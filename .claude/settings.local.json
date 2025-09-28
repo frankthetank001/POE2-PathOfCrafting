@@ -6,9 +6,21 @@
       "WebFetch(domain:poe.ninja)",
       "WebFetch(domain:www.craftofexile.com)",
       "Bash(dir)",
-      "Read(//c/Users/frank/Downloads/**)"
+      "Read(//c/Users/frank/Downloads/**)",
+      "WebFetch(domain:poe2db.tw)",
+      "WebFetch(domain:maxroll.gg)",
+      "Bash(python:*)",
+      "Bash(./venv/Scripts/python:*)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(curl:*)",
+      "WebFetch(domain:api.github.com)",
+      "Bash(grep:*)",
+      "Bash(jq '.prefixes | map(select(.name == \"\"\"\"Monk''''s\"\"\"\")) | .[0].stat_text')"
     ],
     "deny": [],
-    "ask": []
+    "ask": [],
+    "additionalDirectories": [
+      "C:\\Users\\frank\\Documents\\Github\\Poe2-DB-Scraper\\"
+    ]
   }
 }
