@@ -6,6 +6,7 @@ from app.schemas.item import ParsedItem, ItemMod
 from app.schemas.crafting import CraftableItem, ItemModifier, ModType, ItemRarity
 from app.schemas.item_bases import get_item_base_by_name, ITEM_BASES
 from app.services.crafting.modifier_pool import ModifierPool
+from app.services.stat_calculator import StatCalculator
 
 logger = get_logger(__name__)
 
@@ -50,17 +51,21 @@ class ItemConverter:
                     elif mod.mod_type == ModType.SUFFIX:
                         suffix_mods.append(mod)
 
-            return CraftableItem(
+            item = CraftableItem(
                 base_name=base.name,
                 base_category=base.category,
                 rarity=parsed_item.rarity,
                 item_level=parsed_item.item_level or 65,
-                quality=parsed_item.quality or 0,
+                quality=parsed_item.quality or 20,
                 implicit_mods=implicit_mods,
                 prefix_mods=prefix_mods,
                 suffix_mods=suffix_mods,
                 corrupted=parsed_item.corrupted,
             )
+
+            # Calculate stats
+            StatCalculator.update_item_stats(item)
+            return item
 
         except Exception as e:
             logger.error(f"Error converting item: {e}")

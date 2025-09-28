@@ -65,6 +65,14 @@ export const craftingApi = {
     return response.data
   },
 
+  getBasesForSlotCategory: async (
+    slot: string,
+    category: string
+  ): Promise<Array<{name: string, description: string, default_ilvl: number, base_stats: Record<string, number>}>> => {
+    const response = await api.get(`/item-bases/${slot}/${category}`)
+    return response.data
+  },
+
   parseItem: async (
     itemText: string
   ): Promise<{

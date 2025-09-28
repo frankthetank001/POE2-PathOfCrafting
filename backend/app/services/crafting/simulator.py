@@ -8,6 +8,7 @@ from app.schemas.crafting import (
 )
 from app.services.crafting.currencies import CurrencyFactory
 from app.services.crafting.modifier_pool import ModifierPool
+from app.services.stat_calculator import StatCalculator
 
 logger = get_logger(__name__)
 
@@ -46,6 +47,10 @@ class CraftingSimulator:
                 )
 
             success, message, result_item = currency.apply(item, self.modifier_pool)
+
+            # Update stats if currency was applied successfully
+            if success and result_item:
+                StatCalculator.update_item_stats(result_item)
 
             return CraftingSimulationResult(
                 success=success,

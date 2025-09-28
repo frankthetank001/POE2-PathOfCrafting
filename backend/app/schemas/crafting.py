@@ -53,6 +53,8 @@ class CraftableItem(BaseModel):
     suffix_mods: List[ItemModifier] = Field(default_factory=list)
 
     corrupted: bool = False
+    base_stats: Dict[str, int] = Field(default_factory=dict)  # Base stats from item base
+    calculated_stats: Dict[str, int] = Field(default_factory=dict)  # Final calculated stats
 
     @property
     def prefix_count(self) -> int:

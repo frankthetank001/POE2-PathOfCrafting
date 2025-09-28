@@ -1,4 +1,4 @@
-from typing import List, Optional
+from typing import List, Optional, Dict
 from pydantic import BaseModel
 
 
@@ -9,6 +9,7 @@ class ItemBase(BaseModel):
     attribute_requirements: List[str] = []  # str, dex, int
     default_ilvl: int = 65
     description: Optional[str] = None
+    base_stats: Dict[str, int] = {}  # {'evasion': 266, 'armour': 100, 'energy_shield': 50}
 
 
 import json

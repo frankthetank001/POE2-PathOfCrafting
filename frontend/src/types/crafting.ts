@@ -50,6 +50,8 @@ export interface CraftableItem {
   suffix_mods: ItemModifier[]
 
   corrupted: boolean
+  base_stats: Record<string, number>
+  calculated_stats: Record<string, number>
 }
 
 export interface CraftingSimulationRequest {

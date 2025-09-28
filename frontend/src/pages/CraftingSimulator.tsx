@@ -9,11 +9,13 @@ function CraftingSimulator() {
     base_category: 'int_armour',
     rarity: 'Normal' as ItemRarity,
     item_level: 65,
-    quality: 0,
+    quality: 20,
     implicit_mods: [],
     prefix_mods: [],
     suffix_mods: [],
     corrupted: false,
+    base_stats: {},
+    calculated_stats: {},
   })
 
   const [currencies, setCurrencies] = useState<string[]>([])
@@ -37,20 +39,49 @@ function CraftingSimulator() {
   const [itemBases, setItemBases] = useState<ItemBasesBySlot>({})
   const [selectedSlot, setSelectedSlot] = useState<string>('body_armour')
   const [selectedCategory, setSelectedCategory] = useState<string>('int_armour')
+  const [availableBases, setAvailableBases] = useState<Array<{name: string, description: string, default_ilvl: number, base_stats: Record<string, number>}>>([])
+  const [selectedBase, setSelectedBase] = useState<string>('')
   const [modsPoolCollapsed, setModsPoolCollapsed] = useState(false)
   const [itemPasteText, setItemPasteText] = useState('')
   const [pasteExpanded, setPasteExpanded] = useState(false)
   const [pasteMessage, setPasteMessage] = useState('')
+  const [currencyExpanded, setCurrencyExpanded] = useState(true)
   const [modsPoolWidth, setModsPoolWidth] = useState<number>(() => {
     const saved = localStorage.getItem('modsPoolWidth')
     return saved ? parseInt(saved) : 600
   })
   const [isResizing, setIsResizing] = useState(false)
 
+  // Vertical resize state
+  const [verticalSizes, setVerticalSizes] = useState(() => {
+    const saved = localStorage.getItem('verticalSizes')
+    return saved ? JSON.parse(saved) : {
+      currencyCompact: 100,
+      itemDisplay: 350,
+      currencySection: 150,
+      historySection: 200
+    }
+  })
+  const [verticalResizing, setVerticalResizing] = useState<{
+    active: boolean
+    section: string
+    startY: number
+    startHeight: number
+  }>({
+    active: false,
+    section: '',
+    startY: 0,
+    startHeight: 0
+  })
+
   useEffect(() => {
     loadCurrencies()
     loadItemBases()
   }, [])
+
+  useEffect(() => {
+    loadAvailableBases()
+  }, [selectedSlot, selectedCategory])
 
   useEffect(() => {
     loadAvailableCurrencies()
@@ -74,7 +105,8 @@ function CraftingSimulator() {
       if (!isResizing) return
 
       const newWidth = e.clientX - 32
-      if (newWidth >= 300 && newWidth <= 1000) {
+      const maxWidth = Math.floor(window.innerWidth * 0.8) // 80% of screen width
+      if (newWidth >= 300 && newWidth <= maxWidth) {
         setModsPoolWidth(newWidth)
       }
     }
@@ -100,6 +132,56 @@ function CraftingSimulator() {
       document.body.style.userSelect = ''
     }
   }, [isResizing, modsPoolWidth])
+
+  // Vertical resize handlers
+  useEffect(() => {
+    const handleVerticalMouseMove = (e: MouseEvent) => {
+      if (!verticalResizing.active) return
+
+      const deltaY = e.clientY - verticalResizing.startY
+      const newHeight = Math.max(150, verticalResizing.startHeight + deltaY)
+
+      setVerticalSizes(prev => ({
+        ...prev,
+        [verticalResizing.section]: newHeight
+      }))
+    }
+
+    const handleVerticalMouseUp = () => {
+      if (verticalResizing.active) {
+        setVerticalResizing({
+          active: false,
+          section: '',
+          startY: 0,
+          startHeight: 0
+        })
+        localStorage.setItem('verticalSizes', JSON.stringify(verticalSizes))
+      }
+    }
+
+    if (verticalResizing.active) {
+      document.addEventListener('mousemove', handleVerticalMouseMove)
+      document.addEventListener('mouseup', handleVerticalMouseUp)
+      document.body.style.cursor = 'row-resize'
+      document.body.style.userSelect = 'none'
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleVerticalMouseMove)
+      document.removeEventListener('mouseup', handleVerticalMouseUp)
+      document.body.style.cursor = ''
+      document.body.style.userSelect = ''
+    }
+  }, [verticalResizing, verticalSizes])
+
+  const handleVerticalResizeStart = (section: string, e: React.MouseEvent) => {
+    setVerticalResizing({
+      active: true,
+      section: section,
+      startY: e.clientY,
+      startHeight: verticalSizes[section]
+    })
+  }
 
   const loadCurrencies = async () => {
     try {
@@ -146,6 +228,49 @@ function CraftingSimulator() {
     } catch (err) {
       console.error('Failed to load item bases:', err)
     }
+  }
+
+  const loadAvailableBases = async () => {
+    try {
+      const bases = await craftingApi.getBasesForSlotCategory(selectedSlot, selectedCategory)
+      setAvailableBases(bases)
+
+      // Set default selected base (first one) and create item
+      if (bases.length > 0) {
+        const firstBase = bases[0]
+        setSelectedBase(firstBase.name)
+        const baseStats = firstBase.base_stats || {}
+        setItem({
+          base_name: firstBase.name,
+          base_category: selectedCategory,
+          rarity: 'Normal' as ItemRarity,
+          item_level: 65,
+          quality: 20,
+          implicit_mods: [],
+          prefix_mods: [],
+          suffix_mods: [],
+          corrupted: false,
+          base_stats: baseStats,
+          calculated_stats: calculateItemStats(baseStats, 20),
+        })
+      }
+    } catch (err) {
+      console.error('Failed to load available bases:', err)
+    }
+  }
+
+  // Helper function to calculate stats with quality
+  const calculateItemStats = (baseStats: Record<string, number>, quality: number): Record<string, number> => {
+    const calculated = { ...baseStats }
+
+    // Apply quality bonuses to armor, evasion, and energy_shield
+    for (const [stat, value] of Object.entries(calculated)) {
+      if (['armour', 'evasion', 'energy_shield'].includes(stat)) {
+        calculated[stat] = Math.floor(value * (1 + quality / 100))
+      }
+    }
+
+    return calculated
   }
 
   const handleCraft = async (currencyName: string) => {
@@ -206,15 +331,17 @@ function CraftingSimulator() {
 
   const handleReset = () => {
     setItem({
-      base_name: getDisplayName(selectedSlot, selectedCategory),
+      base_name: selectedBase || getDisplayName(selectedSlot, selectedCategory),
       base_category: selectedCategory,
       rarity: 'Normal' as ItemRarity,
       item_level: 65,
-      quality: 0,
+      quality: 20,
       implicit_mods: [],
       prefix_mods: [],
       suffix_mods: [],
       corrupted: false,
+      base_stats: {},
+      calculated_stats: {},
     })
     setMessage('')
     setHistory([])
@@ -328,6 +455,40 @@ function CraftingSimulator() {
     return category.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())
   }
 
+  const formatStatName = (statName: string) => {
+    const statNames: Record<string, string> = {
+      'armour': 'Armour',
+      'evasion': 'Evasion Rating',
+      'energy_shield': 'Energy Shield',
+    }
+    return statNames[statName] || statName
+  }
+
+  // Currency icon helpers
+  const getCurrencyIconUrl = (currency: string): string => {
+    const iconMap: Record<string, string> = {
+      "Orb of Transmutation": "https://www.poe2wiki.net/images/6/67/Orb_of_Transmutation_inventory_icon.png",
+      "Greater Orb of Transmutation": "https://www.poe2wiki.net/images/6/67/Orb_of_Transmutation_inventory_icon.png", // Use same for now
+      "Perfect Orb of Transmutation": "https://www.poe2wiki.net/images/6/67/Orb_of_Transmutation_inventory_icon.png", // Use same for now
+      "Orb of Augmentation": "https://www.poe2wiki.net/images/c/cb/Orb_of_Augmentation_inventory_icon.png",
+      "Greater Orb of Augmentation": "https://www.poe2wiki.net/images/c/cb/Orb_of_Augmentation_inventory_icon.png", // Use same for now
+      "Perfect Orb of Augmentation": "https://www.poe2wiki.net/images/c/cb/Orb_of_Augmentation_inventory_icon.png", // Use same for now
+      "Orb of Alchemy": "https://www.poe2wiki.net/images/9/9f/Orb_of_Alchemy_inventory_icon.png",
+      "Regal Orb": "https://www.poe2wiki.net/images/3/33/Regal_Orb_inventory_icon.png",
+      "Greater Regal Orb": "https://www.poe2wiki.net/images/3/33/Regal_Orb_inventory_icon.png", // Use same for now
+      "Perfect Regal Orb": "https://www.poe2wiki.net/images/3/33/Regal_Orb_inventory_icon.png", // Use same for now
+      "Exalted Orb": "https://www.poe2wiki.net/images/2/26/Exalted_Orb_inventory_icon.png",
+      "Greater Exalted Orb": "https://www.poe2wiki.net/images/2/26/Exalted_Orb_inventory_icon.png", // Use same for now
+      "Perfect Exalted Orb": "https://www.poe2wiki.net/images/2/26/Exalted_Orb_inventory_icon.png", // Use same for now
+      "Chaos Orb": "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png",
+      "Greater Chaos Orb": "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png", // Use same for now
+      "Perfect Chaos Orb": "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png", // Use same for now
+      "Divine Orb": "https://www.poe2wiki.net/images/5/58/Divine_Orb_inventory_icon.png"
+    }
+    return iconMap[currency] || "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png" // Default fallback
+  }
+
+
   const handlePasteItem = async () => {
     if (!itemPasteText.trim()) {
       setPasteMessage('Please paste item text')
@@ -418,6 +579,9 @@ function CraftingSimulator() {
                 if (categoriesForSlot && categoriesForSlot.length > 0) {
                   setSelectedCategory(categoriesForSlot[0])
                 }
+                // Reset bases when slot changes
+                setAvailableBases([])
+                setSelectedBase('')
               }}
             >
               {Object.keys(itemBases).map(slot => (
@@ -435,17 +599,7 @@ function CraftingSimulator() {
               value={selectedCategory}
               onChange={(e) => {
                 setSelectedCategory(e.target.value)
-                setItem({
-                  base_name: getDisplayName(selectedSlot, e.target.value),
-                  base_category: e.target.value,
-                  rarity: 'Normal' as ItemRarity,
-                  item_level: 65,
-                  quality: 0,
-                  implicit_mods: [],
-                  prefix_mods: [],
-                  suffix_mods: [],
-                  corrupted: false,
-                })
+                // Don't update the item here, wait for base selection
                 setMessage('')
                 setHistory([])
                 setItemHistory([])
@@ -457,6 +611,55 @@ function CraftingSimulator() {
                   {formatCategoryName(category)}
                 </option>
               ))}
+            </select>
+          </div>
+
+          <div className="base-selector">
+            <label htmlFor="base-select">Base:</label>
+            <select
+              id="base-select"
+              value={selectedBase}
+              onChange={(e) => {
+                const selectedBaseName = e.target.value
+                const selectedBaseData = availableBases.find(base => base.name === selectedBaseName)
+                const baseStats = selectedBaseData?.base_stats || {}
+
+                setSelectedBase(selectedBaseName)
+                setItem({
+                  base_name: selectedBaseName,
+                  base_category: selectedCategory,
+                  rarity: 'Normal' as ItemRarity,
+                  item_level: 65,
+                  quality: 20,
+                  implicit_mods: [],
+                  prefix_mods: [],
+                  suffix_mods: [],
+                  corrupted: false,
+                  base_stats: baseStats,
+                  calculated_stats: calculateItemStats(baseStats, 20),
+                })
+                setMessage('')
+                setHistory([])
+                setItemHistory([])
+                setCurrencySpent({})
+              }}
+              disabled={availableBases.length === 0}
+            >
+              {availableBases.map((base, index) => {
+                const statsText = Object.entries(base.base_stats || {})
+                  .map(([stat, value]) => `${value} ${formatStatName(stat)}`)
+                  .join(', ')
+
+                return (
+                  <option
+                    key={`${base.name}-${index}-${JSON.stringify(base.base_stats)}`}
+                    value={base.name}
+                    title={`${base.description}${statsText ? ` - ${statsText}` : ''}`}
+                  >
+                    {base.name}{statsText ? ` (${statsText})` : ''}
+                  </option>
+                )
+              })}
             </select>
           </div>
 
@@ -483,41 +686,6 @@ function CraftingSimulator() {
         </div>
       </div>
 
-      <div className="currency-bar">
-        <div className="currency-bar-header">
-          <h3>Available Currencies</h3>
-          <button
-            className="undo-button-top"
-            onClick={handleUndo}
-            disabled={itemHistory.length === 0}
-            title="Undo last action (Ctrl+Z)"
-          >
-            ↶ Undo
-          </button>
-        </div>
-        {availableCurrencies.length === 0 ? (
-          <p className="no-currencies-bar">No currencies can be applied to this item</p>
-        ) : (
-          <div className="currency-buttons-row">
-            {availableCurrencies.map((currency) => (
-              <button
-                key={currency}
-                className="currency-button-compact"
-                onClick={() => handleCraft(currency)}
-                disabled={loading}
-                title={currency}
-              >
-                {currency}
-              </button>
-            ))}
-          </div>
-        )}
-        {message && (
-          <div className={`message-compact ${message.startsWith('✓') ? 'success' : message.startsWith('↶') ? 'info' : 'error'}`}>
-            {message}
-          </div>
-        )}
-      </div>
 
       <div className={`simulator-layout ${modsPoolCollapsed ? 'mods-collapsed' : ''}`}>
         <div
@@ -579,7 +747,7 @@ function CraftingSimulator() {
                   return (
                     <div key={groupKey} className="pool-mod-group">
                       <div
-                        className="pool-mod-group-header prefix"
+                        className={`pool-mod-group-header prefix ${allUnavailable ? 'all-unavailable' : ''}`}
                         onClick={() => toggleModGroup(`prefix-${groupKey}`)}
                       >
                         <div className="group-main-info">
@@ -650,7 +818,7 @@ function CraftingSimulator() {
                   return (
                     <div key={groupKey} className="pool-mod-group">
                       <div
-                        className="pool-mod-group-header suffix"
+                        className={`pool-mod-group-header suffix ${allUnavailable ? 'all-unavailable' : ''}`}
                         onClick={() => toggleModGroup(`suffix-${groupKey}`)}
                       >
                         <div className="group-main-info">
@@ -714,7 +882,79 @@ function CraftingSimulator() {
           </div>
         )}
         <div className="center-panel">
-          <div className="item-display">
+          {/* Currency Section - moved above item preview */}
+          <div
+            className="currency-section-compact"
+            style={{ height: `${verticalSizes.currencyCompact}px`, overflow: 'auto' }}
+          >
+            <div className="currency-section-header" onClick={() => setCurrencyExpanded(!currencyExpanded)}>
+              <h3>Currencies {currencyExpanded ? '▼' : '▶'}</h3>
+              <button
+                className="undo-button-small"
+                onClick={(e) => {
+                  e.stopPropagation()
+                  handleUndo()
+                }}
+                disabled={itemHistory.length === 0}
+                title="Undo last action (Ctrl+Z)"
+              >
+                ↶ Undo
+              </button>
+            </div>
+            {currencyExpanded && (
+              <>
+                {currencies.length === 0 ? (
+                  <p className="no-currencies-compact">No currencies available</p>
+                ) : (
+                  <div className="currency-buttons-grid">
+                    {currencies.map((currency) => {
+                      const isAvailable = availableCurrencies.includes(currency)
+                      return (
+                        <button
+                          key={currency}
+                          className={`currency-button-icon ${!isAvailable ? 'currency-disabled' : ''}`}
+                          onClick={() => isAvailable && handleCraft(currency)}
+                          disabled={loading || !isAvailable}
+                          title={isAvailable ? currency : `${currency} (Cannot be applied to this item)`}
+                        >
+                          <div className="currency-icon">
+                            <img
+                              src={getCurrencyIconUrl(currency)}
+                              alt={currency}
+                              className="currency-icon-img"
+                              onError={(e) => {
+                                // Fallback to a default icon if image fails to load
+                                (e.target as HTMLImageElement).src = "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
+                              }}
+                            />
+                          </div>
+                          <span className="currency-name-short">{currency}</span>
+                        </button>
+                      )
+                    })}
+                  </div>
+                )}
+                {message && (
+                  <div className={`message-inline ${message.startsWith('✓') ? 'success' : message.startsWith('↶') ? 'info' : 'error'}`}>
+                    {message}
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+
+          {/* Vertical resize handle after currency section */}
+          <div
+            className="resize-handle-vertical"
+            onMouseDown={(e) => handleVerticalResizeStart('currencyCompact', e)}
+          >
+            <div className="resize-line-vertical" />
+          </div>
+
+          <div
+            className="item-display"
+            style={{ height: `${verticalSizes.itemDisplay}px`, overflow: 'auto' }}
+          >
             <div className="item-header">
               <h3
                 className="item-name"
@@ -740,6 +980,19 @@ function CraftingSimulator() {
                   {item.prefix_mods.length + item.suffix_mods.length} / 6
                 </span>
               </div>
+
+              {/* Display base/calculated stats */}
+              {Object.keys(item.calculated_stats || {}).length > 0 && (
+                <div className="stats-section">
+                  <h4 className="stats-title">Defence</h4>
+                  {Object.entries(item.calculated_stats).map(([statName, value]) => (
+                    <div key={statName} className="stat-row">
+                      <span className="stat-label">{formatStatName(statName)}:</span>
+                      <span className="stat-value">{value}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             {item.implicit_mods.length > 0 && (
@@ -812,25 +1065,56 @@ function CraftingSimulator() {
             )}
           </div>
 
+          {/* Vertical resize handle after item display */}
+          <div
+            className="resize-handle-vertical"
+            onMouseDown={(e) => handleVerticalResizeStart('itemDisplay', e)}
+          >
+            <div className="resize-line-vertical" />
+          </div>
+
           <button className="reset-button" onClick={handleReset}>
             Reset Item
           </button>
 
           {Object.keys(currencySpent).length > 0 && (
-            <div className="currency-tracker">
-              <h3>Currency Spent</h3>
-              <div className="currency-spent-list">
-                {Object.entries(currencySpent).map(([currency, count]) => (
-                  <div key={currency} className="currency-spent-item">
-                    <span className="currency-spent-name">{currency}</span>
-                    <span className="currency-spent-count">×{count}</span>
-                  </div>
-                ))}
+            <>
+              <div
+                className="currency-tracker"
+                style={{ height: `${verticalSizes.currencySection}px`, overflow: 'auto' }}
+              >
+                <h3>Currency Spent</h3>
+                <div className="currency-spent-list">
+                  {Object.entries(currencySpent).map(([currency, count]) => (
+                    <div key={currency} className="currency-spent-item">
+                      <span className="currency-spent-name">{currency}</span>
+                      <span className="currency-spent-count">×{count}</span>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
+              {/* Vertical resize handle after currency section */}
+              <div
+                className="resize-handle-vertical"
+                onMouseDown={(e) => handleVerticalResizeStart('currencySection', e)}
+              >
+                <div className="resize-line-vertical" />
+              </div>
+            </>
           )}
 
-          <div className="history-section">
+          {/* Vertical resize handle before history section */}
+          <div
+            className="resize-handle-vertical"
+            onMouseDown={(e) => handleVerticalResizeStart('historySection', e)}
+          >
+            <div className="resize-line-vertical" />
+          </div>
+
+          <div
+            className="history-section"
+            style={{ height: `${verticalSizes.historySection}px`, overflow: 'auto' }}
+          >
             <h3>Crafting History</h3>
             {history.length === 0 ? (
               <p className="empty-history">No actions yet</p>

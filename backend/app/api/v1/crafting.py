@@ -15,6 +15,7 @@ from app.services.crafting.currencies import CurrencyFactory
 from app.services.crafting.simulator import CraftingSimulator
 from app.services.item_parser import ItemParser
 from app.services.item_converter import ItemConverter
+from app.services.stat_calculator import StatCalculator
 
 logger = get_logger(__name__)
 
@@ -102,6 +103,17 @@ async def get_item_bases():
     return get_slot_category_combinations()
 
 
+@router.get("/item-bases/{slot}/{category}")
+async def get_bases_for_slot_category(slot: str, category: str):
+    """Get all available base names for a specific slot and category"""
+    try:
+        bases = [base for base in ITEM_BASES if base.slot == slot and base.category == category]
+        return [{"name": base.name, "description": base.description, "default_ilvl": base.default_ilvl, "base_stats": base.base_stats} for base in bases]
+    except Exception as e:
+        logger.error(f"Error fetching bases for {slot}/{category}: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.post("/create-base-item")
 async def create_base_item(slot: str, category: str, item_level: int = 65):
     """Create a base item for the given slot and category"""
@@ -110,14 +122,23 @@ async def create_base_item(slot: str, category: str, item_level: int = 65):
     if not base:
         raise HTTPException(status_code=404, detail=f"No base found for slot '{slot}' and category '{category}'")
 
-    return {
-        "base_name": base.name,
-        "base_category": base.category,
-        "slot": base.slot,
-        "item_level": item_level,
-        "attribute_requirements": base.attribute_requirements,
-        "description": base.description
-    }
+    # Create craftable item with stats
+    item = CraftableItem(
+        base_name=base.name,
+        base_category=base.category,
+        rarity='Normal',
+        item_level=item_level,
+        quality=20,
+        implicit_mods=[],
+        prefix_mods=[],
+        suffix_mods=[],
+        corrupted=False
+    )
+
+    # Calculate stats
+    StatCalculator.update_item_stats(item)
+
+    return item.model_dump()
 
 
 @router.post("/available-mods")

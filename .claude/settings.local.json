@@ -16,7 +16,11 @@
       "WebFetch(domain:api.github.com)",
       "Bash(grep:*)",
       "Bash(jq '.prefixes | map(select(.name == \"\"\"\"Monk''''s\"\"\"\")) | .[0].stat_text')",
-      "Bash(cat:*)"
+      "Bash(cat:*)",
+      "Bash(npm run dev:*)",
+      "Bash(npm install:*)",
+      "WebFetch(domain:www.poe2wiki.net)",
+      "Read(//c/Users/frank/OneDrive/Pictures/Screenshots/**)"
     ],
     "deny": [],
     "ask": [],
