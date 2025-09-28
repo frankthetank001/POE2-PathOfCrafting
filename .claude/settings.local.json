@@ -15,7 +15,8 @@
       "Bash(curl:*)",
       "WebFetch(domain:api.github.com)",
       "Bash(grep:*)",
-      "Bash(jq '.prefixes | map(select(.name == \"\"\"\"Monk''''s\"\"\"\")) | .[0].stat_text')"
+      "Bash(jq '.prefixes | map(select(.name == \"\"\"\"Monk''''s\"\"\"\")) | .[0].stat_text')",
+      "Bash(cat:*)"
     ],
     "deny": [],
     "ask": [],

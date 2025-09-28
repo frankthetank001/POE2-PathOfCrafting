@@ -64,6 +64,21 @@ export const craftingApi = {
     const response = await api.get<ItemBasesBySlot>('/item-bases')
     return response.data
   },
+
+  parseItem: async (
+    itemText: string
+  ): Promise<{
+    success: boolean
+    item: CraftableItem
+    parsed_info: {
+      base_type: string
+      rarity: string
+      item_level: number
+    }
+  }> => {
+    const response = await api.post('/parse-item', { item_text: itemText })
+    return response.data
+  },
 }
 
 export default craftingApi

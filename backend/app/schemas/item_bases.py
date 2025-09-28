@@ -11,8 +11,22 @@ class ItemBase(BaseModel):
     description: Optional[str] = None
 
 
-# Item base definitions based on PoE2 items
-ITEM_BASES = [
+import json
+import os
+
+# Load item bases from scraped data
+def load_item_bases():
+    bases_file = os.path.join(os.path.dirname(__file__), "..", "data", "item_bases.json")
+    try:
+        with open(bases_file, 'r', encoding='utf-8') as f:
+            bases_data = json.load(f)
+            return [ItemBase(**base) for base in bases_data]
+    except FileNotFoundError:
+        print(f"Warning: {bases_file} not found, using fallback bases")
+        return FALLBACK_BASES
+
+# Fallback bases for development
+FALLBACK_BASES = [
     # Body Armour - INT
     ItemBase(
         name="Vile Robe",
@@ -199,6 +213,9 @@ ITEM_BASES = [
         description="Belt accessory"
     ),
 ]
+
+# Load actual item bases
+ITEM_BASES = load_item_bases()
 
 
 def get_item_bases_by_slot(slot: str) -> List[ItemBase]:

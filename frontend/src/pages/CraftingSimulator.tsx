@@ -37,6 +37,15 @@ function CraftingSimulator() {
   const [itemBases, setItemBases] = useState<ItemBasesBySlot>({})
   const [selectedSlot, setSelectedSlot] = useState<string>('body_armour')
   const [selectedCategory, setSelectedCategory] = useState<string>('int_armour')
+  const [modsPoolCollapsed, setModsPoolCollapsed] = useState(false)
+  const [itemPasteText, setItemPasteText] = useState('')
+  const [pasteExpanded, setPasteExpanded] = useState(false)
+  const [pasteMessage, setPasteMessage] = useState('')
+  const [modsPoolWidth, setModsPoolWidth] = useState<number>(() => {
+    const saved = localStorage.getItem('modsPoolWidth')
+    return saved ? parseInt(saved) : 600
+  })
+  const [isResizing, setIsResizing] = useState(false)
 
   useEffect(() => {
     loadCurrencies()
@@ -59,6 +68,38 @@ function CraftingSimulator() {
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [itemHistory])
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!isResizing) return
+
+      const newWidth = e.clientX - 32
+      if (newWidth >= 300 && newWidth <= 1000) {
+        setModsPoolWidth(newWidth)
+      }
+    }
+
+    const handleMouseUp = () => {
+      if (isResizing) {
+        setIsResizing(false)
+        localStorage.setItem('modsPoolWidth', modsPoolWidth.toString())
+      }
+    }
+
+    if (isResizing) {
+      document.addEventListener('mousemove', handleMouseMove)
+      document.addEventListener('mouseup', handleMouseUp)
+      document.body.style.cursor = 'col-resize'
+      document.body.style.userSelect = 'none'
+    }
+
+    return () => {
+      document.removeEventListener('mousemove', handleMouseMove)
+      document.removeEventListener('mouseup', handleMouseUp)
+      document.body.style.cursor = ''
+      document.body.style.userSelect = ''
+    }
+  }, [isResizing, modsPoolWidth])
 
   const loadCurrencies = async () => {
     try {
@@ -275,8 +316,6 @@ function CraftingSimulator() {
     ])
   ).sort()
 
-  const [modsPoolCollapsed, setModsPoolCollapsed] = useState(false)
-
   const getDisplayName = (slot: string, category: string) => {
     return `${category.replace('_', ' ')} ${slot.replace('_', ' ')}`
   }
@@ -289,10 +328,81 @@ function CraftingSimulator() {
     return category.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())
   }
 
+  const handlePasteItem = async () => {
+    if (!itemPasteText.trim()) {
+      setPasteMessage('Please paste item text')
+      return
+    }
+
+    setLoading(true)
+    setPasteMessage('')
+
+    try {
+      const result = await craftingApi.parseItem(itemPasteText)
+
+      if (result.success && result.item) {
+        setItem(result.item)
+        setSelectedSlot(result.parsed_info.base_type.includes('Body Armour') || result.parsed_info.base_type.includes('Robe') || result.parsed_info.base_type.includes('Vest') || result.parsed_info.base_type.includes('Plate') ? 'body_armour' : 'body_armour')
+        setSelectedCategory(result.item.base_category)
+        setPasteMessage(`✓ Loaded ${result.parsed_info.rarity} ${result.parsed_info.base_type}`)
+        setHistory([])
+        setItemHistory([])
+        setCurrencySpent({})
+        setPasteExpanded(false)
+        setItemPasteText('')
+      }
+    } catch (err: any) {
+      setPasteMessage(`✗ Error: ${err.response?.data?.detail || 'Failed to parse item'}`)
+    } finally {
+      setLoading(false)
+    }
+  }
+
   return (
     <div className="crafting-simulator">
       <h2 className="page-title">Crafting Simulator</h2>
       <p className="page-subtitle">Experiment with crafting currencies on items</p>
+
+      <div className="item-paste-section">
+        <div className="paste-header" onClick={() => setPasteExpanded(!pasteExpanded)}>
+          <h3>Paste Item from Game {pasteExpanded ? '▼' : '▶'}</h3>
+        </div>
+        {pasteExpanded && (
+          <div className="paste-content">
+            <p className="paste-instructions">
+              Copy an item from PoE2 (Ctrl+C in-game) and paste it here. Both simple and detailed formats are supported.
+            </p>
+            <textarea
+              className="item-paste-textarea"
+              value={itemPasteText}
+              onChange={(e) => setItemPasteText(e.target.value)}
+              placeholder="Item Class: Body Armours&#10;Rarity: Rare&#10;Viper Coat&#10;Vile Robe&#10;--------&#10;Quality: +20% (augmented)&#10;..."
+              rows={12}
+            />
+            <div className="paste-actions">
+              <button
+                className="paste-button"
+                onClick={handlePasteItem}
+                disabled={loading || !itemPasteText.trim()}
+              >
+                Load Item
+              </button>
+              <button
+                className="clear-button"
+                onClick={() => { setItemPasteText(''); setPasteMessage('') }}
+                disabled={!itemPasteText}
+              >
+                Clear
+              </button>
+            </div>
+            {pasteMessage && (
+              <div className={`paste-message ${pasteMessage.startsWith('✓') ? 'success' : 'error'}`}>
+                {pasteMessage}
+              </div>
+            )}
+          </div>
+        )}
+      </div>
 
       <div className="item-base-selector">
         <h3>Item Base Selection</h3>
@@ -350,9 +460,24 @@ function CraftingSimulator() {
             </select>
           </div>
 
+          <div className="ilvl-selector">
+            <label htmlFor="ilvl-input">Item Level:</label>
+            <input
+              id="ilvl-input"
+              type="number"
+              min="1"
+              max="100"
+              value={item.item_level}
+              onChange={(e) => {
+                const newIlvl = parseInt(e.target.value) || 1
+                setItem({ ...item, item_level: Math.max(1, Math.min(100, newIlvl)) })
+              }}
+            />
+          </div>
+
           <div className="base-info">
             <span className="base-category">{selectedCategory}</span>
-            <span className="base-ilvl">ilvl 65</span>
+            <span className="base-ilvl">ilvl {item.item_level}</span>
             <span className="base-slot">{formatSlotName(selectedSlot)}</span>
           </div>
         </div>
@@ -395,7 +520,10 @@ function CraftingSimulator() {
       </div>
 
       <div className={`simulator-layout ${modsPoolCollapsed ? 'mods-collapsed' : ''}`}>
-        <div className="mods-pool-panel">
+        <div
+          className="mods-pool-panel"
+          style={{ width: modsPoolCollapsed ? '60px' : `${modsPoolWidth}px` }}
+        >
           <div className="mods-pool-header">
             <div className="mods-pool-title-row">
               <h3>Available Mods</h3>
@@ -439,6 +567,14 @@ function CraftingSimulator() {
                   const bestTier = groupMods[0] // Tier 1 (highest)
                   const maxIlvl = Math.max(...groupMods.map(m => m.required_ilvl || 1))
                   const isExpanded = expandedModGroups.has(`prefix-${groupKey}`)
+                  const unavailableCount = groupMods.filter(m => m.required_ilvl && m.required_ilvl > item.item_level).length
+                  const allUnavailable = unavailableCount === groupMods.length
+
+                  // Calculate available tier range
+                  const availableMods = groupMods.filter(m => !m.required_ilvl || m.required_ilvl <= item.item_level)
+                  const bestAvailableTier = availableMods.length > 0 ? Math.min(...availableMods.map(m => m.tier)) : null
+                  const worstTier = Math.max(...groupMods.map(m => m.tier))
+                  const tierRangeText = bestAvailableTier ? `T${bestAvailableTier}-T${worstTier}` : `T1-T${worstTier}`
 
                   return (
                     <div key={groupKey} className="pool-mod-group">
@@ -449,8 +585,13 @@ function CraftingSimulator() {
                         <div className="group-main-info">
                           <span className="pool-mod-stat-main">{bestTier.stat_text}</span>
                           <div className="group-summary">
-                            <span className="group-tier-range">T1-T{Math.max(...groupMods.map(m => m.tier))}</span>
+                            <span className={`group-tier-range ${allUnavailable ? 'all-unavailable' : ''}`}>{tierRangeText}</span>
                             <span className="group-max-ilvl">ilvl {maxIlvl}</span>
+                            {unavailableCount > 0 && (
+                              <span className={`unavailable-badge ${allUnavailable ? 'all-unavailable' : ''}`}>
+                                {unavailableCount} unavailable
+                              </span>
+                            )}
                           </div>
                         </div>
                         <span className="expand-indicator">{isExpanded ? '−' : '+'}</span>
@@ -458,24 +599,30 @@ function CraftingSimulator() {
 
                       {isExpanded && (
                         <div className="tier-breakdown">
-                          {groupMods.map((mod, idx) => (
-                            <div key={idx} className="tier-item">
-                              <div className="tier-header">
-                                <span className="tier-label">T{mod.tier}</span>
-                                <span className="tier-ilvl">ilvl {mod.required_ilvl}</span>
-                              </div>
-                              {mod.stat_min !== undefined && mod.stat_max !== undefined && (
-                                <div className="tier-range">{mod.stat_min}-{mod.stat_max}</div>
-                              )}
-                              {mod.tags && mod.tags.length > 0 && (
-                                <div className="tier-tags">
-                                  {mod.tags.slice(0, 3).map((tag, i) => (
-                                    <span key={i} className="pool-tag">{tag}</span>
-                                  ))}
+                          {groupMods.map((mod, idx) => {
+                            const isUnavailable = mod.required_ilvl && mod.required_ilvl > item.item_level
+                            return (
+                              <div key={idx} className={`tier-item ${isUnavailable ? 'unavailable' : ''}`}>
+                                <div className="tier-header">
+                                  <span className="tier-label">T{mod.tier}</span>
+                                  <span className={`tier-ilvl ${isUnavailable ? 'ilvl-too-high' : ''}`}>
+                                    ilvl {mod.required_ilvl}
+                                    {isUnavailable && ' ⚠'}
+                                  </span>
                                 </div>
-                              )}
-                            </div>
-                          ))}
+                                {mod.stat_min !== undefined && mod.stat_max !== undefined && (
+                                  <div className="tier-range">{mod.stat_min}-{mod.stat_max}</div>
+                                )}
+                                {mod.tags && mod.tags.length > 0 && (
+                                  <div className="tier-tags">
+                                    {mod.tags.slice(0, 3).map((tag, i) => (
+                                      <span key={i} className="pool-tag">{tag}</span>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            )
+                          })}
                         </div>
                       )}
                     </div>
@@ -491,6 +638,14 @@ function CraftingSimulator() {
                   const bestTier = groupMods[0] // Tier 1 (highest)
                   const maxIlvl = Math.max(...groupMods.map(m => m.required_ilvl || 1))
                   const isExpanded = expandedModGroups.has(`suffix-${groupKey}`)
+                  const unavailableCount = groupMods.filter(m => m.required_ilvl && m.required_ilvl > item.item_level).length
+                  const allUnavailable = unavailableCount === groupMods.length
+
+                  // Calculate available tier range
+                  const availableMods = groupMods.filter(m => !m.required_ilvl || m.required_ilvl <= item.item_level)
+                  const bestAvailableTier = availableMods.length > 0 ? Math.min(...availableMods.map(m => m.tier)) : null
+                  const worstTier = Math.max(...groupMods.map(m => m.tier))
+                  const tierRangeText = bestAvailableTier ? `T${bestAvailableTier}-T${worstTier}` : `T1-T${worstTier}`
 
                   return (
                     <div key={groupKey} className="pool-mod-group">
@@ -501,8 +656,13 @@ function CraftingSimulator() {
                         <div className="group-main-info">
                           <span className="pool-mod-stat-main">{bestTier.stat_text}</span>
                           <div className="group-summary">
-                            <span className="group-tier-range">T1-T{Math.max(...groupMods.map(m => m.tier))}</span>
+                            <span className={`group-tier-range ${allUnavailable ? 'all-unavailable' : ''}`}>{tierRangeText}</span>
                             <span className="group-max-ilvl">ilvl {maxIlvl}</span>
+                            {unavailableCount > 0 && (
+                              <span className={`unavailable-badge ${allUnavailable ? 'all-unavailable' : ''}`}>
+                                {unavailableCount} unavailable
+                              </span>
+                            )}
                           </div>
                         </div>
                         <span className="expand-indicator">{isExpanded ? '−' : '+'}</span>
@@ -510,24 +670,30 @@ function CraftingSimulator() {
 
                       {isExpanded && (
                         <div className="tier-breakdown">
-                          {groupMods.map((mod, idx) => (
-                            <div key={idx} className="tier-item">
-                              <div className="tier-header">
-                                <span className="tier-label">T{mod.tier}</span>
-                                <span className="tier-ilvl">ilvl {mod.required_ilvl}</span>
-                              </div>
-                              {mod.stat_min !== undefined && mod.stat_max !== undefined && (
-                                <div className="tier-range">{mod.stat_min}-{mod.stat_max}</div>
-                              )}
-                              {mod.tags && mod.tags.length > 0 && (
-                                <div className="tier-tags">
-                                  {mod.tags.slice(0, 3).map((tag, i) => (
-                                    <span key={i} className="pool-tag">{tag}</span>
-                                  ))}
+                          {groupMods.map((mod, idx) => {
+                            const isUnavailable = mod.required_ilvl && mod.required_ilvl > item.item_level
+                            return (
+                              <div key={idx} className={`tier-item ${isUnavailable ? 'unavailable' : ''}`}>
+                                <div className="tier-header">
+                                  <span className="tier-label">T{mod.tier}</span>
+                                  <span className={`tier-ilvl ${isUnavailable ? 'ilvl-too-high' : ''}`}>
+                                    ilvl {mod.required_ilvl}
+                                    {isUnavailable && ' ⚠'}
+                                  </span>
                                 </div>
-                              )}
-                            </div>
-                          ))}
+                                {mod.stat_min !== undefined && mod.stat_max !== undefined && (
+                                  <div className="tier-range">{mod.stat_min}-{mod.stat_max}</div>
+                                )}
+                                {mod.tags && mod.tags.length > 0 && (
+                                  <div className="tier-tags">
+                                    {mod.tags.slice(0, 3).map((tag, i) => (
+                                      <span key={i} className="pool-tag">{tag}</span>
+                                    ))}
+                                  </div>
+                                )}
+                              </div>
+                            )
+                          })}
                         </div>
                       )}
                     </div>
@@ -539,6 +705,14 @@ function CraftingSimulator() {
             </>
           )}
         </div>
+        {!modsPoolCollapsed && (
+          <div
+            className="resize-handle"
+            onMouseDown={() => setIsResizing(true)}
+          >
+            <div className="resize-line" />
+          </div>
+        )}
         <div className="center-panel">
           <div className="item-display">
             <div className="item-header">

@@ -1,0 +1,3506 @@
+[
+  {
+    "name": "Rusted Cuirass",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour body_armour"
+  },
+  {
+    "name": "Fur Plate",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour body_armour"
+  },
+  {
+    "name": "Iron Cuirass",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour body_armour"
+  },
+  {
+    "name": "Raider Plate",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour body_armour"
+  },
+  {
+    "name": "Maraketh Cuirass",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour body_armour"
+  },
+  {
+    "name": "Steel Plate",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour body_armour"
+  },
+  {
+    "name": "Full Plate",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour body_armour"
+  },
+  {
+    "name": "Vaal Cuirass",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour body_armour"
+  },
+  {
+    "name": "Juggernaut Plate",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour body_armour"
+  },
+  {
+    "name": "Chieftain Cuirass",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour body_armour"
+  },
+  {
+    "name": "Colosseum Plate",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour body_armour"
+  },
+  {
+    "name": "Champion Cuirass",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour body_armour"
+  },
+  {
+    "name": "Glorious Plate",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour body_armour"
+  },
+  {
+    "name": "Conqueror Plate",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour body_armour"
+  },
+  {
+    "name": "Abyssal Cuirass",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour body_armour"
+  },
+  {
+    "name": "Barbarian Plate",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour body_armour"
+  },
+  {
+    "name": "Rugged Cuirass",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour body_armour"
+  },
+  {
+    "name": "Sandsworn Cuirass",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour body_armour"
+  },
+  {
+    "name": "Elegant Plate",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour body_armour"
+  },
+  {
+    "name": "Heavy Plate",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour body_armour"
+  },
+  {
+    "name": "Stone Cuirass",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour body_armour"
+  },
+  {
+    "name": "Soldier Cuirass",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour body_armour"
+  },
+  {
+    "name": "Ornate Plate",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour body_armour"
+  },
+  {
+    "name": "Utzaal Cuirass",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour body_armour"
+  },
+  {
+    "name": "Warlord Cuirass",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour body_armour"
+  },
+  {
+    "name": "Leather Vest",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion body_armour"
+  },
+  {
+    "name": "Quilted Vest",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion body_armour"
+  },
+  {
+    "name": "Pathfinder Coat",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion body_armour"
+  },
+  {
+    "name": "Shrouded Vest",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion body_armour"
+  },
+  {
+    "name": "Rhoahide Coat",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion body_armour"
+  },
+  {
+    "name": "Studded Vest",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion body_armour"
+  },
+  {
+    "name": "Scout's Vest",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion body_armour"
+  },
+  {
+    "name": "Serpentscale Coat",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion body_armour"
+  },
+  {
+    "name": "Corsair Vest",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion body_armour"
+  },
+  {
+    "name": "Smuggler Coat",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion body_armour"
+  },
+  {
+    "name": "Strider Vest",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion body_armour"
+  },
+  {
+    "name": "Hardleather Coat",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion body_armour"
+  },
+  {
+    "name": "Exquisite Vest",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion body_armour"
+  },
+  {
+    "name": "Mail Coat",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion body_armour"
+  },
+  {
+    "name": "Armoured Vest",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion body_armour"
+  },
+  {
+    "name": "Patchwork Vest",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion body_armour"
+  },
+  {
+    "name": "Hunting Coat",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion body_armour"
+  },
+  {
+    "name": "Riding Coat",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion body_armour"
+  },
+  {
+    "name": "Layered Vest",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion body_armour"
+  },
+  {
+    "name": "Runner Vest",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion body_armour"
+  },
+  {
+    "name": "Lizardscale Coat",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion body_armour"
+  },
+  {
+    "name": "Swiftstalker Coat",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion body_armour"
+  },
+  {
+    "name": "Slipstrike Vest",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion body_armour"
+  },
+  {
+    "name": "Wyrmscale Coat",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion body_armour"
+  },
+  {
+    "name": "Corsair Coat",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion body_armour"
+  },
+  {
+    "name": "Tattered Robe",
+    "category": "int_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield body_armour"
+  },
+  {
+    "name": "Feathered Robe",
+    "category": "int_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield body_armour"
+  },
+  {
+    "name": "Hexer's Robe",
+    "category": "int_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield body_armour"
+  },
+  {
+    "name": "Bone Raiment",
+    "category": "int_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield body_armour"
+  },
+  {
+    "name": "Silk Robe",
+    "category": "int_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield body_armour"
+  },
+  {
+    "name": "Keth Raiment",
+    "category": "int_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield body_armour"
+  },
+  {
+    "name": "Votive Raiment",
+    "category": "int_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield body_armour"
+  },
+  {
+    "name": "Altar Robe",
+    "category": "int_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield body_armour"
+  },
+  {
+    "name": "Elementalist Robe",
+    "category": "int_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield body_armour"
+  },
+  {
+    "name": "Mystic Raiment",
+    "category": "int_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield body_armour"
+  },
+  {
+    "name": "Imperial Robe",
+    "category": "int_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield body_armour"
+  },
+  {
+    "name": "Plated Raiment",
+    "category": "int_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield body_armour"
+  },
+  {
+    "name": "Havoc Raiment",
+    "category": "int_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield body_armour"
+  },
+  {
+    "name": "Enlightened Robe",
+    "category": "int_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield body_armour"
+  },
+  {
+    "name": "Arcane Raiment",
+    "category": "int_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield body_armour"
+  },
+  {
+    "name": "Avian Robe",
+    "category": "int_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield body_armour"
+  },
+  {
+    "name": "Cursespeaker's Robe",
+    "category": "int_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield body_armour"
+  },
+  {
+    "name": "Luxurious Robe",
+    "category": "int_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield body_armour"
+  },
+  {
+    "name": "River Raiment",
+    "category": "int_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield body_armour"
+  },
+  {
+    "name": "Adherent's Raiment",
+    "category": "int_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield body_armour"
+  },
+  {
+    "name": "Ceremonial Robe",
+    "category": "int_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield body_armour"
+  },
+  {
+    "name": "Vile Robe",
+    "category": "int_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield body_armour"
+  },
+  {
+    "name": "Flowing Raiment",
+    "category": "int_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield body_armour"
+  },
+  {
+    "name": "Sacramental Robe",
+    "category": "int_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield body_armour"
+  },
+  {
+    "name": "Feathered Raiment",
+    "category": "int_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield body_armour"
+  },
+  {
+    "name": "Chain Mail",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion body_armour"
+  },
+  {
+    "name": "Rogue Armour",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion body_armour"
+  },
+  {
+    "name": "Vagabond Armour",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion body_armour"
+  },
+  {
+    "name": "Cloaked Mail",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion body_armour"
+  },
+  {
+    "name": "Explorer Armour",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion body_armour"
+  },
+  {
+    "name": "Scale Mail",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion body_armour"
+  },
+  {
+    "name": "Knight Armour",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion body_armour"
+  },
+  {
+    "name": "Ancestral Mail",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion body_armour"
+  },
+  {
+    "name": "Lamellar Mail",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion body_armour"
+  },
+  {
+    "name": "Gladiator Armour",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion body_armour"
+  },
+  {
+    "name": "Heroic Armour",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion body_armour"
+  },
+  {
+    "name": "Tournament Mail",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion body_armour"
+  },
+  {
+    "name": "Tournament Mail",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion body_armour"
+  },
+  {
+    "name": "Tournament Mail",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion body_armour"
+  },
+  {
+    "name": "Slayer Armour",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion body_armour"
+  },
+  {
+    "name": "Ring Mail",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion body_armour"
+  },
+  {
+    "name": "Scoundrel Armour",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion body_armour"
+  },
+  {
+    "name": "Wanderer Armour",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion body_armour"
+  },
+  {
+    "name": "Mantled Mail",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion body_armour"
+  },
+  {
+    "name": "Trailblazer Armour",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion body_armour"
+  },
+  {
+    "name": "Golden Mail",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion body_armour"
+  },
+  {
+    "name": "Dastard Armour",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion body_armour"
+  },
+  {
+    "name": "Shrouded Mail",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion body_armour"
+  },
+  {
+    "name": "Shrouded Mail",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion body_armour"
+  },
+  {
+    "name": "Shrouded Mail",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion body_armour"
+  },
+  {
+    "name": "Death Mail",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion body_armour"
+  },
+  {
+    "name": "Thane Mail",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion body_armour"
+  },
+  {
+    "name": "Pilgrim Vestments",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield body_armour"
+  },
+  {
+    "name": "Pelt Mantle",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield body_armour"
+  },
+  {
+    "name": "Mail Vestments",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield body_armour"
+  },
+  {
+    "name": "Shaman Mantle",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield body_armour"
+  },
+  {
+    "name": "Ironclad Vestments",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield body_armour"
+  },
+  {
+    "name": "Sacrificial Mantle",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield body_armour"
+  },
+  {
+    "name": "Cleric Vestments",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield body_armour"
+  },
+  {
+    "name": "Tideseer Mantle",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield body_armour"
+  },
+  {
+    "name": "Gilded Vestments",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield body_armour"
+  },
+  {
+    "name": "Venerated Mantle",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield body_armour"
+  },
+  {
+    "name": "Revered Vestments",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield body_armour"
+  },
+  {
+    "name": "Corvus Mantle",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield body_armour"
+  },
+  {
+    "name": "Zenith Vestments",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield body_armour"
+  },
+  {
+    "name": "Templar Vestments",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield body_armour"
+  },
+  {
+    "name": "Bearskin Mantle",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield body_armour"
+  },
+  {
+    "name": "Chain Vestments",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield body_armour"
+  },
+  {
+    "name": "Occultist Mantle",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield body_armour"
+  },
+  {
+    "name": "Plated Vestments",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield body_armour"
+  },
+  {
+    "name": "Heartcarver Mantle",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield body_armour"
+  },
+  {
+    "name": "Wolfskin Mantle",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield body_armour"
+  },
+  {
+    "name": "Conjurer Mantle",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield body_armour"
+  },
+  {
+    "name": "Death Mantle",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield body_armour"
+  },
+  {
+    "name": "Seastorm Mantle",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield body_armour"
+  },
+  {
+    "name": "Hermit Garb",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield body_armour"
+  },
+  {
+    "name": "Waxed Jacket",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield body_armour"
+  },
+  {
+    "name": "Marabout Garb",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield body_armour"
+  },
+  {
+    "name": "Wayfarer Jacket",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield body_armour"
+  },
+  {
+    "name": "Anchorite Garb",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield body_armour"
+  },
+  {
+    "name": "Scalper's Jacket",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield body_armour"
+  },
+  {
+    "name": "Scoundrel Jacket",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield body_armour"
+  },
+  {
+    "name": "Ascetic Garb",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield body_armour"
+  },
+  {
+    "name": "Clandestine Jacket",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield body_armour"
+  },
+  {
+    "name": "Monastic Garb",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield body_armour"
+  },
+  {
+    "name": "Torment Jacket",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield body_armour"
+  },
+  {
+    "name": "Devout Garb",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield body_armour"
+  },
+  {
+    "name": "Assassin Garb",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield body_armour"
+  },
+  {
+    "name": "Ascetic Garb",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield body_armour"
+  },
+  {
+    "name": "Oiled Jacket",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield body_armour"
+  },
+  {
+    "name": "Evangelist Garb",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield body_armour"
+  },
+  {
+    "name": "Itinerant Jacket",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield body_armour"
+  },
+  {
+    "name": "Hatungo Garb",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield body_armour"
+  },
+  {
+    "name": "Hawker's Jacket",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield body_armour"
+  },
+  {
+    "name": "Sleek Jacket",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield body_armour"
+  },
+  {
+    "name": "Rambler Jacket",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield body_armour"
+  },
+  {
+    "name": "Falconer's Jacket",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield body_armour"
+  },
+  {
+    "name": "Austere Garb",
+    "category": "dex_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield body_armour"
+  },
+  {
+    "name": "Grand Regalia",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion/Energy Shield body_armour"
+  },
+  {
+    "name": "Garment",
+    "category": "str_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion/Energy Shield body_armour"
+  },
+  {
+    "name": "Rusted Greathelm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour helmet"
+  },
+  {
+    "name": "Soldier Greathelm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour helmet"
+  },
+  {
+    "name": "Wrapped Greathelm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour helmet"
+  },
+  {
+    "name": "Spired Greathelm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour helmet"
+  },
+  {
+    "name": "Elite Greathelm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour helmet"
+  },
+  {
+    "name": "Warrior Greathelm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour helmet"
+  },
+  {
+    "name": "Commander Greathelm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour helmet"
+  },
+  {
+    "name": "Fierce Greathelm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour helmet"
+  },
+  {
+    "name": "Sentinel Greathelm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour helmet"
+  },
+  {
+    "name": "Goliath Greathelm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour helmet"
+  },
+  {
+    "name": "Guardian Greathelm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour helmet"
+  },
+  {
+    "name": "Corroded Greathelm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour helmet"
+  },
+  {
+    "name": "Mercenary Greathelm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour helmet"
+  },
+  {
+    "name": "Homeguard Greathelm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour helmet"
+  },
+  {
+    "name": "Elegant Greathelm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour helmet"
+  },
+  {
+    "name": "Noble Greathelm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour helmet"
+  },
+  {
+    "name": "Warmonger Greathelm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour helmet"
+  },
+  {
+    "name": "Masked Greathelm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour helmet"
+  },
+  {
+    "name": "Paragon Greathelm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour helmet"
+  },
+  {
+    "name": "Imperial Greathelm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour helmet"
+  },
+  {
+    "name": "Shabby Hood",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion helmet"
+  },
+  {
+    "name": "Felt Cap",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion helmet"
+  },
+  {
+    "name": "Lace Hood",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion helmet"
+  },
+  {
+    "name": "Swathed Cap",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion helmet"
+  },
+  {
+    "name": "Hunter Hood",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion helmet"
+  },
+  {
+    "name": "Viper Cap",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion helmet"
+  },
+  {
+    "name": "Corsair Cap",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion helmet"
+  },
+  {
+    "name": "Leatherbound Hood",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion helmet"
+  },
+  {
+    "name": "Velvet Cap",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion helmet"
+  },
+  {
+    "name": "Covert Hood",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion helmet"
+  },
+  {
+    "name": "Armoured Cap",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion helmet"
+  },
+  {
+    "name": "Rotted Hood",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion helmet"
+  },
+  {
+    "name": "Wool Cap",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion helmet"
+  },
+  {
+    "name": "Narrow Hood",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion helmet"
+  },
+  {
+    "name": "Wrapped Cap",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion helmet"
+  },
+  {
+    "name": "Deerstalker Hood",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion helmet"
+  },
+  {
+    "name": "Woven Cap",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion helmet"
+  },
+  {
+    "name": "Desert Cap",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion helmet"
+  },
+  {
+    "name": "Trapper Hood",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion helmet"
+  },
+  {
+    "name": "Freebooter Cap",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion helmet"
+  },
+  {
+    "name": "Twig Circlet",
+    "category": "int_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield helmet"
+  },
+  {
+    "name": "Wicker Tiara",
+    "category": "int_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield helmet"
+  },
+  {
+    "name": "Beaded Circlet",
+    "category": "int_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield helmet"
+  },
+  {
+    "name": "Chain Tiara",
+    "category": "int_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield helmet"
+  },
+  {
+    "name": "Feathered Tiara",
+    "category": "int_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield helmet"
+  },
+  {
+    "name": "Gold Circlet",
+    "category": "int_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield helmet"
+  },
+  {
+    "name": "Vermeil Circlet",
+    "category": "int_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield helmet"
+  },
+  {
+    "name": "Jade Tiara",
+    "category": "int_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield helmet"
+  },
+  {
+    "name": "Noble Circlet",
+    "category": "int_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield helmet"
+  },
+  {
+    "name": "Twilight Tiara",
+    "category": "int_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield helmet"
+  },
+  {
+    "name": "Magus Tiara",
+    "category": "int_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield helmet"
+  },
+  {
+    "name": "Druidic Circlet",
+    "category": "int_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield helmet"
+  },
+  {
+    "name": "Avian Tiara",
+    "category": "int_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield helmet"
+  },
+  {
+    "name": "Desert Circlet",
+    "category": "int_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield helmet"
+  },
+  {
+    "name": "Sandsworn Tiara",
+    "category": "int_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield helmet"
+  },
+  {
+    "name": "Jungle Tiara",
+    "category": "int_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield helmet"
+  },
+  {
+    "name": "Skycrown Tiara",
+    "category": "int_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield helmet"
+  },
+  {
+    "name": "Sorcerous Tiara",
+    "category": "int_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield helmet"
+  },
+  {
+    "name": "Kamasan Tiara",
+    "category": "int_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield helmet"
+  },
+  {
+    "name": "Ancestral Tiara",
+    "category": "int_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield helmet"
+  },
+  {
+    "name": "Brimmed Helm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion helmet"
+  },
+  {
+    "name": "Guarded Helm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion helmet"
+  },
+  {
+    "name": "Visored Helm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion helmet"
+  },
+  {
+    "name": "Cowled Helm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion helmet"
+  },
+  {
+    "name": "Shielded Helm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion helmet"
+  },
+  {
+    "name": "Closed Helm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion helmet"
+  },
+  {
+    "name": "Decorated Helm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion helmet"
+  },
+  {
+    "name": "Gallant Helm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion helmet"
+  },
+  {
+    "name": "Domed Helm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion helmet"
+  },
+  {
+    "name": "Engraved Helm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion helmet"
+  },
+  {
+    "name": "Soldier Helm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion helmet"
+  },
+  {
+    "name": "Cabalist Helm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion helmet"
+  },
+  {
+    "name": "Gladiatoral Helm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion helmet"
+  },
+  {
+    "name": "Warded Helm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion helmet"
+  },
+  {
+    "name": "Cryptic Helm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion helmet"
+  },
+  {
+    "name": "Champion Helm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion helmet"
+  },
+  {
+    "name": "Gladiatorial Helm",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion helmet"
+  },
+  {
+    "name": "Iron Crown",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield helmet"
+  },
+  {
+    "name": "Horned Crown",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield helmet"
+  },
+  {
+    "name": "Cultist Crown",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield helmet"
+  },
+  {
+    "name": "Martyr Crown",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield helmet"
+  },
+  {
+    "name": "Heavy Crown",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield helmet"
+  },
+  {
+    "name": "Spiritbone Crown",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield helmet"
+  },
+  {
+    "name": "Lavish Crown",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield helmet"
+  },
+  {
+    "name": "Archon Crown",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield helmet"
+  },
+  {
+    "name": "Mailed Crown",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield helmet"
+  },
+  {
+    "name": "Forest Crown",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield helmet"
+  },
+  {
+    "name": "Zealot Crown",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield helmet"
+  },
+  {
+    "name": "Hallowed Crown",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield helmet"
+  },
+  {
+    "name": "Inquisitor Crown",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield helmet"
+  },
+  {
+    "name": "Druidic Crown",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield helmet"
+  },
+  {
+    "name": "Saintly Crown",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield helmet"
+  },
+  {
+    "name": "Divine Crown",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield helmet"
+  },
+  {
+    "name": "Cryptic Crown",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield helmet"
+  },
+  {
+    "name": "Hewn Mask",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield helmet"
+  },
+  {
+    "name": "Face Mask",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield helmet"
+  },
+  {
+    "name": "Hooded Mask",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield helmet"
+  },
+  {
+    "name": "Veiled Mask",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield helmet"
+  },
+  {
+    "name": "Tribal Mask",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield helmet"
+  },
+  {
+    "name": "Solid Mask",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield helmet"
+  },
+  {
+    "name": "Shaded Mask",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield helmet"
+  },
+  {
+    "name": "Death Mask",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield helmet"
+  },
+  {
+    "name": "Oak Mask",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield helmet"
+  },
+  {
+    "name": "Bandit Mask",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield helmet"
+  },
+  {
+    "name": "Skulking Mask",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield helmet"
+  },
+  {
+    "name": "Pariah Mask",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield helmet"
+  },
+  {
+    "name": "Avian Mask",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield helmet"
+  },
+  {
+    "name": "Brigand Mask",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield helmet"
+  },
+  {
+    "name": "Faridun Mask",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield helmet"
+  },
+  {
+    "name": "Soaring Mask",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield helmet"
+  },
+  {
+    "name": "Grinning Mask",
+    "category": "dex_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield helmet"
+  },
+  {
+    "name": "Grand Visage",
+    "category": "str_armour",
+    "slot": "helmet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion/Energy Shield helmet"
+  },
+  {
+    "name": "Stocky Mitts",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour gloves"
+  },
+  {
+    "name": "Riveted Mitts",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour gloves"
+  },
+  {
+    "name": "Tempered Mitts",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour gloves"
+  },
+  {
+    "name": "Bolstered Mitts",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour gloves"
+  },
+  {
+    "name": "Moulded Mitts",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour gloves"
+  },
+  {
+    "name": "Detailed Mitts",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour gloves"
+  },
+  {
+    "name": "Titan Mitts",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour gloves"
+  },
+  {
+    "name": "Grand Mitts",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour gloves"
+  },
+  {
+    "name": "Plated Mitts",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour gloves"
+  },
+  {
+    "name": "Elegant Mitts",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour gloves"
+  },
+  {
+    "name": "Ancient Mitts",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour gloves"
+  },
+  {
+    "name": "Feathered Mitts",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour gloves"
+  },
+  {
+    "name": "Knightly Mitts",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour gloves"
+  },
+  {
+    "name": "Ornate Mitts",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour gloves"
+  },
+  {
+    "name": "Vaal Mitts",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour gloves"
+  },
+  {
+    "name": "Massive Mitts",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour gloves"
+  },
+  {
+    "name": "Suede Bracers",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion gloves"
+  },
+  {
+    "name": "Firm Bracers",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion gloves"
+  },
+  {
+    "name": "Bound Bracers",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion gloves"
+  },
+  {
+    "name": "Sectioned Bracers",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion gloves"
+  },
+  {
+    "name": "Spined Bracers",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion gloves"
+  },
+  {
+    "name": "Fine Bracers",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion gloves"
+  },
+  {
+    "name": "Hardened Bracers",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion gloves"
+  },
+  {
+    "name": "Engraved Bracers",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion gloves"
+  },
+  {
+    "name": "Hunting Bracers",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion gloves"
+  },
+  {
+    "name": "Swift Bracers",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion gloves"
+  },
+  {
+    "name": "Refined Bracers",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion gloves"
+  },
+  {
+    "name": "Spiked Bracers",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion gloves"
+  },
+  {
+    "name": "Stalking Bracers",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion gloves"
+  },
+  {
+    "name": "Grand Bracers",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion gloves"
+  },
+  {
+    "name": "Barbed Bracers",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion gloves"
+  },
+  {
+    "name": "Polished Bracers",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion gloves"
+  },
+  {
+    "name": "Torn Gloves",
+    "category": "int_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield gloves"
+  },
+  {
+    "name": "Sombre Gloves",
+    "category": "int_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield gloves"
+  },
+  {
+    "name": "Stitched Gloves",
+    "category": "int_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield gloves"
+  },
+  {
+    "name": "Jewelled Gloves",
+    "category": "int_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield gloves"
+  },
+  {
+    "name": "Intricate Gloves",
+    "category": "int_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield gloves"
+  },
+  {
+    "name": "Pauascale Gloves",
+    "category": "int_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield gloves"
+  },
+  {
+    "name": "Embroidered Gloves",
+    "category": "int_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield gloves"
+  },
+  {
+    "name": "Adorned Gloves",
+    "category": "int_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield gloves"
+  },
+  {
+    "name": "Ominous Gloves",
+    "category": "int_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield gloves"
+  },
+  {
+    "name": "Embellished Gloves",
+    "category": "int_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield gloves"
+  },
+  {
+    "name": "Baroque Gloves",
+    "category": "int_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield gloves"
+  },
+  {
+    "name": "Gold Gloves",
+    "category": "int_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield gloves"
+  },
+  {
+    "name": "Grim Gloves",
+    "category": "int_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield gloves"
+  },
+  {
+    "name": "Opulent Gloves",
+    "category": "int_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield gloves"
+  },
+  {
+    "name": "Vaal Gloves",
+    "category": "int_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield gloves"
+  },
+  {
+    "name": "Sirenscale Gloves",
+    "category": "int_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield gloves"
+  },
+  {
+    "name": "Ringmail Gauntlets",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion gloves"
+  },
+  {
+    "name": "Layered Gauntlets",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion gloves"
+  },
+  {
+    "name": "Doubled Gauntlets",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion gloves"
+  },
+  {
+    "name": "Plate Gauntlets",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion gloves"
+  },
+  {
+    "name": "Burnished Gauntlets",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion gloves"
+  },
+  {
+    "name": "Ornate Gauntlets",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion gloves"
+  },
+  {
+    "name": "Ironmail Gauntlets",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion gloves"
+  },
+  {
+    "name": "Captain Gauntlets",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion gloves"
+  },
+  {
+    "name": "Zealot Gauntlets",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion gloves"
+  },
+  {
+    "name": "Steelmail Gauntlets",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion gloves"
+  },
+  {
+    "name": "Commander Gauntlets",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion gloves"
+  },
+  {
+    "name": "Cultist Gauntlets",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion gloves"
+  },
+  {
+    "name": "Blacksteel Gauntlets",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion gloves"
+  },
+  {
+    "name": "Rope Cuffs",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield gloves"
+  },
+  {
+    "name": "Aged Cuffs",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield gloves"
+  },
+  {
+    "name": "Goldcast Cuffs",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield gloves"
+  },
+  {
+    "name": "Verisium Cuffs",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield gloves"
+  },
+  {
+    "name": "Righteous Cuffs",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield gloves"
+  },
+  {
+    "name": "Signet Cuffs",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield gloves"
+  },
+  {
+    "name": "Braided Cuffs",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield gloves"
+  },
+  {
+    "name": "Heirloom Cuffs",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield gloves"
+  },
+  {
+    "name": "Ornate Cuffs",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield gloves"
+  },
+  {
+    "name": "Bound Cuffs",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield gloves"
+  },
+  {
+    "name": "Ancient Cuffs",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield gloves"
+  },
+  {
+    "name": "Gleaming Cuffs",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield gloves"
+  },
+  {
+    "name": "Adherent Cuffs",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield gloves"
+  },
+  {
+    "name": "Gauze Wraps",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield gloves"
+  },
+  {
+    "name": "Linen Wraps",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield gloves"
+  },
+  {
+    "name": "Spiral Wraps",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield gloves"
+  },
+  {
+    "name": "Buckled Wraps",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield gloves"
+  },
+  {
+    "name": "Furtive Wraps",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield gloves"
+  },
+  {
+    "name": "Utility Wraps",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield gloves"
+  },
+  {
+    "name": "Bandage Wraps",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield gloves"
+  },
+  {
+    "name": "Cambric Wraps",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield gloves"
+  },
+  {
+    "name": "Adorned Wraps",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield gloves"
+  },
+  {
+    "name": "War Wraps",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield gloves"
+  },
+  {
+    "name": "Elegant Wraps",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield gloves"
+  },
+  {
+    "name": "Vaal Wraps",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield gloves"
+  },
+  {
+    "name": "Secured Wraps",
+    "category": "dex_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield gloves"
+  },
+  {
+    "name": "Grand Manchettes",
+    "category": "str_armour",
+    "slot": "gloves",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion/Energy Shield gloves"
+  },
+  {
+    "name": "Rough Greaves",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour boots"
+  },
+  {
+    "name": "Iron Greaves",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour boots"
+  },
+  {
+    "name": "Bronze Greaves",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour boots"
+  },
+  {
+    "name": "Trimmed Greaves",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour boots"
+  },
+  {
+    "name": "Stone Greaves",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour boots"
+  },
+  {
+    "name": "Reefsteel Greaves",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour boots"
+  },
+  {
+    "name": "Monument Greaves",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour boots"
+  },
+  {
+    "name": "Totemic Greaves",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour boots"
+  },
+  {
+    "name": "Plated Greaves",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour boots"
+  },
+  {
+    "name": "Lionheart Greaves",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour boots"
+  },
+  {
+    "name": "Elegant Greaves",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour boots"
+  },
+  {
+    "name": "Carved Greaves",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour boots"
+  },
+  {
+    "name": "Bulwark Greaves",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour boots"
+  },
+  {
+    "name": "Ornate Greaves",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour boots"
+  },
+  {
+    "name": "Vaal Greaves",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour boots"
+  },
+  {
+    "name": "Tasalian Greaves",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour boots"
+  },
+  {
+    "name": "Rawhide Boots",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion boots"
+  },
+  {
+    "name": "Laced Boots",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion boots"
+  },
+  {
+    "name": "Embossed Boots",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion boots"
+  },
+  {
+    "name": "Steeltoe Boots",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion boots"
+  },
+  {
+    "name": "Lizardscale Boots",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion boots"
+  },
+  {
+    "name": "Flared Boots",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion boots"
+  },
+  {
+    "name": "Leatherplate Boots",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion boots"
+  },
+  {
+    "name": "Embroidered Boots",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion boots"
+  },
+  {
+    "name": "Bound Boots",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion boots"
+  },
+  {
+    "name": "Sleek Boots",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion boots"
+  },
+  {
+    "name": "Studded Boots",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion boots"
+  },
+  {
+    "name": "Serpentscale Boots",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion boots"
+  },
+  {
+    "name": "Cinched Boots",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion boots"
+  },
+  {
+    "name": "Cavalry Boots",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion boots"
+  },
+  {
+    "name": "Dragonscale Boots",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion boots"
+  },
+  {
+    "name": "Drakeskin Boots",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion boots"
+  },
+  {
+    "name": "Straw Sandals",
+    "category": "int_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield boots"
+  },
+  {
+    "name": "Wrapped Sandals",
+    "category": "int_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield boots"
+  },
+  {
+    "name": "Lattice Sandals",
+    "category": "int_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield boots"
+  },
+  {
+    "name": "Silk Slippers",
+    "category": "int_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield boots"
+  },
+  {
+    "name": "Feathered Sandals",
+    "category": "int_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield boots"
+  },
+  {
+    "name": "Flax Sandals",
+    "category": "int_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield boots"
+  },
+  {
+    "name": "Studded Sandals",
+    "category": "int_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield boots"
+  },
+  {
+    "name": "Elaborate Sandals",
+    "category": "int_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield boots"
+  },
+  {
+    "name": "Laced Sandals",
+    "category": "int_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield boots"
+  },
+  {
+    "name": "Bangled Sandals",
+    "category": "int_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield boots"
+  },
+  {
+    "name": "Elegant Slippers",
+    "category": "int_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield boots"
+  },
+  {
+    "name": "Dunerunner Sandals",
+    "category": "int_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield boots"
+  },
+  {
+    "name": "Bound Sandals",
+    "category": "int_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield boots"
+  },
+  {
+    "name": "Luxurious Slippers",
+    "category": "int_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield boots"
+  },
+  {
+    "name": "Sandsworn Sandals",
+    "category": "int_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield boots"
+  },
+  {
+    "name": "Sekhema Sandals",
+    "category": "int_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Energy Shield boots"
+  },
+  {
+    "name": "Mail Sabatons",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion boots"
+  },
+  {
+    "name": "Braced Sabatons",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion boots"
+  },
+  {
+    "name": "Stacked Sabatons",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion boots"
+  },
+  {
+    "name": "Covered Sabatons",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion boots"
+  },
+  {
+    "name": "Flexile Sabatons",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion boots"
+  },
+  {
+    "name": "Bold Sabatons",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion boots"
+  },
+  {
+    "name": "Soldiering Sabatons",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion boots"
+  },
+  {
+    "name": "Goldwork Sabatons",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion boots"
+  },
+  {
+    "name": "Bastion Sabatons",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion boots"
+  },
+  {
+    "name": "Veteran Sabatons",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion boots"
+  },
+  {
+    "name": "Noble Sabatons",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion boots"
+  },
+  {
+    "name": "Fortress Sabatons",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion boots"
+  },
+  {
+    "name": "Blacksteel Sabatons",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion boots"
+  },
+  {
+    "name": "Padded Leggings",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield boots"
+  },
+  {
+    "name": "Secured Leggings",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield boots"
+  },
+  {
+    "name": "Pelt Leggings",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield boots"
+  },
+  {
+    "name": "Weaver Leggings",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield boots"
+  },
+  {
+    "name": "Gilt Leggings",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield boots"
+  },
+  {
+    "name": "Pious Leggings",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield boots"
+  },
+  {
+    "name": "Adherent Leggings",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield boots"
+  },
+  {
+    "name": "Bound Leggings",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield boots"
+  },
+  {
+    "name": "Shamanistic Leggings",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield boots"
+  },
+  {
+    "name": "Faithful Leggings",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield boots"
+  },
+  {
+    "name": "Apostle Leggings",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield boots"
+  },
+  {
+    "name": "Warlock Leggings",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield boots"
+  },
+  {
+    "name": "Cryptic Leggings",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Energy Shield boots"
+  },
+  {
+    "name": "Frayed Shoes",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield boots"
+  },
+  {
+    "name": "Threaded Shoes",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield boots"
+  },
+  {
+    "name": "Hunting Shoes",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield boots"
+  },
+  {
+    "name": "Steelpoint Shoes",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield boots"
+  },
+  {
+    "name": "Velour Shoes",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield boots"
+  },
+  {
+    "name": "Bladed Shoes",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield boots"
+  },
+  {
+    "name": "Wayfarer Shoes",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield boots"
+  },
+  {
+    "name": "Silverbuckled Shoes",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield boots"
+  },
+  {
+    "name": "Treerunner Shoes",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield boots"
+  },
+  {
+    "name": "Wanderer Shoes",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield boots"
+  },
+  {
+    "name": "Charmed Shoes",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield boots"
+  },
+  {
+    "name": "Quickslip Shoes",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield boots"
+  },
+  {
+    "name": "Daggerfoot Shoes",
+    "category": "dex_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Evasion/Energy Shield boots"
+  },
+  {
+    "name": "Grand Cuisses",
+    "category": "str_armour",
+    "slot": "boots",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Armour/Evasion/Energy Shield boots"
+  }
+]

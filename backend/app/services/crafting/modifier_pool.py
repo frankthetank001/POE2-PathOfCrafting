@@ -61,21 +61,7 @@ class ModifierPool:
             if exclude_exclusive and self._is_unique_only_mod_group(mod.mod_group, item_category):
                 continue
 
-            # Check if mod applies to this item category
-            # For specific item types, also accept generic categories
-            generic_categories = []
-            if item_category in ["int_armour", "str_armour", "dex_armour", "str_dex_armour", "str_int_armour", "dex_int_armour", "str_dex_int_armour"]:
-                generic_categories = ["armour", "body_armour"]
-            elif item_category == "weapon":
-                # For weapons, we already collapsed all specific types to "weapon"
-                # but PathOfBuilding might have mods that specify individual weapon types
-                # This is handled by our scraper mapping, so no additional generics needed
-                pass
-            # Add more generic mappings as discovered
-
-            applicable_categories = [item_category] + generic_categories
-
-            if not any(cat in mod.applicable_items for cat in applicable_categories):
+            if not self._is_mod_applicable_to_category(mod, item_category):
                 continue
 
             eligible.append(mod)
@@ -143,6 +129,12 @@ class ModifierPool:
                 return mod
         return None
 
+    def find_mod_by_name_and_tier(self, name: str, tier: int) -> Optional[ItemModifier]:
+        for mod in self.modifiers:
+            if mod.name.lower() == name.lower() and mod.tier == tier:
+                return mod
+        return None
+
     def get_eligible_mods(
         self,
         item_category: str,
@@ -161,3 +153,64 @@ class ModifierPool:
         return self._filter_eligible_mods(
             pool, item_category, item_level, excluded_groups, None, exclude_exclusive
         )
+
+    def get_all_mods_for_category(
+        self,
+        item_category: str,
+        mod_type: str,
+        item=None,
+        exclude_exclusive: bool = True,
+    ) -> List[ItemModifier]:
+        """Get ALL mods for a category, regardless of item level (for display purposes)"""
+        pool = self._prefix_pool if mod_type == "prefix" else self._suffix_pool
+
+        excluded_groups = []
+        if item:
+            all_mods = item.prefix_mods + item.suffix_mods
+            excluded_groups = [mod.mod_group for mod in all_mods if mod.mod_group]
+
+        eligible = []
+        for mod in pool:
+            if mod.mod_group and mod.mod_group in excluded_groups:
+                continue
+
+            if not mod.applicable_items:
+                continue
+
+            if exclude_exclusive and mod.is_exclusive:
+                continue
+
+            if exclude_exclusive and self._is_unique_only_mod_group(mod.mod_group, item_category):
+                continue
+
+            # Check if mod applies to this item category
+            # For defence mods, be more specific based on mod group
+            if not self._is_mod_applicable_to_category(mod, item_category):
+                continue
+
+            eligible.append(mod)
+
+        return eligible
+
+    def _is_mod_applicable_to_category(self, mod: ItemModifier, item_category: str) -> bool:
+        """Check if a mod is applicable to an item category"""
+        if item_category in mod.applicable_items:
+            return True
+
+        # PathOfBuilding uses generic categories for universal mods
+        if item_category in ["int_armour", "str_armour", "dex_armour", "str_dex_armour", "str_int_armour", "dex_int_armour", "str_dex_int_armour"]:
+            # "armour" is for universal mods (resistances, life, etc)
+            if "armour" in mod.applicable_items:
+                return True
+
+            # "body_armour" is used for some universal mods, but exclude defence percentage mods
+            # that only have ["body_armour", "shield"] (these shouldn't roll on specific bases)
+            if "body_armour" in mod.applicable_items:
+                # Exclude defence % mods that only have generic categories
+                if (mod.applicable_items == ["body_armour", "shield"] and
+                    "% increased" in mod.stat_text and
+                    any(defence in mod.stat_text for defence in ["Armour", "Evasion", "Energy Shield"])):
+                    return False
+                return True
+
+        return False

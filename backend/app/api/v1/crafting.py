@@ -9,9 +9,12 @@ from app.schemas.crafting import (
     CraftingSimulationResult,
     ItemModifier,
 )
+from app.schemas.item import ItemParseRequest
 from app.schemas.item_bases import ITEM_BASES, get_item_bases_by_slot, get_available_slots, get_slot_category_combinations, get_default_base_for_category
 from app.services.crafting.currencies import CurrencyFactory
 from app.services.crafting.simulator import CraftingSimulator
+from app.services.item_parser import ItemParser
+from app.services.item_converter import ItemConverter
 
 logger = get_logger(__name__)
 
@@ -120,16 +123,15 @@ async def create_base_item(slot: str, category: str, item_level: int = 65):
 @router.post("/available-mods")
 async def get_available_mods(item: CraftableItem) -> dict:
     try:
-        available_prefixes = simulator.modifier_pool.get_eligible_mods(
+        # Return ALL mods for the item category (frontend will handle ilvl filtering visually)
+        available_prefixes = simulator.modifier_pool.get_all_mods_for_category(
             item.base_category,
-            item.item_level,
             "prefix",
             item
         )
 
-        available_suffixes = simulator.modifier_pool.get_eligible_mods(
+        available_suffixes = simulator.modifier_pool.get_all_mods_for_category(
             item.base_category,
-            item.item_level,
             "suffix",
             item
         )
@@ -143,4 +145,36 @@ async def get_available_mods(item: CraftableItem) -> dict:
 
     except Exception as e:
         logger.error(f"Error fetching available mods: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/parse-item")
+async def parse_item(request: ItemParseRequest) -> dict:
+    """Parse item text from clipboard and convert to CraftableItem"""
+    try:
+        # Parse the item text
+        parsed_item = ItemParser.parse(request.item_text)
+
+        # Convert to CraftableItem
+        converter = ItemConverter(simulator.modifier_pool)
+        craftable_item = converter.convert_to_craftable(parsed_item)
+
+        if not craftable_item:
+            raise HTTPException(status_code=400, detail="Could not convert item")
+
+        return {
+            "success": True,
+            "item": craftable_item.model_dump(),
+            "parsed_info": {
+                "base_type": parsed_item.base_type,
+                "rarity": parsed_item.rarity,
+                "item_level": parsed_item.item_level,
+            }
+        }
+
+    except ValueError as e:
+        logger.error(f"Error parsing item: {e}")
+        raise HTTPException(status_code=400, detail=str(e))
+    except Exception as e:
+        logger.error(f"Error parsing item: {e}")
         raise HTTPException(status_code=500, detail=str(e))

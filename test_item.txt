@@ -1,0 +1,19 @@
+Item Class: Helmets
+Rarity: Rare
+Hate Shelter
+Trapper Hood
+--------
+Evasion Rating: 266
+--------
+Requires: Level 75, 107 (unmet) Dex
+--------
+Item Level: 80
+--------
+{ Prefix Modifier "Rotund" (Tier: 4) — Life }
++96(85-99) to maximum Life
+{ Suffix Modifier "of Plunder" (Tier: 5) }
+8(6-10)% increased Rarity of Items found
+{ Suffix Modifier "of the Newt" (Tier: 8) — Life }
+1.5(1-2) Life Regeneration per second
+{ Suffix Modifier "of the Thunderhead" (Tier: 5) — Elemental, Lightning, Resistance }
++25(21-25)% to Lightning Resistance

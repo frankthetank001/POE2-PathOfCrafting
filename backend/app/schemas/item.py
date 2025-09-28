@@ -19,6 +19,10 @@ class ItemSocket(BaseModel):
 class ItemMod(BaseModel):
     text: str
     values: List[str] = Field(default_factory=list)
+    mod_name: Optional[str] = None
+    tier: Optional[int] = None
+    mod_type: Optional[str] = None
+    tags: List[str] = Field(default_factory=list)
 
 
 class ParsedItem(BaseModel):

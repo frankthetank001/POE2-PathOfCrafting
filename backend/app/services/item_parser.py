@@ -55,13 +55,25 @@ class ItemParser:
             if "Corrupted" in section:
                 corrupted = True
 
-            if i > 1 and not implicit_found:
-                if ItemParser._looks_like_mods(lines):
-                    implicits = ItemParser._parse_mods(section)
-                    implicit_found = True
+            if i > 1 and ItemParser._looks_like_mods(lines):
+                if not implicit_found:
+                    # Check if this section contains detailed mod format (explicit mods)
+                    # If so, treat as explicits. Otherwise, treat as implicits.
+                    has_detailed_format = any(
+                        re.search(r'\{\s*(?:Prefix|Suffix)\s+Modifier', line)
+                        for line in lines
+                    )
 
-            elif implicit_found and ItemParser._looks_like_mods(lines):
-                explicits = ItemParser._parse_mods(section)
+                    if has_detailed_format:
+                        # Detailed format = explicit mods
+                        explicits = ItemParser._parse_mods(section)
+                    else:
+                        # No detailed format = likely implicits
+                        implicits = ItemParser._parse_mods(section)
+                        implicit_found = True
+                else:
+                    # Already found implicits, this must be explicits
+                    explicits = ItemParser._parse_mods(section)
 
         return ParsedItem(
             rarity=rarity,
@@ -167,8 +179,13 @@ class ItemParser:
     @staticmethod
     def _looks_like_mods(lines: List[str]) -> bool:
         mod_indicators = ["+", "increased", "reduced", "to", "%", "Adds"]
+
+        # Check for detailed format: { Prefix/Suffix Modifier "Name" (Tier: X) }
+        detailed_format_pattern = r'\{\s*(?:Prefix|Suffix)\s+Modifier\s+"[^"]+"\s+\(Tier:\s*\d+\)'
+
         return any(
-            any(indicator in line for indicator in mod_indicators) for line in lines
+            any(indicator in line for indicator in mod_indicators) or
+            re.search(detailed_format_pattern, line) for line in lines
         )
 
     @staticmethod
@@ -176,9 +193,45 @@ class ItemParser:
         lines = [line.strip() for line in section.split("\n") if line.strip()]
         mods = []
 
-        for line in lines:
-            if line and not line.startswith("Requirements:"):
+        i = 0
+        while i < len(lines):
+            line = lines[i]
+
+            if not line or line.startswith("Requirements:"):
+                i += 1
+                continue
+
+            # Check if this line has detailed mod info format: { Prefix/Suffix Modifier "Name" (Tier: X) — Tags }
+            detailed_match = re.match(
+                r'\{\s*(Prefix|Suffix)\s+Modifier\s+"([^"]+)"\s+\(Tier:\s*(\d+)\)\s*(?:—\s*(.+))?\s*\}',
+                line
+            )
+
+            if detailed_match:
+                mod_type = detailed_match.group(1).lower()
+                mod_name = detailed_match.group(2)
+                tier = int(detailed_match.group(3))
+                tags_str = detailed_match.group(4) or ""
+                tags = [tag.strip() for tag in tags_str.split(",") if tag.strip()]
+
+                # Next line should be the actual stat text
+                i += 1
+                if i < len(lines):
+                    stat_line = lines[i]
+                    values = re.findall(r"\d+(?:\.\d+)?", stat_line)
+                    mods.append(ItemMod(
+                        text=stat_line,
+                        values=values,
+                        mod_name=mod_name,
+                        tier=tier,
+                        mod_type=mod_type,
+                        tags=tags
+                    ))
+            else:
+                # Simple format without detailed info
                 values = re.findall(r"\d+(?:\.\d+)?", line)
                 mods.append(ItemMod(text=line, values=values))
+
+            i += 1
 
         return mods
