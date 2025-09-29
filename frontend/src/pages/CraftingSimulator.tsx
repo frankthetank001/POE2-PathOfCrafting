@@ -1139,79 +1139,99 @@ function CraftingSimulator() {
                 })}
               </div>
             </div>
+            </div>
 
-            {/* Essence-Only Modifiers Column */}
+            {/* Essence-Only Modifiers Section */}
             {(availableMods.essence_prefixes.length > 0 || availableMods.essence_suffixes.length > 0) && (
-              <div className="mods-pool-column essence-column">
-                <h4 className="column-title">Essence-Only ({availableMods.essence_prefixes.length + availableMods.essence_suffixes.length} modifiers)</h4>
-                <div className="mods-pool-list">
-                  {/* Essence Prefixes */}
-                  {availableMods.essence_prefixes.map((mod, idx) => (
-                    <div key={`essence-prefix-${idx}`} className="pool-mod-group essence-only">
-                      <div className="pool-mod-group-header essence prefix">
-                        <div className="group-main-info">
-                          <span className="pool-mod-stat-main">{mod.stat_text}</span>
-                          <div className="group-summary">
-                            <span className="essence-only-badge">Perfect/Corrupted Only</span>
+              <div className="special-mods-section essence-section">
+                <h4 className="special-section-title">
+                  Essence-Only Modifiers ({availableMods.essence_prefixes.length + availableMods.essence_suffixes.length} total)
+                </h4>
+                <div className="special-mods-columns">
+                  <div className="special-mods-column">
+                    <h5 className="special-column-title">Essence Prefixes ({availableMods.essence_prefixes.length})</h5>
+                    <div className="mods-pool-list">
+                      {availableMods.essence_prefixes.map((mod, idx) => (
+                        <div key={`essence-prefix-${idx}`} className="pool-mod-group essence-only">
+                          <div className="pool-mod-group-header essence prefix">
+                            <div className="group-main-info">
+                              <span className="pool-mod-stat-main">{mod.stat_text}</span>
+                              <div className="group-summary">
+                                <span className="essence-only-badge">Perfect/Corrupted Only</span>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      ))}
                     </div>
-                  ))}
+                  </div>
 
-                  {/* Essence Suffixes */}
-                  {availableMods.essence_suffixes.map((mod, idx) => (
-                    <div key={`essence-suffix-${idx}`} className="pool-mod-group essence-only">
-                      <div className="pool-mod-group-header essence suffix">
-                        <div className="group-main-info">
-                          <span className="pool-mod-stat-main">{mod.stat_text}</span>
-                          <div className="group-summary">
-                            <span className="essence-only-badge">Perfect/Corrupted Only</span>
+                  <div className="special-mods-column">
+                    <h5 className="special-column-title">Essence Suffixes ({availableMods.essence_suffixes.length})</h5>
+                    <div className="mods-pool-list">
+                      {availableMods.essence_suffixes.map((mod, idx) => (
+                        <div key={`essence-suffix-${idx}`} className="pool-mod-group essence-only">
+                          <div className="pool-mod-group-header essence suffix">
+                            <div className="group-main-info">
+                              <span className="pool-mod-stat-main">{mod.stat_text}</span>
+                              <div className="group-summary">
+                                <span className="essence-only-badge">Perfect/Corrupted Only</span>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      ))}
                     </div>
-                  ))}
+                  </div>
                 </div>
               </div>
             )}
 
-            {/* Desecrated-Only Modifiers Column */}
+            {/* Desecrated-Only Modifiers Section */}
             {(availableMods.desecrated_prefixes.length > 0 || availableMods.desecrated_suffixes.length > 0) && (
-              <div className="mods-pool-column desecrated-column">
-                <h4 className="column-title">Desecrated-Only ({availableMods.desecrated_prefixes.length + availableMods.desecrated_suffixes.length} modifiers)</h4>
-                <div className="mods-pool-list">
-                  {/* Desecrated Prefixes */}
-                  {availableMods.desecrated_prefixes.map((mod, idx) => (
-                    <div key={`desecrated-prefix-${idx}`} className="pool-mod-group desecrated-only">
-                      <div className="pool-mod-group-header desecrated prefix">
-                        <div className="group-main-info">
-                          <span className="pool-mod-stat-main">{mod.stat_text}</span>
-                          <div className="group-summary">
-                            <span className="desecrated-only-badge">Abyssal Bones Only</span>
+              <div className="special-mods-section desecrated-section">
+                <h4 className="special-section-title">
+                  Desecrated-Only Modifiers ({availableMods.desecrated_prefixes.length + availableMods.desecrated_suffixes.length} total)
+                </h4>
+                <div className="special-mods-columns">
+                  <div className="special-mods-column">
+                    <h5 className="special-column-title">Desecrated Prefixes ({availableMods.desecrated_prefixes.length})</h5>
+                    <div className="mods-pool-list">
+                      {availableMods.desecrated_prefixes.map((mod, idx) => (
+                        <div key={`desecrated-prefix-${idx}`} className="pool-mod-group desecrated-only">
+                          <div className="pool-mod-group-header desecrated prefix">
+                            <div className="group-main-info">
+                              <span className="pool-mod-stat-main">{mod.stat_text}</span>
+                              <div className="group-summary">
+                                <span className="desecrated-only-badge">Abyssal Bones Only</span>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      ))}
                     </div>
-                  ))}
+                  </div>
 
-                  {/* Desecrated Suffixes */}
-                  {availableMods.desecrated_suffixes.map((mod, idx) => (
-                    <div key={`desecrated-suffix-${idx}`} className="pool-mod-group desecrated-only">
-                      <div className="pool-mod-group-header desecrated suffix">
-                        <div className="group-main-info">
-                          <span className="pool-mod-stat-main">{mod.stat_text}</span>
-                          <div className="group-summary">
-                            <span className="desecrated-only-badge">Abyssal Bones Only</span>
+                  <div className="special-mods-column">
+                    <h5 className="special-column-title">Desecrated Suffixes ({availableMods.desecrated_suffixes.length})</h5>
+                    <div className="mods-pool-list">
+                      {availableMods.desecrated_suffixes.map((mod, idx) => (
+                        <div key={`desecrated-suffix-${idx}`} className="pool-mod-group desecrated-only">
+                          <div className="pool-mod-group-header desecrated suffix">
+                            <div className="group-main-info">
+                              <span className="pool-mod-stat-main">{mod.stat_text}</span>
+                              <div className="group-summary">
+                                <span className="desecrated-only-badge">Abyssal Bones Only</span>
+                              </div>
+                            </div>
                           </div>
                         </div>
-                      </div>
+                      ))}
                     </div>
-                  ))}
+                  </div>
                 </div>
               </div>
             )}
-          </div>
             </>
           )}
         </div>
