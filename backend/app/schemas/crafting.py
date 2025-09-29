@@ -165,3 +165,76 @@ class CurrencyInfo(BaseModel):
     function: str
     rarity: str
     rules: Dict = Field(default_factory=dict)
+
+
+class EssenceItemEffect(BaseModel):
+    id: int
+    essence_id: int
+    item_type: str  # "Belt", "Body Armour", "Amulet", etc.
+    modifier_type: str  # prefix, suffix
+    effect_text: str  # "+(30-39) to maximum Life"
+    value_min: Optional[float] = None  # 30
+    value_max: Optional[float] = None  # 39
+
+
+class EssenceInfo(BaseModel):
+    id: int
+    name: str
+    essence_tier: str  # lesser, normal, greater, perfect, corrupted
+    essence_type: str  # body, mind, enhancement, etc.
+    mechanic: str  # magic_to_rare, remove_add_rare
+    stack_size: int = 10
+    item_effects: List[EssenceItemEffect] = Field(default_factory=list)
+
+
+class OmenRule(BaseModel):
+    id: int
+    omen_id: int
+    rule_type: str  # "force_prefix", "force_suffix", "add_two", etc.
+    rule_value: Optional[str] = None  # Additional rule parameters
+    priority: int = 0  # Rule application order
+
+
+class OmenInfo(BaseModel):
+    id: int
+    name: str
+    effect_description: str
+    affected_currency: str  # "Chaos Orb", "Exalted Orb", etc.
+    effect_type: str  # "sinistral", "dextral", "greater", etc.
+    stack_size: int = 10
+    rules: List[OmenRule] = Field(default_factory=list)
+
+
+class DesecrationBoneInfo(BaseModel):
+    id: int
+    name: str
+    bone_type: str  # "jawbone", "rib", "collarbone", etc.
+    quality: str  # "regular", "ancient"
+    mechanic: str  # "add_desecrated_mod"
+    stack_size: int = 20
+
+
+class PoolModifier(BaseModel):
+    id: int
+    pool_id: int
+    modifier_id: int
+    weight_multiplier: float = 1.0
+
+
+class ModifierPoolInfo(BaseModel):
+    id: int
+    name: str
+    pool_type: str  # "regular", "essence_only", "desecrated", "corrupted"
+    description: Optional[str] = None
+    modifiers: List[PoolModifier] = Field(default_factory=list)
+
+
+class CurrencyConfigInfo(BaseModel):
+    id: int
+    name: str
+    currency_type: str  # "transmutation", "essence", "omen", etc.
+    tier: Optional[str] = None  # "lesser", "greater", "perfect", null for basic
+    rarity: str
+    stack_size: int = 20
+    mechanic_class: str  # Python class name for the mechanic
+    config_data: Dict = Field(default_factory=dict)  # Currency-specific parameters

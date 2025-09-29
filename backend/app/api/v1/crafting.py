@@ -12,7 +12,7 @@ from app.schemas.crafting import (
 )
 from app.schemas.item import ItemParseRequest
 from app.schemas.item_bases import ITEM_BASES, get_item_bases_by_slot, get_available_slots, get_slot_category_combinations, get_default_base_for_category
-from app.services.crafting.currencies import CurrencyFactory
+from app.services.crafting.unified_factory import unified_crafting_factory
 from app.services.crafting.simulator import CraftingSimulator
 from app.services.item_parser import ItemParser
 from app.services.item_converter import ItemConverter
@@ -28,7 +28,7 @@ simulator = CraftingSimulator()
 @router.get("/currencies")
 async def get_available_currencies() -> List[str]:
     try:
-        return CurrencyFactory.get_all_currencies()
+        return unified_crafting_factory.get_all_available_currencies()
     except Exception as e:
         logger.error(f"Error fetching currencies: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -84,7 +84,7 @@ async def simulate_crafting_with_omens(
 @router.get("/omens/{currency_name}")
 async def get_available_omens_for_currency(currency_name: str) -> List[str]:
     try:
-        omens = simulator.get_available_omens_for_currency(currency_name)
+        omens = unified_crafting_factory.get_omens_for_currency(currency_name)
         return omens
     except Exception as e:
         logger.error(f"Error fetching omens for {currency_name}: {e}")
@@ -94,7 +94,9 @@ async def get_available_omens_for_currency(currency_name: str) -> List[str]:
 @router.get("/currencies/categorized")
 async def get_categorized_currencies() -> dict:
     try:
-        all_currencies = CurrencyFactory.get_all_currencies()
+        all_currencies = unified_crafting_factory.get_all_available_currencies()
+        all_essences = unified_crafting_factory.get_all_available_essences()
+        all_omens = unified_crafting_factory.get_all_available_omens()
 
         # Categorize currencies
         orbs = []
@@ -111,9 +113,10 @@ async def get_categorized_currencies() -> dict:
 
         return {
             "orbs": sorted(orbs),
-            "essences": sorted(essences),
+            "essences": sorted(essences + all_essences),  # Include essence configs
             "bones": sorted(bones),
-            "total": len(all_currencies)
+            "omens": sorted(all_omens),
+            "total": len(all_currencies) + len(all_essences) + len(all_omens)
         }
     except Exception as e:
         logger.error(f"Error fetching categorized currencies: {e}")

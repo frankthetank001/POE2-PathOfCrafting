@@ -12,18 +12,42 @@ class ItemBase(BaseModel):
     base_stats: Dict[str, int] = {}  # {'evasion': 266, 'armour': 100, 'energy_shield': 50}
 
 
-import json
-import os
-
-# Load item bases from scraped data
+# Database loader functions (moved here to avoid circular imports)
 def load_item_bases():
-    bases_file = os.path.join(os.path.dirname(__file__), "..", "data", "item_bases.json")
+    """Load item bases from database with fallback to static data"""
     try:
-        with open(bases_file, 'r', encoding='utf-8') as f:
-            bases_data = json.load(f)
-            return [ItemBase(**base) for base in bases_data]
-    except FileNotFoundError:
-        print(f"Warning: {bases_file} not found, using fallback bases")
+        from sqlalchemy.orm import sessionmaker
+        from app.models.base import engine
+        from app.models.crafting import BaseItem as DBBaseItem
+
+        SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
+        session = SessionLocal()
+
+        try:
+            # Query all item bases from database
+            db_bases = session.query(DBBaseItem).all()
+
+            item_bases = []
+            for db_base in db_bases:
+                item_bases.append(
+                    ItemBase(
+                        name=db_base.name,
+                        category=db_base.category,
+                        slot=db_base.slot,
+                        attribute_requirements=db_base.attribute_requirements or [],
+                        default_ilvl=db_base.default_ilvl,
+                        description=db_base.description,
+                        base_stats=db_base.base_stats or {},
+                    )
+                )
+
+            return item_bases
+
+        finally:
+            session.close()
+
+    except Exception as e:
+        print(f"Warning: Could not load from database ({e}), using fallback bases")
         return FALLBACK_BASES
 
 # Fallback bases for development
