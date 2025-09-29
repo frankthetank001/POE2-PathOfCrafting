@@ -20,7 +20,9 @@
       "Bash(npm run dev:*)",
       "Bash(npm install:*)",
       "WebFetch(domain:www.poe2wiki.net)",
-      "Read(//c/Users/frank/OneDrive/Pictures/Screenshots/**)"
+      "Read(//c/Users/frank/OneDrive/Pictures/Screenshots/**)",
+      "Bash(npm run type-check:*)",
+      "Bash(ruff check:*)"
     ],
     "deny": [],
     "ask": [],

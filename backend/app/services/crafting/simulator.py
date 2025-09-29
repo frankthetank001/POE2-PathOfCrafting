@@ -102,3 +102,71 @@ class CraftingSimulator:
                     available.append(currency_name)
 
         return available
+
+    def simulate_currency_with_omens(
+        self, item: CraftableItem, currency_name: str, omen_names: List[str]
+    ) -> CraftingSimulationResult:
+        """Simulate currency application with omen modifiers."""
+        try:
+            from app.services.crafting.omens import OmenFactory, OmenApplicator
+
+            # Get currency
+            currency = CurrencyFactory.create(currency_name)
+            if not currency:
+                return CraftingSimulationResult(
+                    success=False,
+                    result_item=None,
+                    message=f"Unknown currency: {currency_name}",
+                )
+
+            # Get omens
+            omens = []
+            for omen_name in omen_names:
+                omen = OmenFactory.create(omen_name)
+                if not omen:
+                    return CraftingSimulationResult(
+                        success=False,
+                        result_item=None,
+                        message=f"Unknown omen: {omen_name}",
+                    )
+                omens.append(omen)
+
+            # Validate omens can apply to this currency
+            for omen in omens:
+                if not omen.can_apply_to_currency(currency_name):
+                    return CraftingSimulationResult(
+                        success=False,
+                        result_item=None,
+                        message=f"{omen.name} cannot modify {currency_name}",
+                    )
+
+            # Apply currency with omens
+            success, message, result_item = OmenApplicator.apply_currency_with_omens(
+                item, currency_name, omens, self.modifier_pool, currency.apply
+            )
+
+            # Update stats if successful
+            if success and result_item:
+                StatCalculator.update_item_stats(result_item)
+
+            return CraftingSimulationResult(
+                success=success,
+                result_item=result_item if success else None,
+                message=message,
+            )
+
+        except Exception as e:
+            logger.error(f"Error simulating currency with omens: {e}")
+            return CraftingSimulationResult(
+                success=False,
+                result_item=None,
+                message=f"Simulation error: {str(e)}",
+            )
+
+    def get_available_omens_for_currency(self, currency_name: str) -> List[str]:
+        """Get all omens that can modify a specific currency."""
+        try:
+            from app.services.crafting.omens import OmenFactory
+            return OmenFactory.get_omens_for_currency(currency_name)
+        except ImportError:
+            return []

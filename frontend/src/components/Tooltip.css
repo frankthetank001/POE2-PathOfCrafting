@@ -1,0 +1,170 @@
+.tooltip-wrapper {
+  position: relative;
+  display: inline-block;
+}
+
+.tooltip-trigger {
+  cursor: help;
+}
+
+.tooltip-content {
+  background: #1a1a1a;
+  border: 2px solid #444;
+  border-radius: 8px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.8);
+  z-index: 10000;
+  pointer-events: none;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* Currency Tooltip Styles */
+.currency-tooltip {
+  padding: 1rem;
+  min-width: 250px;
+  max-width: 400px;
+}
+
+.tooltip-header {
+  border-bottom: 1px solid #444;
+  padding-bottom: 0.5rem;
+  margin-bottom: 0.75rem;
+}
+
+.tooltip-title {
+  color: #d4af37;
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 0;
+  text-align: center;
+}
+
+.tooltip-body {
+  color: #e0e0e0;
+}
+
+.tooltip-description {
+  color: #ccc;
+  margin: 0 0 0.75rem 0;
+  font-size: 0.85rem;
+  line-height: 1.3;
+}
+
+.tooltip-stat-ranges,
+.tooltip-mechanics {
+  margin-bottom: 0.75rem;
+}
+
+.tooltip-stat-ranges:last-child,
+.tooltip-mechanics:last-child {
+  margin-bottom: 0;
+}
+
+.tooltip-stat-ranges h5,
+.tooltip-mechanics h5 {
+  color: #88ccff;
+  font-size: 0.8rem;
+  font-weight: 600;
+  margin: 0 0 0.4rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.stat-ranges-content,
+.mechanics-content {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 0.5rem;
+}
+
+.stat-range-line,
+.mechanics-line {
+  margin-bottom: 0.2rem;
+}
+
+.stat-range-line:last-child,
+.mechanics-line:last-child {
+  margin-bottom: 0;
+}
+
+.stat-range-item,
+.mechanics-item {
+  color: #fff;
+  font-size: 0.8rem;
+  font-family: 'Courier New', monospace;
+}
+
+.stat-range-value {
+  color: #d4af37;
+  font-weight: 600;
+  font-size: 0.85rem;
+  font-family: 'Courier New', monospace;
+}
+
+.mechanics-text {
+  color: #aaa;
+  font-size: 0.8rem;
+}
+
+/* Tooltip animations */
+.tooltip-content {
+  animation: tooltipFadeIn 0.15s ease-out;
+}
+
+@keyframes tooltipFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-2px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+/* Hover states for better UX */
+.tooltip-trigger:hover {
+  position: relative;
+}
+
+/* Specific styling for currency icons with tooltips */
+.currency-icon-button.has-tooltip,
+.currency-icon-button-small.has-tooltip {
+  position: relative;
+}
+
+.currency-icon-button.has-tooltip:hover,
+.currency-icon-button-small.has-tooltip:hover {
+  z-index: 1;
+}
+
+/* Enhanced styling for omen tooltips */
+.omen-tooltip {
+  border-color: #6a5acd;
+  background: linear-gradient(135deg, #1a1a1a 0%, #252545 100%);
+}
+
+.omen-tooltip .tooltip-title {
+  color: #9370db;
+}
+
+.omen-tooltip .tooltip-stat-ranges h5,
+.omen-tooltip .tooltip-mechanics h5 {
+  color: #dda0dd;
+}
+
+/* Enhanced styling for essence tooltips */
+.essence-tooltip {
+  border-color: #8b4513;
+  background: linear-gradient(135deg, #1a1a1a 0%, #2d1b0f 100%);
+}
+
+.essence-tooltip .tooltip-title {
+  color: #d2691e;
+}
+
+.essence-tooltip .tooltip-stat-ranges h5,
+.essence-tooltip .tooltip-mechanics h5 {
+  color: #daa520;
+}

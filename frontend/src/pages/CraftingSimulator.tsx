@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { craftingApi } from '@/services/crafting-api'
-import type { CraftableItem, ItemModifier, ItemRarity, ItemBasesBySlot, ItemBase } from '@/types/crafting'
+import { getCurrencyDescription, getOmenDescription } from '@/data/currency-descriptions'
+import { Tooltip, CurrencyTooltip } from '@/components/Tooltip'
+import type { CraftableItem, ItemModifier, ItemRarity, ItemBasesBySlot } from '@/types/crafting'
 import './CraftingSimulator.css'
 
 function CraftingSimulator() {
@@ -18,9 +20,16 @@ function CraftingSimulator() {
     calculated_stats: {},
   })
 
-  const [currencies, setCurrencies] = useState<string[]>([])
+  const [categorizedCurrencies, setCategorizedCurrencies] = useState<{
+    orbs: string[]
+    essences: string[]
+    bones: string[]
+  }>({ orbs: [], essences: [], bones: [] })
   const [availableCurrencies, setAvailableCurrencies] = useState<string[]>([])
   const [selectedCurrency, setSelectedCurrency] = useState<string>('')
+  const [selectedOmens, setSelectedOmens] = useState<string[]>([])
+  const [availableOmens, setAvailableOmens] = useState<string[]>([])
+  const [allOmens, setAllOmens] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<string>('')
   const [history, setHistory] = useState<string[]>([])
@@ -45,7 +54,6 @@ function CraftingSimulator() {
   const [itemPasteText, setItemPasteText] = useState('')
   const [pasteExpanded, setPasteExpanded] = useState(false)
   const [pasteMessage, setPasteMessage] = useState('')
-  const [currencyExpanded, setCurrencyExpanded] = useState(true)
   const [modsPoolWidth, setModsPoolWidth] = useState<number>(() => {
     const saved = localStorage.getItem('modsPoolWidth')
     return saved ? parseInt(saved) : 600
@@ -77,6 +85,7 @@ function CraftingSimulator() {
   useEffect(() => {
     loadCurrencies()
     loadItemBases()
+    loadAllOmens()
   }, [])
 
   useEffect(() => {
@@ -141,7 +150,7 @@ function CraftingSimulator() {
       const deltaY = e.clientY - verticalResizing.startY
       const newHeight = Math.max(150, verticalResizing.startHeight + deltaY)
 
-      setVerticalSizes(prev => ({
+      setVerticalSizes((prev: typeof verticalSizes) => ({
         ...prev,
         [verticalResizing.section]: newHeight
       }))
@@ -174,7 +183,7 @@ function CraftingSimulator() {
     }
   }, [verticalResizing, verticalSizes])
 
-  const handleVerticalResizeStart = (section: string, e: React.MouseEvent) => {
+  const handleVerticalResizeStart = (section: string, e: React.MouseEvent): void => {
     setVerticalResizing({
       active: true,
       section: section,
@@ -185,10 +194,11 @@ function CraftingSimulator() {
 
   const loadCurrencies = async () => {
     try {
-      const data = await craftingApi.getCurrencies()
-      setCurrencies(data)
-      if (data.length > 0) {
-        setSelectedCurrency(data[0])
+      const categorized = await craftingApi.getCategorizedCurrencies()
+      setCategorizedCurrencies(categorized)
+
+      if (categorized.orbs.length > 0) {
+        setSelectedCurrency(categorized.orbs[0])
       }
     } catch (err) {
       console.error('Failed to load currencies:', err)
@@ -273,26 +283,81 @@ function CraftingSimulator() {
     return calculated
   }
 
+  const loadAllOmens = async () => {
+    const allOmenNames = [
+      "Omen of Whittling",
+      "Omen of Greater Exaltation",
+      "Omen of Sinistral Exaltation",
+      "Omen of Dextral Exaltation",
+      "Omen of Homogenising Exaltation",
+      "Omen of Catalysing Exaltation",
+      "Omen of Sinistral Erasure",
+      "Omen of Dextral Erasure",
+      "Omen of Greater Annulment",
+      "Omen of Sinistral Annulment",
+      "Omen of Dextral Annulment",
+      "Omen of Sinistral Coronation",
+      "Omen of Dextral Coronation",
+      "Omen of Homogenising Coronation",
+      "Omen of Sinistral Alchemy",
+      "Omen of Dextral Alchemy",
+      "Omen of Corruption"
+    ]
+    setAllOmens(allOmenNames)
+  }
+
+  const loadAvailableOmens = async (currencyName: string) => {
+    try {
+      const omens = await craftingApi.getAvailableOmensForCurrency(currencyName)
+      setAvailableOmens(omens)
+    } catch (err) {
+      console.error('Failed to load available omens:', err)
+      setAvailableOmens([])
+    }
+  }
+
+  const toggleOmen = (omen: string) => {
+    // Only allow toggling if omen is compatible with selected currency
+    if (selectedCurrency === '' || !availableOmens.includes(omen)) {
+      return
+    }
+
+    setSelectedOmens(prev =>
+      prev.includes(omen)
+        ? prev.filter(o => o !== omen)
+        : [...prev, omen]
+    )
+  }
+
   const handleCraft = async (currencyName: string) => {
     setLoading(true)
     setMessage('')
 
     try {
-      const result = await craftingApi.simulateCrafting({
-        item,
-        currency_name: currencyName,
-      })
+      let result
+      if (selectedOmens.length > 0) {
+        result = await craftingApi.simulateCraftingWithOmens(item, currencyName, selectedOmens)
+      } else {
+        result = await craftingApi.simulateCrafting({
+          item,
+          currency_name: currencyName,
+        })
+      }
 
       if (result.success && result.result_item) {
         setItemHistory([...itemHistory, item])
         setItem(result.result_item)
+        const omenText = selectedOmens.length > 0 ? ` with omens [${selectedOmens.join(', ')}]` : ''
         setMessage(`✓ ${result.message}`)
-        setHistory([...history, `Used ${currencyName}: ${result.message}`])
+        setHistory([...history, `Used ${currencyName}${omenText}: ${result.message}`])
 
         setCurrencySpent(prev => ({
           ...prev,
           [currencyName]: (prev[currencyName] || 0) + 1
         }))
+
+        // Clear selected omens after use
+        setSelectedOmens([])
       } else {
         setMessage(`✗ ${result.message}`)
       }
@@ -390,6 +455,84 @@ function CraftingSimulator() {
     )
   }
 
+  // Function to determine which mod types should be highlighted based on selected omens
+  const getHighlightedModTypes = (): { highlightPrefixes: boolean, highlightSuffixes: boolean, highlightSameTypes: boolean, highlightSameTags: boolean } => {
+    if (selectedOmens.length === 0) {
+      return { highlightPrefixes: false, highlightSuffixes: false, highlightSameTypes: false, highlightSameTags: false }
+    }
+
+    let highlightPrefixes = false
+    let highlightSuffixes = false
+    let highlightSameTypes = false
+    let highlightSameTags = false
+
+    for (const omen of selectedOmens) {
+      // Prefix-focused omens (Sinistral = left/prefix)
+      if (omen.includes('Sinistral')) {
+        highlightPrefixes = true
+      }
+      // Suffix-focused omens (Dextral = right/suffix)
+      else if (omen.includes('Dextral')) {
+        highlightSuffixes = true
+      }
+      // Homogenising omens - highlight mods of same type as existing mods
+      else if (omen.includes('Homogenising')) {
+        highlightSameTypes = true
+      }
+      // Catalysing omen - highlight mods with same tags as existing mods
+      else if (omen.includes('Catalysing')) {
+        highlightSameTags = true
+      }
+    }
+
+    return { highlightPrefixes, highlightSuffixes, highlightSameTypes, highlightSameTags }
+  }
+
+  // Function to check if a mod should be greyed out (incompatible)
+  const shouldGreyOutMod = (mod: ItemModifier, modType: 'prefix' | 'suffix'): boolean => {
+    const highlighting = getHighlightedModTypes()
+
+    // If no omens are selected, don't grey out anything
+    if (!highlighting.highlightPrefixes && !highlighting.highlightSuffixes &&
+        !highlighting.highlightSameTypes && !highlighting.highlightSameTags) {
+      return false
+    }
+
+    // Check prefix/suffix highlighting - if omen targets specific type, grey out the other
+    if (highlighting.highlightPrefixes && modType === 'suffix') return true
+    if (highlighting.highlightSuffixes && modType === 'prefix') return true
+
+    // For same type highlighting (homogenising omens), grey out mods that don't match
+    if (highlighting.highlightSameTypes) {
+      const existingMods = [...item.prefix_mods, ...item.suffix_mods]
+      const existingModGroups = existingMods.map(m => m.mod_group).filter(Boolean)
+
+      // If mod doesn't match any existing group, grey it out
+      if (existingModGroups.length > 0 && (!mod.mod_group || !existingModGroups.includes(mod.mod_group))) {
+        return true
+      }
+    }
+
+    // For same tag highlighting (catalysing omens), grey out mods without matching tags
+    if (highlighting.highlightSameTags && mod.tags && mod.tags.length > 0) {
+      const existingMods = [...item.prefix_mods, ...item.suffix_mods]
+      const existingTags = existingMods.flatMap(m => m.tags || [])
+
+      // If mod has no tags that match existing tags, grey it out
+      if (existingTags.length > 0 && !mod.tags.some(tag => existingTags.includes(tag))) {
+        return true
+      }
+    }
+
+    return false
+  }
+
+  // Function to check if a mod group should be greyed out
+  const shouldGreyOutModGroup = (groupMods: ItemModifier[], modType: 'prefix' | 'suffix'): boolean => {
+    // If all mods in the group should be greyed out, grey out the group
+    return groupMods.every(mod => shouldGreyOutMod(mod, modType))
+  }
+
   const getGroupedMods = (modType: 'prefix' | 'suffix') => {
     let mods = modType === 'prefix' ? availableMods.prefixes : availableMods.suffixes
 
@@ -436,12 +579,6 @@ function CraftingSimulator() {
     setExpandedModGroups(newExpanded)
   }
 
-  const allTags = Array.from(
-    new Set([
-      ...availableMods.prefixes.flatMap(m => m.tags || []),
-      ...availableMods.suffixes.flatMap(m => m.tags || []),
-    ])
-  ).sort()
 
   const getDisplayName = (slot: string, category: string) => {
     return `${category.replace('_', ' ')} ${slot.replace('_', ' ')}`
@@ -468,24 +605,83 @@ function CraftingSimulator() {
   const getCurrencyIconUrl = (currency: string): string => {
     const iconMap: Record<string, string> = {
       "Orb of Transmutation": "https://www.poe2wiki.net/images/6/67/Orb_of_Transmutation_inventory_icon.png",
-      "Greater Orb of Transmutation": "https://www.poe2wiki.net/images/6/67/Orb_of_Transmutation_inventory_icon.png", // Use same for now
-      "Perfect Orb of Transmutation": "https://www.poe2wiki.net/images/6/67/Orb_of_Transmutation_inventory_icon.png", // Use same for now
+      "Greater Orb of Transmutation": "https://www.poe2wiki.net/images/6/67/Orb_of_Transmutation_inventory_icon.png",
+      "Perfect Orb of Transmutation": "https://www.poe2wiki.net/images/6/67/Orb_of_Transmutation_inventory_icon.png",
       "Orb of Augmentation": "https://www.poe2wiki.net/images/c/cb/Orb_of_Augmentation_inventory_icon.png",
-      "Greater Orb of Augmentation": "https://www.poe2wiki.net/images/c/cb/Orb_of_Augmentation_inventory_icon.png", // Use same for now
-      "Perfect Orb of Augmentation": "https://www.poe2wiki.net/images/c/cb/Orb_of_Augmentation_inventory_icon.png", // Use same for now
+      "Greater Orb of Augmentation": "https://www.poe2wiki.net/images/c/cb/Orb_of_Augmentation_inventory_icon.png",
+      "Perfect Orb of Augmentation": "https://www.poe2wiki.net/images/c/cb/Orb_of_Augmentation_inventory_icon.png",
       "Orb of Alchemy": "https://www.poe2wiki.net/images/9/9f/Orb_of_Alchemy_inventory_icon.png",
       "Regal Orb": "https://www.poe2wiki.net/images/3/33/Regal_Orb_inventory_icon.png",
-      "Greater Regal Orb": "https://www.poe2wiki.net/images/3/33/Regal_Orb_inventory_icon.png", // Use same for now
-      "Perfect Regal Orb": "https://www.poe2wiki.net/images/3/33/Regal_Orb_inventory_icon.png", // Use same for now
+      "Greater Regal Orb": "https://www.poe2wiki.net/images/3/33/Regal_Orb_inventory_icon.png",
+      "Perfect Regal Orb": "https://www.poe2wiki.net/images/3/33/Regal_Orb_inventory_icon.png",
       "Exalted Orb": "https://www.poe2wiki.net/images/2/26/Exalted_Orb_inventory_icon.png",
-      "Greater Exalted Orb": "https://www.poe2wiki.net/images/2/26/Exalted_Orb_inventory_icon.png", // Use same for now
-      "Perfect Exalted Orb": "https://www.poe2wiki.net/images/2/26/Exalted_Orb_inventory_icon.png", // Use same for now
+      "Greater Exalted Orb": "https://www.poe2wiki.net/images/2/26/Exalted_Orb_inventory_icon.png",
+      "Perfect Exalted Orb": "https://www.poe2wiki.net/images/2/26/Exalted_Orb_inventory_icon.png",
       "Chaos Orb": "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png",
-      "Greater Chaos Orb": "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png", // Use same for now
-      "Perfect Chaos Orb": "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png", // Use same for now
+      "Greater Chaos Orb": "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png",
+      "Perfect Chaos Orb": "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png",
       "Divine Orb": "https://www.poe2wiki.net/images/5/58/Divine_Orb_inventory_icon.png"
     }
-    return iconMap[currency] || "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png" // Default fallback
+
+    // Handle Essences - based on poe2wiki.net/wiki/Essence
+    if (currency.includes('Essence of')) {
+      // Map our backend names to actual PoE2 wiki icon URLs
+      // Note: PoE2 uses different names (Flames not Fire, Ice not Cold, etc.)
+      const essenceIconMap: Record<string, string> = {
+        'Fire': 'https://www.poe2wiki.net/images/d/d4/Essence_of_Flames_inventory_icon.png',
+        'Cold': 'https://www.poe2wiki.net/images/d/df/Essence_of_Ice_inventory_icon.png',
+        'Lightning': 'https://www.poe2wiki.net/images/c/ca/Essence_of_Electricity_inventory_icon.png',
+        'Life': 'https://www.poe2wiki.net/images/b/b2/Essence_of_the_Body_inventory_icon.png',
+        'Mana': 'https://www.poe2wiki.net/images/6/62/Essence_of_the_Mind_inventory_icon.png',
+        'Armor': 'https://www.poe2wiki.net/images/f/fc/Essence_of_the_Protector_inventory_icon.png',
+        'Evasion': 'https://www.poe2wiki.net/images/d/dc/Essence_of_Haste_inventory_icon.png',
+        'Energy Shield': 'https://www.poe2wiki.net/images/d/d1/Essence_of_Warding_inventory_icon.png',
+        'Delirium': 'https://www.poe2wiki.net/images/9/9b/Essence_of_Delirium_inventory_icon.png',
+        'Horror': 'https://www.poe2wiki.net/images/0/06/Essence_of_Horror_inventory_icon.png',
+        'Hysteria': 'https://www.poe2wiki.net/images/b/b7/Essence_of_Hysteria_inventory_icon.png',
+        'Insanity': 'https://www.poe2wiki.net/images/d/d0/Essence_of_Insanity_inventory_icon.png',
+      }
+
+      // Check which essence this is (works for Greater/Perfect variants too)
+      for (const [key, url] of Object.entries(essenceIconMap)) {
+        if (currency.includes(key)) {
+          return url
+        }
+      }
+    }
+
+    // Handle Abyssal Bones
+    if (currency.startsWith('Abyssal') || currency.startsWith('Ancient Abyssal')) {
+      // Generic bone icon for now - can be customized per bone type
+      return "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
+    }
+
+    return iconMap[currency] || "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
+  }
+
+
+  const getOmenIconUrl = (omen: string): string => {
+    // Based on poe2wiki.net/wiki/Category:Omen_icons - Correct URLs verified from wiki
+    const omenIconMap: Record<string, string> = {
+      "Omen of Whittling": "https://www.poe2wiki.net/images/8/81/Omen_of_Whittling_inventory_icon.png",
+      "Omen of Greater Exaltation": "https://www.poe2wiki.net/images/6/6b/Omen_of_Greater_Exaltation_inventory_icon.png",
+      "Omen of Sinistral Exaltation": "https://www.poe2wiki.net/images/0/06/Omen_of_Sinistral_Exaltation_inventory_icon.png",
+      "Omen of Dextral Exaltation": "https://www.poe2wiki.net/images/4/4d/Omen_of_Dextral_Exaltation_inventory_icon.png",
+      "Omen of Homogenising Exaltation": "https://www.poe2wiki.net/images/6/60/Omen_of_Homogenising_Exaltation_inventory_icon.png",
+      "Omen of Catalysing Exaltation": "https://www.poe2wiki.net/images/9/9b/Omen_of_Catalysing_Exaltation_inventory_icon.png",
+      "Omen of Sinistral Erasure": "https://www.poe2wiki.net/images/4/47/Omen_of_Sinistral_Erasure_inventory_icon.png",
+      "Omen of Dextral Erasure": "https://www.poe2wiki.net/images/0/0b/Omen_of_Dextral_Erasure_inventory_icon.png",
+      "Omen of Greater Annulment": "https://www.poe2wiki.net/images/d/df/Omen_of_Greater_Annulment_inventory_icon.png",
+      "Omen of Sinistral Annulment": "https://www.poe2wiki.net/images/4/45/Omen_of_Sinistral_Annulment_inventory_icon.png",
+      "Omen of Dextral Annulment": "https://www.poe2wiki.net/images/e/ef/Omen_of_Dextral_Annulment_inventory_icon.png",
+      "Omen of Sinistral Coronation": "https://www.poe2wiki.net/images/6/66/Omen_of_Sinistral_Coronation_inventory_icon.png",
+      "Omen of Dextral Coronation": "https://www.poe2wiki.net/images/1/1c/Omen_of_Dextral_Coronation_inventory_icon.png",
+      "Omen of Homogenising Coronation": "https://www.poe2wiki.net/images/0/0b/Omen_of_Homogenising_Coronation_inventory_icon.png",
+      "Omen of Sinistral Alchemy": "https://www.poe2wiki.net/images/b/b6/Omen_of_Sinistral_Alchemy_inventory_icon.png",
+      "Omen of Dextral Alchemy": "https://www.poe2wiki.net/images/2/2c/Omen_of_Dextral_Alchemy_inventory_icon.png",
+      "Omen of Corruption": "https://www.poe2wiki.net/images/a/a2/Omen_of_Corruption_inventory_icon.png"
+    }
+    return omenIconMap[omen] || "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
   }
 
 
@@ -737,6 +933,7 @@ function CraftingSimulator() {
                   const isExpanded = expandedModGroups.has(`prefix-${groupKey}`)
                   const unavailableCount = groupMods.filter(m => m.required_ilvl && m.required_ilvl > item.item_level).length
                   const allUnavailable = unavailableCount === groupMods.length
+                  const isGroupGreyedOut = shouldGreyOutModGroup(groupMods, 'prefix')
 
                   // Calculate available tier range
                   const availableMods = groupMods.filter(m => !m.required_ilvl || m.required_ilvl <= item.item_level)
@@ -745,7 +942,7 @@ function CraftingSimulator() {
                   const tierRangeText = bestAvailableTier ? `T${bestAvailableTier}-T${worstTier}` : `T1-T${worstTier}`
 
                   return (
-                    <div key={groupKey} className="pool-mod-group">
+                    <div key={groupKey} className={`pool-mod-group ${isGroupGreyedOut ? 'omen-incompatible' : ''}`}>
                       <div
                         className={`pool-mod-group-header prefix ${allUnavailable ? 'all-unavailable' : ''}`}
                         onClick={() => toggleModGroup(`prefix-${groupKey}`)}
@@ -769,8 +966,9 @@ function CraftingSimulator() {
                         <div className="tier-breakdown">
                           {groupMods.map((mod, idx) => {
                             const isUnavailable = mod.required_ilvl && mod.required_ilvl > item.item_level
+                            const isGreyedOut = shouldGreyOutMod(mod, 'prefix')
                             return (
-                              <div key={idx} className={`tier-item ${isUnavailable ? 'unavailable' : ''}`}>
+                              <div key={idx} className={`tier-item ${isUnavailable ? 'unavailable' : ''} ${isGreyedOut ? 'omen-incompatible' : ''}`}>
                                 <div className="tier-header">
                                   <span className="tier-label">T{mod.tier}</span>
                                   <span className={`tier-ilvl ${isUnavailable ? 'ilvl-too-high' : ''}`}>
@@ -808,6 +1006,7 @@ function CraftingSimulator() {
                   const isExpanded = expandedModGroups.has(`suffix-${groupKey}`)
                   const unavailableCount = groupMods.filter(m => m.required_ilvl && m.required_ilvl > item.item_level).length
                   const allUnavailable = unavailableCount === groupMods.length
+                  const isGroupGreyedOut = shouldGreyOutModGroup(groupMods, 'suffix')
 
                   // Calculate available tier range
                   const availableMods = groupMods.filter(m => !m.required_ilvl || m.required_ilvl <= item.item_level)
@@ -816,7 +1015,7 @@ function CraftingSimulator() {
                   const tierRangeText = bestAvailableTier ? `T${bestAvailableTier}-T${worstTier}` : `T1-T${worstTier}`
 
                   return (
-                    <div key={groupKey} className="pool-mod-group">
+                    <div key={groupKey} className={`pool-mod-group ${isGroupGreyedOut ? 'omen-incompatible' : ''}`}>
                       <div
                         className={`pool-mod-group-header suffix ${allUnavailable ? 'all-unavailable' : ''}`}
                         onClick={() => toggleModGroup(`suffix-${groupKey}`)}
@@ -840,8 +1039,9 @@ function CraftingSimulator() {
                         <div className="tier-breakdown">
                           {groupMods.map((mod, idx) => {
                             const isUnavailable = mod.required_ilvl && mod.required_ilvl > item.item_level
+                            const isGreyedOut = shouldGreyOutMod(mod, 'suffix')
                             return (
-                              <div key={idx} className={`tier-item ${isUnavailable ? 'unavailable' : ''}`}>
+                              <div key={idx} className={`tier-item ${isUnavailable ? 'unavailable' : ''} ${isGreyedOut ? 'omen-incompatible' : ''}`}>
                                 <div className="tier-header">
                                   <span className="tier-label">T{mod.tier}</span>
                                   <span className={`tier-ilvl ${isUnavailable ? 'ilvl-too-high' : ''}`}>
@@ -887,59 +1087,684 @@ function CraftingSimulator() {
             className="currency-section-compact"
             style={{ height: `${verticalSizes.currencyCompact}px`, overflow: 'auto' }}
           >
-            <div className="currency-section-header" onClick={() => setCurrencyExpanded(!currencyExpanded)}>
-              <h3>Currencies {currencyExpanded ? '▼' : '▶'}</h3>
-              <button
-                className="undo-button-small"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  handleUndo()
-                }}
-                disabled={itemHistory.length === 0}
-                title="Undo last action (Ctrl+Z)"
-              >
-                ↶ Undo
-              </button>
-            </div>
-            {currencyExpanded && (
-              <>
-                {currencies.length === 0 ? (
-                  <p className="no-currencies-compact">No currencies available</p>
-                ) : (
-                  <div className="currency-buttons-grid">
-                    {currencies.map((currency) => {
+            {/* All currencies and omens in five tables */}
+            <div className="currency-five-tables">
+              {/* Table 1: All orb families */}
+              <div className="currency-table">
+                <h5 className="currency-table-title">Orbs</h5>
+                <div className="currency-horizontal-rows">
+                  {/* Transmutation family */}
+                  <div className="currency-family-row">
+                    {['Orb of Transmutation', 'Greater Orb of Transmutation', 'Perfect Orb of Transmutation'].map((currency) => {
                       const isAvailable = availableCurrencies.includes(currency)
+                      const isSelected = selectedCurrency === currency
+                      const description = getCurrencyDescription(currency)
+
                       return (
-                        <button
+                        <Tooltip
                           key={currency}
-                          className={`currency-button-icon ${!isAvailable ? 'currency-disabled' : ''}`}
-                          onClick={() => isAvailable && handleCraft(currency)}
-                          disabled={loading || !isAvailable}
-                          title={isAvailable ? currency : `${currency} (Cannot be applied to this item)`}
+                          content={
+                            <CurrencyTooltip
+                              name={currency}
+                              description={description}
+                              mechanics={isAvailable ? "Double-click to apply" : "Not available for this item"}
+                            />
+                          }
+                          delay={0}
+                          position="top"
                         >
-                          <div className="currency-icon">
+                          <div
+                            className={`currency-icon-button has-tooltip ${!isAvailable ? 'currency-disabled' : ''} ${isSelected ? 'currency-selected' : ''}`}
+                            onClick={() => {
+                              if (isAvailable) {
+                                if (selectedCurrency === currency) {
+                                  // Deselect if same currency is clicked
+                                  setSelectedCurrency('')
+                                  setAvailableOmens([])
+                                  setSelectedOmens([])
+                                } else {
+                                  setSelectedCurrency(currency)
+                                  loadAvailableOmens(currency)
+                                  setSelectedOmens([]) // Clear omens when switching currency
+                                }
+                              }
+                            }}
+                            onDoubleClick={() => isAvailable && handleCraft(currency)}
+                          >
                             <img
                               src={getCurrencyIconUrl(currency)}
                               alt={currency}
                               className="currency-icon-img"
                               onError={(e) => {
-                                // Fallback to a default icon if image fails to load
                                 (e.target as HTMLImageElement).src = "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
                               }}
                             />
                           </div>
-                          <span className="currency-name-short">{currency}</span>
-                        </button>
+                        </Tooltip>
+                      )
+                    })
+                  </div>
+                  {/* Augmentation family */}
+                  <div className="currency-family-row">
+                    {['Orb of Augmentation', 'Greater Orb of Augmentation', 'Perfect Orb of Augmentation'].map((currency) => {
+                      const isAvailable = availableCurrencies.includes(currency)
+                      const isSelected = selectedCurrency === currency
+                      const description = getCurrencyDescription(currency)
+
+                      return (
+                        <Tooltip
+                          key={currency}
+                          content={
+                            <CurrencyTooltip
+                              name={currency}
+                              description={description}
+                              mechanics={isAvailable ? "Double-click to apply" : "Not available for this item"}
+                            />
+                          }
+                          delay={0}
+                          position="top"
+                        >
+                          <div
+                            className={`currency-icon-button has-tooltip ${!isAvailable ? 'currency-disabled' : ''} ${isSelected ? 'currency-selected' : ''}`}
+                            onClick={() => {
+                              if (isAvailable) {
+                                if (selectedCurrency === currency) {
+                                  // Deselect if same currency is clicked
+                                  setSelectedCurrency('')
+                                  setAvailableOmens([])
+                                  setSelectedOmens([])
+                                } else {
+                                  setSelectedCurrency(currency)
+                                  loadAvailableOmens(currency)
+                                  setSelectedOmens([]) // Clear omens when switching currency
+                                }
+                              }
+                            }}
+                            onDoubleClick={() => isAvailable && handleCraft(currency)}
+                          >
+                            <img
+                              src={getCurrencyIconUrl(currency)}
+                              alt={currency}
+                              className="currency-icon-img"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
+                              }}
+                            />
+                          </div>
+                        </Tooltip>
                       )
                     })}
                   </div>
-                )}
-                {message && (
-                  <div className={`message-inline ${message.startsWith('✓') ? 'success' : message.startsWith('↶') ? 'info' : 'error'}`}>
-                    {message}
+                  {/* Regal family */}
+                  <div className="currency-family-row">
+                    {['Regal Orb', 'Greater Regal Orb', 'Perfect Regal Orb'].map((currency) => {
+                      const isAvailable = availableCurrencies.includes(currency)
+                      const isSelected = selectedCurrency === currency
+                      const description = getCurrencyDescription(currency)
+
+                      return (
+                        <Tooltip
+                          key={currency}
+                          content={
+                            <CurrencyTooltip
+                              name={currency}
+                              description={description}
+                              mechanics={isAvailable ? "Double-click to apply" : "Not available for this item"}
+                            />
+                          }
+                          delay={0}
+                          position="top"
+                        >
+                          <div
+                            className={`currency-icon-button has-tooltip ${!isAvailable ? 'currency-disabled' : ''} ${isSelected ? 'currency-selected' : ''}`}
+                            onClick={() => {
+                              if (isAvailable) {
+                                if (selectedCurrency === currency) {
+                                  // Deselect if same currency is clicked
+                                  setSelectedCurrency('')
+                                  setAvailableOmens([])
+                                  setSelectedOmens([])
+                                } else {
+                                  setSelectedCurrency(currency)
+                                  loadAvailableOmens(currency)
+                                  setSelectedOmens([]) // Clear omens when switching currency
+                                }
+                              }
+                            }}
+                            onDoubleClick={() => isAvailable && handleCraft(currency)}
+                          >
+                            <img
+                              src={getCurrencyIconUrl(currency)}
+                              alt={currency}
+                              className="currency-icon-img"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
+                              }}
+                            />
+                          </div>
+                        </Tooltip>
+                      )
+                    })}
                   </div>
-                )}
-              </>
+                  {/* Exalted family */}
+                  <div className="currency-family-row">
+                    {['Exalted Orb', 'Greater Exalted Orb', 'Perfect Exalted Orb'].map((currency) => {
+                      const isAvailable = availableCurrencies.includes(currency)
+                      const isSelected = selectedCurrency === currency
+                      const description = getCurrencyDescription(currency)
+
+                      return (
+                        <Tooltip
+                          key={currency}
+                          content={
+                            <CurrencyTooltip
+                              name={currency}
+                              description={description}
+                              mechanics={isAvailable ? "Double-click to apply" : "Not available for this item"}
+                            />
+                          }
+                          delay={0}
+                          position="top"
+                        >
+                          <div
+                            className={`currency-icon-button has-tooltip ${!isAvailable ? 'currency-disabled' : ''} ${isSelected ? 'currency-selected' : ''}`}
+                            onClick={() => {
+                              if (isAvailable) {
+                                if (selectedCurrency === currency) {
+                                  // Deselect if same currency is clicked
+                                  setSelectedCurrency('')
+                                  setAvailableOmens([])
+                                  setSelectedOmens([])
+                                } else {
+                                  setSelectedCurrency(currency)
+                                  loadAvailableOmens(currency)
+                                  setSelectedOmens([]) // Clear omens when switching currency
+                                }
+                              }
+                            }}
+                            onDoubleClick={() => isAvailable && handleCraft(currency)}
+                          >
+                            <img
+                              src={getCurrencyIconUrl(currency)}
+                              alt={currency}
+                              className="currency-icon-img"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
+                              }}
+                            />
+                          </div>
+                        </Tooltip>
+                      )
+                    })}
+                  </div>
+                  {/* Chaos family */}
+                  <div className="currency-family-row">
+                    {['Chaos Orb', 'Greater Chaos Orb', 'Perfect Chaos Orb'].map((currency) => {
+                      const isAvailable = availableCurrencies.includes(currency)
+                      const isSelected = selectedCurrency === currency
+                      const description = getCurrencyDescription(currency)
+
+                      return (
+                        <Tooltip
+                          key={currency}
+                          content={
+                            <CurrencyTooltip
+                              name={currency}
+                              description={description}
+                              mechanics={isAvailable ? "Double-click to apply" : "Not available for this item"}
+                            />
+                          }
+                          delay={0}
+                          position="top"
+                        >
+                          <div
+                            className={`currency-icon-button has-tooltip ${!isAvailable ? 'currency-disabled' : ''} ${isSelected ? 'currency-selected' : ''}`}
+                            onClick={() => {
+                              if (isAvailable) {
+                                if (selectedCurrency === currency) {
+                                  // Deselect if same currency is clicked
+                                  setSelectedCurrency('')
+                                  setAvailableOmens([])
+                                  setSelectedOmens([])
+                                } else {
+                                  setSelectedCurrency(currency)
+                                  loadAvailableOmens(currency)
+                                  setSelectedOmens([]) // Clear omens when switching currency
+                                }
+                              }
+                            }}
+                            onDoubleClick={() => isAvailable && handleCraft(currency)}
+                          >
+                            <img
+                              src={getCurrencyIconUrl(currency)}
+                              alt={currency}
+                              className="currency-icon-img"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
+                              }}
+                            />
+                          </div>
+                        </Tooltip>
+                      )
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              {/* Table 2: Special orbs */}
+              <div className="currency-table">
+                <h5 className="currency-table-title">Special Orbs</h5>
+                <div className="currency-horizontal-rows">
+                  <div className="currency-family-row">
+                    {['Orb of Alchemy', 'Vaal Orb', 'Orb of Annulment', 'Orb of Fracturing', 'Divine Orb'].map((currency) => {
+                      const isAvailable = availableCurrencies.includes(currency)
+                      const isSelected = selectedCurrency === currency
+                      const description = getCurrencyDescription(currency)
+
+                      return (
+                        <Tooltip
+                          key={currency}
+                          content={
+                            <CurrencyTooltip
+                              name={currency}
+                              description={description}
+                              mechanics={isAvailable ? "Double-click to apply" : "Not available for this item"}
+                            />
+                          }
+                          delay={0}
+                          position="top"
+                        >
+                          <div
+                            className={`currency-icon-button has-tooltip ${!isAvailable ? 'currency-disabled' : ''} ${isSelected ? 'currency-selected' : ''}`}
+                            onClick={() => {
+                              if (isAvailable) {
+                                if (selectedCurrency === currency) {
+                                  // Deselect if same currency is clicked
+                                  setSelectedCurrency('')
+                                  setAvailableOmens([])
+                                  setSelectedOmens([])
+                                } else {
+                                  setSelectedCurrency(currency)
+                                  loadAvailableOmens(currency)
+                                  setSelectedOmens([]) // Clear omens when switching currency
+                                }
+                              }
+                            }}
+                            onDoubleClick={() => isAvailable && handleCraft(currency)}
+                          >
+                            <img
+                              src={getCurrencyIconUrl(currency)}
+                              alt={currency}
+                              className="currency-icon-img"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
+                              }}
+                            />
+                          </div>
+                        </Tooltip>
+                      )
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              {/* Table 3: Bones */}
+              <div className="currency-table">
+                <h5 className="currency-table-title">Abyssal Bones</h5>
+                <div className="currency-horizontal-rows">
+                  <div className="currency-family-row">
+                    {categorizedCurrencies.bones.map((currency) => {
+                      const isAvailable = availableCurrencies.includes(currency)
+                      const isSelected = selectedCurrency === currency
+                      const description = getCurrencyDescription(currency)
+
+                      return (
+                        <Tooltip
+                          key={currency}
+                          content={
+                            <CurrencyTooltip
+                              name={currency}
+                              description={description}
+                              mechanics={isAvailable ? "Double-click to apply" : "Not available for this item"}
+                            />
+                          }
+                          delay={0}
+                          position="top"
+                        >
+                          <div
+                            className={`currency-icon-button has-tooltip ${!isAvailable ? 'currency-disabled' : ''} ${isSelected ? 'currency-selected' : ''}`}
+                            onClick={() => {
+                              if (isAvailable) {
+                                if (selectedCurrency === currency) {
+                                  // Deselect if same currency is clicked
+                                  setSelectedCurrency('')
+                                  setAvailableOmens([])
+                                  setSelectedOmens([])
+                                } else {
+                                  setSelectedCurrency(currency)
+                                  loadAvailableOmens(currency)
+                                  setSelectedOmens([]) // Clear omens when switching currency
+                                }
+                              }
+                            }}
+                            onDoubleClick={() => isAvailable && handleCraft(currency)}
+                          >
+                            <img
+                              src={getCurrencyIconUrl(currency)}
+                              alt={currency}
+                              className="currency-icon-img"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
+                              }}
+                            />
+                          </div>
+                        </Tooltip>
+                      )
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              {/* Table 4: Essences */}
+              <div className="currency-table">
+                <h5 className="currency-table-title">Essences</h5>
+                <div className="currency-horizontal-rows">
+                  <div className="currency-family-row">
+                    {categorizedCurrencies.essences.map((currency) => {
+                      const isAvailable = availableCurrencies.includes(currency)
+                      const isSelected = selectedCurrency === currency
+                      const currencyDescInfo = getCurrencyDescription(currency)
+
+                      return (
+                        <Tooltip
+                          key={currency}
+                          content={
+                            <div className="essence-tooltip">
+                              <CurrencyTooltip
+                                name={currency}
+                                description={currencyDescInfo}
+                                mechanics={isAvailable ? "Double-click to apply" : "Not available for this item"}
+                                statRanges={currencyDescInfo.includes("Adds +") ? currencyDescInfo.split("\n").find(line => line.includes("Adds +")) : undefined}
+                              />
+                            </div>
+                          }
+                          delay={0}
+                          position="top"
+                        >
+                          <div
+                            className={`currency-icon-button has-tooltip ${!isAvailable ? 'currency-disabled' : ''} ${isSelected ? 'currency-selected' : ''}`}
+                            onClick={() => {
+                              if (isAvailable) {
+                                if (selectedCurrency === currency) {
+                                  // Deselect if same currency is clicked
+                                  setSelectedCurrency('')
+                                  setAvailableOmens([])
+                                  setSelectedOmens([])
+                                } else {
+                                  setSelectedCurrency(currency)
+                                  loadAvailableOmens(currency)
+                                  setSelectedOmens([]) // Clear omens when switching currency
+                                }
+                              }
+                            }}
+                            onDoubleClick={() => isAvailable && handleCraft(currency)}
+                          >
+                            <img
+                              src={getCurrencyIconUrl(currency)}
+                              alt={currency}
+                              className="currency-icon-img"
+                              onError={(e) => {
+                                (e.target as HTMLImageElement).src = "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
+                              }}
+                            />
+                          </div>
+                        </Tooltip>
+                      )
+                    })}
+                  </div>
+                </div>
+              </div>
+
+              {/* Table 5: Omens */}
+              <div className="currency-table omen-table">
+                <h5 className="currency-table-title">Omens</h5>
+                <div className="currency-horizontal-rows">
+                  {/* Exalted Orb Omens */}
+                  <div className="omen-group">
+                    <span className="omen-group-label">Exalted</span>
+                    <div className="currency-family-row">
+                      {['Omen of Greater Exaltation', 'Omen of Sinistral Exaltation', 'Omen of Dextral Exaltation', 'Omen of Homogenising Exaltation', 'Omen of Catalysing Exaltation'].map((omen) => {
+                        const isActive = selectedOmens.includes(omen)
+                        const isCompatible = selectedCurrency !== '' && availableOmens.includes(omen)
+                        const description = getOmenDescription(omen)
+
+                        return (
+                          <Tooltip
+                            key={omen}
+                            content={
+                              <div className="omen-tooltip">
+                                <CurrencyTooltip
+                                  name={omen}
+                                  description={description}
+                                  mechanics={isCompatible ? (isActive ? "Click to deselect" : "Click to select") : "Not compatible with selected currency"}
+                                />
+                              </div>
+                            }
+                            delay={0}
+                            position="top"
+                          >
+                            <div
+                              className={`currency-icon-button-small has-tooltip ${isActive ? 'omen-active' : ''} ${!isCompatible ? 'omen-incompatible' : ''}`}
+                              onClick={() => isCompatible ? toggleOmen(omen) : undefined}
+                            >
+                              <img
+                                src={getOmenIconUrl(omen)}
+                                alt={omen}
+                                className="currency-icon-img-small"
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).src = "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
+                                }}
+                              />
+                            </div>
+                          </Tooltip>
+                        )
+                      })
+                    </div>
+                  </div>
+
+                  {/* Regal Orb Omens */}
+                  <div className="omen-group">
+                    <span className="omen-group-label">Regal</span>
+                    <div className="currency-family-row">
+                      {['Omen of Sinistral Coronation', 'Omen of Dextral Coronation', 'Omen of Homogenising Coronation'].map((omen) => {
+                        const isActive = selectedOmens.includes(omen)
+                        const isCompatible = selectedCurrency !== '' && availableOmens.includes(omen)
+                        const description = getOmenDescription(omen)
+
+                        return (
+                          <Tooltip
+                            key={omen}
+                            content={
+                              <div className="omen-tooltip">
+                                <CurrencyTooltip
+                                  name={omen}
+                                  description={description}
+                                  mechanics={isCompatible ? (isActive ? "Click to deselect" : "Click to select") : "Not compatible with selected currency"}
+                                />
+                              </div>
+                            }
+                            delay={0}
+                            position="top"
+                          >
+                            <div
+                              className={`currency-icon-button-small has-tooltip ${isActive ? 'omen-active' : ''} ${!isCompatible ? 'omen-incompatible' : ''}`}
+                              onClick={() => isCompatible ? toggleOmen(omen) : undefined}
+                            >
+                              <img
+                                src={getOmenIconUrl(omen)}
+                                alt={omen}
+                                className="currency-icon-img-small"
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).src = "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
+                                }}
+                              />
+                            </div>
+                          </Tooltip>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Chaos/Removal Omens */}
+                  <div className="omen-group">
+                    <span className="omen-group-label">Chaos</span>
+                    <div className="currency-family-row">
+                      {['Omen of Whittling', 'Omen of Sinistral Erasure', 'Omen of Dextral Erasure'].map((omen) => {
+                        const isActive = selectedOmens.includes(omen)
+                        const isCompatible = selectedCurrency !== '' && availableOmens.includes(omen)
+                        const description = getOmenDescription(omen)
+
+                        return (
+                          <Tooltip
+                            key={omen}
+                            content={
+                              <div className="omen-tooltip">
+                                <CurrencyTooltip
+                                  name={omen}
+                                  description={description}
+                                  mechanics={isCompatible ? (isActive ? "Click to deselect" : "Click to select") : "Not compatible with selected currency"}
+                                />
+                              </div>
+                            }
+                            delay={0}
+                            position="top"
+                          >
+                            <div
+                              className={`currency-icon-button-small has-tooltip ${isActive ? 'omen-active' : ''} ${!isCompatible ? 'omen-incompatible' : ''}`}
+                              onClick={() => isCompatible ? toggleOmen(omen) : undefined}
+                            >
+                              <img
+                                src={getOmenIconUrl(omen)}
+                                alt={omen}
+                                className="currency-icon-img-small"
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).src = "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
+                                }}
+                              />
+                            </div>
+                          </Tooltip>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Annulment Omens */}
+                  <div className="omen-group">
+                    <span className="omen-group-label">Annulment</span>
+                    <div className="currency-family-row">
+                      {['Omen of Greater Annulment', 'Omen of Sinistral Annulment', 'Omen of Dextral Annulment'].map((omen) => {
+                        const isActive = selectedOmens.includes(omen)
+                        const isCompatible = selectedCurrency !== '' && availableOmens.includes(omen)
+                        const description = getOmenDescription(omen)
+
+                        return (
+                          <Tooltip
+                            key={omen}
+                            content={
+                              <div className="omen-tooltip">
+                                <CurrencyTooltip
+                                  name={omen}
+                                  description={description}
+                                  mechanics={isCompatible ? (isActive ? "Click to deselect" : "Click to select") : "Not compatible with selected currency"}
+                                />
+                              </div>
+                            }
+                            delay={0}
+                            position="top"
+                          >
+                            <div
+                              className={`currency-icon-button-small has-tooltip ${isActive ? 'omen-active' : ''} ${!isCompatible ? 'omen-incompatible' : ''}`}
+                              onClick={() => isCompatible ? toggleOmen(omen) : undefined}
+                            >
+                              <img
+                                src={getOmenIconUrl(omen)}
+                                alt={omen}
+                                className="currency-icon-img-small"
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).src = "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
+                                }}
+                              />
+                            </div>
+                          </Tooltip>
+                        )
+                      })}
+                    </div>
+                  </div>
+
+                  {/* Alchemy & Other Omens */}
+                  <div className="omen-group">
+                    <span className="omen-group-label">Other</span>
+                    <div className="currency-family-row">
+                      {['Omen of Sinistral Alchemy', 'Omen of Dextral Alchemy', 'Omen of Corruption'].map((omen) => {
+                        const isActive = selectedOmens.includes(omen)
+                        const isCompatible = selectedCurrency !== '' && availableOmens.includes(omen)
+                        const description = getOmenDescription(omen)
+
+                        return (
+                          <Tooltip
+                            key={omen}
+                            content={
+                              <div className="omen-tooltip">
+                                <CurrencyTooltip
+                                  name={omen}
+                                  description={description}
+                                  mechanics={isCompatible ? (isActive ? "Click to deselect" : "Click to select") : "Not compatible with selected currency"}
+                                />
+                              </div>
+                            }
+                            delay={0}
+                            position="top"
+                          >
+                            <div
+                              className={`currency-icon-button-small has-tooltip ${isActive ? 'omen-active' : ''} ${!isCompatible ? 'omen-incompatible' : ''}`}
+                              onClick={() => isCompatible ? toggleOmen(omen) : undefined}
+                            >
+                              <img
+                                src={getOmenIconUrl(omen)}
+                                alt={omen}
+                                className="currency-icon-img-small"
+                                onError={(e) => {
+                                  (e.target as HTMLImageElement).src = "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
+                                }}
+                              />
+                            </div>
+                          </Tooltip>
+                        )
+                      })}
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Selected omens info */}
+              {selectedOmens.length > 0 && (
+                <div className="selected-omens-info">
+                  <h6>Selected Omens:</h6>
+                  <div className="selected-omens-list">
+                    {selectedOmens.map((omen) => (
+                      <span key={omen} className="selected-omen-tag">
+                        {omen}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {message && (
+              <div className={`message-inline ${message.startsWith('✓') ? 'success' : 'error'}`}>
+                {message}
+              </div>
             )}
           </div>
 

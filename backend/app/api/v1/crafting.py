@@ -6,6 +6,7 @@ from app.core.logging import get_logger
 from app.schemas.crafting import (
     CraftableItem,
     CraftingSimulationRequest,
+    CraftingSimulationWithOmensRequest,
     CraftingSimulationResult,
     ItemModifier,
 )
@@ -57,6 +58,65 @@ async def simulate_crafting(
 
     except Exception as e:
         logger.error(f"Error simulating crafting: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/simulate-with-omens", response_model=CraftingSimulationResult)
+async def simulate_crafting_with_omens(
+    request: CraftingSimulationWithOmensRequest,
+) -> CraftingSimulationResult:
+    try:
+        logger.info(
+            f"Simulating {request.currency_name} with omens {request.omen_names} on {request.item.base_name}"
+        )
+
+        result = simulator.simulate_currency_with_omens(
+            request.item, request.currency_name, request.omen_names
+        )
+
+        return result
+
+    except Exception as e:
+        logger.error(f"Error simulating crafting with omens: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/omens/{currency_name}")
+async def get_available_omens_for_currency(currency_name: str) -> List[str]:
+    try:
+        omens = simulator.get_available_omens_for_currency(currency_name)
+        return omens
+    except Exception as e:
+        logger.error(f"Error fetching omens for {currency_name}: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/currencies/categorized")
+async def get_categorized_currencies() -> dict:
+    try:
+        all_currencies = CurrencyFactory.get_all_currencies()
+
+        # Categorize currencies
+        orbs = []
+        essences = []
+        bones = []
+
+        for currency_name in all_currencies:
+            if "Essence" in currency_name:
+                essences.append(currency_name)
+            elif "Abyssal" in currency_name or "bone" in currency_name.lower():
+                bones.append(currency_name)
+            else:
+                orbs.append(currency_name)
+
+        return {
+            "orbs": sorted(orbs),
+            "essences": sorted(essences),
+            "bones": sorted(bones),
+            "total": len(all_currencies)
+        }
+    except Exception as e:
+        logger.error(f"Error fetching categorized currencies: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 

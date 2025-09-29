@@ -34,12 +34,42 @@ export const craftingApi = {
     return response.data
   },
 
+  simulateCraftingWithOmens: async (
+    item: CraftableItem,
+    currencyName: string,
+    omenNames: string[]
+  ): Promise<CraftingSimulationResult> => {
+    const response = await api.post<CraftingSimulationResult>('/simulate-with-omens', {
+      item,
+      currency_name: currencyName,
+      omen_names: omenNames,
+    })
+    return response.data
+  },
+
+  getAvailableOmensForCurrency: async (currencyName: string): Promise<string[]> => {
+    const response = await api.get<string[]>(`/omens/${currencyName}`)
+    return response.data
+  },
+
+  getCategorizedCurrencies: async (): Promise<{
+    orbs: string[]
+    essences: string[]
+    bones: string[]
+    total: number
+  }> => {
+    const response = await api.get('/currencies/categorized')
+    return response.data
+  },
+
   calculateProbability: async (
     item: CraftableItem,
     goalModGroup: string,
     currencyName: string
   ): Promise<{ goal_mod_group: string; currency_name: string; probability: number }> => {
-    const response = await api.post('/probability', null, {
+    // Note: Backend expects item in request body, but currently using query params
+    // This is a pre-existing pattern that should be refactored
+    const response = await api.post('/probability', item, {
       params: {
         goal_mod_group: goalModGroup,
         currency_name: currencyName,

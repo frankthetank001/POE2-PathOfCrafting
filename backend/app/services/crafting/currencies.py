@@ -51,12 +51,22 @@ class OrbOfTransmutation(CraftingCurrency):
                 existing_type = added_mods[0].mod_type.value
                 mod_type = "suffix" if existing_type == "prefix" else "prefix"
 
+            # Build excluded groups from current item state (including already added mods)
+            excluded_groups = modifier_pool._get_excluded_groups_from_item(manager.item)
+
             mod = modifier_pool.roll_random_modifier(
-                mod_type, item.base_category, item.item_level
+                mod_type, item.base_category, item.item_level, excluded_groups=excluded_groups
             )
             if mod:
                 manager.add_modifier(mod)
                 added_mods.append(mod)
+
+        if len(added_mods) == 0:
+            return (
+                False,
+                "No eligible modifiers found",
+                item,
+            )
 
         return (
             True,
@@ -90,14 +100,14 @@ class OrbOfAugmentation(CraftingCurrency):
             return False, "Item already has maximum mods for Magic rarity", item
 
         mod = modifier_pool.roll_random_modifier(
-            mod_type, item.base_category, item.item_level
+            mod_type, item.base_category, item.item_level, item=item
         )
 
         if mod:
             manager.add_modifier(mod)
             return True, f"Added {mod.name}", manager.item
 
-        return False, "Failed to generate modifier", item
+        return False, "No eligible modifiers found", item
 
 
 class OrbOfAlchemy(CraftingCurrency):
@@ -123,15 +133,19 @@ class OrbOfAlchemy(CraftingCurrency):
         num_suffixes = min(3, num_mods - num_prefixes)
 
         for _ in range(num_prefixes):
+            # Build excluded groups from current item state
+            excluded_groups = modifier_pool._get_excluded_groups_from_item(manager.item)
             mod = modifier_pool.roll_random_modifier(
-                "prefix", item.base_category, item.item_level
+                "prefix", item.base_category, item.item_level, excluded_groups=excluded_groups
             )
             if mod:
                 manager.add_modifier(mod)
 
         for _ in range(num_suffixes):
+            # Build excluded groups from current item state
+            excluded_groups = modifier_pool._get_excluded_groups_from_item(manager.item)
             mod = modifier_pool.roll_random_modifier(
-                "suffix", item.base_category, item.item_level
+                "suffix", item.base_category, item.item_level, excluded_groups=excluded_groups
             )
             if mod:
                 manager.add_modifier(mod)
@@ -169,7 +183,7 @@ class RegalOrb(CraftingCurrency):
             mod_type = random.choice(["prefix", "suffix"])
 
         mod = modifier_pool.roll_random_modifier(
-            mod_type, item.base_category, item.item_level
+            mod_type, item.base_category, item.item_level, item=item
         )
 
         if mod:
@@ -211,7 +225,7 @@ class ExaltedOrb(CraftingCurrency):
 
         mod_type = random.choice(available_types)
         mod = modifier_pool.roll_random_modifier(
-            mod_type, item.base_category, item.item_level
+            mod_type, item.base_category, item.item_level, item=item
         )
 
         if mod:
@@ -253,7 +267,7 @@ class ChaosOrb(CraftingCurrency):
             manager.remove_modifier(mod_to_replace.mod_type, index)
 
         new_mod = modifier_pool.roll_random_modifier(
-            mod_type, item.base_category, item.item_level
+            mod_type, item.base_category, item.item_level, item=item
         )
 
         if new_mod:
@@ -301,7 +315,7 @@ class GreaterOrbOfTransmutation(OrbOfTransmutation):
     def __init__(self) -> None:
         super().__init__()
         self.name = "Greater Orb of Transmutation"
-        self.min_mod_level = 55
+        self.min_mod_level = 35
 
     def apply(
         self, item: CraftableItem, modifier_pool: ModifierPool
@@ -323,16 +337,26 @@ class GreaterOrbOfTransmutation(OrbOfTransmutation):
                 existing_type = added_mods[0].mod_type.value
                 mod_type = "suffix" if existing_type == "prefix" else "prefix"
 
+            # Build excluded groups from current item state (including already added mods)
+            excluded_groups = modifier_pool._get_excluded_groups_from_item(manager.item)
+
             mod = modifier_pool.roll_random_modifier(
-                mod_type, item.base_category, item.item_level, min_mod_level=self.min_mod_level
+                mod_type, item.base_category, item.item_level, excluded_groups=excluded_groups, min_mod_level=self.min_mod_level
             )
             if mod:
                 manager.add_modifier(mod)
                 added_mods.append(mod)
 
+        if len(added_mods) == 0:
+            return (
+                False,
+                f"No eligible modifiers found for ilvl {self.min_mod_level}+ requirement",
+                item,
+            )
+
         return (
             True,
-            f"Upgraded to Magic with {len(added_mods)} modifier(s) (ilvl 55+)",
+            f"Upgraded to Magic with {len(added_mods)} modifier(s) (ilvl {self.min_mod_level}+)",
             manager.item,
         )
 
@@ -341,7 +365,7 @@ class PerfectOrbOfTransmutation(OrbOfTransmutation):
     def __init__(self) -> None:
         super().__init__()
         self.name = "Perfect Orb of Transmutation"
-        self.min_mod_level = 70
+        self.min_mod_level = 50
 
     def apply(
         self, item: CraftableItem, modifier_pool: ModifierPool
@@ -363,16 +387,26 @@ class PerfectOrbOfTransmutation(OrbOfTransmutation):
                 existing_type = added_mods[0].mod_type.value
                 mod_type = "suffix" if existing_type == "prefix" else "prefix"
 
+            # Build excluded groups from current item state (including already added mods)
+            excluded_groups = modifier_pool._get_excluded_groups_from_item(manager.item)
+
             mod = modifier_pool.roll_random_modifier(
-                mod_type, item.base_category, item.item_level, min_mod_level=self.min_mod_level
+                mod_type, item.base_category, item.item_level, excluded_groups=excluded_groups, min_mod_level=self.min_mod_level
             )
             if mod:
                 manager.add_modifier(mod)
                 added_mods.append(mod)
 
+        if len(added_mods) == 0:
+            return (
+                False,
+                f"No eligible modifiers found for ilvl {self.min_mod_level}+ requirement",
+                item,
+            )
+
         return (
             True,
-            f"Upgraded to Magic with {len(added_mods)} modifier(s) (ilvl 70+)",
+            f"Upgraded to Magic with {len(added_mods)} modifier(s) (ilvl {self.min_mod_level}+)",
             manager.item,
         )
 
@@ -381,7 +415,7 @@ class GreaterOrbOfAugmentation(OrbOfAugmentation):
     def __init__(self) -> None:
         super().__init__()
         self.name = "Greater Orb of Augmentation"
-        self.min_mod_level = 55
+        self.min_mod_level = 35
 
     def apply(
         self, item: CraftableItem, modifier_pool: ModifierPool
@@ -405,16 +439,16 @@ class GreaterOrbOfAugmentation(OrbOfAugmentation):
 
         if mod:
             manager.add_modifier(mod)
-            return True, f"Added {mod.name} (ilvl 55+)", manager.item
+            return True, f"Added {mod.name} (ilvl {self.min_mod_level}+)", manager.item
 
-        return False, "Failed to generate modifier", item
+        return False, f"No eligible modifiers found for ilvl {self.min_mod_level}+ requirement", item
 
 
 class PerfectOrbOfAugmentation(OrbOfAugmentation):
     def __init__(self) -> None:
         super().__init__()
         self.name = "Perfect Orb of Augmentation"
-        self.min_mod_level = 70
+        self.min_mod_level = 50
 
     def apply(
         self, item: CraftableItem, modifier_pool: ModifierPool
@@ -438,9 +472,9 @@ class PerfectOrbOfAugmentation(OrbOfAugmentation):
 
         if mod:
             manager.add_modifier(mod)
-            return True, f"Added {mod.name} (ilvl 70+)", manager.item
+            return True, f"Added {mod.name} (ilvl {self.min_mod_level}+)", manager.item
 
-        return False, "Failed to generate modifier", item
+        return False, f"No eligible modifiers found for ilvl {self.min_mod_level}+ requirement", item
 
 
 class GreaterRegalOrb(RegalOrb):
@@ -474,11 +508,11 @@ class GreaterRegalOrb(RegalOrb):
             manager.add_modifier(mod)
             return (
                 True,
-                f"Upgraded to Rare and added {mod.name} (ilvl 35+)",
+                f"Upgraded to Rare and added {mod.name} (ilvl {self.min_mod_level}+)",
                 manager.item,
             )
 
-        return False, "Failed to generate modifier", item
+        return False, f"No eligible modifiers found for ilvl {self.min_mod_level}+ requirement", item
 
 
 class PerfectRegalOrb(RegalOrb):
@@ -512,11 +546,11 @@ class PerfectRegalOrb(RegalOrb):
             manager.add_modifier(mod)
             return (
                 True,
-                f"Upgraded to Rare and added {mod.name} (ilvl 50+)",
+                f"Upgraded to Rare and added {mod.name} (ilvl {self.min_mod_level}+)",
                 manager.item,
             )
 
-        return False, "Failed to generate modifier", item
+        return False, f"No eligible modifiers found for ilvl {self.min_mod_level}+ requirement", item
 
 
 class GreaterExaltedOrb(ExaltedOrb):
@@ -550,9 +584,9 @@ class GreaterExaltedOrb(ExaltedOrb):
 
         if mod:
             manager.add_modifier(mod)
-            return True, f"Added {mod.name} (ilvl 35+)", manager.item
+            return True, f"Added {mod.name} (ilvl {self.min_mod_level}+)", manager.item
 
-        return False, "Failed to generate modifier", item
+        return False, f"No eligible modifiers found for ilvl {self.min_mod_level}+ requirement", item
 
 
 class PerfectExaltedOrb(ExaltedOrb):
@@ -586,9 +620,9 @@ class PerfectExaltedOrb(ExaltedOrb):
 
         if mod:
             manager.add_modifier(mod)
-            return True, f"Added {mod.name} (ilvl 50+)", manager.item
+            return True, f"Added {mod.name} (ilvl {self.min_mod_level}+)", manager.item
 
-        return False, "Failed to generate modifier", item
+        return False, f"No eligible modifiers found for ilvl {self.min_mod_level}+ requirement", item
 
 
 class GreaterChaosOrb(ChaosOrb):
@@ -628,11 +662,11 @@ class GreaterChaosOrb(ChaosOrb):
             manager.add_modifier(new_mod)
             return (
                 True,
-                f"Replaced {mod_to_replace.name} with {new_mod.name} (ilvl 35+)",
+                f"Replaced {mod_to_replace.name} with {new_mod.name} (ilvl {self.min_mod_level}+)",
                 manager.item,
             )
 
-        return False, "Failed to generate replacement modifier", item
+        return False, f"No eligible replacement modifiers found for ilvl {self.min_mod_level}+ requirement", item
 
 
 class PerfectChaosOrb(ChaosOrb):
@@ -672,11 +706,11 @@ class PerfectChaosOrb(ChaosOrb):
             manager.add_modifier(new_mod)
             return (
                 True,
-                f"Replaced {mod_to_replace.name} with {new_mod.name} (ilvl 50+)",
+                f"Replaced {mod_to_replace.name} with {new_mod.name} (ilvl {self.min_mod_level}+)",
                 manager.item,
             )
 
-        return False, "Failed to generate replacement modifier", item
+        return False, f"No eligible replacement modifiers found for ilvl {self.min_mod_level}+ requirement", item
 
 
 class CurrencyFactory:
@@ -700,13 +734,180 @@ class CurrencyFactory:
         "Divine Orb": DivineOrb,
     }
 
+    _essence_currencies = {}  # Will be populated by _initialize_essences()
+    _desecration_currencies = {}  # Will be populated by _initialize_desecration()
+
+    @classmethod
+    def _initialize_essences(cls):
+        """Initialize essence currencies dynamically."""
+        if cls._essence_currencies:
+            return  # Already initialized
+
+        try:
+            from app.services.crafting.essences import EssenceFactory
+
+            # Get all essence names and create currency mappings
+            essence_names = EssenceFactory.get_all_essence_names()
+
+            for essence_name in essence_names:
+                # Create a wrapper function that returns the appropriate essence
+                def create_essence_wrapper(name=essence_name):
+                    return cls._create_essence_by_name(name)
+
+                cls._essence_currencies[essence_name] = create_essence_wrapper
+
+        except ImportError:
+            # Essences not available, skip
+            pass
+
+    @classmethod
+    def _initialize_desecration(cls):
+        """Initialize desecration currencies dynamically."""
+        if cls._desecration_currencies:
+            return  # Already initialized
+
+        try:
+            from app.services.crafting.desecration import DesecrationFactory
+
+            # Get all bone names and create currency mappings
+            bone_names = DesecrationFactory.get_all_bone_names()
+
+            for bone_name in bone_names:
+                # Create a wrapper function that returns the appropriate bone
+                def create_bone_wrapper(name=bone_name):
+                    return cls._create_bone_by_name(name)
+
+                cls._desecration_currencies[bone_name] = create_bone_wrapper
+
+        except ImportError:
+            # Desecration not available, skip
+            pass
+
+    @classmethod
+    def _create_essence_by_name(cls, essence_name: str):
+        """Create an essence instance by its full name."""
+        from app.services.crafting.essences import (
+            EssenceFactory, EssenceType, EssenceTier,
+            EssenceOfHysteria, EssenceOfDelirium, EssenceOfHorror, EssenceOfInsanity
+        )
+
+        # Handle corrupted essences first
+        corrupted_mapping = {
+            "Essence of Hysteria": EssenceOfHysteria,
+            "Essence of Delirium": EssenceOfDelirium,
+            "Essence of Horror": EssenceOfHorror,
+            "Essence of Insanity": EssenceOfInsanity,
+        }
+
+        if essence_name in corrupted_mapping:
+            return corrupted_mapping[essence_name]()
+
+        # Parse regular essence names
+        # Format: "[Tier] Essence of [Type]"
+        parts = essence_name.split(" ")
+
+        if len(parts) < 3 or "Essence" not in parts or "of" not in parts:
+            raise ValueError(f"Invalid essence name format: {essence_name}")
+
+        # Determine tier
+        tier = EssenceTier.REGULAR
+        if essence_name.startswith("Greater "):
+            tier = EssenceTier.GREATER
+        elif essence_name.startswith("Perfect "):
+            tier = EssenceTier.PERFECT
+        elif essence_name.startswith("Corrupted "):
+            tier = EssenceTier.CORRUPTED
+
+        # Extract type name (everything after "of ")
+        of_index = parts.index("of")
+        type_name = " ".join(parts[of_index + 1:])
+
+        # Map type names to EssenceType enums
+        type_mapping = {
+            "Fire": EssenceType.FIRE,
+            "Cold": EssenceType.COLD,
+            "Lightning": EssenceType.LIGHTNING,
+            "Life": EssenceType.LIFE,
+            "Mana": EssenceType.MANA,
+            "Armor": EssenceType.ARMOR,
+            "Evasion": EssenceType.EVASION,
+            "Energy Shield": EssenceType.ENERGY_SHIELD,
+            "Attack Speed": EssenceType.ATTACK_SPEED,
+            "Cast Speed": EssenceType.CAST_SPEED,
+            "Critical": EssenceType.CRITICAL,
+            "Resistance": EssenceType.RESISTANCE,
+            "Damage": EssenceType.DAMAGE,
+        }
+
+        essence_type = type_mapping.get(type_name)
+        if not essence_type:
+            raise ValueError(f"Unknown essence type: {type_name}")
+
+        return EssenceFactory.create_essence(essence_type, tier)
+
+    @classmethod
+    def _create_bone_by_name(cls, bone_name: str):
+        """Create an abyssal bone instance by its full name."""
+        from app.services.crafting.desecration import (
+            DesecrationFactory, AbyssalBoneType, BoneQuality
+        )
+
+        # Parse bone names
+        # Format: "[Ancient] Abyssal [BoneType]"
+        parts = bone_name.split(" ")
+
+        if "Abyssal" not in parts:
+            raise ValueError(f"Invalid bone name format: {bone_name}")
+
+        # Determine quality
+        quality = BoneQuality.ANCIENT if bone_name.startswith("Ancient ") else BoneQuality.REGULAR
+
+        # Extract bone type (last part)
+        bone_type_name = parts[-1]
+
+        # Map bone type names to enums
+        type_mapping = {
+            "Jawbone": AbyssalBoneType.JAWBONE,
+            "Rib": AbyssalBoneType.RIB,
+            "Collarbone": AbyssalBoneType.COLLARBONE,
+            "Cranium": AbyssalBoneType.CRANIUM,
+            "Vertebrae": AbyssalBoneType.VERTEBRAE,
+        }
+
+        bone_type = type_mapping.get(bone_type_name)
+        if not bone_type:
+            raise ValueError(f"Unknown bone type: {bone_type_name}")
+
+        return DesecrationFactory.create_bone(bone_type, quality)
+
     @classmethod
     def create(cls, currency_name: str) -> Optional[CraftingCurrency]:
+        # Initialize all currency types if not already done
+        cls._initialize_essences()
+        cls._initialize_desecration()
+
+        # Check regular currencies first
         currency_class = cls._currencies.get(currency_name)
         if currency_class:
             return currency_class()
+
+        # Check essence currencies
+        essence_factory = cls._essence_currencies.get(currency_name)
+        if essence_factory:
+            return essence_factory()
+
+        # Check desecration currencies
+        bone_factory = cls._desecration_currencies.get(currency_name)
+        if bone_factory:
+            return bone_factory()
+
         return None
 
     @classmethod
     def get_all_currencies(cls) -> List[str]:
-        return list(cls._currencies.keys())
+        cls._initialize_essences()
+        cls._initialize_desecration()
+        regular_currencies = list(cls._currencies.keys())
+        essence_currencies = list(cls._essence_currencies.keys())
+        desecration_currencies = list(cls._desecration_currencies.keys())
+        return regular_currencies + essence_currencies + desecration_currencies

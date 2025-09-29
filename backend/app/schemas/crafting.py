@@ -120,6 +120,12 @@ class CraftingSimulationRequest(BaseModel):
     currency_name: str
 
 
+class CraftingSimulationWithOmensRequest(BaseModel):
+    item: CraftableItem
+    currency_name: str
+    omen_names: List[str] = Field(default_factory=list)
+
+
 class CraftingSimulationResult(BaseModel):
     success: bool
     result_item: Optional[CraftableItem] = None
