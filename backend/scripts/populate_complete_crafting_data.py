@@ -17,7 +17,8 @@ sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from app.models.crafting import (
     CurrencyConfig, Essence, EssenceItemEffect, Omen, OmenRule,
-    DesecrationBone, ModifierPool, PoolModifier
+    DesecrationBone, ModifierPool, PoolModifier, AbyssalEye,
+    AbyssalEyeEffect, DesecrationModifier
 )
 from app.models.base import get_db
 from sqlalchemy.orm import Session
@@ -31,10 +32,13 @@ def clear_existing_data(db: Session):
     db.query(EssenceItemEffect).delete()
     db.query(OmenRule).delete()
     db.query(PoolModifier).delete()
+    db.query(AbyssalEyeEffect).delete()
 
     db.query(Essence).delete()
     db.query(Omen).delete()
     db.query(DesecrationBone).delete()
+    db.query(AbyssalEye).delete()
+    db.query(DesecrationModifier).delete()
     db.query(ModifierPool).delete()
     db.query(CurrencyConfig).delete()
 
@@ -1685,6 +1689,71 @@ def populate_complete_omen_data(db: Session):
                 {"rule_type": "summon_allies", "rule_value": None, "priority": 1}
             ]
         },
+        # Desecration Omens
+        {
+            "name": "Omen of Abyssal Echoes",
+            "effect_description": "Can reroll desecrated options once when revealing",
+            "affected_currency": "Desecration",
+            "effect_type": "revelation",
+            "rules": [
+                {"rule_type": "reroll_once", "rule_value": None, "priority": 1}
+            ]
+        },
+        {
+            "name": "Omen of Sinistral Necromancy",
+            "effect_description": "Adds only prefix desecrated modifiers",
+            "affected_currency": "Desecration",
+            "effect_type": "prefix_only",
+            "rules": [
+                {"rule_type": "force_prefix", "rule_value": None, "priority": 1}
+            ]
+        },
+        {
+            "name": "Omen of Dextral Necromancy",
+            "effect_description": "Adds only suffix desecrated modifiers",
+            "affected_currency": "Desecration",
+            "effect_type": "suffix_only",
+            "rules": [
+                {"rule_type": "force_suffix", "rule_value": None, "priority": 1}
+            ]
+        },
+        {
+            "name": "Omen of the Sovereign",
+            "effect_description": "Guarantees random Ulaman modifier",
+            "affected_currency": "Desecration",
+            "effect_type": "boss_specific",
+            "rules": [
+                {"rule_type": "force_boss_mod", "rule_value": "ulaman", "priority": 1}
+            ]
+        },
+        {
+            "name": "Omen of the Liege",
+            "effect_description": "Guarantees random Amanamu modifier",
+            "affected_currency": "Desecration",
+            "effect_type": "boss_specific",
+            "rules": [
+                {"rule_type": "force_boss_mod", "rule_value": "amanamu", "priority": 1}
+            ]
+        },
+        {
+            "name": "Omen of the Blackblooded",
+            "effect_description": "Guarantees random Kurgal modifier",
+            "affected_currency": "Desecration",
+            "effect_type": "boss_specific",
+            "rules": [
+                {"rule_type": "force_boss_mod", "rule_value": "kurgal", "priority": 1}
+            ]
+        },
+        {
+            "name": "Omen of Putrefaction",
+            "effect_description": "Replaces ALL mods with up to 6 Desecrated mods and corrupts",
+            "affected_currency": "Desecration",
+            "effect_type": "mass_replace",
+            "rules": [
+                {"rule_type": "replace_all_with_desecrated", "rule_value": "6", "priority": 1},
+                {"rule_type": "corrupt_item", "rule_value": None, "priority": 2}
+            ]
+        },
     ]
 
     for omen_data in complete_omens_data:
@@ -1717,48 +1786,225 @@ def populate_complete_desecration_data(db: Session):
     """Populate ALL desecration data from CRAFTING_SYSTEM_DESIGN.md."""
     print("Populating complete desecration data...")
 
-    # All bone types with regular and ancient versions
-    bone_types = ["Jawbone", "Rib", "Collarbone", "Cranium", "Vertebrae"]
-    bones_data = []
-
-    for bone_type in bone_types:
-        # Regular version
-        bones_data.append({
-            "name": f"Abyssal {bone_type}",
-            "bone_type": bone_type.lower(),
-            "quality": "regular"
-        })
-        # Ancient version
-        bones_data.append({
-            "name": f"Ancient Abyssal {bone_type}",
-            "bone_type": bone_type.lower(),
-            "quality": "ancient"
-        })
+    # All bone types with exact data from design doc
+    bones_data = [
+        # Gnawed Bones (Max Item Level: 64)
+        {
+            "name": "Gnawed Jawbone",
+            "bone_type": "gnawed",
+            "bone_part": "jawbone",
+            "applicable_items": ["weapon", "quiver"],
+            "max_item_level": 64,
+            "function_description": "Desecrates a Rare Weapon or Quiver (Maximum Item Level: 64)"
+        },
+        {
+            "name": "Gnawed Rib",
+            "bone_type": "gnawed",
+            "bone_part": "rib",
+            "applicable_items": ["armour"],
+            "max_item_level": 64,
+            "function_description": "Desecrates a Rare Armour (Maximum Item Level: 64)"
+        },
+        {
+            "name": "Gnawed Collarbone",
+            "bone_type": "gnawed",
+            "bone_part": "collarbone",
+            "applicable_items": ["amulet", "ring", "belt"],
+            "max_item_level": 64,
+            "function_description": "Desecrates a Rare Amulet, Ring or Belt (Maximum Item Level: 64)"
+        },
+        # Preserved Bones (Mid-tier)
+        {
+            "name": "Preserved Jawbone",
+            "bone_type": "preserved",
+            "bone_part": "jawbone",
+            "applicable_items": ["weapon", "quiver"],
+            "function_description": "Desecrates a Rare Weapon or Quiver"
+        },
+        {
+            "name": "Preserved Rib",
+            "bone_type": "preserved",
+            "bone_part": "rib",
+            "applicable_items": ["armour"],
+            "function_description": "Desecrates a Rare Armour"
+        },
+        {
+            "name": "Preserved Collarbone",
+            "bone_type": "preserved",
+            "bone_part": "collarbone",
+            "applicable_items": ["amulet", "ring", "belt"],
+            "function_description": "Desecrates a Rare Amulet, Ring or Belt"
+        },
+        {
+            "name": "Preserved Cranium",
+            "bone_type": "preserved",
+            "bone_part": "cranium",
+            "applicable_items": ["jewel"],
+            "function_description": "Desecrates a Rare Jewel"
+        },
+        {
+            "name": "Preserved Vertebrae",
+            "bone_type": "preserved",
+            "bone_part": "vertebrae",
+            "applicable_items": ["waystone"],
+            "function_description": "Desecrates a Rare Waystone"
+        },
+        # Ancient Bones (Min Modifier Level: 40)
+        {
+            "name": "Ancient Jawbone",
+            "bone_type": "ancient",
+            "bone_part": "jawbone",
+            "applicable_items": ["weapon", "quiver"],
+            "min_modifier_level": 40,
+            "function_description": "Desecrates a Rare Weapon or Quiver (Minimum Modifier Level: 40)"
+        },
+        {
+            "name": "Ancient Rib",
+            "bone_type": "ancient",
+            "bone_part": "rib",
+            "applicable_items": ["armour"],
+            "min_modifier_level": 40,
+            "function_description": "Desecrates a Rare Armour (Minimum Modifier Level: 40)"
+        },
+        {
+            "name": "Ancient Collarbone",
+            "bone_type": "ancient",
+            "bone_part": "collarbone",
+            "applicable_items": ["amulet", "ring", "belt"],
+            "min_modifier_level": 40,
+            "function_description": "Desecrates a Rare Amulet, Ring or Belt (Minimum Modifier Level: 40)"
+        }
+    ]
 
     for bone_data in bones_data:
         bone = DesecrationBone(
             name=bone_data["name"],
             bone_type=bone_data["bone_type"],
-            quality=bone_data["quality"],
+            bone_part=bone_data["bone_part"],
             mechanic="add_desecrated_mod",
-            stack_size=20
+            stack_size=20,
+            applicable_items=bone_data["applicable_items"],
+            min_modifier_level=bone_data.get("min_modifier_level"),
+            max_item_level=bone_data.get("max_item_level"),
+            function_description=bone_data["function_description"]
         )
         db.add(bone)
 
         # Also add as currency config
+        rarity = "rare" if bone_data["bone_type"] == "ancient" else "uncommon"
         currency_config = CurrencyConfig(
             name=bone_data["name"],
             currency_type="desecration",
-            tier=bone_data["quality"],
-            rarity="rare" if bone_data["quality"] == "ancient" else "uncommon",
+            tier=bone_data["bone_type"],
+            rarity=rarity,
             stack_size=20,
             mechanic_class="DesecrationMechanic",
-            config_data={"bone_type": bone_data["bone_type"]}
+            config_data={
+                "bone_type": bone_data["bone_type"],
+                "bone_part": bone_data["bone_part"],
+                "applicable_items": bone_data["applicable_items"]
+            }
         )
         db.add(currency_config)
 
+    # Abyssal Eyes data from design doc
+    abyssal_eyes_data = [
+        {
+            "name": "Ulaman's Gaze",
+            "boss_name": "ulaman",
+            "effects": [
+                {
+                    "item_slot": "helmet",
+                    "effect_text": "+1 to Accuracy Rating per 1 Item Evasion Rating on Equipped Helmet"
+                },
+                {
+                    "item_slot": "gloves",
+                    "effect_text": "Critical Hit chance is Lucky against Parried enemies"
+                },
+                {
+                    "item_slot": "body_armour",
+                    "effect_text": "Prevent +3% of Damage from Deflected Hits"
+                }
+            ]
+        },
+        {
+            "name": "Amanamu's Gaze",
+            "boss_name": "amanamu",
+            "effects": [
+                {
+                    "item_slot": "helmet",
+                    "effect_text": "Remove a Damaging Ailment when you use a Command Skill"
+                },
+                {
+                    "item_slot": "body_armour",
+                    "effect_text": "+2 to Armour per 1 Spirit"
+                },
+                {
+                    "item_slot": "boots",
+                    "effect_text": "1% increased Movement Speed per 15 Spirit, up to a maximum of 40%",
+                    "special_mechanics": "Other Modifiers to Movement Speed do not apply"
+                }
+            ]
+        },
+        {
+            "name": "Kurgal's Gaze",
+            "boss_name": "kurgal",
+            "effects": [
+                {
+                    "item_slot": "helmet",
+                    "effect_text": "Increases and Reductions to Life Regeneration Rate also apply to Mana Regeneration Rate"
+                },
+                {
+                    "item_slot": "gloves",
+                    "effect_text": "40% increased effect of Arcane Surge on you"
+                },
+                {
+                    "item_slot": "boots",
+                    "effect_text": "15% increased Mana Cost Efficiency if you haven't Dodge Rolled Recently"
+                }
+            ]
+        },
+        {
+            "name": "Tecrod's Gaze",
+            "boss_name": "tecrod",
+            "effects": [
+                {
+                    "item_slot": "body_armour",
+                    "effect_text": "Regenerate 1.5% of maximum Life per second"
+                },
+                {
+                    "item_slot": "gloves",
+                    "effect_text": "25% increased Life Cost Efficiency"
+                },
+                {
+                    "item_slot": "boots",
+                    "effect_text": "10% increased Movement Speed when on Low Life"
+                }
+            ]
+        }
+    ]
+
+    for eye_data in abyssal_eyes_data:
+        abyssal_eye = AbyssalEye(
+            name=eye_data["name"],
+            boss_name=eye_data["boss_name"],
+            required_level=60,
+            is_limited_to_one=True
+        )
+        db.add(abyssal_eye)
+        db.flush()  # To get the ID
+
+        for effect_data in eye_data["effects"]:
+            effect = AbyssalEyeEffect(
+                abyssal_eye_id=abyssal_eye.id,
+                item_slot=effect_data["item_slot"],
+                effect_text=effect_data["effect_text"],
+                special_mechanics=effect_data.get("special_mechanics")
+            )
+            db.add(effect)
+
     db.commit()
-    print(f"Created {len(bones_data)} desecration bones")
+    print(f"Created {len(bones_data)} desecration bones and {len(abyssal_eyes_data)} abyssal eyes")
 
 
 def main():

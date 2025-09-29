@@ -710,8 +710,8 @@
 }
 
 .currency-buttons-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 0.75rem;
   margin-bottom: 1rem;
 }
@@ -984,8 +984,7 @@
 }
 
 .mods-pool-columns {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
   gap: 1rem;
   flex: 1 1 400px;
   overflow: hidden;
@@ -1003,8 +1002,7 @@
 
 /* Special mods (essence/desecrated) columns layout */
 .special-mods-columns {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
   gap: 1rem;
   margin-top: 0.5rem;
   height: 100%;
@@ -1016,6 +1014,7 @@
   flex-direction: column;
   overflow: hidden;
   min-height: 0;
+  flex: 1;
 }
 
 .special-mods-column .mods-pool-list {
@@ -1049,6 +1048,7 @@
   overflow: hidden;
   min-height: 0;
   width: 100%;
+  flex: 1;
 }
 
 .column-title {
@@ -1969,11 +1969,11 @@
   }
 
   .mods-pool-columns {
-    grid-template-columns: 1fr 1fr;
+    flex-direction: column;
   }
 
   .special-mods-columns {
-    grid-template-columns: 1fr 1fr;
+    flex-direction: column;
   }
 
   .tag-legend-items {
@@ -2204,9 +2204,10 @@
 }
 
 .currency-icon-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(48px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 0.5rem;
+  justify-content: center;
 }
 
 .currency-icon-button {
@@ -2356,8 +2357,8 @@
 
 /* Omen grouping styles - 2-column layout */
 .omen-table .currency-horizontal-rows {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 0.5rem;
 }
 
@@ -2525,8 +2526,8 @@
 }
 
 .currency-icon-grid-compact {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(28px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
   gap: 0.2rem;
   justify-content: center;
 }
@@ -2578,7 +2579,7 @@
 @media (max-width: 800px) {
 
   .currency-icon-grid {
-    grid-template-columns: repeat(auto-fill, minmax(40px, 1fr));
+    /* Already using flexbox, no changes needed */
   }
 
   .currency-icon-button,
@@ -2607,7 +2608,7 @@
   }
 
   .currency-icon-grid-compact {
-    grid-template-columns: repeat(auto-fill, minmax(28px, 1fr));
+    /* Already using flexbox, no changes needed */
   }
 
   .currency-icon-button-small {
@@ -2618,13 +2619,13 @@
 
 /* 3-Column Essence Stash Layout */
 .essence-stash-layout {
-  display: grid;
-  grid-template-columns: auto auto auto;
+  display: flex;
   gap: 2rem;
   width: fit-content;
   align-items: start;
   justify-content: center;
   margin: 0 auto;
+  flex-wrap: wrap;
 }
 
 .essence-column-1,
@@ -2882,7 +2883,7 @@
 @media (max-width: 600px) {
   .mods-pool-columns,
   .special-mods-columns {
-    grid-template-columns: 1fr;
+    flex-direction: column;
     gap: 0.5rem;
   }
 

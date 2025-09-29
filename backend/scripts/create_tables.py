@@ -14,7 +14,8 @@ from app.models.base import Base, engine
 from app.models.crafting import (
     BaseItem, Modifier, Currency, Essence, EssenceItemEffect,
     Omen, OmenRule, DesecrationBone, ModifierPool, PoolModifier,
-    CurrencyConfig, CraftingProject
+    CurrencyConfig, CraftingProject, AbyssalEye, AbyssalEyeEffect,
+    DesecrationModifier
 )
 
 
@@ -23,7 +24,12 @@ def create_all_tables():
     print("Creating database tables...")
 
     try:
+        # Drop all existing tables first
+        print("Dropping existing tables...")
+        Base.metadata.drop_all(bind=engine)
+
         # Create all tables
+        print("Creating fresh tables...")
         Base.metadata.create_all(bind=engine)
         print("Successfully created all database tables!")
 

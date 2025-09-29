@@ -208,11 +208,14 @@ class OmenInfo(BaseModel):
 class DesecrationBoneInfo(BaseModel):
     id: int
     name: str
-    bone_type: str  # "jawbone", "rib", "collarbone", etc.
-    quality: str  # "regular", "ancient"
+    bone_type: str  # "gnawed", "preserved", "ancient"
+    bone_part: str  # "jawbone", "rib", "collarbone", "cranium", "vertebrae"
     mechanic: str  # "add_desecrated_mod"
     stack_size: int = 20
-    applicable_items: List[str] = Field(default_factory=list)  # ["weapon", "str_armour", etc.]
+    applicable_items: List[str] = Field(default_factory=list)  # ["weapon", "quiver", "armour", etc.]
+    min_modifier_level: Optional[int] = None  # For ancient bones
+    max_item_level: Optional[int] = None  # For gnawed bones
+    function_description: Optional[str] = None
 
 
 class PoolModifier(BaseModel):

@@ -770,12 +770,10 @@ function CraftingSimulator() {
         return boneIconMap[currency]
       }
 
-      // Fallback logic for bone types
+      // Fallback for any unmatched bone - check if it contains key terms
       if (currency.includes('Collarbone')) return 'https://www.poe2wiki.net/images/2/29/Ancient_Collarbone_inventory_icon.png'
       if (currency.includes('Jawbone')) return 'https://www.poe2wiki.net/images/7/79/Ancient_Jawbone_inventory_icon.png'
       if (currency.includes('Rib')) return 'https://www.poe2wiki.net/images/9/9d/Ancient_Rib_inventory_icon.png'
-      if (currency.includes('Cranium')) return 'https://www.poe2wiki.net/images/6/69/Preserved_Cranium_inventory_icon.png'
-      if (currency.includes('Vertebrae')) return 'https://www.poe2wiki.net/images/7/78/Preserved_Vertebrae_inventory_icon.png'
 
       // Default bone icon
       return 'https://www.poe2wiki.net/images/2/29/Ancient_Collarbone_inventory_icon.png'
@@ -845,174 +843,11 @@ function CraftingSimulator() {
       <h2 className="page-title">Crafting Simulator</h2>
       <p className="page-subtitle">Experiment with crafting currencies on items</p>
 
-      <div className="item-paste-section">
-        <div className="paste-header" onClick={() => setPasteExpanded(!pasteExpanded)}>
-          <h3>Paste Item from Game {pasteExpanded ? '▼' : '▶'}</h3>
-        </div>
-        {pasteExpanded && (
-          <div className="paste-content">
-            <p className="paste-instructions">
-              Copy an item from PoE2 (Ctrl+C in-game) and paste it here. Both simple and detailed formats are supported.
-            </p>
-            <textarea
-              className="item-paste-textarea"
-              value={itemPasteText}
-              onChange={(e) => setItemPasteText(e.target.value)}
-              placeholder="Item Class: Body Armours&#10;Rarity: Rare&#10;Viper Coat&#10;Vile Robe&#10;--------&#10;Quality: +20% (augmented)&#10;..."
-              rows={12}
-            />
-            <div className="paste-actions">
-              <button
-                className="paste-button"
-                onClick={handlePasteItem}
-                disabled={loading || !itemPasteText.trim()}
-              >
-                Load Item
-              </button>
-              <button
-                className="clear-button"
-                onClick={() => { setItemPasteText(''); setPasteMessage('') }}
-                disabled={!itemPasteText}
-              >
-                Clear
-              </button>
-            </div>
-            {pasteMessage && (
-              <div className={`paste-message ${pasteMessage.startsWith('✓') ? 'success' : 'error'}`}>
-                {pasteMessage}
-              </div>
-            )}
-          </div>
-        )}
-      </div>
-
-      <div className="item-base-selector">
-        <h3>Item Base Selection</h3>
-        <div className="base-selector-row">
-          <div className="slot-selector">
-            <label htmlFor="slot-select">Slot:</label>
-            <select
-              id="slot-select"
-              value={selectedSlot}
-              onChange={(e) => {
-                setSelectedSlot(e.target.value)
-                const categoriesForSlot = itemBases[e.target.value]
-                if (categoriesForSlot && categoriesForSlot.length > 0) {
-                  setSelectedCategory(categoriesForSlot[0])
-                }
-                // Reset bases when slot changes
-                setAvailableBases([])
-                setSelectedBase('')
-              }}
-            >
-              {Object.keys(itemBases).map(slot => (
-                <option key={slot} value={slot}>
-                  {formatSlotName(slot)}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="base-selector">
-            <label htmlFor="category-select">Category:</label>
-            <select
-              id="category-select"
-              value={selectedCategory}
-              onChange={(e) => {
-                setSelectedCategory(e.target.value)
-                // Don't update the item here, wait for base selection
-                setMessage('')
-                setHistory([])
-                setItemHistory([])
-                setCurrencySpent({})
-              }}
-            >
-              {(itemBases[selectedSlot] || []).map(category => (
-                <option key={category} value={category}>
-                  {formatCategoryName(category)}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          <div className="base-selector">
-            <label htmlFor="base-select">Base:</label>
-            <select
-              id="base-select"
-              value={selectedBase}
-              onChange={(e) => {
-                const selectedBaseName = e.target.value
-                const selectedBaseData = availableBases.find(base => base.name === selectedBaseName)
-                const baseStats = selectedBaseData?.base_stats || {}
-
-                setSelectedBase(selectedBaseName)
-                setItem({
-                  base_name: selectedBaseName,
-                  base_category: selectedCategory,
-                  rarity: 'Normal' as ItemRarity,
-                  item_level: 65,
-                  quality: 20,
-                  implicit_mods: [],
-                  prefix_mods: [],
-                  suffix_mods: [],
-                  corrupted: false,
-                  base_stats: baseStats,
-                  calculated_stats: calculateItemStats(baseStats, 20),
-                })
-                setMessage('')
-                setHistory([])
-                setItemHistory([])
-                setCurrencySpent({})
-              }}
-              disabled={availableBases.length === 0}
-            >
-              {availableBases.map((base, index) => {
-                const statsText = Object.entries(base.base_stats || {})
-                  .map(([stat, value]) => `${value} ${formatStatName(stat)}`)
-                  .join(', ')
-
-                return (
-                  <option
-                    key={`${base.name}-${index}-${JSON.stringify(base.base_stats)}`}
-                    value={base.name}
-                    title={`${base.description}${statsText ? ` - ${statsText}` : ''}`}
-                  >
-                    {base.name}{statsText ? ` (${statsText})` : ''}
-                  </option>
-                )
-              })}
-            </select>
-          </div>
-
-          <div className="ilvl-selector">
-            <label htmlFor="ilvl-input">Item Level:</label>
-            <input
-              id="ilvl-input"
-              type="number"
-              min="1"
-              max="100"
-              value={item.item_level}
-              onChange={(e) => {
-                const newIlvl = parseInt(e.target.value) || 1
-                setItem({ ...item, item_level: Math.max(1, Math.min(100, newIlvl)) })
-              }}
-            />
-          </div>
-
-          <div className="base-info">
-            <span className="base-category">{selectedCategory}</span>
-            <span className="base-ilvl">ilvl {item.item_level}</span>
-            <span className="base-slot">{formatSlotName(selectedSlot)}</span>
-          </div>
-        </div>
-      </div>
 
 
-      <div className={`simulator-layout ${modsPoolCollapsed ? 'mods-collapsed' : ''}`}>
-        <div
-          className="mods-pool-panel"
-          style={{ width: modsPoolCollapsed ? '60px' : `${modsPoolWidth}px` }}
-        >
+
+      <div className="new-simulator-layout">
+        <div className="left-mods-panel">
           <div className="mods-pool-header">
             <div className="mods-pool-title-row">
               <h3>Available Mods</h3>
@@ -1449,7 +1284,7 @@ function CraftingSimulator() {
             <div className="resize-line" />
           </div>
         )}
-        <div className="center-panel">
+        <div className="center-item-panel">
           {/* Currency Section - moved above item preview */}
           <div
             className="currency-section-compact"
@@ -2649,6 +2484,10 @@ function CraftingSimulator() {
               </div>
             )}
           </div>
+        </div>
+
+        <div className="right-orbs-panel">
+          {/* Move the currency section here */}
         </div>
       </div>
     </div>

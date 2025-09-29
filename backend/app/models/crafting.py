@@ -126,11 +126,62 @@ class DesecrationBone(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     name = Column(String(255), nullable=False, unique=True, index=True)
-    bone_type = Column(String(50), nullable=False, index=True)  # "jawbone", "rib", "collarbone", etc.
-    quality = Column(String(20), nullable=False)  # "regular", "ancient"
+    bone_type = Column(String(50), nullable=False, index=True)  # "gnawed", "preserved", "ancient"
+    bone_part = Column(String(50), nullable=False, index=True)  # "jawbone", "rib", "collarbone", "cranium", "vertebrae"
     mechanic = Column(String(50), nullable=False)  # "add_desecrated_mod"
     stack_size = Column(Integer, default=20)
-    applicable_items = Column(JSON, default=[])  # ["weapon", "str_armour", "caster_weapon"]
+    applicable_items = Column(JSON, default=[])  # ["weapon", "quiver", "armour", "jewellery", "jewel", "waystone"]
+    min_modifier_level = Column(Integer, nullable=True)  # For ancient bones (40)
+    max_item_level = Column(Integer, nullable=True)  # For gnawed bones (64)
+    function_description = Column(Text, nullable=True)
+
+
+class AbyssalEye(Base):
+    __tablename__ = "abyssal_eyes"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(255), nullable=False, unique=True, index=True)
+    boss_name = Column(String(50), nullable=False, index=True)  # "ulaman", "amanamu", "kurgal", "tecrod"
+    required_level = Column(Integer, default=60)
+    is_limited_to_one = Column(Boolean, default=True)
+
+    # Relationship to item-specific effects
+    effects = relationship("AbyssalEyeEffect", back_populates="abyssal_eye")
+
+
+class AbyssalEyeEffect(Base):
+    __tablename__ = "abyssal_eye_effects"
+
+    id = Column(Integer, primary_key=True, index=True)
+    abyssal_eye_id = Column(Integer, ForeignKey("abyssal_eyes.id"), nullable=False, index=True)
+    item_slot = Column(String(50), nullable=False, index=True)  # "helmet", "body_armour", "gloves", "boots"
+    effect_text = Column(Text, nullable=False)
+    special_mechanics = Column(Text, nullable=True)  # For unique mechanics like movement speed caps
+
+    # Relationship back to abyssal eye
+    abyssal_eye = relationship("AbyssalEye", back_populates="effects")
+
+
+class DesecrationModifier(Base):
+    __tablename__ = "desecration_modifiers"
+
+    id = Column(Integer, primary_key=True, index=True)
+    name = Column(String(255), nullable=False, index=True)
+    mod_type = Column(String(20), nullable=False, index=True)  # prefix, suffix
+    boss_type = Column(String(50), nullable=True, index=True)  # "ulaman", "amanamu", "kurgal", "tecrod", "abyssal"
+    stat_text = Column(Text, nullable=False)
+    stat_min = Column(Float, nullable=True)
+    stat_max = Column(Float, nullable=True)
+    weight = Column(Integer, default=1000)
+    applicable_items = Column(JSON, default=[])
+    is_unique_mechanic = Column(Boolean, default=False)
+    special_rules = Column(Text, nullable=True)  # For caps, interactions, etc.
+
+    # Composite indexes for efficient queries
+    __table_args__ = (
+        Index('ix_desecration_boss_type', 'boss_type', 'mod_type'),
+        Index('ix_desecration_applicable', 'applicable_items'),
+    )
 
 
 class ModifierPool(Base):

@@ -382,7 +382,7 @@ async def get_currency_tooltip(currency_name: str) -> dict:
                 "name": currency_name,
                 "description": f"Desecration: Offers 3 {bone_config.bone_type} modifier choices from the Well of Souls",
                 "mechanics": f"Targets {bone_config.bone_type} modifiers. Removes 1 random modifier if item has 6 modifiers.",
-                "tier": bone_config.quality,
+                "tier": bone_config.bone_type,
                 "type": "desecration"
             }
 

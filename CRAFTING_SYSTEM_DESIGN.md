@@ -857,25 +857,92 @@ Desecration System
 -   **Restriction**: Items with Desecrated mods cannot be desecrated again
 -   **If Full**: Removes a random modifier when adding desecrated mod
 
+### Bone Currencies (Desecration Items)
+
+#### Gnawed Bones (Low-Level Desecration)
+**Maximum Item Level**: 64
+**Stack Size**: 20
+
+-   **Gnawed Jawbone**: Desecrates a Rare Weapon or Quiver
+-   **Gnawed Rib**: Desecrates a Rare Armour
+-   **Gnawed Collarbone**: Desecrates a Rare Amulet, Ring or Belt
+
+#### Preserved Bones (Mid-Level Desecration)
+**Stack Size**: 20
+
+-   **Preserved Jawbone**: Desecrates a Rare Weapon or Quiver
+-   **Preserved Rib**: Desecrates a Rare Armour
+-   **Preserved Collarbone**: Desecrates a Rare Amulet, Ring or Belt
+-   **Preserved Cranium**: Desecrates a Rare Jewel
+-   **Preserved Vertebrae**: Desecrates a Rare Waystone
+
+#### Ancient Bones (High-Level Desecration)
+**Minimum Modifier Level**: 40
+**Stack Size**: 20
+
+-   **Ancient Jawbone**: Desecrates a Rare Weapon or Quiver
+-   **Ancient Rib**: Desecrates a Rare Armour
+-   **Ancient Collarbone**: Desecrates a Rare Amulet, Ring or Belt
+
 ### Desecration Omens
 
+#### Core Desecration Omens
+**Stack Size**: 10
+
 -   **Omen of Abyssal Echoes**: Can reroll desecrated options once when revealing
--   **Omen of the Sovereign**: Guarantees random Ulaman modifier
--   **Omen of the Liege**: Guarantees random Amanamu modifier
--   **Omen of the Blackblooded**: Guarantees random Kurgal modifier
--   **Omen of Putrefaction**: Replaces ALL mods with up to 6 Desecrated mods and corrupts
 -   **Omen of Sinistral Necromancy**: Adds only prefix desecrated modifiers
 -   **Omen of Dextral Necromancy**: Adds only suffix desecrated modifiers
 -   **Omen of Light**: Removes only Desecrated modifiers (with Annulment)
+
+#### Boss-Specific Omens
+**Stack Size**: 10
+
+-   **Omen of the Sovereign**: Guarantees random Ulaman modifier
+-   **Omen of the Liege**: Guarantees random Amanamu modifier
+-   **Omen of the Blackblooded**: Guarantees random Kurgal modifier
+
+#### Special Desecration Omens
+**Stack Size**: 10
+
+-   **Omen of Putrefaction**: Replaces ALL mods with up to 6 Desecrated mods and corrupts
+
+### Abyssal Eyes (Boss-Specific Items)
+
+**Limited to**: 1 Abyssal Eye
+**Requires**: Level 60
+
+#### Ulaman's Gaze
+-   **Helmets**: +1 to Accuracy Rating per 1 Item Evasion Rating on Equipped Helmet
+-   **Gloves**: Critical Hit chance is Lucky against Parried enemies
+-   **Body Armours**: Prevent +3% of Damage from Deflected Hits
+
+#### Amanamu's Gaze
+-   **Helmets**: Remove a Damaging Ailment when you use a Command Skill
+-   **Body Armours**: +2 to Armour per 1 Spirit
+-   **Boots**: 1% increased Movement Speed per 15 Spirit, up to a maximum of 40% (Other Modifiers to Movement Speed do not apply)
+
+#### Kurgal's Gaze
+-   **Helmets**: Increases and Reductions to Life Regeneration Rate also apply to Mana Regeneration Rate
+-   **Gloves**: 40% increased effect of Arcane Surge on you
+-   **Boots**: 15% increased Mana Cost Efficiency if you haven't Dodge Rolled Recently
+
+#### Tecrod's Gaze
+-   **Body Armours**: Regenerate 1.5% of maximum Life per second
+-   **Gloves**: 25% increased Life Cost Efficiency
+-   **Boots**: 10% increased Movement Speed when on Low Life
+
+### Well of Souls Items
+
+-   **Kulemak's Invitation**: Something awaits you in the Well.
 
 ### Desecrated Modifier Types
 
 The Desecrated modifier pool includes extremely powerful endgame modifiers with unique effects not available through normal crafting, including:
 
--   Abyssal-themed modifiers (Lightless prefix with various damage/defense bonuses)
--   Boss-specific modifiers (Ulaman, Amanamu, Kurgal)
--   Special hybrid modifiers combining multiple stats
--   Unique mechanics not found in regular mod pools
+-   **Abyssal-themed modifiers**: Lightless prefix with various damage/defense bonuses
+-   **Boss-specific modifiers**: Ulaman (accuracy/evasion), Amanamu (spirit/command), Kurgal (life/mana synergy), Tecrod (life-based)
+-   **Special hybrid modifiers**: Combining multiple stats in unique ways
+-   **Unique mechanics**: Not found in regular mod pools (e.g., movement speed caps, spirit scaling)
 
 * * * * *
 
@@ -1005,15 +1072,48 @@ CREATE TABLE omens (
     stack_size INT DEFAULT 10
 );
 
+-- Bone currencies (desecration items)
+CREATE TABLE bone_currencies (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    bone_type VARCHAR(50), -- gnawed, preserved, ancient
+    bone_part VARCHAR(50), -- jawbone, rib, collarbone, cranium, vertebrae
+    target_item_types TEXT[], -- weapon, quiver, armour, jewellery, jewel, waystone
+    stack_size INT DEFAULT 20,
+    min_modifier_level INT,
+    max_item_level INT,
+    function_description TEXT
+);
+
+-- Abyssal Eyes (boss-specific items)
+CREATE TABLE abyssal_eyes (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
+    boss_name VARCHAR(50), -- ulaman, amanamu, kurgal, tecrod
+    required_level INT DEFAULT 60,
+    is_limited_to_one BOOLEAN DEFAULT TRUE
+);
+
+-- Abyssal Eye effects per item slot
+CREATE TABLE abyssal_eye_effects (
+    id SERIAL PRIMARY KEY,
+    abyssal_eye_id INT REFERENCES abyssal_eyes(id),
+    item_slot VARCHAR(50), -- helmet, body_armour, gloves, boots
+    effect_text TEXT,
+    special_mechanics TEXT -- for unique mechanics like movement speed caps
+);
+
 -- Desecrated modifiers
 CREATE TABLE desecrated_modifiers (
     id SERIAL PRIMARY KEY,
     name VARCHAR(255) NOT NULL,
     mod_type VARCHAR(20),
-    boss_type VARCHAR(50),
+    boss_type VARCHAR(50), -- ulaman, amanamu, kurgal, tecrod, abyssal
     stat_text TEXT,
     stat_min FLOAT,
     stat_max FLOAT,
     weight INT,
-    applicable_items TEXT[]
+    applicable_items TEXT[],
+    is_unique_mechanic BOOLEAN DEFAULT FALSE,
+    special_rules TEXT -- for caps, interactions, etc.
 );

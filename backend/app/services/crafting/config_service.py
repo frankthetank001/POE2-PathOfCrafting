@@ -142,10 +142,13 @@ class CraftingConfigService:
                 id=bone.id,
                 name=bone.name,
                 bone_type=bone.bone_type,
-                quality=bone.quality,
+                bone_part=bone.bone_part,
                 mechanic=bone.mechanic,
                 stack_size=bone.stack_size,
-                applicable_items=bone.applicable_items or []
+                applicable_items=bone.applicable_items or [],
+                min_modifier_level=bone.min_modifier_level,
+                max_item_level=bone.max_item_level,
+                function_description=bone.function_description
             )
             self._bone_configs[bone.name] = bone_info
 

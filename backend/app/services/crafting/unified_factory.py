@@ -81,7 +81,9 @@ class UnifiedCraftingFactory:
         enhanced_config = {
             **config.config_data,
             'bone_type': bone_config.bone_type,
-            'quality': bone_config.quality
+            'bone_part': bone_config.bone_part,
+            'min_modifier_level': bone_config.min_modifier_level,
+            'max_item_level': bone_config.max_item_level
         }
 
         mechanic_class = MECHANIC_REGISTRY.get(config.mechanic_class)
