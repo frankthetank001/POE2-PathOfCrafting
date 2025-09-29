@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react'
 import { craftingApi } from '@/services/crafting-api'
-import { getCurrencyDescription, getOmenDescription } from '@/data/currency-descriptions'
+import { getOmenDescription } from '@/data/currency-descriptions'
+import { CurrencyTooltipWrapper } from '@/components/CurrencyTooltipWrapper'
 import { Tooltip, CurrencyTooltip } from '@/components/Tooltip'
 import type { CraftableItem, ItemModifier, ItemRarity, ItemBasesBySlot } from '@/types/crafting'
 import './CraftingSimulator.css'
@@ -21,10 +22,22 @@ function CraftingSimulator() {
   })
 
   const [categorizedCurrencies, setCategorizedCurrencies] = useState<{
-    orbs: string[]
-    essences: string[]
-    bones: string[]
-  }>({ orbs: [], essences: [], bones: [] })
+    orbs: { implemented: string[], disabled: string[] }
+    essences: { implemented: string[], disabled: string[] }
+    bones: { implemented: string[], disabled: string[] }
+    omens: string[]
+    total: number
+    implemented_count: number
+    disabled_count: number
+  }>({
+    orbs: { implemented: [], disabled: [] },
+    essences: { implemented: [], disabled: [] },
+    bones: { implemented: [], disabled: [] },
+    omens: [],
+    total: 0,
+    implemented_count: 0,
+    disabled_count: 0
+  })
   const [availableCurrencies, setAvailableCurrencies] = useState<string[]>([])
   const [selectedCurrency, setSelectedCurrency] = useState<string>('')
   const [selectedEssence, setSelectedEssence] = useState<string>('')
@@ -38,7 +51,11 @@ function CraftingSimulator() {
   const [availableMods, setAvailableMods] = useState<{
     prefixes: ItemModifier[]
     suffixes: ItemModifier[]
-  }>({ prefixes: [], suffixes: [] })
+    essence_prefixes: ItemModifier[]
+    essence_suffixes: ItemModifier[]
+    desecrated_prefixes: ItemModifier[]
+    desecrated_suffixes: ItemModifier[]
+  }>({ prefixes: [], suffixes: [], essence_prefixes: [], essence_suffixes: [], desecrated_prefixes: [], desecrated_suffixes: [] })
   const [modPoolFilter, setModPoolFilter] = useState<{
     search: string
     tags: string[]
@@ -197,8 +214,8 @@ function CraftingSimulator() {
       const categorized = await craftingApi.getCategorizedCurrencies()
       setCategorizedCurrencies(categorized)
 
-      if (categorized.orbs.length > 0) {
-        setSelectedCurrency(categorized.orbs[0])
+      if (categorized.orbs.implemented.length > 0) {
+        setSelectedCurrency(categorized.orbs.implemented[0])
       }
     } catch (err) {
       console.error('Failed to load currencies:', err)
@@ -220,6 +237,10 @@ function CraftingSimulator() {
       setAvailableMods({
         prefixes: data.prefixes,
         suffixes: data.suffixes,
+        essence_prefixes: data.essence_prefixes || [],
+        essence_suffixes: data.essence_suffixes || [],
+        desecrated_prefixes: data.desecrated_prefixes || [],
+        desecrated_suffixes: data.desecrated_suffixes || [],
       })
     } catch (err) {
       console.error('Failed to load available mods:', err)
@@ -600,7 +621,6 @@ function CraftingSimulator() {
       "Perfect Chaos Orb": "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png",
       "Divine Orb": "https://www.poe2wiki.net/images/5/58/Divine_Orb_inventory_icon.png",
       "Orb of Annulment": "https://www.poe2wiki.net/images/4/4c/Orb_of_Annulment_inventory_icon.png",
-      "Orb of Alchemy": "https://www.poe2wiki.net/images/9/9f/Orb_of_Alchemy_inventory_icon.png",
       "Vaal Orb": "https://www.poe2wiki.net/images/2/2c/Vaal_Orb_inventory_icon.png",
       "Orb of Fracturing": "https://www.poe2wiki.net/images/7/70/Fracturing_Orb_inventory_icon.png"
     }
@@ -947,6 +967,16 @@ function CraftingSimulator() {
                 <span className="stat-badge suffix-badge">
                   {availableMods.suffixes.length} Suffixes
                 </span>
+                {(availableMods.essence_prefixes.length > 0 || availableMods.essence_suffixes.length > 0) && (
+                  <span className="stat-badge essence-badge">
+                    {availableMods.essence_prefixes.length + availableMods.essence_suffixes.length} Essence-Only
+                  </span>
+                )}
+                {(availableMods.desecrated_prefixes.length > 0 || availableMods.desecrated_suffixes.length > 0) && (
+                  <span className="stat-badge desecrated-badge">
+                    {availableMods.desecrated_prefixes.length + availableMods.desecrated_suffixes.length} Desecrated-Only
+                  </span>
+                )}
               </div>
             )}
           </div>
@@ -1109,6 +1139,78 @@ function CraftingSimulator() {
                 })}
               </div>
             </div>
+
+            {/* Essence-Only Modifiers Column */}
+            {(availableMods.essence_prefixes.length > 0 || availableMods.essence_suffixes.length > 0) && (
+              <div className="mods-pool-column essence-column">
+                <h4 className="column-title">Essence-Only ({availableMods.essence_prefixes.length + availableMods.essence_suffixes.length} modifiers)</h4>
+                <div className="mods-pool-list">
+                  {/* Essence Prefixes */}
+                  {availableMods.essence_prefixes.map((mod, idx) => (
+                    <div key={`essence-prefix-${idx}`} className="pool-mod-group essence-only">
+                      <div className="pool-mod-group-header essence prefix">
+                        <div className="group-main-info">
+                          <span className="pool-mod-stat-main">{mod.stat_text}</span>
+                          <div className="group-summary">
+                            <span className="essence-only-badge">Perfect/Corrupted Only</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Essence Suffixes */}
+                  {availableMods.essence_suffixes.map((mod, idx) => (
+                    <div key={`essence-suffix-${idx}`} className="pool-mod-group essence-only">
+                      <div className="pool-mod-group-header essence suffix">
+                        <div className="group-main-info">
+                          <span className="pool-mod-stat-main">{mod.stat_text}</span>
+                          <div className="group-summary">
+                            <span className="essence-only-badge">Perfect/Corrupted Only</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Desecrated-Only Modifiers Column */}
+            {(availableMods.desecrated_prefixes.length > 0 || availableMods.desecrated_suffixes.length > 0) && (
+              <div className="mods-pool-column desecrated-column">
+                <h4 className="column-title">Desecrated-Only ({availableMods.desecrated_prefixes.length + availableMods.desecrated_suffixes.length} modifiers)</h4>
+                <div className="mods-pool-list">
+                  {/* Desecrated Prefixes */}
+                  {availableMods.desecrated_prefixes.map((mod, idx) => (
+                    <div key={`desecrated-prefix-${idx}`} className="pool-mod-group desecrated-only">
+                      <div className="pool-mod-group-header desecrated prefix">
+                        <div className="group-main-info">
+                          <span className="pool-mod-stat-main">{mod.stat_text}</span>
+                          <div className="group-summary">
+                            <span className="desecrated-only-badge">Abyssal Bones Only</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+
+                  {/* Desecrated Suffixes */}
+                  {availableMods.desecrated_suffixes.map((mod, idx) => (
+                    <div key={`desecrated-suffix-${idx}`} className="pool-mod-group desecrated-only">
+                      <div className="pool-mod-group-header desecrated suffix">
+                        <div className="group-main-info">
+                          <span className="pool-mod-stat-main">{mod.stat_text}</span>
+                          <div className="group-summary">
+                            <span className="desecrated-only-badge">Abyssal Bones Only</span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
             </>
           )}
@@ -1136,18 +1238,22 @@ function CraftingSimulator() {
                   {/* Transmutation family */}
                   <div className="currency-family-row">
                     {['Orb of Transmutation', 'Greater Orb of Transmutation', 'Perfect Orb of Transmutation'].map((currency) => {
-                      const isAvailable = availableCurrencies.includes(currency)
+                      const isImplemented = categorizedCurrencies.orbs.implemented.includes(currency)
+                      const isAvailable = availableCurrencies.includes(currency) && isImplemented
                       const isSelected = selectedCurrency === currency
-                      const description = getCurrencyDescription(currency)
+                      const additionalMechanics = !isImplemented
+                        ? "Not implemented yet - coming soon!"
+                        : isAvailable
+                          ? "Double-click to apply"
+                          : "Not available for this item"
 
                       return (
                         <Tooltip
                           key={currency}
                           content={
-                            <CurrencyTooltip
-                              name={currency}
-                              description={description}
-                              mechanics={isAvailable ? "Double-click to apply" : "Not available for this item"}
+                            <CurrencyTooltipWrapper
+                              currencyName={currency}
+                              additionalMechanics={additionalMechanics}
                             />
                           }
                           delay={0}
@@ -1187,18 +1293,22 @@ function CraftingSimulator() {
                   {/* Augmentation family */}
                   <div className="currency-family-row">
                     {['Orb of Augmentation', 'Greater Orb of Augmentation', 'Perfect Orb of Augmentation'].map((currency) => {
-                      const isAvailable = availableCurrencies.includes(currency)
+                      const isImplemented = categorizedCurrencies.orbs.implemented.includes(currency)
+                      const isAvailable = availableCurrencies.includes(currency) && isImplemented
                       const isSelected = selectedCurrency === currency
-                      const description = getCurrencyDescription(currency)
+                      const additionalMechanics = !isImplemented
+                        ? "Not implemented yet - coming soon!"
+                        : isAvailable
+                          ? "Double-click to apply"
+                          : "Not available for this item"
 
                       return (
                         <Tooltip
                           key={currency}
                           content={
-                            <CurrencyTooltip
-                              name={currency}
-                              description={description}
-                              mechanics={isAvailable ? "Double-click to apply" : "Not available for this item"}
+                            <CurrencyTooltipWrapper
+                              currencyName={currency}
+                              additionalMechanics={additionalMechanics}
                             />
                           }
                           delay={0}
@@ -1238,18 +1348,22 @@ function CraftingSimulator() {
                   {/* Regal family */}
                   <div className="currency-family-row">
                     {['Regal Orb', 'Greater Regal Orb', 'Perfect Regal Orb'].map((currency) => {
-                      const isAvailable = availableCurrencies.includes(currency)
+                      const isImplemented = categorizedCurrencies.orbs.implemented.includes(currency)
+                      const isAvailable = availableCurrencies.includes(currency) && isImplemented
                       const isSelected = selectedCurrency === currency
-                      const description = getCurrencyDescription(currency)
+                      const additionalMechanics = !isImplemented
+                        ? "Not implemented yet - coming soon!"
+                        : isAvailable
+                          ? "Double-click to apply"
+                          : "Not available for this item"
 
                       return (
                         <Tooltip
                           key={currency}
                           content={
-                            <CurrencyTooltip
-                              name={currency}
-                              description={description}
-                              mechanics={isAvailable ? "Double-click to apply" : "Not available for this item"}
+                            <CurrencyTooltipWrapper
+                              currencyName={currency}
+                              additionalMechanics={additionalMechanics}
                             />
                           }
                           delay={0}
@@ -1289,18 +1403,22 @@ function CraftingSimulator() {
                   {/* Exalted family */}
                   <div className="currency-family-row">
                     {['Exalted Orb', 'Greater Exalted Orb', 'Perfect Exalted Orb'].map((currency) => {
-                      const isAvailable = availableCurrencies.includes(currency)
+                      const isImplemented = categorizedCurrencies.orbs.implemented.includes(currency)
+                      const isAvailable = availableCurrencies.includes(currency) && isImplemented
                       const isSelected = selectedCurrency === currency
-                      const description = getCurrencyDescription(currency)
+                      const additionalMechanics = !isImplemented
+                        ? "Not implemented yet - coming soon!"
+                        : isAvailable
+                          ? "Double-click to apply"
+                          : "Not available for this item"
 
                       return (
                         <Tooltip
                           key={currency}
                           content={
-                            <CurrencyTooltip
-                              name={currency}
-                              description={description}
-                              mechanics={isAvailable ? "Double-click to apply" : "Not available for this item"}
+                            <CurrencyTooltipWrapper
+                              currencyName={currency}
+                              additionalMechanics={additionalMechanics}
                             />
                           }
                           delay={0}
@@ -1340,18 +1458,22 @@ function CraftingSimulator() {
                   {/* Chaos family */}
                   <div className="currency-family-row">
                     {['Chaos Orb', 'Greater Chaos Orb', 'Perfect Chaos Orb'].map((currency) => {
-                      const isAvailable = availableCurrencies.includes(currency)
+                      const isImplemented = categorizedCurrencies.orbs.implemented.includes(currency)
+                      const isAvailable = availableCurrencies.includes(currency) && isImplemented
                       const isSelected = selectedCurrency === currency
-                      const description = getCurrencyDescription(currency)
+                      const additionalMechanics = !isImplemented
+                        ? "Not implemented yet - coming soon!"
+                        : isAvailable
+                          ? "Double-click to apply"
+                          : "Not available for this item"
 
                       return (
                         <Tooltip
                           key={currency}
                           content={
-                            <CurrencyTooltip
-                              name={currency}
-                              description={description}
-                              mechanics={isAvailable ? "Double-click to apply" : "Not available for this item"}
+                            <CurrencyTooltipWrapper
+                              currencyName={currency}
+                              additionalMechanics={additionalMechanics}
                             />
                           }
                           delay={0}
@@ -1397,18 +1519,22 @@ function CraftingSimulator() {
                 <div className="currency-horizontal-rows">
                   <div className="currency-family-row">
                     {['Orb of Alchemy', 'Vaal Orb', 'Orb of Annulment', 'Orb of Fracturing', 'Divine Orb'].map((currency) => {
-                      const isAvailable = availableCurrencies.includes(currency)
+                      const isImplemented = categorizedCurrencies.orbs.implemented.includes(currency)
+                      const isAvailable = availableCurrencies.includes(currency) && isImplemented
                       const isSelected = selectedCurrency === currency
-                      const description = getCurrencyDescription(currency)
+                      const additionalMechanics = !isImplemented
+                        ? "Not implemented yet - coming soon!"
+                        : isAvailable
+                          ? "Double-click to apply"
+                          : "Not available for this item"
 
                       return (
                         <Tooltip
                           key={currency}
                           content={
-                            <CurrencyTooltip
-                              name={currency}
-                              description={description}
-                              mechanics={isAvailable ? "Double-click to apply" : "Not available for this item"}
+                            <CurrencyTooltipWrapper
+                              currencyName={currency}
+                              additionalMechanics={additionalMechanics}
                             />
                           }
                           delay={0}
@@ -1453,19 +1579,23 @@ function CraftingSimulator() {
                 <h5 className="currency-table-title">Abyssal Bones</h5>
                 <div className="currency-horizontal-rows">
                   <div className="currency-family-row">
-                    {categorizedCurrencies.bones.map((currency) => {
-                      const isAvailable = availableCurrencies.includes(currency)
+                    {categorizedCurrencies.bones.implemented.concat(categorizedCurrencies.bones.disabled).map((currency) => {
+                      const isImplemented = categorizedCurrencies.bones.implemented.includes(currency)
+                      const isAvailable = availableCurrencies.includes(currency) && isImplemented
                       const isSelected = selectedCurrency === currency
-                      const description = getCurrencyDescription(currency)
+                      const additionalMechanics = !isImplemented
+                        ? "Not implemented yet - coming soon!"
+                        : isAvailable
+                          ? "Double-click to apply"
+                          : "Not available for this item"
 
                       return (
                         <Tooltip
                           key={currency}
                           content={
-                            <CurrencyTooltip
-                              name={currency}
-                              description={description}
-                              mechanics={isAvailable ? "Double-click to apply" : "Not available for this item"}
+                            <CurrencyTooltipWrapper
+                              currencyName={currency}
+                              additionalMechanics={additionalMechanics}
                             />
                           }
                           delay={0}
@@ -1513,10 +1643,9 @@ function CraftingSimulator() {
                     {selectedEssence ? (
                       <Tooltip
                         content={
-                          <CurrencyTooltip
-                            name={selectedEssence}
-                            description={getCurrencyDescription(selectedEssence)}
-                            mechanics="Click to select as active currency, Double-click to apply, Click arrow for more essences"
+                          <CurrencyTooltipWrapper
+                            currencyName={selectedEssence}
+                            additionalMechanics="Click to select as active currency, Double-click to apply, Click arrow for more essences"
                           />
                         }
                         delay={0}
@@ -1556,7 +1685,7 @@ function CraftingSimulator() {
                         </div>
                       </Tooltip>
                     ) : (
-                      <div className="essence-placeholder-button" title={`Click arrow to choose Essence (${categorizedCurrencies.essences.length} available)`}>
+                      <div className="essence-placeholder-button" title={`Click arrow to choose Essence (${categorizedCurrencies.essences.implemented.length + categorizedCurrencies.essences.disabled.length} available)`}>
                         <span className="essences-icon">💎</span>
                         <span className="essence-placeholder-text">Select</span>
                         <button
@@ -1589,7 +1718,7 @@ function CraftingSimulator() {
                     // Group essences by type
                     const groupedEssences: Record<string, string[]> = {}
 
-                    categorizedCurrencies.essences.forEach(essence => {
+                    categorizedCurrencies.essences.implemented.concat(categorizedCurrencies.essences.disabled).forEach(essence => {
                       let baseType = ''
                       if (essence.includes('the Body')) baseType = 'the Body'
                       else if (essence.includes('the Mind')) baseType = 'the Mind'
@@ -1642,20 +1771,23 @@ function CraftingSimulator() {
                       return (
                         <div key={baseType} className="essence-type-row">
                           {groupedEssences[baseType].map((currency) => {
-                            const isAvailable = availableCurrencies.includes(currency)
+                            const isImplemented = categorizedCurrencies.essences.implemented.includes(currency)
+                            const isAvailable = availableCurrencies.includes(currency) && isImplemented
                             const isSelected = selectedEssence === currency
-                            const currencyDescInfo = getCurrencyDescription(currency)
+                            const additionalMechanics = !isImplemented
+                              ? "Not implemented yet - coming soon!"
+                              : isAvailable
+                                ? "Double-click to apply"
+                                : "Not available for this item"
 
                             return (
                               <Tooltip
                                 key={currency}
                                 content={
                                   <div className="essence-tooltip">
-                                    <CurrencyTooltip
-                                      name={currency}
-                                      description={currencyDescInfo}
-                                      mechanics={isAvailable ? "Double-click to apply" : "Not available for this item"}
-                                      statRanges={currencyDescInfo.includes("Adds +") ? currencyDescInfo.split("\n").find(line => line.includes("Adds +")) : undefined}
+                                    <CurrencyTooltipWrapper
+                                      currencyName={currency}
+                                      additionalMechanics={additionalMechanics}
                                     />
                                   </div>
                                 }
@@ -1718,7 +1850,7 @@ function CraftingSimulator() {
                                   key={currency}
                                   content={
                                     <div className="essence-tooltip">
-                                      <CurrencyTooltip name={currency} description={getCurrencyDescription(currency)} />
+                                      <CurrencyTooltipWrapper currencyName={currency} />
                                     </div>
                                   }
                                 >
@@ -1742,7 +1874,7 @@ function CraftingSimulator() {
                                   key={currency}
                                   content={
                                     <div className="essence-tooltip">
-                                      <CurrencyTooltip name={currency} description={getCurrencyDescription(currency)} />
+                                      <CurrencyTooltipWrapper currencyName={currency} />
                                     </div>
                                   }
                                 >
@@ -1768,7 +1900,7 @@ function CraftingSimulator() {
                                   key={currency}
                                   content={
                                     <div className="essence-tooltip">
-                                      <CurrencyTooltip name={currency} description={getCurrencyDescription(currency)} />
+                                      <CurrencyTooltipWrapper currencyName={currency} />
                                     </div>
                                   }
                                 >
@@ -1792,7 +1924,7 @@ function CraftingSimulator() {
                                   key={currency}
                                   content={
                                     <div className="essence-tooltip">
-                                      <CurrencyTooltip name={currency} description={getCurrencyDescription(currency)} />
+                                      <CurrencyTooltipWrapper currencyName={currency} />
                                     </div>
                                   }
                                 >
@@ -1818,7 +1950,7 @@ function CraftingSimulator() {
                                   key={currency}
                                   content={
                                     <div className="essence-tooltip">
-                                      <CurrencyTooltip name={currency} description={getCurrencyDescription(currency)} />
+                                      <CurrencyTooltipWrapper currencyName={currency} />
                                     </div>
                                   }
                                 >

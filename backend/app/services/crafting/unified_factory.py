@@ -47,6 +47,8 @@ class UnifiedCraftingFactory:
         """Create the base crafting mechanic from configuration."""
         if config.currency_type == "essence":
             return self._create_essence_mechanic(config)
+        elif config.mechanic_class == "DesecrationMechanic":
+            return self._create_desecration_mechanic(config)
         else:
             return self._create_standard_mechanic(config)
 
@@ -67,6 +69,27 @@ class UnifiedCraftingFactory:
             return None
 
         return EssenceMechanic(config.config_data, essence_config)
+
+    def _create_desecration_mechanic(self, config: CurrencyConfigInfo) -> Optional[CraftingMechanic]:
+        """Create desecration mechanic with bone information."""
+        bone_config = get_bone_config(config.name)
+        if not bone_config:
+            logger.error(f"No bone configuration found for: {config.name}")
+            return None
+
+        # Add bone information to the config data
+        enhanced_config = {
+            **config.config_data,
+            'bone_type': bone_config.bone_type,
+            'quality': bone_config.quality
+        }
+
+        mechanic_class = MECHANIC_REGISTRY.get(config.mechanic_class)
+        if not mechanic_class:
+            logger.error(f"Unknown mechanic class: {config.mechanic_class}")
+            return None
+
+        return mechanic_class(enhanced_config)
 
     def _apply_omens(
         self,
@@ -104,6 +127,10 @@ class UnifiedCraftingFactory:
     def get_all_available_omens(self) -> List[str]:
         """Get all available omen names."""
         return crafting_config_service.get_all_omen_names()
+
+    def get_all_available_bones(self) -> List[str]:
+        """Get all available bone names."""
+        return crafting_config_service.get_all_bone_names()
 
     def get_omens_for_currency(self, currency_name: str) -> List[str]:
         """Get omen names that can be applied to a specific currency."""

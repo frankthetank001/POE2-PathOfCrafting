@@ -212,6 +212,7 @@ class DesecrationBoneInfo(BaseModel):
     quality: str  # "regular", "ancient"
     mechanic: str  # "add_desecrated_mod"
     stack_size: int = 20
+    applicable_items: List[str] = Field(default_factory=list)  # ["weapon", "str_armour", etc.]
 
 
 class PoolModifier(BaseModel):

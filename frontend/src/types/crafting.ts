@@ -28,10 +28,11 @@ export interface ItemModifier {
 
 export interface ItemBase {
   name: string
-  category: string
-  attribute_requirements: string[]
+  category?: string
+  attribute_requirements?: string[]
   default_ilvl: number
   description: string
+  base_stats: Record<string, number>
 }
 
 export interface ItemBasesBySlot {

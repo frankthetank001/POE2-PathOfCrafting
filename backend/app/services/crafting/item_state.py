@@ -133,3 +133,54 @@ class ItemStateManager:
             "total_open": (self.item.max_prefixes - self.item.prefix_count)
             + (self.item.max_suffixes - self.item.suffix_count),
         }
+
+    def remove_prefix(self, index: int) -> bool:
+        """Remove a prefix by index."""
+        try:
+            self.item.prefix_mods.pop(index)
+            return True
+        except IndexError:
+            return False
+
+    def remove_suffix(self, index: int) -> bool:
+        """Remove a suffix by index."""
+        try:
+            self.item.suffix_mods.pop(index)
+            return True
+        except IndexError:
+            return False
+
+    def replace_prefix(self, index: int, new_modifier: ItemModifier) -> bool:
+        """Replace a prefix at the given index."""
+        try:
+            self.item.prefix_mods[index] = new_modifier
+            return True
+        except IndexError:
+            return False
+
+    def replace_suffix(self, index: int, new_modifier: ItemModifier) -> bool:
+        """Replace a suffix at the given index."""
+        try:
+            self.item.suffix_mods[index] = new_modifier
+            return True
+        except IndexError:
+            return False
+
+    def get_max_modifiers(self) -> int:
+        """Get maximum number of modifiers for the item based on rarity."""
+        if self.item.rarity == ItemRarity.NORMAL:
+            return 0
+        elif self.item.rarity == ItemRarity.MAGIC:
+            return 2
+        elif self.item.rarity == ItemRarity.RARE:
+            return 6
+        else:
+            return 6
+
+    def set_rarity(self, rarity: ItemRarity) -> None:
+        """Set the item rarity directly."""
+        self.item.rarity = rarity
+
+    def get_item(self) -> CraftableItem:
+        """Get the current item state."""
+        return self.item

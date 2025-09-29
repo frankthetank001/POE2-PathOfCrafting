@@ -78,8 +78,8 @@ class ModifierPool:
             if not mod.applicable_items:
                 continue
 
-            # Exclude mods marked as exclusive-only (unique items only)
-            if exclude_exclusive and mod.is_exclusive:
+            # Exclude mods marked as exclusive-only (unique items only), but allow essence-only and desecrated-only mods
+            if exclude_exclusive and mod.is_exclusive and "essence_only" not in mod.tags and "desecrated_only" not in mod.tags:
                 continue
 
             # Manual override for known unique-only mod groups
@@ -225,7 +225,7 @@ class ModifierPool:
             if not mod.applicable_items:
                 continue
 
-            if exclude_exclusive and mod.is_exclusive:
+            if exclude_exclusive and mod.is_exclusive and "essence_only" not in mod.tags and "desecrated_only" not in mod.tags:
                 continue
 
             if exclude_exclusive and self._is_unique_only_mod_group(mod.mod_group, item_category):

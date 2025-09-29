@@ -67,8 +67,38 @@ class BaseAbyssalBone(CraftingCurrency, ABC):
         }
         return type_tendencies.get(bone_type)
 
+    def _get_applicable_items_for_bone_type(self, bone_type: AbyssalBoneType) -> List[str]:
+        """Get list of item types this bone can be applied to based on logical modifier placement."""
+        type_restrictions = {
+            AbyssalBoneType.JAWBONE: [
+                # Damage modifiers - weapons only
+                "One Handed Sword", "Two Handed Sword", "Bow", "Crossbow",
+                "Wand", "Staff", "Sceptre"
+            ],
+            AbyssalBoneType.RIB: [
+                # Defensive modifiers - armor pieces only
+                "Body Armour", "Helmet", "Gloves", "Boots", "Shield", "Belt"
+            ],
+            AbyssalBoneType.COLLARBONE: [
+                # Resistance modifiers - armor and jewelry
+                "Body Armour", "Helmet", "Gloves", "Boots", "Shield", "Belt",
+                "Ring", "Amulet"
+            ],
+            AbyssalBoneType.CRANIUM: [
+                # Caster modifiers - caster weapons and jewelry
+                "Wand", "Staff", "Sceptre", "Ring", "Amulet"
+            ],
+            AbyssalBoneType.VERTEBRAE: [
+                # Attribute modifiers - any equipment
+                "Body Armour", "Helmet", "Gloves", "Boots", "Shield", "Belt",
+                "Ring", "Amulet", "One Handed Sword", "Two Handed Sword",
+                "Bow", "Crossbow", "Wand", "Staff", "Sceptre", "Quiver"
+            ]
+        }
+        return type_restrictions.get(bone_type, [])
+
     def can_apply(self, item: CraftableItem) -> Tuple[bool, Optional[str]]:
-        """Check if bone can be applied to item."""
+        """Check if bone can be applied to item based on rarity, modifiers, and item type."""
         # Desecration requires rare items
         if item.rarity != ItemRarity.RARE:
             return False, f"{self.name} can only be applied to Rare items"
@@ -76,6 +106,11 @@ class BaseAbyssalBone(CraftingCurrency, ABC):
         # Item must have at least one modifier to work with
         if item.total_explicit_mods == 0:
             return False, f"{self.name} requires existing modifiers"
+
+        # Check if item type is compatible with this bone type
+        applicable_items = self._get_applicable_items_for_bone_type(self.bone_type)
+        if item.base_category not in applicable_items:
+            return False, f"{self.name} cannot be applied to {item.base_category}. Valid item types: {', '.join(applicable_items)}"
 
         return True, None
 

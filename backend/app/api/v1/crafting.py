@@ -98,25 +98,54 @@ async def get_categorized_currencies() -> dict:
         all_essences = unified_crafting_factory.get_all_available_essences()
         all_omens = unified_crafting_factory.get_all_available_omens()
 
-        # Categorize currencies
-        orbs = []
-        essences = []
-        bones = []
+        # Define implemented mechanics
+        implemented_mechanics = {
+            "TransmutationMechanic", "AugmentationMechanic", "AlchemyMechanic",
+            "RegalMechanic", "ExaltedMechanic", "ChaosMechanic", "DivineMechanic",
+            "AnnulmentMechanic", "FracturingMechanic", "DesecrationMechanic", "EssenceMechanic"
+        }
+
+        # Categorize currencies with implementation status
+        orbs = {"implemented": [], "disabled": []}
+        essences = {"implemented": [], "disabled": []}
+        bones = {"implemented": [], "disabled": []}
 
         for currency_name in all_currencies:
+            # Check if currency is implemented
+            currency_info = unified_crafting_factory.get_currency_info(currency_name)
+            is_implemented = currency_info and currency_info.mechanic_class in implemented_mechanics
+
+            status = "implemented" if is_implemented else "disabled"
+
             if "Essence" in currency_name:
-                essences.append(currency_name)
+                essences[status].append(currency_name)
             elif "Abyssal" in currency_name or "bone" in currency_name.lower():
-                bones.append(currency_name)
+                bones[status].append(currency_name)
             else:
-                orbs.append(currency_name)
+                orbs[status].append(currency_name)
+
+        # All essences from essence configs are implemented
+        for essence_name in all_essences:
+            if essence_name not in essences["implemented"]:
+                essences["implemented"].append(essence_name)
 
         return {
-            "orbs": sorted(orbs),
-            "essences": sorted(essences + all_essences),  # Include essence configs
-            "bones": sorted(bones),
+            "orbs": {
+                "implemented": sorted(orbs["implemented"]),
+                "disabled": sorted(orbs["disabled"])
+            },
+            "essences": {
+                "implemented": sorted(essences["implemented"]),
+                "disabled": sorted(essences["disabled"])
+            },
+            "bones": {
+                "implemented": sorted(bones["implemented"]),
+                "disabled": sorted(bones["disabled"])
+            },
             "omens": sorted(all_omens),
-            "total": len(all_currencies) + len(all_essences) + len(all_omens)
+            "total": len(all_currencies) + len(all_essences) + len(all_omens),
+            "implemented_count": len(orbs["implemented"]) + len(essences["implemented"]) + len(bones["implemented"]),
+            "disabled_count": len(orbs["disabled"]) + len(essences["disabled"]) + len(bones["disabled"])
         }
     except Exception as e:
         logger.error(f"Error fetching categorized currencies: {e}")
@@ -150,14 +179,18 @@ async def reload_modifiers():
     """Reload modifier data from file"""
     global simulator
     from app.services.crafting.modifier_loader import ModifierLoader
+    from app.services.crafting.config_service import crafting_config_service
 
     # Force reload modifiers
     ModifierLoader.reload_modifiers()
 
+    # Force reload all configurations including essences
+    crafting_config_service.reload_all_configs()
+
     # Recreate simulator with new data
     simulator = CraftingSimulator()
 
-    return {"message": "Modifiers reloaded successfully", "count": len(simulator.modifier_pool.modifiers)}
+    return {"message": "Modifiers and configurations reloaded successfully", "count": len(simulator.modifier_pool.modifiers)}
 
 
 @router.get("/item-bases")
@@ -220,11 +253,28 @@ async def get_available_mods(item: CraftableItem) -> dict:
             item
         )
 
+        # Separate essence-only and desecrated-only modifiers
+        regular_prefixes = [mod for mod in available_prefixes if "essence_only" not in mod.tags and "desecrated_only" not in mod.tags]
+        essence_prefixes = [mod for mod in available_prefixes if "essence_only" in mod.tags]
+        desecrated_prefixes = [mod for mod in available_prefixes if "desecrated_only" in mod.tags]
+
+        regular_suffixes = [mod for mod in available_suffixes if "essence_only" not in mod.tags and "desecrated_only" not in mod.tags]
+        essence_suffixes = [mod for mod in available_suffixes if "essence_only" in mod.tags]
+        desecrated_suffixes = [mod for mod in available_suffixes if "desecrated_only" in mod.tags]
+
         return {
-            "prefixes": [mod.model_dump() for mod in available_prefixes],
-            "suffixes": [mod.model_dump() for mod in available_suffixes],
-            "total_prefixes": len(available_prefixes),
-            "total_suffixes": len(available_suffixes),
+            "prefixes": [mod.model_dump() for mod in regular_prefixes],
+            "suffixes": [mod.model_dump() for mod in regular_suffixes],
+            "essence_prefixes": [mod.model_dump() for mod in essence_prefixes],
+            "essence_suffixes": [mod.model_dump() for mod in essence_suffixes],
+            "desecrated_prefixes": [mod.model_dump() for mod in desecrated_prefixes],
+            "desecrated_suffixes": [mod.model_dump() for mod in desecrated_suffixes],
+            "total_prefixes": len(regular_prefixes),
+            "total_suffixes": len(regular_suffixes),
+            "total_essence_prefixes": len(essence_prefixes),
+            "total_essence_suffixes": len(essence_suffixes),
+            "total_desecrated_prefixes": len(desecrated_prefixes),
+            "total_desecrated_suffixes": len(desecrated_suffixes),
         }
 
     except Exception as e:
@@ -261,4 +311,96 @@ async def parse_item(request: ItemParseRequest) -> dict:
         raise HTTPException(status_code=400, detail=str(e))
     except Exception as e:
         logger.error(f"Error parsing item: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/currency-tooltip/{currency_name}")
+async def get_currency_tooltip(currency_name: str) -> dict:
+    """Generate dynamic tooltip information for any currency from database data."""
+    try:
+        from app.services.crafting.config_service import get_essence_config, get_bone_config, get_currency_config
+
+        # Check if it's an essence
+        essence_config = get_essence_config(currency_name)
+        if essence_config:
+            # Generate essence tooltip from database data
+            description_parts = []
+
+            # Basic mechanic description
+            if essence_config.mechanic == "magic_to_rare":
+                description_parts.append("Upgrades Magic → Rare with guaranteed modifier")
+            elif essence_config.mechanic == "remove_add_rare":
+                description_parts.append("Removes random modifier and augments Rare with guaranteed modifier")
+
+            # Add effect details
+            mechanics_parts = []
+            for effect in essence_config.item_effects:
+                if effect.value_min is not None and effect.value_max is not None:
+                    value_range = f"({int(effect.value_min)}-{int(effect.value_max)})"
+                    mechanics_parts.append(f"• {effect.item_type}: {effect.effect_text.replace('()', value_range)}")
+                else:
+                    mechanics_parts.append(f"• {effect.item_type}: {effect.effect_text}")
+
+            return {
+                "name": currency_name,
+                "description": description_parts[0] if description_parts else currency_name,
+                "mechanics": "\n".join(mechanics_parts) if mechanics_parts else None,
+                "tier": essence_config.essence_tier,
+                "type": essence_config.essence_type
+            }
+
+        # Check if it's a desecration bone
+        bone_config = get_bone_config(currency_name)
+        if bone_config:
+            return {
+                "name": currency_name,
+                "description": f"Desecration: Offers 3 {bone_config.bone_type} modifier choices from the Well of Souls",
+                "mechanics": f"Targets {bone_config.bone_type} modifiers. Removes 1 random modifier if item has 6 modifiers.",
+                "tier": bone_config.quality,
+                "type": "desecration"
+            }
+
+        # Check if it's a regular currency with config data
+        currency_config = get_currency_config(currency_name)
+        if currency_config:
+            description = currency_name
+            mechanics = None
+
+            # Generate basic description based on mechanic type
+            if currency_config.mechanic_class == "TransmutationMechanic":
+                description = "Upgrades Normal → Magic with 1-2 random modifiers"
+            elif currency_config.mechanic_class == "AugmentationMechanic":
+                description = "Adds a random modifier to Magic items"
+            elif currency_config.mechanic_class == "AlchemyMechanic":
+                description = "Upgrades Normal → Rare with 4-6 random modifiers"
+            elif currency_config.mechanic_class == "RegalMechanic":
+                description = "Upgrades Magic → Rare, keeping existing modifiers and adding new ones"
+            elif currency_config.mechanic_class == "ExaltedMechanic":
+                description = "Adds a random modifier to Rare items"
+            elif currency_config.mechanic_class == "ChaosMechanic":
+                description = "Rerolls all modifiers on Rare items"
+            elif currency_config.mechanic_class == "DivineMechanic":
+                description = "Rerolls numeric values of all modifiers"
+            elif currency_config.mechanic_class == "AnnulmentMechanic":
+                description = "Removes a random modifier"
+            elif currency_config.mechanic_class == "FracturingMechanic":
+                description = "Fractures an item, making one modifier permanent"
+
+            return {
+                "name": currency_name,
+                "description": description,
+                "mechanics": mechanics,
+                "tier": currency_config.tier,
+                "type": currency_config.currency_type
+            }
+
+        # Fallback for other currencies
+        return {
+            "name": currency_name,
+            "description": currency_name,
+            "mechanics": None
+        }
+
+    except Exception as e:
+        logger.error(f"Error generating tooltip for {currency_name}: {e}")
         raise HTTPException(status_code=500, detail=str(e))

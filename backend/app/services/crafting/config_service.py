@@ -144,7 +144,8 @@ class CraftingConfigService:
                 bone_type=bone.bone_type,
                 quality=bone.quality,
                 mechanic=bone.mechanic,
-                stack_size=bone.stack_size
+                stack_size=bone.stack_size,
+                applicable_items=bone.applicable_items or []
             )
             self._bone_configs[bone.name] = bone_info
 

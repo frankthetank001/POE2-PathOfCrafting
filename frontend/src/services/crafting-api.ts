@@ -53,10 +53,13 @@ export const craftingApi = {
   },
 
   getCategorizedCurrencies: async (): Promise<{
-    orbs: string[]
-    essences: string[]
-    bones: string[]
+    orbs: { implemented: string[], disabled: string[] }
+    essences: { implemented: string[], disabled: string[] }
+    bones: { implemented: string[], disabled: string[] }
+    omens: string[]
     total: number
+    implemented_count: number
+    disabled_count: number
   }> => {
     const response = await api.get('/currencies/categorized')
     return response.data
@@ -83,8 +86,16 @@ export const craftingApi = {
   ): Promise<{
     prefixes: ItemModifier[]
     suffixes: ItemModifier[]
+    essence_prefixes: ItemModifier[]
+    essence_suffixes: ItemModifier[]
+    desecrated_prefixes: ItemModifier[]
+    desecrated_suffixes: ItemModifier[]
     total_prefixes: number
     total_suffixes: number
+    total_essence_prefixes: number
+    total_essence_suffixes: number
+    total_desecrated_prefixes: number
+    total_desecrated_suffixes: number
   }> => {
     const response = await api.post('/available-mods', item)
     return response.data
@@ -115,6 +126,17 @@ export const craftingApi = {
     }
   }> => {
     const response = await api.post('/parse-item', { item_text: itemText })
+    return response.data
+  },
+
+  getCurrencyTooltip: async (currencyName: string): Promise<{
+    name: string
+    description: string
+    mechanics?: string
+    tier?: string
+    type?: string
+  }> => {
+    const response = await api.get(`/currency-tooltip/${encodeURIComponent(currencyName)}`)
     return response.data
   },
 }

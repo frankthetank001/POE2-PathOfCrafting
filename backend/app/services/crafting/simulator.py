@@ -93,13 +93,40 @@ class CraftingSimulator:
 
     def get_available_currencies(self, item: CraftableItem) -> List[str]:
         available = []
+        already_added = set()
 
+        # Check regular currencies
         for currency_name in unified_crafting_factory.get_all_available_currencies():
+            if currency_name in already_added:
+                continue
             currency = unified_crafting_factory.create_currency(currency_name)
             if currency:
                 can_apply, _ = currency.can_apply(item)
                 if can_apply:
                     available.append(currency_name)
+                    already_added.add(currency_name)
+
+        # Check essences separately
+        for essence_name in unified_crafting_factory.get_all_available_essences():
+            if essence_name in already_added:
+                continue
+            essence = unified_crafting_factory.create_currency(essence_name)
+            if essence:
+                can_apply, _ = essence.can_apply(item)
+                if can_apply:
+                    available.append(essence_name)
+                    already_added.add(essence_name)
+
+        # Check desecration bones separately
+        for bone_name in unified_crafting_factory.get_all_available_bones():
+            if bone_name in already_added:
+                continue
+            bone = unified_crafting_factory.create_currency(bone_name)
+            if bone:
+                can_apply, _ = bone.can_apply(item)
+                if can_apply:
+                    available.append(bone_name)
+                    already_added.add(bone_name)
 
         return available
 

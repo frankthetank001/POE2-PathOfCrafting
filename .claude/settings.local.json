@@ -22,7 +22,13 @@
       "WebFetch(domain:www.poe2wiki.net)",
       "Read(//c/Users/frank/OneDrive/Pictures/Screenshots/**)",
       "Bash(npm run type-check:*)",
-      "Bash(ruff check:*)"
+      "Bash(ruff check:*)",
+      "Bash(find:*)",
+      "Bash(for essence in \"Lesser Essence of the Body\" \"Essence of the Body\" \"Lesser Essence of Enhancement\" \"Essence of Enhancement\")",
+      "Bash(do echo \"=== $essence ===\")",
+      "Bash(done)",
+      "Bash(PYTHONPATH:*)",
+      "Bash(sqlite3:*)"
     ],
     "deny": [],
     "ask": [],

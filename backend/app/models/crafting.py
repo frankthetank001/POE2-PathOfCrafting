@@ -130,6 +130,7 @@ class DesecrationBone(Base):
     quality = Column(String(20), nullable=False)  # "regular", "ancient"
     mechanic = Column(String(50), nullable=False)  # "add_desecrated_mod"
     stack_size = Column(Integer, default=20)
+    applicable_items = Column(JSON, default=[])  # ["weapon", "str_armour", "caster_weapon"]
 
 
 class ModifierPool(Base):

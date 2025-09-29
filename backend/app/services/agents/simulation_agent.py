@@ -12,7 +12,6 @@ from app.services.agents.schemas import (
 from app.schemas.crafting import CraftableItem, ItemModifier, ItemRarity, ModType
 from app.services.crafting.simulator import CraftingSimulator
 from app.services.crafting.modifier_pool import ModifierPool
-from app.services.crafting.currencies import CurrencyFactory
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)
