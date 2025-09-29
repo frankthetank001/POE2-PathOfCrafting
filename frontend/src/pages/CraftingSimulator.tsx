@@ -27,9 +27,9 @@ function CraftingSimulator() {
   }>({ orbs: [], essences: [], bones: [] })
   const [availableCurrencies, setAvailableCurrencies] = useState<string[]>([])
   const [selectedCurrency, setSelectedCurrency] = useState<string>('')
+  const [selectedEssence, setSelectedEssence] = useState<string>('')
   const [selectedOmens, setSelectedOmens] = useState<string[]>([])
   const [availableOmens, setAvailableOmens] = useState<string[]>([])
-  const [allOmens, setAllOmens] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
   const [message, setMessage] = useState<string>('')
   const [history, setHistory] = useState<string[]>([])
@@ -54,6 +54,7 @@ function CraftingSimulator() {
   const [itemPasteText, setItemPasteText] = useState('')
   const [pasteExpanded, setPasteExpanded] = useState(false)
   const [pasteMessage, setPasteMessage] = useState('')
+  const [essencesModalOpen, setEssencesModalOpen] = useState(false)
   const [modsPoolWidth, setModsPoolWidth] = useState<number>(() => {
     const saved = localStorage.getItem('modsPoolWidth')
     return saved ? parseInt(saved) : 600
@@ -85,7 +86,6 @@ function CraftingSimulator() {
   useEffect(() => {
     loadCurrencies()
     loadItemBases()
-    loadAllOmens()
   }, [])
 
   useEffect(() => {
@@ -283,28 +283,6 @@ function CraftingSimulator() {
     return calculated
   }
 
-  const loadAllOmens = async () => {
-    const allOmenNames = [
-      "Omen of Whittling",
-      "Omen of Greater Exaltation",
-      "Omen of Sinistral Exaltation",
-      "Omen of Dextral Exaltation",
-      "Omen of Homogenising Exaltation",
-      "Omen of Catalysing Exaltation",
-      "Omen of Sinistral Erasure",
-      "Omen of Dextral Erasure",
-      "Omen of Greater Annulment",
-      "Omen of Sinistral Annulment",
-      "Omen of Dextral Annulment",
-      "Omen of Sinistral Coronation",
-      "Omen of Dextral Coronation",
-      "Omen of Homogenising Coronation",
-      "Omen of Sinistral Alchemy",
-      "Omen of Dextral Alchemy",
-      "Omen of Corruption"
-    ]
-    setAllOmens(allOmenNames)
-  }
 
   const loadAvailableOmens = async (currencyName: string) => {
     try {
@@ -620,26 +598,62 @@ function CraftingSimulator() {
       "Chaos Orb": "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png",
       "Greater Chaos Orb": "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png",
       "Perfect Chaos Orb": "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png",
-      "Divine Orb": "https://www.poe2wiki.net/images/5/58/Divine_Orb_inventory_icon.png"
+      "Divine Orb": "https://www.poe2wiki.net/images/5/58/Divine_Orb_inventory_icon.png",
+      "Orb of Annulment": "https://www.poe2wiki.net/images/4/4c/Orb_of_Annulment_inventory_icon.png",
+      "Orb of Alchemy": "https://www.poe2wiki.net/images/9/9f/Orb_of_Alchemy_inventory_icon.png",
+      "Vaal Orb": "https://www.poe2wiki.net/images/2/2c/Vaal_Orb_inventory_icon.png",
+      "Orb of Fracturing": "https://www.poe2wiki.net/images/7/70/Fracturing_Orb_inventory_icon.png"
     }
 
     // Handle Essences - based on poe2wiki.net/wiki/Essence
     if (currency.includes('Essence of')) {
-      // Map our backend names to actual PoE2 wiki icon URLs
-      // Note: PoE2 uses different names (Flames not Fire, Ice not Cold, etc.)
+      // Map essence names to actual PoE2 wiki icon URLs - Complete list from poe2wiki.net
       const essenceIconMap: Record<string, string> = {
+        // Basic damage essences
+        'Flames': 'https://www.poe2wiki.net/images/d/d4/Essence_of_Flames_inventory_icon.png',
         'Fire': 'https://www.poe2wiki.net/images/d/d4/Essence_of_Flames_inventory_icon.png',
+        'Ice': 'https://www.poe2wiki.net/images/d/df/Essence_of_Ice_inventory_icon.png',
         'Cold': 'https://www.poe2wiki.net/images/d/df/Essence_of_Ice_inventory_icon.png',
+        'Electricity': 'https://www.poe2wiki.net/images/c/ca/Essence_of_Electricity_inventory_icon.png',
         'Lightning': 'https://www.poe2wiki.net/images/c/ca/Essence_of_Electricity_inventory_icon.png',
+
+        // Defense essences
+        'the Body': 'https://www.poe2wiki.net/images/b/b2/Essence_of_the_Body_inventory_icon.png',
         'Life': 'https://www.poe2wiki.net/images/b/b2/Essence_of_the_Body_inventory_icon.png',
+        'the Mind': 'https://www.poe2wiki.net/images/6/62/Essence_of_the_Mind_inventory_icon.png',
         'Mana': 'https://www.poe2wiki.net/images/6/62/Essence_of_the_Mind_inventory_icon.png',
+        'the Protector': 'https://www.poe2wiki.net/images/f/fc/Essence_of_the_Protector_inventory_icon.png',
         'Armor': 'https://www.poe2wiki.net/images/f/fc/Essence_of_the_Protector_inventory_icon.png',
-        'Evasion': 'https://www.poe2wiki.net/images/d/dc/Essence_of_Haste_inventory_icon.png',
+        'Haste': 'https://www.poe2wiki.net/images/0/09/Essence_of_Haste_inventory_icon.png',
+        'Evasion': 'https://www.poe2wiki.net/images/0/09/Essence_of_Haste_inventory_icon.png',
+        'Warding': 'https://www.poe2wiki.net/images/d/d1/Essence_of_Warding_inventory_icon.png',
         'Energy Shield': 'https://www.poe2wiki.net/images/d/d1/Essence_of_Warding_inventory_icon.png',
+
+        // Physical/Combat essences
+        'Abrasion': 'https://www.poe2wiki.net/images/2/22/Essence_of_Abrasion_inventory_icon.png',
+        'Battle': 'https://www.poe2wiki.net/images/2/28/Essence_of_Battle_inventory_icon.png',
+        'Sorcery': 'https://www.poe2wiki.net/images/3/38/Essence_of_Sorcery_inventory_icon.png',
+
+        // Support essences
+        'Alacrity': 'https://www.poe2wiki.net/images/3/33/Essence_of_Alacrity_inventory_icon.png',
+        'Command': 'https://www.poe2wiki.net/images/3/3a/Essence_of_Command_inventory_icon.png',
+        'Enhancement': 'https://www.poe2wiki.net/images/3/3f/Essence_of_Enhancement_inventory_icon.png',
+        'Grounding': 'https://www.poe2wiki.net/images/7/72/Essence_of_Grounding_inventory_icon.png',
+        'Seeking': 'https://www.poe2wiki.net/images/d/d4/Essence_of_Seeking_inventory_icon.png',
+        'Thawing': 'https://www.poe2wiki.net/images/2/21/Essence_of_Thawing_inventory_icon.png',
+        'Insulation': 'https://www.poe2wiki.net/images/4/45/Essence_of_Insulation_inventory_icon.png',
+        'Opulence': 'https://www.poe2wiki.net/images/d/d2/Essence_of_Opulence_inventory_icon.png',
+
+        // Chaos/Special essences
+        'Ruin': 'https://www.poe2wiki.net/images/5/54/Essence_of_Ruin_inventory_icon.png',
+        'the Infinite': 'https://www.poe2wiki.net/images/a/a7/Essence_of_the_Infinite_inventory_icon.png',
+
+        // Corrupted essences
         'Delirium': 'https://www.poe2wiki.net/images/9/9b/Essence_of_Delirium_inventory_icon.png',
-        'Horror': 'https://www.poe2wiki.net/images/0/06/Essence_of_Horror_inventory_icon.png',
-        'Hysteria': 'https://www.poe2wiki.net/images/b/b7/Essence_of_Hysteria_inventory_icon.png',
-        'Insanity': 'https://www.poe2wiki.net/images/d/d0/Essence_of_Insanity_inventory_icon.png',
+        'Horror': 'https://www.poe2wiki.net/images/c/c2/Essence_of_Horror_inventory_icon.png',
+        'Hysteria': 'https://www.poe2wiki.net/images/f/fc/Essence_of_Hysteria_inventory_icon.png',
+        'Insanity': 'https://www.poe2wiki.net/images/a/aa/Essence_of_Insanity_inventory_icon.png',
+        'the Abyss': 'https://www.poe2wiki.net/images/a/ac/Essence_of_the_Abyss_inventory_icon.png',
       }
 
       // Check which essence this is (works for Greater/Perfect variants too)
@@ -651,9 +665,35 @@ function CraftingSimulator() {
     }
 
     // Handle Abyssal Bones
-    if (currency.startsWith('Abyssal') || currency.startsWith('Ancient Abyssal')) {
-      // Generic bone icon for now - can be customized per bone type
-      return "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
+    if (currency.includes('Bone') || currency.includes('bone') || currency.startsWith('Abyssal') || currency.startsWith('Ancient')) {
+      const boneIconMap: Record<string, string> = {
+        // Ancient bones
+        'Ancient Collarbone': 'https://www.poe2wiki.net/images/2/29/Ancient_Collarbone_inventory_icon.png',
+        'Ancient Jawbone': 'https://www.poe2wiki.net/images/7/79/Ancient_Jawbone_inventory_icon.png',
+        'Ancient Rib': 'https://www.poe2wiki.net/images/9/9d/Ancient_Rib_inventory_icon.png',
+
+        // Preserved bones
+        'Preserved Collarbone': 'https://www.poe2wiki.net/images/7/7a/Preserved_Collarbone_inventory_icon.png',
+        'Preserved Jawbone': 'https://www.poe2wiki.net/images/4/47/Preserved_Jawbone_inventory_icon.png',
+
+        // Abyssal bones (fallback to Ancient variants)
+        'Abyssal Collarbone': 'https://www.poe2wiki.net/images/2/29/Ancient_Collarbone_inventory_icon.png',
+        'Abyssal Jawbone': 'https://www.poe2wiki.net/images/7/79/Ancient_Jawbone_inventory_icon.png',
+        'Abyssal Rib': 'https://www.poe2wiki.net/images/9/9d/Ancient_Rib_inventory_icon.png',
+      }
+
+      // Check for exact match first
+      if (boneIconMap[currency]) {
+        return boneIconMap[currency]
+      }
+
+      // Fallback for any unmatched bone - check if it contains key terms
+      if (currency.includes('Collarbone')) return 'https://www.poe2wiki.net/images/2/29/Ancient_Collarbone_inventory_icon.png'
+      if (currency.includes('Jawbone')) return 'https://www.poe2wiki.net/images/7/79/Ancient_Jawbone_inventory_icon.png'
+      if (currency.includes('Rib')) return 'https://www.poe2wiki.net/images/9/9d/Ancient_Rib_inventory_icon.png'
+
+      // Default bone icon
+      return 'https://www.poe2wiki.net/images/2/29/Ancient_Collarbone_inventory_icon.png'
     }
 
     return iconMap[currency] || "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
@@ -1142,7 +1182,7 @@ function CraftingSimulator() {
                           </div>
                         </Tooltip>
                       )
-                    })
+                    })}
                   </div>
                   {/* Augmentation family */}
                   <div className="currency-family-row">
@@ -1465,65 +1505,362 @@ function CraftingSimulator() {
                 </div>
               </div>
 
-              {/* Table 4: Essences */}
+              {/* Table 5: Essences */}
               <div className="currency-table">
                 <h5 className="currency-table-title">Essences</h5>
                 <div className="currency-horizontal-rows">
-                  <div className="currency-family-row">
-                    {categorizedCurrencies.essences.map((currency) => {
-                      const isAvailable = availableCurrencies.includes(currency)
-                      const isSelected = selectedCurrency === currency
-                      const currencyDescInfo = getCurrencyDescription(currency)
-
-                      return (
-                        <Tooltip
-                          key={currency}
-                          content={
-                            <div className="essence-tooltip">
-                              <CurrencyTooltip
-                                name={currency}
-                                description={currencyDescInfo}
-                                mechanics={isAvailable ? "Double-click to apply" : "Not available for this item"}
-                                statRanges={currencyDescInfo.includes("Adds +") ? currencyDescInfo.split("\n").find(line => line.includes("Adds +")) : undefined}
-                              />
-                            </div>
-                          }
-                          delay={0}
-                          position="top"
+                  <div className="currency-family-row essence-selector-row">
+                    {selectedEssence ? (
+                      <Tooltip
+                        content={
+                          <CurrencyTooltip
+                            name={selectedEssence}
+                            description={getCurrencyDescription(selectedEssence)}
+                            mechanics="Click to select as active currency, Double-click to apply, Click arrow for more essences"
+                          />
+                        }
+                        delay={0}
+                        position="top"
+                      >
+                        <div
+                          className={`currency-icon-button has-tooltip ${selectedCurrency === selectedEssence ? 'currency-selected' : ''}`}
+                          onClick={() => {
+                            if (selectedCurrency === selectedEssence) {
+                              setSelectedCurrency('')
+                              setAvailableOmens([])
+                              setSelectedOmens([])
+                            } else {
+                              setSelectedCurrency(selectedEssence)
+                              loadAvailableOmens(selectedEssence)
+                              setSelectedOmens([])
+                            }
+                          }}
+                          onDoubleClick={() => handleCraft(selectedEssence)}
+                          style={{ position: 'relative' }}
                         >
-                          <div
-                            className={`currency-icon-button has-tooltip ${!isAvailable ? 'currency-disabled' : ''} ${isSelected ? 'currency-selected' : ''}`}
-                            onClick={() => {
-                              if (isAvailable) {
-                                if (selectedCurrency === currency) {
-                                  // Deselect if same currency is clicked
-                                  setSelectedCurrency('')
-                                  setAvailableOmens([])
-                                  setSelectedOmens([])
-                                } else {
-                                  setSelectedCurrency(currency)
-                                  loadAvailableOmens(currency)
-                                  setSelectedOmens([]) // Clear omens when switching currency
-                                }
-                              }
+                          <img
+                            src={getCurrencyIconUrl(selectedEssence)}
+                            alt={selectedEssence}
+                            className="currency-icon-img"
+                          />
+                          <button
+                            className="essence-expand-arrow"
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              setEssencesModalOpen(true)
                             }}
-                            onDoubleClick={() => isAvailable && handleCraft(currency)}
+                            title="Choose different essence"
                           >
-                            <img
-                              src={getCurrencyIconUrl(currency)}
-                              alt={currency}
-                              className="currency-icon-img"
-                              onError={(e) => {
-                                (e.target as HTMLImageElement).src = "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
-                              }}
-                            />
-                          </div>
-                        </Tooltip>
-                      )
-                    })}
+                            ▼
+                          </button>
+                        </div>
+                      </Tooltip>
+                    ) : (
+                      <div className="essence-placeholder-button" title={`Click arrow to choose Essence (${categorizedCurrencies.essences.length} available)`}>
+                        <span className="essences-icon">💎</span>
+                        <span className="essence-placeholder-text">Select</span>
+                        <button
+                          className="essence-expand-arrow"
+                          onClick={(e) => {
+                            e.preventDefault()
+                            setEssencesModalOpen(true)
+                          }}
+                          title="Choose Essence"
+                        >
+                          ▼
+                        </button>
+                      </div>
+                    )}
                   </div>
                 </div>
               </div>
+
+              {/* Essences Modal */}
+              {essencesModalOpen && (
+                <div className="essence-modal-overlay" onClick={() => setEssencesModalOpen(false)}>
+                  <div className="essence-modal" onClick={(e) => e.stopPropagation()}>
+                    <div className="essence-modal-header">
+                      <h2>Essences</h2>
+                      <button className="essence-modal-close" onClick={() => setEssencesModalOpen(false)}>×</button>
+                    </div>
+                    <div className="essence-modal-content">
+                <div className="essence-stash-layout">
+                  {(() => {
+                    // Group essences by type
+                    const groupedEssences: Record<string, string[]> = {}
+
+                    categorizedCurrencies.essences.forEach(essence => {
+                      let baseType = ''
+                      if (essence.includes('the Body')) baseType = 'the Body'
+                      else if (essence.includes('the Mind')) baseType = 'the Mind'
+                      else if (essence.includes('Enhancement')) baseType = 'Enhancement'
+                      else if (essence.includes('Flames')) baseType = 'Flames'
+                      else if (essence.includes('Insulation')) baseType = 'Insulation'
+                      else if (essence.includes('Ice')) baseType = 'Ice'
+                      else if (essence.includes('Thawing')) baseType = 'Thawing'
+                      else if (essence.includes('Electricity')) baseType = 'Electricity'
+                      else if (essence.includes('Grounding')) baseType = 'Grounding'
+                      else if (essence.includes('Ruin')) baseType = 'Ruin'
+                      else if (essence.includes('Command')) baseType = 'Command'
+                      else if (essence.includes('Abrasion')) baseType = 'Abrasion'
+                      else if (essence.includes('Sorcery')) baseType = 'Sorcery'
+                      else if (essence.includes('Haste')) baseType = 'Haste'
+                      else if (essence.includes('Alacrity')) baseType = 'Alacrity'
+                      else if (essence.includes('Seeking')) baseType = 'Seeking'
+                      else if (essence.includes('Battle')) baseType = 'Battle'
+                      else if (essence.includes('the Infinite')) baseType = 'the Infinite'
+                      else if (essence.includes('Opulence')) baseType = 'Opulence'
+                      else if (essence.includes('Hysteria') || essence.includes('Delirium') || essence.includes('Horror') || essence.includes('Insanity') || essence.includes('the Abyss')) baseType = 'Corrupted'
+                      else {
+                        console.log('Unmatched essence:', essence)
+                        baseType = 'Other'
+                      }
+
+                      if (!groupedEssences[baseType]) {
+                        groupedEssences[baseType] = []
+                      }
+                      groupedEssences[baseType].push(essence)
+                    })
+
+                    // Sort each group by tier
+                    Object.keys(groupedEssences).forEach(baseType => {
+                      groupedEssences[baseType].sort((a, b) => {
+                        const getTierOrder = (name: string) => {
+                          if (name.startsWith('Lesser Essence')) return 1
+                          if (name.startsWith('Essence of')) return 2
+                          if (name.startsWith('Greater Essence')) return 3
+                          if (name.startsWith('Perfect Essence')) return 4
+                          return 5
+                        }
+                        return getTierOrder(a) - getTierOrder(b)
+                      })
+                    })
+
+                    const renderEssenceRow = (baseType: string) => {
+                      if (!groupedEssences[baseType] || groupedEssences[baseType].length === 0) return null
+
+                      return (
+                        <div key={baseType} className="essence-type-row">
+                          {groupedEssences[baseType].map((currency) => {
+                            const isAvailable = availableCurrencies.includes(currency)
+                            const isSelected = selectedEssence === currency
+                            const currencyDescInfo = getCurrencyDescription(currency)
+
+                            return (
+                              <Tooltip
+                                key={currency}
+                                content={
+                                  <div className="essence-tooltip">
+                                    <CurrencyTooltip
+                                      name={currency}
+                                      description={currencyDescInfo}
+                                      mechanics={isAvailable ? "Double-click to apply" : "Not available for this item"}
+                                      statRanges={currencyDescInfo.includes("Adds +") ? currencyDescInfo.split("\n").find(line => line.includes("Adds +")) : undefined}
+                                    />
+                                  </div>
+                                }
+                                delay={0}
+                                position="top"
+                              >
+                                <div
+                                  className={`currency-icon-button has-tooltip ${!isAvailable ? 'currency-disabled' : ''} ${isSelected ? 'currency-selected' : ''}`}
+                                  onClick={() => {
+                                    if (isAvailable) {
+                                      setSelectedEssence(currency)
+                                      setEssencesModalOpen(false)
+                                    }
+                                  }}
+                                  onDoubleClick={() => {
+                                    if (isAvailable) {
+                                      handleCraft(currency)
+                                      setEssencesModalOpen(false)
+                                    }
+                                  }}
+                                >
+                                  <img
+                                    src={getCurrencyIconUrl(currency)}
+                                    alt={currency}
+                                    className="currency-icon-img"
+                                    onError={(e) => {
+                                      (e.target as HTMLImageElement).src = "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
+                                    }}
+                                  />
+                                </div>
+                              </Tooltip>
+                            )
+                          })}
+                        </div>
+                      )
+                    }
+
+                    return (
+                      <>
+                        {/* Column 1: Main essences */}
+                        <div className="essence-column-1">
+                          {renderEssenceRow('the Body')}
+                          {renderEssenceRow('the Mind')}
+                          {renderEssenceRow('Enhancement')}
+                          {renderEssenceRow('Flames')}
+                          {renderEssenceRow('Insulation')}
+                          {renderEssenceRow('Ice')}
+                          {renderEssenceRow('Thawing')}
+                          {renderEssenceRow('Electricity')}
+                          {renderEssenceRow('Grounding')}
+                          {renderEssenceRow('Ruin')}
+                        </div>
+
+                        {/* Column 2: Corrupted essences */}
+                        <div className="essence-column-2">
+                          <div className="corrupted-essences">
+                            <div className="corrupted-row">
+                              {groupedEssences['Corrupted']?.filter(e => e.includes('Hysteria')).map(currency => (
+                                <Tooltip
+                                  key={currency}
+                                  content={
+                                    <div className="essence-tooltip">
+                                      <CurrencyTooltip name={currency} description={getCurrencyDescription(currency)} />
+                                    </div>
+                                  }
+                                >
+                                  <div
+                                    className={`currency-icon-button ${selectedEssence === currency ? 'currency-selected' : ''}`}
+                                    onClick={() => {
+                                      setSelectedEssence(currency)
+                                      setEssencesModalOpen(false)
+                                    }}
+                                    onDoubleClick={() => {
+                                      handleCraft(currency)
+                                      setEssencesModalOpen(false)
+                                    }}
+                                  >
+                                    <img src={getCurrencyIconUrl(currency)} alt={currency} className="currency-icon-img" />
+                                  </div>
+                                </Tooltip>
+                              ))}
+                              {groupedEssences['Corrupted']?.filter(e => e.includes('Horror')).map(currency => (
+                                <Tooltip
+                                  key={currency}
+                                  content={
+                                    <div className="essence-tooltip">
+                                      <CurrencyTooltip name={currency} description={getCurrencyDescription(currency)} />
+                                    </div>
+                                  }
+                                >
+                                  <div
+                                    className={`currency-icon-button ${selectedEssence === currency ? 'currency-selected' : ''}`}
+                                    onClick={() => {
+                                      setSelectedEssence(currency)
+                                      setEssencesModalOpen(false)
+                                    }}
+                                    onDoubleClick={() => {
+                                      handleCraft(currency)
+                                      setEssencesModalOpen(false)
+                                    }}
+                                  >
+                                    <img src={getCurrencyIconUrl(currency)} alt={currency} className="currency-icon-img" />
+                                  </div>
+                                </Tooltip>
+                              ))}
+                            </div>
+                            <div className="corrupted-row">
+                              {groupedEssences['Corrupted']?.filter(e => e.includes('Delirium')).map(currency => (
+                                <Tooltip
+                                  key={currency}
+                                  content={
+                                    <div className="essence-tooltip">
+                                      <CurrencyTooltip name={currency} description={getCurrencyDescription(currency)} />
+                                    </div>
+                                  }
+                                >
+                                  <div
+                                    className={`currency-icon-button ${selectedEssence === currency ? 'currency-selected' : ''}`}
+                                    onClick={() => {
+                                      setSelectedEssence(currency)
+                                      setEssencesModalOpen(false)
+                                    }}
+                                    onDoubleClick={() => {
+                                      handleCraft(currency)
+                                      setEssencesModalOpen(false)
+                                    }}
+                                  >
+                                    <img src={getCurrencyIconUrl(currency)} alt={currency} className="currency-icon-img" />
+                                  </div>
+                                </Tooltip>
+                              ))}
+                              {groupedEssences['Corrupted']?.filter(e => e.includes('Insanity')).map(currency => (
+                                <Tooltip
+                                  key={currency}
+                                  content={
+                                    <div className="essence-tooltip">
+                                      <CurrencyTooltip name={currency} description={getCurrencyDescription(currency)} />
+                                    </div>
+                                  }
+                                >
+                                  <div
+                                    className={`currency-icon-button ${selectedEssence === currency ? 'currency-selected' : ''}`}
+                                    onClick={() => {
+                                      setSelectedEssence(currency)
+                                      setEssencesModalOpen(false)
+                                    }}
+                                    onDoubleClick={() => {
+                                      handleCraft(currency)
+                                      setEssencesModalOpen(false)
+                                    }}
+                                  >
+                                    <img src={getCurrencyIconUrl(currency)} alt={currency} className="currency-icon-img" />
+                                  </div>
+                                </Tooltip>
+                              ))}
+                            </div>
+                            <div className="corrupted-row abyss-row">
+                              {groupedEssences['Corrupted']?.filter(e => e.includes('the Abyss')).map(currency => (
+                                <Tooltip
+                                  key={currency}
+                                  content={
+                                    <div className="essence-tooltip">
+                                      <CurrencyTooltip name={currency} description={getCurrencyDescription(currency)} />
+                                    </div>
+                                  }
+                                >
+                                  <div
+                                    className={`currency-icon-button ${selectedEssence === currency ? 'currency-selected' : ''}`}
+                                    onClick={() => {
+                                      setSelectedEssence(currency)
+                                      setEssencesModalOpen(false)
+                                    }}
+                                    onDoubleClick={() => {
+                                      handleCraft(currency)
+                                      setEssencesModalOpen(false)
+                                    }}
+                                  >
+                                    <img src={getCurrencyIconUrl(currency)} alt={currency} className="currency-icon-img" />
+                                  </div>
+                                </Tooltip>
+                              ))}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Column 3: Remaining essences */}
+                        <div className="essence-column-3">
+                          {renderEssenceRow('Command')}
+                          {renderEssenceRow('Abrasion')}
+                          {renderEssenceRow('Sorcery')}
+                          {renderEssenceRow('Haste')}
+                          {renderEssenceRow('Alacrity')}
+                          {renderEssenceRow('Seeking')}
+                          {renderEssenceRow('Battle')}
+                          {renderEssenceRow('the Infinite')}
+                          {renderEssenceRow('Opulence')}
+                        </div>
+                      </>
+                    )
+                  })()}
+                </div>
+                    </div>
+                  </div>
+                </div>
+              )}
 
               {/* Table 5: Omens */}
               <div className="currency-table omen-table">
@@ -1568,7 +1905,7 @@ function CraftingSimulator() {
                             </div>
                           </Tooltip>
                         )
-                      })
+                      })}
                     </div>
                   </div>
 

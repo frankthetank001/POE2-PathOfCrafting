@@ -1721,28 +1721,53 @@
   color: #4a9eff;
 }
 
-/* Omen grouping styles */
+/* Omen grouping styles - 2-column layout */
+.omen-table .currency-horizontal-rows {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.5rem;
+}
+
 .omen-group {
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.25rem;
 }
 
 .omen-group-label {
   display: block;
-  font-size: 0.7rem;
+  font-size: 0.65rem;
   color: #9370db;
   font-weight: 600;
   text-align: center;
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.125rem;
   text-transform: uppercase;
   letter-spacing: 0.5px;
+  line-height: 1;
 }
 
 .omen-group .currency-family-row {
   justify-content: center;
   border: 1px solid rgba(106, 90, 205, 0.2);
   border-radius: 4px;
-  padding: 0.25rem;
+  padding: 0.15rem;
   background: rgba(106, 90, 205, 0.05);
+  gap: 0.2rem;
+}
+
+/* Compact mobile design for omens */
+@media (max-width: 768px) {
+  .omen-group {
+    margin-bottom: 0.2rem;
+  }
+
+  .omen-group-label {
+    font-size: 0.6rem;
+    margin-bottom: 0.1rem;
+  }
+
+  .omen-group .currency-family-row {
+    padding: 0.1rem;
+    gap: 0.15rem;
+  }
 }
 
 /* Apply Currency Button */
@@ -1784,6 +1809,7 @@
   gap: 0.5rem;
   align-items: flex-start;
   flex-wrap: wrap;
+  justify-content: center;
 }
 
 .currency-table {
@@ -1823,6 +1849,16 @@
   gap: 0.25rem;
   align-items: center;
   justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* Ensure essence rows display horizontally */
+.currency-table .currency-horizontal-rows .currency-family-row {
+  display: flex !important;
+  flex-direction: row !important;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0.25rem;
   flex-wrap: wrap;
 }
 
@@ -1945,4 +1981,268 @@
     width: 28px;
     height: 28px;
   }
+}
+
+/* 3-Column Essence Stash Layout */
+.essence-stash-layout {
+  display: grid;
+  grid-template-columns: auto auto auto;
+  gap: 2rem;
+  width: fit-content;
+  align-items: start;
+  justify-content: center;
+  margin: 0 auto;
+}
+
+.essence-column-1,
+.essence-column-3 {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.essence-column-2 {
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  min-width: 120px;
+  padding-top: 0;
+}
+
+.essence-type-row {
+  display: flex;
+  flex-direction: row;
+  gap: 0.25rem;
+}
+
+/* Corrupted essences layout */
+.corrupted-essences {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.corrupted-row {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.abyss-row {
+  justify-content: center;
+}
+
+/* Essence Section Styling */
+.essence-section {
+  margin-top: 0.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.essences-button {
+  position: relative;
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 100%);
+  border: 2px solid #8e24aa;
+  border-radius: 8px;
+  color: #fff;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(74, 20, 140, 0.3);
+}
+
+.essences-button:hover {
+  background: linear-gradient(135deg, #5e1fa3 0%, #7b1fa2 100%);
+  border-color: #9c27b0;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(74, 20, 140, 0.5);
+}
+
+.essences-icon {
+  font-size: 1.5rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.expand-indicator {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  background: rgba(255, 255, 255, 0.9);
+  color: #4a148c;
+  font-size: 0.75rem;
+  font-weight: bold;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+/* Essence Placeholder Button */
+.essence-placeholder-button {
+  width: 50px;
+  height: 50px;
+  background: linear-gradient(135deg, #4a148c 0%, #6a1b9a 100%);
+  border: 2px solid #8e24aa;
+  border-radius: 8px;
+  color: #fff;
+  transition: all 0.2s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  box-shadow: 0 2px 8px rgba(74, 20, 140, 0.3);
+  position: relative;
+}
+
+.essence-placeholder-button:hover {
+  background: linear-gradient(135deg, #5e1fa3 0%, #7b1fa2 100%);
+  border-color: #9c27b0;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(74, 20, 140, 0.5);
+}
+
+.essence-placeholder-button .essences-icon {
+  font-size: 1.2rem;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.3));
+}
+
+.essence-placeholder-text {
+  font-size: 0.65rem;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  opacity: 0.9;
+}
+
+.essence-expand-arrow {
+  position: absolute;
+  bottom: 2px;
+  right: 2px;
+  width: 16px;
+  height: 16px;
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  border-radius: 3px;
+  color: #fff;
+  font-size: 8px;
+  line-height: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  backdrop-filter: blur(2px);
+}
+
+.essence-expand-arrow:hover {
+  background: rgba(0, 0, 0, 0.8);
+  border-color: rgba(255, 255, 255, 0.6);
+  transform: scale(1.1);
+}
+
+.essence-selector-row {
+  min-height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Essence Modal */
+.essence-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.85);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 10000;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.essence-modal {
+  background: #1a1a1a;
+  border: 2px solid #8e24aa;
+  border-radius: 12px;
+  width: fit-content;
+  max-width: 90vw;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 8px 32px rgba(142, 36, 170, 0.4);
+  animation: slideUp 0.3s ease-out;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.essence-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.5rem 2rem;
+  border-bottom: 2px solid #8e24aa;
+  background: linear-gradient(135deg, #2a0845 0%, #4a148c 100%);
+}
+
+.essence-modal-header h2 {
+  color: #d4af37;
+  margin: 0;
+  font-size: 1.5rem;
+}
+
+.essence-modal-close {
+  background: none;
+  border: none;
+  color: #fff;
+  font-size: 2rem;
+  cursor: pointer;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background-color 0.2s;
+}
+
+.essence-modal-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.essence-modal-content {
+  padding: 2rem;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.essence-modal-content .essence-stash-layout {
+  margin: 0;
 }

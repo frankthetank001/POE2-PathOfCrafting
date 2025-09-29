@@ -788,7 +788,7 @@ class CurrencyFactory:
         """Create an essence instance by its full name."""
         from app.services.crafting.essences import (
             EssenceFactory, EssenceType, EssenceTier,
-            EssenceOfHysteria, EssenceOfDelirium, EssenceOfHorror, EssenceOfInsanity
+            EssenceOfHysteria, EssenceOfDelirium, EssenceOfHorror, EssenceOfInsanity, EssenceOfTheAbyss
         )
 
         # Handle corrupted essences first
@@ -797,6 +797,7 @@ class CurrencyFactory:
             "Essence of Delirium": EssenceOfDelirium,
             "Essence of Horror": EssenceOfHorror,
             "Essence of Insanity": EssenceOfInsanity,
+            "Essence of the Abyss": EssenceOfTheAbyss,
         }
 
         if essence_name in corrupted_mapping:
@@ -822,21 +823,28 @@ class CurrencyFactory:
         of_index = parts.index("of")
         type_name = " ".join(parts[of_index + 1:])
 
-        # Map type names to EssenceType enums
         type_mapping = {
-            "Fire": EssenceType.FIRE,
-            "Cold": EssenceType.COLD,
-            "Lightning": EssenceType.LIGHTNING,
-            "Life": EssenceType.LIFE,
-            "Mana": EssenceType.MANA,
-            "Armor": EssenceType.ARMOR,
-            "Evasion": EssenceType.EVASION,
-            "Energy Shield": EssenceType.ENERGY_SHIELD,
-            "Attack Speed": EssenceType.ATTACK_SPEED,
-            "Cast Speed": EssenceType.CAST_SPEED,
-            "Critical": EssenceType.CRITICAL,
-            "Resistance": EssenceType.RESISTANCE,
-            "Damage": EssenceType.DAMAGE,
+            "Flames": EssenceType.FIRE,
+            "Ice": EssenceType.COLD,
+            "Electricity": EssenceType.LIGHTNING,
+            "the Body": EssenceType.LIFE,
+            "the Mind": EssenceType.MANA,
+            "the Protector": EssenceType.ARMOR,
+            "Haste": EssenceType.EVASION,
+            "Warding": EssenceType.ENERGY_SHIELD,
+            "Enhancement": EssenceType.ENHANCEMENT,
+            "Abrasion": EssenceType.ABRASION,
+            "Ruin": EssenceType.RUIN,
+            "Battle": EssenceType.BATTLE,
+            "Sorcery": EssenceType.SORCERY,
+            "the Infinite": EssenceType.INFINITE,
+            "Seeking": EssenceType.SEEKING,
+            "Insulation": EssenceType.INSULATION,
+            "Thawing": EssenceType.THAWING,
+            "Grounding": EssenceType.GROUNDING,
+            "Command": EssenceType.COMMAND,
+            "Alacrity": EssenceType.ALACRITY,
+            "Opulence": EssenceType.OPULENCE,
         }
 
         essence_type = type_mapping.get(type_name)

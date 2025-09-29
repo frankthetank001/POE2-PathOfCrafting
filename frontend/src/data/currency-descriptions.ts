@@ -266,6 +266,273 @@ export const CURRENCY_DESCRIPTIONS: Record<string, CurrencyDescription> = {
     description: "Removes a random modifier, then upgrades to Rare adding guaranteed highest-tier Energy Shield modifier"
   },
 
+  // Enhancement Essences (Defense)
+  "Lesser Essence of Enhancement": {
+    name: "Lesser Essence of Enhancement",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed defensive modifier",
+    mechanics: "Adds defensive modifiers like armor, evasion, or energy shield"
+  },
+  "Essence of Enhancement": {
+    name: "Essence of Enhancement",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed defensive modifier",
+    mechanics: "Adds mid-tier defensive modifiers"
+  },
+  "Greater Essence of Enhancement": {
+    name: "Greater Essence of Enhancement",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed high-tier defensive modifier"
+  },
+  "Perfect Essence of Enhancement": {
+    name: "Perfect Essence of Enhancement",
+    description: "Removes a random modifier, then upgrades to Rare adding guaranteed highest-tier defensive modifier"
+  },
+
+  // Abrasion Essences (Physical)
+  "Lesser Essence of Abrasion": {
+    name: "Lesser Essence of Abrasion",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed physical damage modifier",
+    mechanics: "Adds physical damage to weapons"
+  },
+  "Essence of Abrasion": {
+    name: "Essence of Abrasion",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed physical damage modifier",
+    mechanics: "Adds mid-tier physical damage"
+  },
+  "Greater Essence of Abrasion": {
+    name: "Greater Essence of Abrasion",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed high-tier physical damage modifier"
+  },
+  "Perfect Essence of Abrasion": {
+    name: "Perfect Essence of Abrasion",
+    description: "Removes a random modifier, then upgrades to Rare adding guaranteed highest-tier physical damage modifier"
+  },
+
+  // Ruin Essences (Chaos)
+  "Lesser Essence of Ruin": {
+    name: "Lesser Essence of Ruin",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed chaos damage modifier",
+    mechanics: "Adds chaos damage to weapons"
+  },
+  "Essence of Ruin": {
+    name: "Essence of Ruin",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed chaos damage modifier",
+    mechanics: "Adds mid-tier chaos damage"
+  },
+  "Greater Essence of Ruin": {
+    name: "Greater Essence of Ruin",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed high-tier chaos damage modifier"
+  },
+  "Perfect Essence of Ruin": {
+    name: "Perfect Essence of Ruin",
+    description: "Removes a random modifier, then upgrades to Rare adding guaranteed highest-tier chaos damage modifier"
+  },
+
+  // Battle Essences (Attack)
+  "Lesser Essence of Battle": {
+    name: "Lesser Essence of Battle",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed attack modifier",
+    mechanics: "Adds attack speed, accuracy, or critical strike modifiers"
+  },
+  "Essence of Battle": {
+    name: "Essence of Battle",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed attack modifier",
+    mechanics: "Adds mid-tier attack modifiers"
+  },
+  "Greater Essence of Battle": {
+    name: "Greater Essence of Battle",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed high-tier attack modifier"
+  },
+  "Perfect Essence of Battle": {
+    name: "Perfect Essence of Battle",
+    description: "Removes a random modifier, then upgrades to Rare adding guaranteed highest-tier attack modifier"
+  },
+
+  // Sorcery Essences (Caster)
+  "Lesser Essence of Sorcery": {
+    name: "Lesser Essence of Sorcery",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed caster modifier",
+    mechanics: "Adds spell damage, cast speed, or spell critical modifiers"
+  },
+  "Essence of Sorcery": {
+    name: "Essence of Sorcery",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed caster modifier",
+    mechanics: "Adds mid-tier caster modifiers"
+  },
+  "Greater Essence of Sorcery": {
+    name: "Greater Essence of Sorcery",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed high-tier caster modifier"
+  },
+  "Perfect Essence of Sorcery": {
+    name: "Perfect Essence of Sorcery",
+    description: "Removes a random modifier, then upgrades to Rare adding guaranteed highest-tier caster modifier"
+  },
+
+  // Infinite Essences (Attribute)
+  "Lesser Essence of the Infinite": {
+    name: "Lesser Essence of the Infinite",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed attribute modifier",
+    mechanics: "Adds strength, dexterity, or intelligence modifiers"
+  },
+  "Essence of the Infinite": {
+    name: "Essence of the Infinite",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed attribute modifier",
+    mechanics: "Adds mid-tier attribute modifiers"
+  },
+  "Greater Essence of the Infinite": {
+    name: "Greater Essence of the Infinite",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed high-tier attribute modifier"
+  },
+  "Perfect Essence of the Infinite": {
+    name: "Perfect Essence of the Infinite",
+    description: "Removes a random modifier, then upgrades to Rare adding guaranteed highest-tier attribute modifier"
+  },
+
+  // Seeking Essences (Critical)
+  "Lesser Essence of Seeking": {
+    name: "Lesser Essence of Seeking",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed critical strike modifier",
+    mechanics: "Adds critical strike chance or multiplier modifiers"
+  },
+  "Essence of Seeking": {
+    name: "Essence of Seeking",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed critical strike modifier",
+    mechanics: "Adds mid-tier critical strike modifiers"
+  },
+  "Greater Essence of Seeking": {
+    name: "Greater Essence of Seeking",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed high-tier critical strike modifier"
+  },
+  "Perfect Essence of Seeking": {
+    name: "Perfect Essence of Seeking",
+    description: "Removes a random modifier, then upgrades to Rare adding guaranteed highest-tier critical strike modifier"
+  },
+
+  // Resistance Essences
+  "Lesser Essence of Insulation": {
+    name: "Lesser Essence of Insulation",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed Fire Resistance modifier",
+    mechanics: "Adds +(11-15)% to Fire Resistance"
+  },
+  "Essence of Insulation": {
+    name: "Essence of Insulation",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed Fire Resistance modifier",
+    mechanics: "Adds +(16-20)% to Fire Resistance"
+  },
+  "Greater Essence of Insulation": {
+    name: "Greater Essence of Insulation",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed Fire Resistance modifier",
+    mechanics: "Adds +(21-25)% to Fire Resistance"
+  },
+  "Perfect Essence of Insulation": {
+    name: "Perfect Essence of Insulation",
+    description: "Removes a random modifier, then upgrades to Rare adding guaranteed highest-tier Fire Resistance modifier"
+  },
+
+  "Lesser Essence of Thawing": {
+    name: "Lesser Essence of Thawing",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed Cold Resistance modifier",
+    mechanics: "Adds +(11-15)% to Cold Resistance"
+  },
+  "Essence of Thawing": {
+    name: "Essence of Thawing",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed Cold Resistance modifier",
+    mechanics: "Adds +(16-20)% to Cold Resistance"
+  },
+  "Greater Essence of Thawing": {
+    name: "Greater Essence of Thawing",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed Cold Resistance modifier",
+    mechanics: "Adds +(21-25)% to Cold Resistance"
+  },
+  "Perfect Essence of Thawing": {
+    name: "Perfect Essence of Thawing",
+    description: "Removes a random modifier, then upgrades to Rare adding guaranteed highest-tier Cold Resistance modifier"
+  },
+
+  "Lesser Essence of Grounding": {
+    name: "Lesser Essence of Grounding",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed Lightning Resistance modifier",
+    mechanics: "Adds +(11-15)% to Lightning Resistance"
+  },
+  "Essence of Grounding": {
+    name: "Essence of Grounding",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed Lightning Resistance modifier",
+    mechanics: "Adds +(16-20)% to Lightning Resistance"
+  },
+  "Greater Essence of Grounding": {
+    name: "Greater Essence of Grounding",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed Lightning Resistance modifier",
+    mechanics: "Adds +(21-25)% to Lightning Resistance"
+  },
+  "Perfect Essence of Grounding": {
+    name: "Perfect Essence of Grounding",
+    description: "Removes a random modifier, then upgrades to Rare adding guaranteed highest-tier Lightning Resistance modifier"
+  },
+
+  // Command Essences
+  "Lesser Essence of Command": {
+    name: "Lesser Essence of Command",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed command modifier",
+    mechanics: "Adds weapon-related command modifiers"
+  },
+  "Essence of Command": {
+    name: "Essence of Command",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed command modifier",
+    mechanics: "Adds mid-tier weapon command modifiers"
+  },
+  "Greater Essence of Command": {
+    name: "Greater Essence of Command",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed high-tier command modifier"
+  },
+  "Perfect Essence of Command": {
+    name: "Perfect Essence of Command",
+    description: "Removes a random modifier, then upgrades to Rare adding guaranteed highest-tier command modifier"
+  },
+
+  // Alacrity Essences (Cast Speed)
+  "Lesser Essence of Alacrity": {
+    name: "Lesser Essence of Alacrity",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed Cast Speed modifier",
+    mechanics: "Adds (13-16)% increased Cast Speed to Foci/Wands, (20-25)% to Staves"
+  },
+  "Essence of Alacrity": {
+    name: "Essence of Alacrity",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed Cast Speed modifier",
+    mechanics: "Adds mid-tier Cast Speed modifiers"
+  },
+  "Greater Essence of Alacrity": {
+    name: "Greater Essence of Alacrity",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed high-tier Cast Speed modifier"
+  },
+  "Perfect Essence of Alacrity": {
+    name: "Perfect Essence of Alacrity",
+    description: "Removes a random modifier, then upgrades to Rare adding guaranteed highest-tier Cast Speed modifier"
+  },
+  "Lesser Essence of Opulence": {
+    name: "Lesser Essence of Opulence",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed Item Rarity modifier",
+    mechanics: "Adds (11-14)% increased Rarity of Items found"
+  },
+  "Essence of Opulence": {
+    name: "Essence of Opulence",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed Item Rarity modifier",
+    mechanics: "Adds (15-18)% increased Rarity of Items found"
+  },
+  "Greater Essence of Opulence": {
+    name: "Greater Essence of Opulence",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed high-tier Item Rarity modifier",
+    mechanics: "Adds (19-21)% increased Rarity of Items found"
+  },
+  "Perfect Essence of Opulence": {
+    name: "Perfect Essence of Opulence",
+    description: "Removes a random modifier, then upgrades to Rare adding guaranteed Gold Quantity modifier",
+    mechanics: "Adds (10-15)% increased Quantity of Gold Dropped by Slain Enemies to Gloves"
+  },
+
+  // Additional Corrupted Essences
+  "Essence of the Abyss": {
+    name: "Essence of the Abyss",
+    description: "Upgrades a Magic item to a Rare item, adding a guaranteed unique Abyss modifier",
+    mechanics: "Adds essence-only modifier not available through normal crafting"
+  },
 
   // Corrupted Essences
   "Essence of Delirium": {

@@ -27,6 +27,19 @@ class EssenceType(str, Enum):
     CRITICAL = "critical"
     RESISTANCE = "resistance"
     DAMAGE = "damage"
+    ENHANCEMENT = "enhancement"      # Defense essences
+    ABRASION = "abrasion"           # Physical damage essences
+    RUIN = "ruin"                   # Chaos damage essences
+    BATTLE = "battle"               # Attack essences
+    SORCERY = "sorcery"             # Caster essences
+    INFINITE = "infinite"           # Attribute essences
+    SEEKING = "seeking"             # Critical strike essences
+    INSULATION = "insulation"       # Fire resistance essences
+    THAWING = "thawing"            # Cold resistance essences
+    GROUNDING = "grounding"        # Lightning resistance essences
+    COMMAND = "command"            # Command essences
+    ALACRITY = "alacrity"          # Cast speed essences
+    OPULENCE = "opulence"          # Item rarity essences
 
 
 class EssenceTier(str, Enum):
@@ -60,6 +73,20 @@ class BaseEssence(CraftingCurrency, ABC):
             EssenceType.ARMOR: "the Protector",
             EssenceType.EVASION: "Haste",
             EssenceType.ENERGY_SHIELD: "Warding",
+            EssenceType.ENHANCEMENT: "Enhancement",
+            EssenceType.ABRASION: "Abrasion",
+            EssenceType.RUIN: "Ruin",
+            EssenceType.BATTLE: "Battle",
+            EssenceType.SORCERY: "Sorcery",
+            EssenceType.INFINITE: "the Infinite",
+            EssenceType.SEEKING: "Seeking",
+            EssenceType.INSULATION: "Insulation",
+            EssenceType.THAWING: "Thawing",
+            EssenceType.GROUNDING: "Grounding",
+            EssenceType.COMMAND: "Command",
+            EssenceType.ALACRITY: "Alacrity",
+            EssenceType.OPULENCE: "Opulence",
+            # Legacy mappings for backward compatibility
             EssenceType.ATTACK_SPEED: "Battle",
             EssenceType.CAST_SPEED: "Sorcery",
             EssenceType.CRITICAL: "Seeking",
@@ -390,6 +417,71 @@ class EssenceOfEnergyShield(BaseEssence):
         super().__init__(EssenceType.ENERGY_SHIELD, tier)
 
 
+class EssenceOfEnhancement(BaseEssence):
+    def __init__(self, tier: EssenceTier = EssenceTier.REGULAR):
+        super().__init__(EssenceType.ENHANCEMENT, tier)
+
+
+class EssenceOfAbrasion(BaseEssence):
+    def __init__(self, tier: EssenceTier = EssenceTier.REGULAR):
+        super().__init__(EssenceType.ABRASION, tier)
+
+
+class EssenceOfRuin(BaseEssence):
+    def __init__(self, tier: EssenceTier = EssenceTier.REGULAR):
+        super().__init__(EssenceType.RUIN, tier)
+
+
+class EssenceOfBattle(BaseEssence):
+    def __init__(self, tier: EssenceTier = EssenceTier.REGULAR):
+        super().__init__(EssenceType.BATTLE, tier)
+
+
+class EssenceOfSorcery(BaseEssence):
+    def __init__(self, tier: EssenceTier = EssenceTier.REGULAR):
+        super().__init__(EssenceType.SORCERY, tier)
+
+
+class EssenceOfTheInfinite(BaseEssence):
+    def __init__(self, tier: EssenceTier = EssenceTier.REGULAR):
+        super().__init__(EssenceType.INFINITE, tier)
+
+
+class EssenceOfSeeking(BaseEssence):
+    def __init__(self, tier: EssenceTier = EssenceTier.REGULAR):
+        super().__init__(EssenceType.SEEKING, tier)
+
+
+class EssenceOfInsulation(BaseEssence):
+    def __init__(self, tier: EssenceTier = EssenceTier.REGULAR):
+        super().__init__(EssenceType.INSULATION, tier)
+
+
+class EssenceOfThawing(BaseEssence):
+    def __init__(self, tier: EssenceTier = EssenceTier.REGULAR):
+        super().__init__(EssenceType.THAWING, tier)
+
+
+class EssenceOfGrounding(BaseEssence):
+    def __init__(self, tier: EssenceTier = EssenceTier.REGULAR):
+        super().__init__(EssenceType.GROUNDING, tier)
+
+
+class EssenceOfCommand(BaseEssence):
+    def __init__(self, tier: EssenceTier = EssenceTier.REGULAR):
+        super().__init__(EssenceType.COMMAND, tier)
+
+
+class EssenceOfAlacrity(BaseEssence):
+    def __init__(self, tier: EssenceTier = EssenceTier.REGULAR):
+        super().__init__(EssenceType.ALACRITY, tier)
+
+
+class EssenceOfOpulence(BaseEssence):
+    def __init__(self, tier: EssenceTier = EssenceTier.REGULAR):
+        super().__init__(EssenceType.OPULENCE, tier)
+
+
 # Corrupted essence types (unique modifiers)
 class EssenceOfHysteria(BaseEssence):
     def __init__(self):
@@ -415,6 +507,12 @@ class EssenceOfInsanity(BaseEssence):
         self.name = "Essence of Insanity"
 
 
+class EssenceOfTheAbyss(BaseEssence):
+    def __init__(self):
+        super().__init__(EssenceType.DAMAGE, EssenceTier.CORRUPTED)
+        self.name = "Essence of the Abyss"
+
+
 class EssenceFactory:
     """Factory for creating essence instances."""
 
@@ -430,6 +528,25 @@ class EssenceFactory:
             EssenceType.ARMOR: EssenceOfArmor,
             EssenceType.EVASION: EssenceOfEvasion,
             EssenceType.ENERGY_SHIELD: EssenceOfEnergyShield,
+            EssenceType.ENHANCEMENT: EssenceOfEnhancement,
+            EssenceType.ABRASION: EssenceOfAbrasion,
+            EssenceType.RUIN: EssenceOfRuin,
+            EssenceType.BATTLE: EssenceOfBattle,
+            EssenceType.SORCERY: EssenceOfSorcery,
+            EssenceType.INFINITE: EssenceOfTheInfinite,
+            EssenceType.SEEKING: EssenceOfSeeking,
+            EssenceType.INSULATION: EssenceOfInsulation,
+            EssenceType.THAWING: EssenceOfThawing,
+            EssenceType.GROUNDING: EssenceOfGrounding,
+            EssenceType.COMMAND: EssenceOfCommand,
+            EssenceType.ALACRITY: EssenceOfAlacrity,
+            EssenceType.OPULENCE: EssenceOfOpulence,
+            # Legacy mappings for backward compatibility
+            EssenceType.ATTACK_SPEED: EssenceOfBattle,
+            EssenceType.CAST_SPEED: EssenceOfSorcery,
+            EssenceType.CRITICAL: EssenceOfSeeking,
+            EssenceType.RESISTANCE: EssenceOfEnhancement,
+            EssenceType.DAMAGE: EssenceOfAbrasion,
         }
 
         essence_class = essence_classes.get(essence_type)
@@ -446,6 +563,7 @@ class EssenceFactory:
             "delirium": EssenceOfDelirium,
             "horror": EssenceOfHorror,
             "insanity": EssenceOfInsanity,
+            "abyss": EssenceOfTheAbyss,
         }
 
         essence_class = corrupted_essences.get(corrupted_type.lower())
@@ -459,20 +577,43 @@ class EssenceFactory:
         """Get all available essence names."""
         names = []
 
-        # Regular essence types with all tiers
-        essence_types = [
-            EssenceType.FIRE, EssenceType.COLD, EssenceType.LIGHTNING,
-            EssenceType.LIFE, EssenceType.MANA, EssenceType.ARMOR,
-            EssenceType.EVASION, EssenceType.ENERGY_SHIELD
+        # Regular essence types with all tiers - exact poe2db.tw layout
+        # Column 1
+        column1_types = [
+            EssenceType.LIFE,           # body
+            EssenceType.MANA,           # mind
+            EssenceType.ENHANCEMENT,    # enhancement
+            EssenceType.FIRE,           # flames
+            EssenceType.INSULATION,     # insulation (fire resistance)
+            EssenceType.COLD,           # ice
+            EssenceType.THAWING,        # thawing (cold resistance)
+            EssenceType.LIGHTNING,      # electricity
+            EssenceType.GROUNDING,      # grounding (lightning resistance)
+            EssenceType.RUIN,           # ruin
         ]
 
+        # Column 3 (Column 2 is corrupted essences handled separately)
+        column3_types = [
+            EssenceType.COMMAND,        # command
+            EssenceType.ABRASION,       # abrasion
+            EssenceType.SORCERY,        # sorcery
+            EssenceType.EVASION,        # haste
+            EssenceType.ALACRITY,       # alacrity
+            EssenceType.SEEKING,        # seeking
+            EssenceType.BATTLE,         # battle
+            EssenceType.INFINITE,       # infinite
+            EssenceType.OPULENCE,       # opulence
+        ]
+
+        essence_types = column1_types + column3_types
+
         for essence_type in essence_types:
-            for tier in [EssenceTier.REGULAR, EssenceTier.GREATER, EssenceTier.PERFECT]:
+            for tier in [EssenceTier.LESSER, EssenceTier.REGULAR, EssenceTier.GREATER, EssenceTier.PERFECT]:
                 essence = EssenceFactory.create_essence(essence_type, tier)
                 names.append(essence.name)
 
         # Corrupted essences
-        for corrupted_type in ["hysteria", "delirium", "horror", "insanity"]:
+        for corrupted_type in ["hysteria", "delirium", "horror", "insanity", "abyss"]:
             essence = EssenceFactory.create_corrupted_essence(corrupted_type)
             names.append(essence.name)
 
