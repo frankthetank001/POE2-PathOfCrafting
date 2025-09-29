@@ -237,6 +237,32 @@ async def create_base_item(slot: str, category: str, item_level: int = 65):
     return item.model_dump()
 
 
+def filter_mod_tags(mod):
+    """Filter to include only known valid tags from mod"""
+    if hasattr(mod, 'tags') and mod.tags:
+        # Known valid tags (positive match from screenshot)
+        valid_tags = {
+            'ailment', 'amanamu', 'attack', 'attribute', 'cold', 'critical',
+            'elemental', 'fire', 'gem', 'intelligence', 'kurgal', 'life',
+            'lightning', 'mana', 'minion', 'physical', 'speed', 'strength',
+            'dexterity', 'chaos', 'aura', 'curse', 'resistance', 'non-attack',
+            'non-cold', 'non-critical', 'non-lightning', 'non-physical',
+            'non-speed', 'non-influence', 'influence', 'ulaman'
+        }
+
+        # Only include tags that are in our known valid set
+        filtered_tags = [
+            tag for tag in mod.tags
+            if tag.lower() in valid_tags
+        ]
+
+        # Create a copy of the mod with filtered tags
+        mod_dict = mod.model_dump()
+        mod_dict['tags'] = filtered_tags
+        return mod_dict
+    return mod.model_dump()
+
+
 @router.post("/available-mods")
 async def get_available_mods(item: CraftableItem) -> dict:
     try:
@@ -263,12 +289,12 @@ async def get_available_mods(item: CraftableItem) -> dict:
         desecrated_suffixes = [mod for mod in available_suffixes if "desecrated_only" in mod.tags]
 
         return {
-            "prefixes": [mod.model_dump() for mod in regular_prefixes],
-            "suffixes": [mod.model_dump() for mod in regular_suffixes],
-            "essence_prefixes": [mod.model_dump() for mod in essence_prefixes],
-            "essence_suffixes": [mod.model_dump() for mod in essence_suffixes],
-            "desecrated_prefixes": [mod.model_dump() for mod in desecrated_prefixes],
-            "desecrated_suffixes": [mod.model_dump() for mod in desecrated_suffixes],
+            "prefixes": [filter_mod_tags(mod) for mod in regular_prefixes],
+            "suffixes": [filter_mod_tags(mod) for mod in regular_suffixes],
+            "essence_prefixes": [filter_mod_tags(mod) for mod in essence_prefixes],
+            "essence_suffixes": [filter_mod_tags(mod) for mod in essence_suffixes],
+            "desecrated_prefixes": [filter_mod_tags(mod) for mod in desecrated_prefixes],
+            "desecrated_suffixes": [filter_mod_tags(mod) for mod in desecrated_suffixes],
             "total_prefixes": len(regular_prefixes),
             "total_suffixes": len(regular_suffixes),
             "total_essence_prefixes": len(essence_prefixes),

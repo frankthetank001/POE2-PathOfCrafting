@@ -1,10 +1,11 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo } from 'react'
 import { craftingApi } from '@/services/crafting-api'
 import { getOmenDescription } from '@/data/currency-descriptions'
 import { CurrencyTooltipWrapper } from '@/components/CurrencyTooltipWrapper'
 import { Tooltip, CurrencyTooltip } from '@/components/Tooltip'
 import type { CraftableItem, ItemModifier, ItemRarity, ItemBasesBySlot } from '@/types/crafting'
 import './CraftingSimulator.css'
+
 
 function CraftingSimulator() {
   const [item, setItem] = useState<CraftableItem>({
@@ -61,6 +62,7 @@ function CraftingSimulator() {
     tags: string[]
     modType: 'all' | 'prefix' | 'suffix'
   }>({ search: '', tags: [], modType: 'all' })
+  const [activeTagFilters, setActiveTagFilters] = useState<Set<string>>(new Set())
   const [expandedModGroups, setExpandedModGroups] = useState<Set<string>>(new Set())
   const [itemBases, setItemBases] = useState<ItemBasesBySlot>({})
   const [selectedSlot, setSelectedSlot] = useState<string>('body_armour')
@@ -528,8 +530,10 @@ function CraftingSimulator() {
 
   // Function to check if a mod group should be greyed out
   const shouldGreyOutModGroup = (groupMods: ItemModifier[], modType: 'prefix' | 'suffix'): boolean => {
-    // If all mods in the group should be greyed out, grey out the group
-    return groupMods.every(mod => shouldGreyOutMod(mod, modType))
+    // Check if group should be greyed out due to omen incompatibility or tag filtering
+    const omentIncompatible = groupMods.every(mod => shouldGreyOutMod(mod, modType))
+    const tagFiltered = activeTagFilters.size > 0 && !groupMods.some(mod => isModMatchingTagFilters(mod))
+    return omentIncompatible || tagFiltered
   }
 
   const getGroupedMods = (modType: 'prefix' | 'suffix') => {
@@ -568,6 +572,32 @@ function CraftingSimulator() {
     return grouped
   }
 
+
+
+  const getDisplayName = (slot: string, category: string) => {
+    return `${category.replace('_', ' ')} ${slot.replace('_', ' ')}`
+  }
+
+  const formatSlotName = (slot: string) => {
+    return slot.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())
+  }
+
+  // Tag filtering functions
+  const toggleTagFilter = (tag: string) => {
+    const newFilters = new Set(activeTagFilters)
+    if (newFilters.has(tag)) {
+      newFilters.delete(tag)
+    } else {
+      newFilters.add(tag)
+    }
+    setActiveTagFilters(newFilters)
+  }
+
+  const clearTagFilters = () => {
+    setActiveTagFilters(new Set())
+  }
+
+  // Mod group expansion
   const toggleModGroup = (groupKey: string) => {
     const newExpanded = new Set(expandedModGroups)
     if (newExpanded.has(groupKey)) {
@@ -578,14 +608,39 @@ function CraftingSimulator() {
     setExpandedModGroups(newExpanded)
   }
 
-
-  const getDisplayName = (slot: string, category: string) => {
-    return `${category.replace('_', ' ')} ${slot.replace('_', ' ')}`
+  // Apply all tags from a mod group
+  const applyAllModTags = (mod: any) => {
+    if (mod.tags && mod.tags.length > 0) {
+      const newFilters = new Set(activeTagFilters)
+      mod.tags.forEach((tag: string) => newFilters.add(tag))
+      setActiveTagFilters(newFilters)
+    }
   }
 
-  const formatSlotName = (slot: string) => {
-    return slot.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())
+  const isModMatchingTagFilters = (mod: any) => {
+    if (activeTagFilters.size === 0) return true
+    if (!mod.tags) return false
+    return Array.from(activeTagFilters).every(filter => mod.tags.includes(filter))
   }
+
+  // Available tags from all mods
+  const allAvailableTags = useMemo(() => {
+    const tagSet = new Set<string>()
+    const allMods = [
+      ...availableMods.prefixes,
+      ...availableMods.suffixes,
+      ...availableMods.essence_prefixes,
+      ...availableMods.essence_suffixes,
+      ...availableMods.desecrated_prefixes,
+      ...availableMods.desecrated_suffixes
+    ]
+    allMods.forEach(mod => {
+      if (mod.tags) {
+        mod.tags.forEach((tag: string) => tagSet.add(tag))
+      }
+    })
+    return Array.from(tagSet).sort()
+  }, [availableMods])
 
   const formatCategoryName = (category: string) => {
     return category.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())
@@ -991,6 +1046,29 @@ function CraftingSimulator() {
                   value={modPoolFilter.search}
                   onChange={e => setModPoolFilter({ ...modPoolFilter, search: e.target.value })}
                 />
+
+                {/* Tag Filters */}
+                <div className="tag-filters">
+                  <span className="tag-filters-label">Filter by tags:</span>
+                  <button
+                    className={`clear-filters-btn ${activeTagFilters.size === 0 ? 'disabled' : ''}`}
+                    onClick={clearTagFilters}
+                    disabled={activeTagFilters.size === 0}
+                    title={activeTagFilters.size > 0 ? `Clear ${activeTagFilters.size} active filters` : 'No active filters'}
+                  >
+                    ↺
+                  </button>
+                  {allAvailableTags.map(tag => (
+                    <span
+                      key={tag}
+                      className={`legend-tag-text ${activeTagFilters.has(tag) ? 'active-filter' : ''}`}
+                      data-tag={tag}
+                      onClick={() => toggleTagFilter(tag)}
+                    >
+                      {tag}
+                    </span>
+                  ))}
+                </div>
               </div>
 
               <div className="mods-pool-columns">
@@ -1000,10 +1078,10 @@ function CraftingSimulator() {
                 {Object.entries(getGroupedMods('prefix')).map(([groupKey, groupMods]) => {
                   const bestTier = groupMods[0] // Tier 1 (highest)
                   const maxIlvl = Math.max(...groupMods.map(m => m.required_ilvl || 1))
-                  const isExpanded = expandedModGroups.has(`prefix-${groupKey}`)
                   const unavailableCount = groupMods.filter(m => m.required_ilvl && m.required_ilvl > item.item_level).length
                   const allUnavailable = unavailableCount === groupMods.length
                   const isGroupGreyedOut = shouldGreyOutModGroup(groupMods, 'prefix')
+                  const isExpanded = expandedModGroups.has(`prefix-${groupKey}`)
 
                   // Calculate available tier range
                   const availableMods = groupMods.filter(m => !m.required_ilvl || m.required_ilvl <= item.item_level)
@@ -1014,48 +1092,67 @@ function CraftingSimulator() {
                   return (
                     <div key={groupKey} className={`pool-mod-group ${isGroupGreyedOut ? 'omen-incompatible' : ''}`}>
                       <div
-                        className={`pool-mod-group-header prefix ${allUnavailable ? 'all-unavailable' : ''}`}
+                        className={`pool-mod-group-header prefix compact-single-line ${allUnavailable ? 'all-unavailable' : ''} mod-group-clickable`}
                         onClick={() => toggleModGroup(`prefix-${groupKey}`)}
+                        onDoubleClick={() => applyAllModTags(bestTier)}
+                        title="Click to expand/collapse, double-click to filter by all tags"
                       >
-                        <div className="group-main-info">
-                          <span className="pool-mod-stat-main">{bestTier.stat_text}</span>
-                          <div className="group-summary">
-                            <span className={`group-tier-range ${allUnavailable ? 'all-unavailable' : ''}`}>{tierRangeText}</span>
-                            <span className="group-max-ilvl">ilvl {maxIlvl}</span>
-                            {unavailableCount > 0 && (
-                              <span className={`unavailable-badge ${allUnavailable ? 'all-unavailable' : ''}`}>
-                                {unavailableCount} unavailable
-                              </span>
-                            )}
-                          </div>
+                        <span className="pool-mod-stat-main">{bestTier.stat_text}</span>
+                        <div className="compact-mod-info">
+                          {unavailableCount > 0 && (
+                            <span
+                              className="unavailable-indicator"
+                              title={`${unavailableCount} unavailable tier${unavailableCount > 1 ? 's' : ''}`}
+                            >
+                              ⚠
+                            </span>
+                          )}
+                          <span className={`group-tier-range ${allUnavailable ? 'all-unavailable' : ''}`}>{tierRangeText}</span>
+                          <span className="group-max-ilvl">ilvl {maxIlvl}</span>
+                          <span className="expand-indicator">{isExpanded ? '▼' : '▶'}</span>
+                          {bestTier.tags && bestTier.tags.length > 0 && (
+                            <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
+                              {bestTier.tags.map((tag, i) => (
+                                <span
+                                  key={i}
+                                  className={`mod-tag-text ${activeTagFilters.has(tag) ? 'active-filter' : ''}`}
+                                  data-tag={tag}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleTagFilter(tag);
+                                  }}
+                                  title={`Click to filter by "${tag}" tag`}
+                                >
+                                  {tag}
+                                </span>
+                              ))}
+                            </div>
+                          )}
                         </div>
-                        <span className="expand-indicator">{isExpanded ? '−' : '+'}</span>
                       </div>
 
                       {isExpanded && (
-                        <div className="tier-breakdown">
-                          {groupMods.map((mod, idx) => {
-                            const isUnavailable = mod.required_ilvl && mod.required_ilvl > item.item_level
-                            const isGreyedOut = shouldGreyOutMod(mod, 'prefix')
+                        <div className="mod-tier-details">
+                          {groupMods.map(mod => {
+                            // Format the value range for this tier
+                            let valueText = ''
+                            if (mod.stat_min !== undefined && mod.stat_max !== undefined) {
+                              if (mod.stat_min === mod.stat_max) {
+                                valueText = `${mod.stat_min}`
+                              } else {
+                                valueText = `${mod.stat_min}-${mod.stat_max}`
+                              }
+                            }
+
                             return (
-                              <div key={idx} className={`tier-item ${isUnavailable ? 'unavailable' : ''} ${isGreyedOut ? 'omen-incompatible' : ''}`}>
-                                <div className="tier-header">
-                                  <span className="tier-label">T{mod.tier}</span>
-                                  <span className={`tier-ilvl ${isUnavailable ? 'ilvl-too-high' : ''}`}>
-                                    ilvl {mod.required_ilvl}
-                                    {isUnavailable && ' ⚠'}
-                                  </span>
-                                </div>
-                                {mod.stat_min !== undefined && mod.stat_max !== undefined && (
-                                  <div className="tier-range">{mod.stat_min}-{mod.stat_max}</div>
-                                )}
-                                {mod.tags && mod.tags.length > 0 && (
-                                  <div className="tier-tags">
-                                    {mod.tags.slice(0, 3).map((tag, i) => (
-                                      <span key={i} className="pool-tag">{tag}</span>
-                                    ))}
-                                  </div>
-                                )}
+                              <div
+                                key={mod.tier}
+                                className={`tier-detail ${mod.required_ilvl && mod.required_ilvl > item.item_level ? 'unavailable' : ''}`}
+                              >
+                                <span className="tier-label">T{mod.tier}</span>
+                                <span className="tier-stat">{mod.stat_text}</span>
+                                {valueText && <span className="tier-values">({valueText})</span>}
+                                <span className="tier-ilvl">ilvl {mod.required_ilvl || 1}</span>
                               </div>
                             )
                           })}
@@ -1073,10 +1170,10 @@ function CraftingSimulator() {
                 {Object.entries(getGroupedMods('suffix')).map(([groupKey, groupMods]) => {
                   const bestTier = groupMods[0] // Tier 1 (highest)
                   const maxIlvl = Math.max(...groupMods.map(m => m.required_ilvl || 1))
-                  const isExpanded = expandedModGroups.has(`suffix-${groupKey}`)
                   const unavailableCount = groupMods.filter(m => m.required_ilvl && m.required_ilvl > item.item_level).length
                   const allUnavailable = unavailableCount === groupMods.length
                   const isGroupGreyedOut = shouldGreyOutModGroup(groupMods, 'suffix')
+                  const isExpanded = expandedModGroups.has(`suffix-${groupKey}`)
 
                   // Calculate available tier range
                   const availableMods = groupMods.filter(m => !m.required_ilvl || m.required_ilvl <= item.item_level)
@@ -1087,48 +1184,67 @@ function CraftingSimulator() {
                   return (
                     <div key={groupKey} className={`pool-mod-group ${isGroupGreyedOut ? 'omen-incompatible' : ''}`}>
                       <div
-                        className={`pool-mod-group-header suffix ${allUnavailable ? 'all-unavailable' : ''}`}
+                        className={`pool-mod-group-header suffix compact-single-line ${allUnavailable ? 'all-unavailable' : ''} mod-group-clickable`}
                         onClick={() => toggleModGroup(`suffix-${groupKey}`)}
+                        onDoubleClick={() => applyAllModTags(bestTier)}
+                        title="Click to expand/collapse, double-click to filter by all tags"
                       >
-                        <div className="group-main-info">
-                          <span className="pool-mod-stat-main">{bestTier.stat_text}</span>
-                          <div className="group-summary">
-                            <span className={`group-tier-range ${allUnavailable ? 'all-unavailable' : ''}`}>{tierRangeText}</span>
-                            <span className="group-max-ilvl">ilvl {maxIlvl}</span>
-                            {unavailableCount > 0 && (
-                              <span className={`unavailable-badge ${allUnavailable ? 'all-unavailable' : ''}`}>
-                                {unavailableCount} unavailable
-                              </span>
-                            )}
-                          </div>
+                        <span className="pool-mod-stat-main">{bestTier.stat_text}</span>
+                        <div className="compact-mod-info">
+                          {unavailableCount > 0 && (
+                            <span
+                              className="unavailable-indicator"
+                              title={`${unavailableCount} unavailable tier${unavailableCount > 1 ? 's' : ''}`}
+                            >
+                              ⚠
+                            </span>
+                          )}
+                          <span className={`group-tier-range ${allUnavailable ? 'all-unavailable' : ''}`}>{tierRangeText}</span>
+                          <span className="group-max-ilvl">ilvl {maxIlvl}</span>
+                          <span className="expand-indicator">{isExpanded ? '▼' : '▶'}</span>
+                          {bestTier.tags && bestTier.tags.length > 0 && (
+                            <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
+                              {bestTier.tags.map((tag, i) => (
+                                <span
+                                  key={i}
+                                  className={`mod-tag-text ${activeTagFilters.has(tag) ? 'active-filter' : ''}`}
+                                  data-tag={tag}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    toggleTagFilter(tag);
+                                  }}
+                                  title={`Click to filter by "${tag}" tag`}
+                                >
+                                  {tag}
+                                </span>
+                              ))}
+                            </div>
+                          )}
                         </div>
-                        <span className="expand-indicator">{isExpanded ? '−' : '+'}</span>
                       </div>
 
                       {isExpanded && (
-                        <div className="tier-breakdown">
-                          {groupMods.map((mod, idx) => {
-                            const isUnavailable = mod.required_ilvl && mod.required_ilvl > item.item_level
-                            const isGreyedOut = shouldGreyOutMod(mod, 'suffix')
+                        <div className="mod-tier-details">
+                          {groupMods.map(mod => {
+                            // Format the value range for this tier
+                            let valueText = ''
+                            if (mod.stat_min !== undefined && mod.stat_max !== undefined) {
+                              if (mod.stat_min === mod.stat_max) {
+                                valueText = `${mod.stat_min}`
+                              } else {
+                                valueText = `${mod.stat_min}-${mod.stat_max}`
+                              }
+                            }
+
                             return (
-                              <div key={idx} className={`tier-item ${isUnavailable ? 'unavailable' : ''} ${isGreyedOut ? 'omen-incompatible' : ''}`}>
-                                <div className="tier-header">
-                                  <span className="tier-label">T{mod.tier}</span>
-                                  <span className={`tier-ilvl ${isUnavailable ? 'ilvl-too-high' : ''}`}>
-                                    ilvl {mod.required_ilvl}
-                                    {isUnavailable && ' ⚠'}
-                                  </span>
-                                </div>
-                                {mod.stat_min !== undefined && mod.stat_max !== undefined && (
-                                  <div className="tier-range">{mod.stat_min}-{mod.stat_max}</div>
-                                )}
-                                {mod.tags && mod.tags.length > 0 && (
-                                  <div className="tier-tags">
-                                    {mod.tags.slice(0, 3).map((tag, i) => (
-                                      <span key={i} className="pool-tag">{tag}</span>
-                                    ))}
-                                  </div>
-                                )}
+                              <div
+                                key={mod.tier}
+                                className={`tier-detail ${mod.required_ilvl && mod.required_ilvl > item.item_level ? 'unavailable' : ''}`}
+                              >
+                                <span className="tier-label">T{mod.tier}</span>
+                                <span className="tier-stat">{mod.stat_text}</span>
+                                {valueText && <span className="tier-values">({valueText})</span>}
+                                <span className="tier-ilvl">ilvl {mod.required_ilvl || 1}</span>
                               </div>
                             )
                           })}
@@ -1151,36 +1267,76 @@ function CraftingSimulator() {
                   <div className="special-mods-column">
                     <h5 className="special-column-title">Essence Prefixes ({availableMods.essence_prefixes.length})</h5>
                     <div className="mods-pool-list">
-                      {availableMods.essence_prefixes.map((mod, idx) => (
-                        <div key={`essence-prefix-${idx}`} className="pool-mod-group essence-only">
-                          <div className="pool-mod-group-header essence prefix">
-                            <div className="group-main-info">
-                              <span className="pool-mod-stat-main">{mod.stat_text}</span>
-                              <div className="group-summary">
-                                <span className="essence-only-badge">Perfect/Corrupted Only</span>
+                      {availableMods.essence_prefixes.map((mod, idx) => {
+                        const isTagFiltered = activeTagFilters.size > 0 && !isModMatchingTagFilters(mod)
+                        return (
+                        <div key={`essence-prefix-${idx}`} className={`pool-mod-group essence-only ${isTagFiltered ? 'tag-filtered' : ''}`}>
+                          <div
+                            className="pool-mod-group-header essence prefix compact-single-line mod-group-clickable"
+                            onDoubleClick={() => applyAllModTags(mod)}
+                            title="Double-click to filter by all tags"
+                          >
+                            <span className="pool-mod-stat-main">{mod.stat_text}</span>
+                            {mod.tags && mod.tags.length > 0 && (
+                              <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
+                                {mod.tags.map((tag, i) => (
+                                  <span
+                                    key={i}
+                                    className="mod-tag-text"
+                                    data-tag={tag}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleTagFilter(tag);
+                                    }}
+                                    title={`Click to filter by "${tag}" tag`}
+                                  >
+                                    {tag}
+                                  </span>
+                                ))}
                               </div>
-                            </div>
+                            )}
                           </div>
                         </div>
-                      ))}
+                        )
+                      })}
                     </div>
                   </div>
 
                   <div className="special-mods-column">
                     <h5 className="special-column-title">Essence Suffixes ({availableMods.essence_suffixes.length})</h5>
                     <div className="mods-pool-list">
-                      {availableMods.essence_suffixes.map((mod, idx) => (
-                        <div key={`essence-suffix-${idx}`} className="pool-mod-group essence-only">
-                          <div className="pool-mod-group-header essence suffix">
-                            <div className="group-main-info">
-                              <span className="pool-mod-stat-main">{mod.stat_text}</span>
-                              <div className="group-summary">
-                                <span className="essence-only-badge">Perfect/Corrupted Only</span>
+                      {availableMods.essence_suffixes.map((mod, idx) => {
+                        const isTagFiltered = activeTagFilters.size > 0 && !isModMatchingTagFilters(mod)
+                        return (
+                        <div key={`essence-suffix-${idx}`} className={`pool-mod-group essence-only ${isTagFiltered ? 'tag-filtered' : ''}`}>
+                          <div
+                            className="pool-mod-group-header essence suffix compact-single-line mod-group-clickable"
+                            onDoubleClick={() => applyAllModTags(mod)}
+                            title="Double-click to filter by all tags"
+                          >
+                            <span className="pool-mod-stat-main">{mod.stat_text}</span>
+                            {mod.tags && mod.tags.length > 0 && (
+                              <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
+                                {mod.tags.map((tag, i) => (
+                                  <span
+                                    key={i}
+                                    className="mod-tag-text"
+                                    data-tag={tag}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleTagFilter(tag);
+                                    }}
+                                    title={`Click to filter by "${tag}" tag`}
+                                  >
+                                    {tag}
+                                  </span>
+                                ))}
                               </div>
-                            </div>
+                            )}
                           </div>
                         </div>
-                      ))}
+                        )
+                      })}
                     </div>
                   </div>
                 </div>
@@ -1197,36 +1353,76 @@ function CraftingSimulator() {
                   <div className="special-mods-column">
                     <h5 className="special-column-title">Desecrated Prefixes ({availableMods.desecrated_prefixes.length})</h5>
                     <div className="mods-pool-list">
-                      {availableMods.desecrated_prefixes.map((mod, idx) => (
-                        <div key={`desecrated-prefix-${idx}`} className="pool-mod-group desecrated-only">
-                          <div className="pool-mod-group-header desecrated prefix">
-                            <div className="group-main-info">
-                              <span className="pool-mod-stat-main">{mod.stat_text}</span>
-                              <div className="group-summary">
-                                <span className="desecrated-only-badge">Abyssal Bones Only</span>
+                      {availableMods.desecrated_prefixes.map((mod, idx) => {
+                        const isTagFiltered = activeTagFilters.size > 0 && !isModMatchingTagFilters(mod)
+                        return (
+                        <div key={`desecrated-prefix-${idx}`} className={`pool-mod-group desecrated-only ${isTagFiltered ? 'tag-filtered' : ''}`}>
+                          <div
+                            className="pool-mod-group-header desecrated prefix compact-single-line mod-group-clickable"
+                            onDoubleClick={() => applyAllModTags(mod)}
+                            title="Double-click to filter by all tags"
+                          >
+                            <span className="pool-mod-stat-main">{mod.stat_text}</span>
+                            {mod.tags && mod.tags.length > 0 && (
+                              <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
+                                {mod.tags.map((tag, i) => (
+                                  <span
+                                    key={i}
+                                    className="mod-tag-text"
+                                    data-tag={tag}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleTagFilter(tag);
+                                    }}
+                                    title={`Click to filter by "${tag}" tag`}
+                                  >
+                                    {tag}
+                                  </span>
+                                ))}
                               </div>
-                            </div>
+                            )}
                           </div>
                         </div>
-                      ))}
+                        )
+                      })}
                     </div>
                   </div>
 
                   <div className="special-mods-column">
                     <h5 className="special-column-title">Desecrated Suffixes ({availableMods.desecrated_suffixes.length})</h5>
                     <div className="mods-pool-list">
-                      {availableMods.desecrated_suffixes.map((mod, idx) => (
-                        <div key={`desecrated-suffix-${idx}`} className="pool-mod-group desecrated-only">
-                          <div className="pool-mod-group-header desecrated suffix">
-                            <div className="group-main-info">
-                              <span className="pool-mod-stat-main">{mod.stat_text}</span>
-                              <div className="group-summary">
-                                <span className="desecrated-only-badge">Abyssal Bones Only</span>
+                      {availableMods.desecrated_suffixes.map((mod, idx) => {
+                        const isTagFiltered = activeTagFilters.size > 0 && !isModMatchingTagFilters(mod)
+                        return (
+                        <div key={`desecrated-suffix-${idx}`} className={`pool-mod-group desecrated-only ${isTagFiltered ? 'tag-filtered' : ''}`}>
+                          <div
+                            className="pool-mod-group-header desecrated suffix compact-single-line mod-group-clickable"
+                            onDoubleClick={() => applyAllModTags(mod)}
+                            title="Double-click to filter by all tags"
+                          >
+                            <span className="pool-mod-stat-main">{mod.stat_text}</span>
+                            {mod.tags && mod.tags.length > 0 && (
+                              <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
+                                {mod.tags.map((tag, i) => (
+                                  <span
+                                    key={i}
+                                    className="mod-tag-text"
+                                    data-tag={tag}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleTagFilter(tag);
+                                    }}
+                                    title={`Click to filter by "${tag}" tag`}
+                                  >
+                                    {tag}
+                                  </span>
+                                ))}
                               </div>
-                            </div>
+                            )}
                           </div>
                         </div>
-                      ))}
+                        )
+                      })}
                     </div>
                   </div>
                 </div>
