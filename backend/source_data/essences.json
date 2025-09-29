@@ -1,0 +1,569 @@
+[
+  {
+    "name": "Lesser Essence of the Body",
+    "essence_tier": "lesser",
+    "essence_type": "body",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Essence of the Body",
+    "essence_tier": "normal",
+    "essence_type": "body",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Greater Essence of the Body",
+    "essence_tier": "greater",
+    "essence_type": "body",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Perfect Essence of the Body",
+    "essence_tier": "perfect",
+    "essence_type": "body",
+    "mechanic": "remove_add_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Lesser Essence of the Mind",
+    "essence_tier": "lesser",
+    "essence_type": "mind",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Essence of the Mind",
+    "essence_tier": "normal",
+    "essence_type": "mind",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Greater Essence of the Mind",
+    "essence_tier": "greater",
+    "essence_type": "mind",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Perfect Essence of the Mind",
+    "essence_tier": "perfect",
+    "essence_type": "mind",
+    "mechanic": "remove_add_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Lesser Essence of Enhancement",
+    "essence_tier": "lesser",
+    "essence_type": "enhancement",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Essence of Enhancement",
+    "essence_tier": "normal",
+    "essence_type": "enhancement",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Greater Essence of Enhancement",
+    "essence_tier": "greater",
+    "essence_type": "enhancement",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Perfect Essence of Enhancement",
+    "essence_tier": "perfect",
+    "essence_type": "enhancement",
+    "mechanic": "remove_add_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Lesser Essence of Abrasion",
+    "essence_tier": "lesser",
+    "essence_type": "abrasion",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Essence of Abrasion",
+    "essence_tier": "normal",
+    "essence_type": "abrasion",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Greater Essence of Abrasion",
+    "essence_tier": "greater",
+    "essence_type": "abrasion",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Perfect Essence of Abrasion",
+    "essence_tier": "perfect",
+    "essence_type": "abrasion",
+    "mechanic": "remove_add_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Lesser Essence of Flames",
+    "essence_tier": "lesser",
+    "essence_type": "flames",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Essence of Flames",
+    "essence_tier": "normal",
+    "essence_type": "flames",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Greater Essence of Flames",
+    "essence_tier": "greater",
+    "essence_type": "flames",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Perfect Essence of Flames",
+    "essence_tier": "perfect",
+    "essence_type": "flames",
+    "mechanic": "remove_add_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Lesser Essence of Ice",
+    "essence_tier": "lesser",
+    "essence_type": "ice",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Essence of Ice",
+    "essence_tier": "normal",
+    "essence_type": "ice",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Greater Essence of Ice",
+    "essence_tier": "greater",
+    "essence_type": "ice",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Perfect Essence of Ice",
+    "essence_tier": "perfect",
+    "essence_type": "ice",
+    "mechanic": "remove_add_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Lesser Essence of Electricity",
+    "essence_tier": "lesser",
+    "essence_type": "electricity",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Essence of Electricity",
+    "essence_tier": "normal",
+    "essence_type": "electricity",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Greater Essence of Electricity",
+    "essence_tier": "greater",
+    "essence_type": "electricity",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Perfect Essence of Electricity",
+    "essence_tier": "perfect",
+    "essence_type": "electricity",
+    "mechanic": "remove_add_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Lesser Essence of Ruin",
+    "essence_tier": "lesser",
+    "essence_type": "ruin",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Essence of Ruin",
+    "essence_tier": "normal",
+    "essence_type": "ruin",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Greater Essence of Ruin",
+    "essence_tier": "greater",
+    "essence_type": "ruin",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Perfect Essence of Ruin",
+    "essence_tier": "perfect",
+    "essence_type": "ruin",
+    "mechanic": "remove_add_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Lesser Essence of Battle",
+    "essence_tier": "lesser",
+    "essence_type": "battle",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Essence of Battle",
+    "essence_tier": "normal",
+    "essence_type": "battle",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Greater Essence of Battle",
+    "essence_tier": "greater",
+    "essence_type": "battle",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Perfect Essence of Battle",
+    "essence_tier": "perfect",
+    "essence_type": "battle",
+    "mechanic": "remove_add_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Lesser Essence of Sorcery",
+    "essence_tier": "lesser",
+    "essence_type": "sorcery",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Essence of Sorcery",
+    "essence_tier": "normal",
+    "essence_type": "sorcery",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Greater Essence of Sorcery",
+    "essence_tier": "greater",
+    "essence_type": "sorcery",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Perfect Essence of Sorcery",
+    "essence_tier": "perfect",
+    "essence_type": "sorcery",
+    "mechanic": "remove_add_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Lesser Essence of Haste",
+    "essence_tier": "lesser",
+    "essence_type": "haste",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Essence of Haste",
+    "essence_tier": "normal",
+    "essence_type": "haste",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Greater Essence of Haste",
+    "essence_tier": "greater",
+    "essence_type": "haste",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Perfect Essence of Haste",
+    "essence_tier": "perfect",
+    "essence_type": "haste",
+    "mechanic": "remove_add_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Lesser Essence of the Infinite",
+    "essence_tier": "lesser",
+    "essence_type": "infinite",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Essence of the Infinite",
+    "essence_tier": "normal",
+    "essence_type": "infinite",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Greater Essence of the Infinite",
+    "essence_tier": "greater",
+    "essence_type": "infinite",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Perfect Essence of the Infinite",
+    "essence_tier": "perfect",
+    "essence_type": "infinite",
+    "mechanic": "remove_add_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Lesser Essence of Seeking",
+    "essence_tier": "lesser",
+    "essence_type": "seeking",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Essence of Seeking",
+    "essence_tier": "normal",
+    "essence_type": "seeking",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Greater Essence of Seeking",
+    "essence_tier": "greater",
+    "essence_type": "seeking",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Perfect Essence of Seeking",
+    "essence_tier": "perfect",
+    "essence_type": "seeking",
+    "mechanic": "remove_add_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Lesser Essence of Insulation",
+    "essence_tier": "lesser",
+    "essence_type": "insulation",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Essence of Insulation",
+    "essence_tier": "normal",
+    "essence_type": "insulation",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Greater Essence of Insulation",
+    "essence_tier": "greater",
+    "essence_type": "insulation",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Perfect Essence of Insulation",
+    "essence_tier": "perfect",
+    "essence_type": "insulation",
+    "mechanic": "remove_add_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Lesser Essence of Thawing",
+    "essence_tier": "lesser",
+    "essence_type": "thawing",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Essence of Thawing",
+    "essence_tier": "normal",
+    "essence_type": "thawing",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Greater Essence of Thawing",
+    "essence_tier": "greater",
+    "essence_type": "thawing",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Perfect Essence of Thawing",
+    "essence_tier": "perfect",
+    "essence_type": "thawing",
+    "mechanic": "remove_add_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Lesser Essence of Grounding",
+    "essence_tier": "lesser",
+    "essence_type": "grounding",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Essence of Grounding",
+    "essence_tier": "normal",
+    "essence_type": "grounding",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Greater Essence of Grounding",
+    "essence_tier": "greater",
+    "essence_type": "grounding",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Perfect Essence of Grounding",
+    "essence_tier": "perfect",
+    "essence_type": "grounding",
+    "mechanic": "remove_add_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Lesser Essence of Alacrity",
+    "essence_tier": "lesser",
+    "essence_type": "alacrity",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Essence of Alacrity",
+    "essence_tier": "normal",
+    "essence_type": "alacrity",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Greater Essence of Alacrity",
+    "essence_tier": "greater",
+    "essence_type": "alacrity",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Perfect Essence of Alacrity",
+    "essence_tier": "perfect",
+    "essence_type": "alacrity",
+    "mechanic": "remove_add_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Lesser Essence of Opulence",
+    "essence_tier": "lesser",
+    "essence_type": "opulence",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Essence of Opulence",
+    "essence_tier": "normal",
+    "essence_type": "opulence",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Greater Essence of Opulence",
+    "essence_tier": "greater",
+    "essence_type": "opulence",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Perfect Essence of Opulence",
+    "essence_tier": "perfect",
+    "essence_type": "opulence",
+    "mechanic": "remove_add_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Lesser Essence of Command",
+    "essence_tier": "lesser",
+    "essence_type": "command",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Essence of Command",
+    "essence_tier": "normal",
+    "essence_type": "command",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Greater Essence of Command",
+    "essence_tier": "greater",
+    "essence_type": "command",
+    "mechanic": "magic_to_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Perfect Essence of Command",
+    "essence_tier": "perfect",
+    "essence_type": "command",
+    "mechanic": "remove_add_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Essence of Hysteria",
+    "essence_tier": "corrupted",
+    "essence_type": "hysteria",
+    "mechanic": "remove_add_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Essence of Delirium",
+    "essence_tier": "corrupted",
+    "essence_type": "delirium",
+    "mechanic": "remove_add_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Essence of Horror",
+    "essence_tier": "corrupted",
+    "essence_type": "horror",
+    "mechanic": "remove_add_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Essence of Insanity",
+    "essence_tier": "corrupted",
+    "essence_type": "insanity",
+    "mechanic": "remove_add_rare",
+    "stack_size": 10
+  },
+  {
+    "name": "Essence of the Abyss",
+    "essence_tier": "corrupted",
+    "essence_type": "abyss",
+    "mechanic": "remove_add_rare",
+    "stack_size": 10
+  }
+]

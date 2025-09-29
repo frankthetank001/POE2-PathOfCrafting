@@ -1,0 +1,266 @@
+[
+  {
+    "name": "Omen of Whittling",
+    "effect_description": "Chaos Orb removes lowest level modifier",
+    "affected_currency": "Chaos Orb",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Sinistral Erasure",
+    "effect_description": "Chaos Orb removes only prefixes",
+    "affected_currency": "Chaos Orb",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Dextral Erasure",
+    "effect_description": "Chaos Orb removes only suffixes",
+    "affected_currency": "Chaos Orb",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Chaotic Rarity",
+    "effect_description": "Chaos Orb on Waystone adds Item Rarity mods",
+    "affected_currency": "Chaos Orb",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Chaotic Quantity",
+    "effect_description": "Chaos Orb on Waystone adds Pack Size mods",
+    "affected_currency": "Chaos Orb",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Chaotic Monsters",
+    "effect_description": "Chaos Orb on Waystone adds Rare/Magic monster mods",
+    "affected_currency": "Chaos Orb",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Sinistral Alchemy",
+    "effect_description": "Results in maximum prefix modifiers",
+    "affected_currency": "Orb of Alchemy",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Dextral Alchemy",
+    "effect_description": "Results in maximum suffix modifiers",
+    "affected_currency": "Orb of Alchemy",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Sinistral Coronation",
+    "effect_description": "Adds only prefix modifier",
+    "affected_currency": "Regal Orb",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Dextral Coronation",
+    "effect_description": "Adds only suffix modifier",
+    "affected_currency": "Regal Orb",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Homogenising Coronation",
+    "effect_description": "Adds modifier of same type as existing",
+    "affected_currency": "Regal Orb",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Greater Exaltation",
+    "effect_description": "Adds TWO random modifiers",
+    "affected_currency": "Exalted Orb",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Sinistral Exaltation",
+    "effect_description": "Adds only prefix modifier",
+    "affected_currency": "Exalted Orb",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Dextral Exaltation",
+    "effect_description": "Adds only suffix modifier",
+    "affected_currency": "Exalted Orb",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Homogenising Exaltation",
+    "effect_description": "Adds modifier of same type as existing",
+    "affected_currency": "Exalted Orb",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Catalysing Exaltation",
+    "effect_description": "Special catalyst-based modifier",
+    "affected_currency": "Exalted Orb",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Greater Annulment",
+    "effect_description": "Removes TWO modifiers",
+    "affected_currency": "Orb of Annulment",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Sinistral Annulment",
+    "effect_description": "Removes only prefixes",
+    "affected_currency": "Orb of Annulment",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Dextral Annulment",
+    "effect_description": "Removes only suffixes",
+    "affected_currency": "Orb of Annulment",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Light",
+    "effect_description": "Removes only Desecrated modifiers",
+    "affected_currency": "Orb of Annulment",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Corruption",
+    "effect_description": "Vaal Orb always results in change",
+    "affected_currency": "Vaal Orb",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Chance",
+    "effect_description": "Orb of Chance doesn't destroy item on failure",
+    "affected_currency": "Orb of Chance",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of the Ancients",
+    "effect_description": "Orb of Chance upgrades to random Unique of same class",
+    "affected_currency": "Orb of Chance",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of the Blessed",
+    "effect_description": "Divine Orb only rerolls Implicit modifiers",
+    "affected_currency": "Divine Orb",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Recombination",
+    "effect_description": "Makes Recombination Lucky",
+    "affected_currency": "Recombination",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Sanctification",
+    "effect_description": "Unknown effect",
+    "affected_currency": "Unknown",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Dextral Crystallisation",
+    "effect_description": "Perfect/Corrupted Essence removes only suffixes",
+    "affected_currency": "Perfect Essence",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Sinistral Crystallisation",
+    "effect_description": "Perfect/Corrupted Essence removes only prefixes",
+    "affected_currency": "Perfect Essence",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Refreshment",
+    "effect_description": "Fully recovers flask/charm charges at Low Life",
+    "affected_currency": "Gameplay",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Resurgence",
+    "effect_description": "Fully recovers Life/Mana/ES at Low Life",
+    "affected_currency": "Gameplay",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Amelioration",
+    "effect_description": "Prevents 75% of XP loss on death",
+    "affected_currency": "Gameplay",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Gambling",
+    "effect_description": "50% chance for free Gamble purchase",
+    "affected_currency": "Gambling",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Bartering",
+    "effect_description": "Vendor incorrectly assesses item value",
+    "affected_currency": "Vendor",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Answered Prayers",
+    "effect_description": "Next Shrine grants additional effect",
+    "affected_currency": "Shrine",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Secret Compartments",
+    "effect_description": "Next Strongbox is reopenable",
+    "affected_currency": "Strongbox",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of the Hunt",
+    "effect_description": "Possessed monsters release Azmeri Spirits",
+    "affected_currency": "Monster",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Reinforcements",
+    "effect_description": "Rogue Exiles summon allies",
+    "affected_currency": "Exile",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Abyssal Echoes",
+    "effect_description": "Can reroll desecrated options once when revealing",
+    "affected_currency": "Desecration",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Sinistral Necromancy",
+    "effect_description": "Adds only prefix desecrated modifiers",
+    "affected_currency": "Desecration",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Dextral Necromancy",
+    "effect_description": "Adds only suffix desecrated modifiers",
+    "affected_currency": "Desecration",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of the Sovereign",
+    "effect_description": "Guarantees random Ulaman modifier",
+    "affected_currency": "Desecration",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of the Liege",
+    "effect_description": "Guarantees random Amanamu modifier",
+    "affected_currency": "Desecration",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of the Blackblooded",
+    "effect_description": "Guarantees random Kurgal modifier",
+    "affected_currency": "Desecration",
+    "stack_size": 10
+  },
+  {
+    "name": "Omen of Putrefaction",
+    "effect_description": "Replaces ALL mods with up to 6 Desecrated mods and corrupts",
+    "affected_currency": "Desecration",
+    "stack_size": 10
+  }
+]

@@ -1,0 +1,1144 @@
+[
+  {
+    "name": "Orb of Transmutation",
+    "currency_type": "transmutation",
+    "tier": null,
+    "stack_size": 40,
+    "rarity": "common",
+    "mechanic_class": "TransmutationMechanic",
+    "config_data": {
+      "min_mods": 1,
+      "max_mods": 1
+    }
+  },
+  {
+    "name": "Greater Orb of Transmutation",
+    "currency_type": "transmutation",
+    "tier": "greater",
+    "stack_size": 40,
+    "rarity": "uncommon",
+    "mechanic_class": "TransmutationMechanic",
+    "config_data": {
+      "min_mods": 1,
+      "max_mods": 1,
+      "min_mod_level": 55
+    }
+  },
+  {
+    "name": "Perfect Orb of Transmutation",
+    "currency_type": "transmutation",
+    "tier": "perfect",
+    "stack_size": 40,
+    "rarity": "rare",
+    "mechanic_class": "TransmutationMechanic",
+    "config_data": {
+      "min_mods": 1,
+      "max_mods": 1,
+      "min_mod_level": 70
+    }
+  },
+  {
+    "name": "Orb of Augmentation",
+    "currency_type": "augmentation",
+    "tier": null,
+    "stack_size": 30,
+    "rarity": "common",
+    "mechanic_class": "AugmentationMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Greater Orb of Augmentation",
+    "currency_type": "augmentation",
+    "tier": "greater",
+    "stack_size": 30,
+    "rarity": "uncommon",
+    "mechanic_class": "AugmentationMechanic",
+    "config_data": {
+      "min_mod_level": 55
+    }
+  },
+  {
+    "name": "Perfect Orb of Augmentation",
+    "currency_type": "augmentation",
+    "tier": "perfect",
+    "stack_size": 30,
+    "rarity": "rare",
+    "mechanic_class": "AugmentationMechanic",
+    "config_data": {
+      "min_mod_level": 70
+    }
+  },
+  {
+    "name": "Orb of Alchemy",
+    "currency_type": "alchemy",
+    "tier": null,
+    "stack_size": 10,
+    "rarity": "uncommon",
+    "mechanic_class": "AlchemyMechanic",
+    "config_data": {
+      "min_mods": 4,
+      "max_mods": 6
+    }
+  },
+  {
+    "name": "Regal Orb",
+    "currency_type": "regal",
+    "tier": null,
+    "stack_size": 20,
+    "rarity": "uncommon",
+    "mechanic_class": "RegalMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Greater Regal Orb",
+    "currency_type": "regal",
+    "tier": "greater",
+    "stack_size": 20,
+    "rarity": "rare",
+    "mechanic_class": "RegalMechanic",
+    "config_data": {
+      "min_mod_level": 55
+    }
+  },
+  {
+    "name": "Perfect Regal Orb",
+    "currency_type": "regal",
+    "tier": "perfect",
+    "stack_size": 20,
+    "rarity": "rare",
+    "mechanic_class": "RegalMechanic",
+    "config_data": {
+      "min_mod_level": 70
+    }
+  },
+  {
+    "name": "Exalted Orb",
+    "currency_type": "exalted",
+    "tier": null,
+    "stack_size": 20,
+    "rarity": "rare",
+    "mechanic_class": "ExaltedMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Greater Exalted Orb",
+    "currency_type": "exalted",
+    "tier": "greater",
+    "stack_size": 20,
+    "rarity": "very_rare",
+    "mechanic_class": "ExaltedMechanic",
+    "config_data": {
+      "min_mod_level": 55
+    }
+  },
+  {
+    "name": "Perfect Exalted Orb",
+    "currency_type": "exalted",
+    "tier": "perfect",
+    "stack_size": 20,
+    "rarity": "very_rare",
+    "mechanic_class": "ExaltedMechanic",
+    "config_data": {
+      "min_mod_level": 70
+    }
+  },
+  {
+    "name": "Chaos Orb",
+    "currency_type": "chaos",
+    "tier": null,
+    "stack_size": 20,
+    "rarity": "rare",
+    "mechanic_class": "ChaosMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Greater Chaos Orb",
+    "currency_type": "chaos",
+    "tier": "greater",
+    "stack_size": 20,
+    "rarity": "very_rare",
+    "mechanic_class": "ChaosMechanic",
+    "config_data": {
+      "min_mod_level": 55
+    }
+  },
+  {
+    "name": "Perfect Chaos Orb",
+    "currency_type": "chaos",
+    "tier": "perfect",
+    "stack_size": 20,
+    "rarity": "very_rare",
+    "mechanic_class": "ChaosMechanic",
+    "config_data": {
+      "min_mod_level": 70
+    }
+  },
+  {
+    "name": "Divine Orb",
+    "currency_type": "divine",
+    "tier": null,
+    "stack_size": 10,
+    "rarity": "very_rare",
+    "mechanic_class": "DivineMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Vaal Orb",
+    "currency_type": "vaal",
+    "tier": null,
+    "stack_size": 20,
+    "rarity": "rare",
+    "mechanic_class": "VaalMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Orb of Annulment",
+    "currency_type": "annulment",
+    "tier": null,
+    "stack_size": 20,
+    "rarity": "rare",
+    "mechanic_class": "AnnulmentMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Orb of Chance",
+    "currency_type": "chance",
+    "tier": null,
+    "stack_size": 20,
+    "rarity": "uncommon",
+    "mechanic_class": "ChanceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Mirror of Kalandra",
+    "currency_type": "mirror",
+    "tier": null,
+    "stack_size": 1,
+    "rarity": "extremely_rare",
+    "mechanic_class": "MirrorMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Hinekora's Lock",
+    "currency_type": "hinekora",
+    "tier": null,
+    "stack_size": 10,
+    "rarity": "rare",
+    "mechanic_class": "HinekoraMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Fracturing Orb",
+    "currency_type": "fracturing",
+    "tier": null,
+    "stack_size": 20,
+    "rarity": "very_rare",
+    "mechanic_class": "FracturingMechanic",
+    "config_data": {
+      "min_mods_required": 4
+    }
+  },
+  {
+    "name": "Lesser Essence of the Body",
+    "currency_type": "essence",
+    "tier": "lesser",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Essence of the Body",
+    "currency_type": "essence",
+    "tier": "normal",
+    "stack_size": 10,
+    "rarity": "uncommon",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Greater Essence of the Body",
+    "currency_type": "essence",
+    "tier": "greater",
+    "stack_size": 10,
+    "rarity": "rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Perfect Essence of the Body",
+    "currency_type": "essence",
+    "tier": "perfect",
+    "stack_size": 10,
+    "rarity": "very_rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Lesser Essence of the Mind",
+    "currency_type": "essence",
+    "tier": "lesser",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Essence of the Mind",
+    "currency_type": "essence",
+    "tier": "normal",
+    "stack_size": 10,
+    "rarity": "uncommon",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Greater Essence of the Mind",
+    "currency_type": "essence",
+    "tier": "greater",
+    "stack_size": 10,
+    "rarity": "rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Perfect Essence of the Mind",
+    "currency_type": "essence",
+    "tier": "perfect",
+    "stack_size": 10,
+    "rarity": "very_rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Lesser Essence of Enhancement",
+    "currency_type": "essence",
+    "tier": "lesser",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Essence of Enhancement",
+    "currency_type": "essence",
+    "tier": "normal",
+    "stack_size": 10,
+    "rarity": "uncommon",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Greater Essence of Enhancement",
+    "currency_type": "essence",
+    "tier": "greater",
+    "stack_size": 10,
+    "rarity": "rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Perfect Essence of Enhancement",
+    "currency_type": "essence",
+    "tier": "perfect",
+    "stack_size": 10,
+    "rarity": "very_rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Lesser Essence of Abrasion",
+    "currency_type": "essence",
+    "tier": "lesser",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Essence of Abrasion",
+    "currency_type": "essence",
+    "tier": "normal",
+    "stack_size": 10,
+    "rarity": "uncommon",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Greater Essence of Abrasion",
+    "currency_type": "essence",
+    "tier": "greater",
+    "stack_size": 10,
+    "rarity": "rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Perfect Essence of Abrasion",
+    "currency_type": "essence",
+    "tier": "perfect",
+    "stack_size": 10,
+    "rarity": "very_rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Lesser Essence of Flames",
+    "currency_type": "essence",
+    "tier": "lesser",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Essence of Flames",
+    "currency_type": "essence",
+    "tier": "normal",
+    "stack_size": 10,
+    "rarity": "uncommon",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Greater Essence of Flames",
+    "currency_type": "essence",
+    "tier": "greater",
+    "stack_size": 10,
+    "rarity": "rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Perfect Essence of Flames",
+    "currency_type": "essence",
+    "tier": "perfect",
+    "stack_size": 10,
+    "rarity": "very_rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Lesser Essence of Ice",
+    "currency_type": "essence",
+    "tier": "lesser",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Essence of Ice",
+    "currency_type": "essence",
+    "tier": "normal",
+    "stack_size": 10,
+    "rarity": "uncommon",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Greater Essence of Ice",
+    "currency_type": "essence",
+    "tier": "greater",
+    "stack_size": 10,
+    "rarity": "rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Perfect Essence of Ice",
+    "currency_type": "essence",
+    "tier": "perfect",
+    "stack_size": 10,
+    "rarity": "very_rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Lesser Essence of Electricity",
+    "currency_type": "essence",
+    "tier": "lesser",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Essence of Electricity",
+    "currency_type": "essence",
+    "tier": "normal",
+    "stack_size": 10,
+    "rarity": "uncommon",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Greater Essence of Electricity",
+    "currency_type": "essence",
+    "tier": "greater",
+    "stack_size": 10,
+    "rarity": "rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Perfect Essence of Electricity",
+    "currency_type": "essence",
+    "tier": "perfect",
+    "stack_size": 10,
+    "rarity": "very_rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Lesser Essence of Ruin",
+    "currency_type": "essence",
+    "tier": "lesser",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Essence of Ruin",
+    "currency_type": "essence",
+    "tier": "normal",
+    "stack_size": 10,
+    "rarity": "uncommon",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Greater Essence of Ruin",
+    "currency_type": "essence",
+    "tier": "greater",
+    "stack_size": 10,
+    "rarity": "rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Perfect Essence of Ruin",
+    "currency_type": "essence",
+    "tier": "perfect",
+    "stack_size": 10,
+    "rarity": "very_rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Lesser Essence of Battle",
+    "currency_type": "essence",
+    "tier": "lesser",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Essence of Battle",
+    "currency_type": "essence",
+    "tier": "normal",
+    "stack_size": 10,
+    "rarity": "uncommon",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Greater Essence of Battle",
+    "currency_type": "essence",
+    "tier": "greater",
+    "stack_size": 10,
+    "rarity": "rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Perfect Essence of Battle",
+    "currency_type": "essence",
+    "tier": "perfect",
+    "stack_size": 10,
+    "rarity": "very_rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Lesser Essence of Sorcery",
+    "currency_type": "essence",
+    "tier": "lesser",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Essence of Sorcery",
+    "currency_type": "essence",
+    "tier": "normal",
+    "stack_size": 10,
+    "rarity": "uncommon",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Greater Essence of Sorcery",
+    "currency_type": "essence",
+    "tier": "greater",
+    "stack_size": 10,
+    "rarity": "rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Perfect Essence of Sorcery",
+    "currency_type": "essence",
+    "tier": "perfect",
+    "stack_size": 10,
+    "rarity": "very_rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Lesser Essence of Haste",
+    "currency_type": "essence",
+    "tier": "lesser",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Essence of Haste",
+    "currency_type": "essence",
+    "tier": "normal",
+    "stack_size": 10,
+    "rarity": "uncommon",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Greater Essence of Haste",
+    "currency_type": "essence",
+    "tier": "greater",
+    "stack_size": 10,
+    "rarity": "rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Perfect Essence of Haste",
+    "currency_type": "essence",
+    "tier": "perfect",
+    "stack_size": 10,
+    "rarity": "very_rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Lesser Essence of the Infinite",
+    "currency_type": "essence",
+    "tier": "lesser",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Essence of the Infinite",
+    "currency_type": "essence",
+    "tier": "normal",
+    "stack_size": 10,
+    "rarity": "uncommon",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Greater Essence of the Infinite",
+    "currency_type": "essence",
+    "tier": "greater",
+    "stack_size": 10,
+    "rarity": "rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Perfect Essence of the Infinite",
+    "currency_type": "essence",
+    "tier": "perfect",
+    "stack_size": 10,
+    "rarity": "very_rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Lesser Essence of Seeking",
+    "currency_type": "essence",
+    "tier": "lesser",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Essence of Seeking",
+    "currency_type": "essence",
+    "tier": "normal",
+    "stack_size": 10,
+    "rarity": "uncommon",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Greater Essence of Seeking",
+    "currency_type": "essence",
+    "tier": "greater",
+    "stack_size": 10,
+    "rarity": "rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Perfect Essence of Seeking",
+    "currency_type": "essence",
+    "tier": "perfect",
+    "stack_size": 10,
+    "rarity": "very_rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Lesser Essence of Insulation",
+    "currency_type": "essence",
+    "tier": "lesser",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Essence of Insulation",
+    "currency_type": "essence",
+    "tier": "normal",
+    "stack_size": 10,
+    "rarity": "uncommon",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Greater Essence of Insulation",
+    "currency_type": "essence",
+    "tier": "greater",
+    "stack_size": 10,
+    "rarity": "rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Perfect Essence of Insulation",
+    "currency_type": "essence",
+    "tier": "perfect",
+    "stack_size": 10,
+    "rarity": "very_rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Lesser Essence of Thawing",
+    "currency_type": "essence",
+    "tier": "lesser",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Essence of Thawing",
+    "currency_type": "essence",
+    "tier": "normal",
+    "stack_size": 10,
+    "rarity": "uncommon",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Greater Essence of Thawing",
+    "currency_type": "essence",
+    "tier": "greater",
+    "stack_size": 10,
+    "rarity": "rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Perfect Essence of Thawing",
+    "currency_type": "essence",
+    "tier": "perfect",
+    "stack_size": 10,
+    "rarity": "very_rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Lesser Essence of Grounding",
+    "currency_type": "essence",
+    "tier": "lesser",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Essence of Grounding",
+    "currency_type": "essence",
+    "tier": "normal",
+    "stack_size": 10,
+    "rarity": "uncommon",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Greater Essence of Grounding",
+    "currency_type": "essence",
+    "tier": "greater",
+    "stack_size": 10,
+    "rarity": "rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Perfect Essence of Grounding",
+    "currency_type": "essence",
+    "tier": "perfect",
+    "stack_size": 10,
+    "rarity": "very_rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Lesser Essence of Alacrity",
+    "currency_type": "essence",
+    "tier": "lesser",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Essence of Alacrity",
+    "currency_type": "essence",
+    "tier": "normal",
+    "stack_size": 10,
+    "rarity": "uncommon",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Greater Essence of Alacrity",
+    "currency_type": "essence",
+    "tier": "greater",
+    "stack_size": 10,
+    "rarity": "rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Perfect Essence of Alacrity",
+    "currency_type": "essence",
+    "tier": "perfect",
+    "stack_size": 10,
+    "rarity": "very_rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Lesser Essence of Opulence",
+    "currency_type": "essence",
+    "tier": "lesser",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Essence of Opulence",
+    "currency_type": "essence",
+    "tier": "normal",
+    "stack_size": 10,
+    "rarity": "uncommon",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Greater Essence of Opulence",
+    "currency_type": "essence",
+    "tier": "greater",
+    "stack_size": 10,
+    "rarity": "rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Perfect Essence of Opulence",
+    "currency_type": "essence",
+    "tier": "perfect",
+    "stack_size": 10,
+    "rarity": "very_rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Lesser Essence of Command",
+    "currency_type": "essence",
+    "tier": "lesser",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Essence of Command",
+    "currency_type": "essence",
+    "tier": "normal",
+    "stack_size": 10,
+    "rarity": "uncommon",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Greater Essence of Command",
+    "currency_type": "essence",
+    "tier": "greater",
+    "stack_size": 10,
+    "rarity": "rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Perfect Essence of Command",
+    "currency_type": "essence",
+    "tier": "perfect",
+    "stack_size": 10,
+    "rarity": "very_rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Essence of Hysteria",
+    "currency_type": "essence",
+    "tier": "corrupted",
+    "stack_size": 10,
+    "rarity": "very_rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Essence of Delirium",
+    "currency_type": "essence",
+    "tier": "corrupted",
+    "stack_size": 10,
+    "rarity": "very_rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Essence of Horror",
+    "currency_type": "essence",
+    "tier": "corrupted",
+    "stack_size": 10,
+    "rarity": "very_rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Essence of Insanity",
+    "currency_type": "essence",
+    "tier": "corrupted",
+    "stack_size": 10,
+    "rarity": "very_rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Essence of the Abyss",
+    "currency_type": "essence",
+    "tier": "corrupted",
+    "stack_size": 10,
+    "rarity": "very_rare",
+    "mechanic_class": "EssenceMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Gnawed Jawbone",
+    "currency_type": "desecration",
+    "tier": "gnawed",
+    "stack_size": 20,
+    "rarity": "uncommon",
+    "mechanic_class": "DesecrationMechanic",
+    "config_data": {
+      "bone_type": "gnawed",
+      "bone_part": "jawbone",
+      "applicable_items": [
+        "weapon",
+        "quiver"
+      ]
+    }
+  },
+  {
+    "name": "Gnawed Rib",
+    "currency_type": "desecration",
+    "tier": "gnawed",
+    "stack_size": 20,
+    "rarity": "uncommon",
+    "mechanic_class": "DesecrationMechanic",
+    "config_data": {
+      "bone_type": "gnawed",
+      "bone_part": "rib",
+      "applicable_items": [
+        "armour"
+      ]
+    }
+  },
+  {
+    "name": "Gnawed Collarbone",
+    "currency_type": "desecration",
+    "tier": "gnawed",
+    "stack_size": 20,
+    "rarity": "uncommon",
+    "mechanic_class": "DesecrationMechanic",
+    "config_data": {
+      "bone_type": "gnawed",
+      "bone_part": "collarbone",
+      "applicable_items": [
+        "amulet",
+        "ring",
+        "belt"
+      ]
+    }
+  },
+  {
+    "name": "Preserved Jawbone",
+    "currency_type": "desecration",
+    "tier": "preserved",
+    "stack_size": 20,
+    "rarity": "uncommon",
+    "mechanic_class": "DesecrationMechanic",
+    "config_data": {
+      "bone_type": "preserved",
+      "bone_part": "jawbone",
+      "applicable_items": [
+        "weapon",
+        "quiver"
+      ]
+    }
+  },
+  {
+    "name": "Preserved Rib",
+    "currency_type": "desecration",
+    "tier": "preserved",
+    "stack_size": 20,
+    "rarity": "uncommon",
+    "mechanic_class": "DesecrationMechanic",
+    "config_data": {
+      "bone_type": "preserved",
+      "bone_part": "rib",
+      "applicable_items": [
+        "armour"
+      ]
+    }
+  },
+  {
+    "name": "Preserved Collarbone",
+    "currency_type": "desecration",
+    "tier": "preserved",
+    "stack_size": 20,
+    "rarity": "uncommon",
+    "mechanic_class": "DesecrationMechanic",
+    "config_data": {
+      "bone_type": "preserved",
+      "bone_part": "collarbone",
+      "applicable_items": [
+        "amulet",
+        "ring",
+        "belt"
+      ]
+    }
+  },
+  {
+    "name": "Preserved Cranium",
+    "currency_type": "desecration",
+    "tier": "preserved",
+    "stack_size": 20,
+    "rarity": "uncommon",
+    "mechanic_class": "DesecrationMechanic",
+    "config_data": {
+      "bone_type": "preserved",
+      "bone_part": "cranium",
+      "applicable_items": [
+        "jewel"
+      ]
+    }
+  },
+  {
+    "name": "Preserved Vertebrae",
+    "currency_type": "desecration",
+    "tier": "preserved",
+    "stack_size": 20,
+    "rarity": "uncommon",
+    "mechanic_class": "DesecrationMechanic",
+    "config_data": {
+      "bone_type": "preserved",
+      "bone_part": "vertebrae",
+      "applicable_items": [
+        "waystone"
+      ]
+    }
+  },
+  {
+    "name": "Ancient Jawbone",
+    "currency_type": "desecration",
+    "tier": "ancient",
+    "stack_size": 20,
+    "rarity": "rare",
+    "mechanic_class": "DesecrationMechanic",
+    "config_data": {
+      "bone_type": "ancient",
+      "bone_part": "jawbone",
+      "applicable_items": [
+        "weapon",
+        "quiver"
+      ]
+    }
+  },
+  {
+    "name": "Ancient Rib",
+    "currency_type": "desecration",
+    "tier": "ancient",
+    "stack_size": 20,
+    "rarity": "rare",
+    "mechanic_class": "DesecrationMechanic",
+    "config_data": {
+      "bone_type": "ancient",
+      "bone_part": "rib",
+      "applicable_items": [
+        "armour"
+      ]
+    }
+  },
+  {
+    "name": "Ancient Collarbone",
+    "currency_type": "desecration",
+    "tier": "ancient",
+    "stack_size": 20,
+    "rarity": "rare",
+    "mechanic_class": "DesecrationMechanic",
+    "config_data": {
+      "bone_type": "ancient",
+      "bone_part": "collarbone",
+      "applicable_items": [
+        "amulet",
+        "ring",
+        "belt"
+      ]
+    }
+  }
+]

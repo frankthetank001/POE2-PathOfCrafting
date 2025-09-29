@@ -1,0 +1,143 @@
+[
+  {
+    "name": "Gnawed Jawbone",
+    "bone_type": "gnawed",
+    "bone_part": "jawbone",
+    "applicable_items": [
+      "weapon",
+      "quiver"
+    ],
+    "stack_size": 20,
+    "max_item_level": 64,
+    "min_modifier_level": null,
+    "function_description": "Desecrates a Rare Weapon or Quiver (Maximum Item Level: 64)"
+  },
+  {
+    "name": "Gnawed Rib",
+    "bone_type": "gnawed",
+    "bone_part": "rib",
+    "applicable_items": [
+      "armour"
+    ],
+    "stack_size": 20,
+    "max_item_level": 64,
+    "min_modifier_level": null,
+    "function_description": "Desecrates a Rare Armour (Maximum Item Level: 64)"
+  },
+  {
+    "name": "Gnawed Collarbone",
+    "bone_type": "gnawed",
+    "bone_part": "collarbone",
+    "applicable_items": [
+      "amulet",
+      "ring",
+      "belt"
+    ],
+    "stack_size": 20,
+    "max_item_level": 64,
+    "min_modifier_level": null,
+    "function_description": "Desecrates a Rare Amulet, Ring or Belt (Maximum Item Level: 64)"
+  },
+  {
+    "name": "Preserved Jawbone",
+    "bone_type": "preserved",
+    "bone_part": "jawbone",
+    "applicable_items": [
+      "weapon",
+      "quiver"
+    ],
+    "stack_size": 20,
+    "max_item_level": null,
+    "min_modifier_level": null,
+    "function_description": "Desecrates a Rare Weapon or Quiver"
+  },
+  {
+    "name": "Preserved Rib",
+    "bone_type": "preserved",
+    "bone_part": "rib",
+    "applicable_items": [
+      "armour"
+    ],
+    "stack_size": 20,
+    "max_item_level": null,
+    "min_modifier_level": null,
+    "function_description": "Desecrates a Rare Armour"
+  },
+  {
+    "name": "Preserved Collarbone",
+    "bone_type": "preserved",
+    "bone_part": "collarbone",
+    "applicable_items": [
+      "amulet",
+      "ring",
+      "belt"
+    ],
+    "stack_size": 20,
+    "max_item_level": null,
+    "min_modifier_level": null,
+    "function_description": "Desecrates a Rare Amulet, Ring or Belt"
+  },
+  {
+    "name": "Preserved Cranium",
+    "bone_type": "preserved",
+    "bone_part": "cranium",
+    "applicable_items": [
+      "jewel"
+    ],
+    "stack_size": 20,
+    "max_item_level": null,
+    "min_modifier_level": null,
+    "function_description": "Desecrates a Rare Jewel"
+  },
+  {
+    "name": "Preserved Vertebrae",
+    "bone_type": "preserved",
+    "bone_part": "vertebrae",
+    "applicable_items": [
+      "waystone"
+    ],
+    "stack_size": 20,
+    "max_item_level": null,
+    "min_modifier_level": null,
+    "function_description": "Desecrates a Rare Waystone"
+  },
+  {
+    "name": "Ancient Jawbone",
+    "bone_type": "ancient",
+    "bone_part": "jawbone",
+    "applicable_items": [
+      "weapon",
+      "quiver"
+    ],
+    "stack_size": 20,
+    "max_item_level": null,
+    "min_modifier_level": 40,
+    "function_description": "Desecrates a Rare Weapon or Quiver (Minimum Modifier Level: 40)"
+  },
+  {
+    "name": "Ancient Rib",
+    "bone_type": "ancient",
+    "bone_part": "rib",
+    "applicable_items": [
+      "armour"
+    ],
+    "stack_size": 20,
+    "max_item_level": null,
+    "min_modifier_level": 40,
+    "function_description": "Desecrates a Rare Armour (Minimum Modifier Level: 40)"
+  },
+  {
+    "name": "Ancient Collarbone",
+    "bone_type": "ancient",
+    "bone_part": "collarbone",
+    "applicable_items": [
+      "amulet",
+      "ring",
+      "belt"
+    ],
+    "stack_size": 20,
+    "max_item_level": null,
+    "min_modifier_level": 40,
+    "function_description": "Desecrates a Rare Amulet, Ring or Belt (Minimum Modifier Level: 40)"
+  }
+]
