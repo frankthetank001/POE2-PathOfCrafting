@@ -29,7 +29,8 @@
       "Bash(done)",
       "Bash(PYTHONPATH:*)",
       "Bash(sqlite3:*)",
-      "Read(//c/Users/frank/.claude/projects/C--Users-frank-Documents-Github-Poe2-AI-TradeCraft/**)"
+      "Read(//c/Users/frank/.claude/projects/C--Users-frank-Documents-Github-Poe2-AI-TradeCraft/**)",
+      "Bash(npm run lint)"
     ],
     "deny": [],
     "ask": [],

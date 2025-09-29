@@ -96,6 +96,7 @@ async def get_categorized_currencies() -> dict:
     try:
         all_currencies = unified_crafting_factory.get_all_available_currencies()
         all_essences = unified_crafting_factory.get_all_available_essences()
+        all_bones = unified_crafting_factory.get_all_available_bones()
         all_omens = unified_crafting_factory.get_all_available_omens()
 
         # Define implemented mechanics
@@ -129,6 +130,11 @@ async def get_categorized_currencies() -> dict:
             if essence_name not in essences["implemented"]:
                 essences["implemented"].append(essence_name)
 
+        # All bones from bone configs are implemented (DesecrationMechanic is implemented)
+        for bone_name in all_bones:
+            if bone_name not in bones["implemented"]:
+                bones["implemented"].append(bone_name)
+
         return {
             "orbs": {
                 "implemented": sorted(orbs["implemented"]),
@@ -143,7 +149,7 @@ async def get_categorized_currencies() -> dict:
                 "disabled": sorted(bones["disabled"])
             },
             "omens": sorted(all_omens),
-            "total": len(all_currencies) + len(all_essences) + len(all_omens),
+            "total": len(all_currencies) + len(all_essences) + len(all_bones) + len(all_omens),
             "implemented_count": len(orbs["implemented"]) + len(essences["implemented"]) + len(bones["implemented"]),
             "disabled_count": len(orbs["disabled"]) + len(essences["disabled"]) + len(bones["disabled"])
         }
@@ -386,6 +392,18 @@ async def get_currency_tooltip(currency_name: str) -> dict:
                 "type": "desecration"
             }
 
+        # Check if it's an omen
+        from app.services.crafting.config_service import get_omen_config
+        omen_config = get_omen_config(currency_name)
+        if omen_config:
+            return {
+                "name": currency_name,
+                "description": omen_config.effect_description,
+                "mechanics": f"Used with: {omen_config.affected_currency}",
+                "tier": None,
+                "type": "omen"
+            }
+
         # Check if it's a regular currency with config data
         currency_config = get_currency_config(currency_name)
         if currency_config:
@@ -398,7 +416,7 @@ async def get_currency_tooltip(currency_name: str) -> dict:
             elif currency_config.mechanic_class == "AugmentationMechanic":
                 description = "Adds a random modifier to Magic items"
             elif currency_config.mechanic_class == "AlchemyMechanic":
-                description = "Upgrades Normal → Rare with 4-6 random modifiers"
+                description = "Upgrades Normal → Rare with 4 modifiers"
             elif currency_config.mechanic_class == "RegalMechanic":
                 description = "Upgrades Magic → Rare, keeping existing modifiers and adding new ones"
             elif currency_config.mechanic_class == "ExaltedMechanic":

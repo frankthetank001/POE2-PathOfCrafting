@@ -128,11 +128,13 @@
 
 .three-column-layout {
   display: flex;
-  min-height: 100vh;
+  height: calc(100vh - 120px);
+  max-height: calc(100vh - 120px);
   max-width: 100%;
   gap: 1rem;
   padding: 1rem;
   box-sizing: border-box;
+  overflow: hidden;
 }
 
 /* Left Panel - Available Mods (flexible) */
@@ -331,6 +333,19 @@
 
 .pool-mod-group-header.suffix {
   border-left-color: #ffaa44;
+}
+
+.pool-mod-group-header.desecrated,
+.pool-mod-group-header.desecrated_only {
+  border-left-color: #44ff88;
+  background: rgba(68, 255, 136, 0.05);
+  border: 1px solid rgba(68, 255, 136, 0.2);
+}
+
+.pool-mod-group.desecrated-only,
+.pool-mod-group.desecrated_only {
+  border: 1px solid rgba(68, 255, 136, 0.3);
+  background: rgba(68, 255, 136, 0.03);
 }
 
 .pool-mod-stat-main {
@@ -571,6 +586,14 @@
 .mod-line.suffix {
   color: #ffaa44;
   background: rgba(255, 170, 68, 0.05);
+}
+
+.mod-line.desecrated,
+.mod-line.desecrated_only {
+  color: #44ff88;
+  background: rgba(68, 255, 136, 0.1);
+  border: 1px solid rgba(68, 255, 136, 0.3);
+  box-shadow: 0 0 8px rgba(68, 255, 136, 0.2);
 }
 
 .mod-stat {
@@ -1203,6 +1226,7 @@
   .left-panel, .right-panel {
     min-width: 280px;
     max-width: 350px;
+    max-height: calc(45vh - 100px);
   }
 }
 
@@ -1215,7 +1239,8 @@
   .left-panel, .right-panel {
     flex: none;
     width: 100%;
-    max-height: 400px;
+    max-height: calc(40vh - 100px);
+    min-height: 250px;
     min-width: auto;
     max-width: none;
   }
@@ -1230,11 +1255,13 @@
   }
 
   .vertical-currency-list {
-    max-height: 300px;
+    max-height: calc(30vh - 150px);
+    min-height: 200px;
   }
 
   .omens-grid {
-    max-height: 200px;
+    max-height: calc(25vh - 100px);
+    min-height: 150px;
     overflow-y: auto;
   }
 }
@@ -1332,7 +1359,8 @@
 
 @media (max-width: 480px) {
   .left-panel, .right-panel {
-    max-height: 300px;
+    max-height: calc(35vh - 80px);
+    min-height: 200px;
   }
 
   .item-display {
@@ -1365,6 +1393,8 @@
   border-radius: 8px;
   padding: 1rem;
   height: 100%;
+  max-height: calc(100vh - 200px);
+  overflow-y: auto;
 }
 
 .currency-stash-header {
@@ -1506,7 +1536,8 @@
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
   gap: 0.5rem;
-  max-height: 200px;
+  max-height: calc(30vh - 120px);
+  min-height: 150px;
   overflow-y: auto;
 }
 
@@ -1867,7 +1898,63 @@
   flex-direction: column;
 }
 
-/* Corrupted Essences Styling */
+/* Abyssal Bones Row Styling - Horizontal layout at top */
+.bones-row {
+  background: rgba(101, 67, 33, 0.1);
+  border: 1px solid rgba(101, 67, 33, 0.3);
+}
+
+.bones-row .currency-row-label {
+  color: #d2691e;
+}
+
+.bones-row .currency-icons-row {
+  justify-content: flex-start;
+  flex-wrap: wrap;
+}
+
+/* Essences Row - Wider layout with corrupted essences */
+.essences-row {
+  background: rgba(128, 0, 128, 0.05);
+}
+
+.essences-row .currency-row-label {
+  color: #da70d6;
+}
+
+.essences-content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.essence-pair.corrupted {
+  border: 1px solid rgba(139, 0, 0, 0.3);
+  background: rgba(139, 0, 0, 0.05);
+  border-radius: 4px;
+  padding: 0.25rem;
+}
+
+.essence-corrupted {
+  border-color: #8B0000 !important;
+  background: rgba(139, 0, 0, 0.1) !important;
+  box-shadow: 0 0 8px rgba(139, 0, 0, 0.3);
+}
+
+.essence-corrupted:hover {
+  border-color: #CD5C5C !important;
+  background: rgba(139, 0, 0, 0.2) !important;
+  box-shadow: 0 0 12px rgba(139, 0, 0, 0.5) !important;
+}
+
+.corrupted-label {
+  font-size: 0.8rem;
+  color: #CD5C5C;
+  font-style: italic;
+  margin-top: 0.25rem;
+}
+
+/* Corrupted Essences Styling - Legacy support */
 .corrupted-essence {
   border-color: #8B0000 !important;
   background: rgba(139, 0, 0, 0.1) !important;

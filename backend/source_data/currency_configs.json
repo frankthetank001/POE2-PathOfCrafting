@@ -76,8 +76,7 @@
     "rarity": "uncommon",
     "mechanic_class": "AlchemyMechanic",
     "config_data": {
-      "min_mods": 4,
-      "max_mods": 6
+      "num_mods": 4
     }
   },
   {

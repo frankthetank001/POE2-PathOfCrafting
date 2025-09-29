@@ -1,8 +1,6 @@
 import { useState, useEffect, useMemo } from 'react'
 import { craftingApi } from '@/services/crafting-api'
-import { CurrencyTooltipWrapper } from '@/components/CurrencyTooltipWrapper'
 import { UnifiedCurrencyStash } from '@/components/UnifiedCurrencyStash'
-import { Tooltip, CurrencyTooltip } from '@/components/Tooltip'
 import type { CraftableItem, ItemModifier, ItemRarity, ItemBasesBySlot } from '@/types/crafting'
 import './GridCraftingSimulator.css'
 
@@ -19,7 +17,7 @@ interface TabContentProps {
   onItemCreated?: () => void
 }
 
-function ItemTab({ item, setItem, onHistoryReset, setMessage, onItemCreated }: TabContentProps) {
+function ItemTab({ setItem, onHistoryReset, setMessage, onItemCreated }: TabContentProps) {
   const [itemBases, setItemBases] = useState<ItemBasesBySlot>({})
   const [selectedSlot, setSelectedSlot] = useState<string>('body_armour')
   const [selectedCategory, setSelectedCategory] = useState<string>('int_armour')
@@ -362,8 +360,8 @@ function GridCraftingSimulator() {
     disabled_count: 0
   })
 
-  const [, setAvailableCurrencies] = useState<string[]>([])
-  const [selectedEssence] = useState<string>('')
+  const [availableCurrencies, setAvailableCurrencies] = useState<string[]>([])
+  // const [selectedEssence] = useState<string>('') // Unused for now
   const [selectedOmens, setSelectedOmens] = useState<string[]>([])
   const [availableOmens, setAvailableOmens] = useState<string[]>([])
   const [loading, setLoading] = useState(false)
@@ -444,11 +442,12 @@ function GridCraftingSimulator() {
     setCurrencySpent({})
   }
 
-  // Load available mods when item changes
+  // Load available mods and currencies when item changes
   useEffect(() => {
     if (item.base_name && item.base_name !== "Int Armour Body Armour") {
       loadAvailableMods()
       loadCategorizedCurrencies()
+      loadAvailableCurrencies()
     }
   }, [item])
 
@@ -465,10 +464,19 @@ function GridCraftingSimulator() {
     try {
       const currencies = await craftingApi.getCategorizedCurrencies()
       setCategorizedCurrencies(currencies)
-      setAvailableCurrencies([...currencies.orbs.implemented, ...currencies.essences.implemented, ...currencies.bones.implemented])
       setAvailableOmens(currencies.omens)
     } catch (err) {
       console.error('Failed to load currencies:', err)
+    }
+  }
+
+  const loadAvailableCurrencies = async () => {
+    try {
+      const data = await craftingApi.getAvailableCurrenciesForItem(item)
+      setAvailableCurrencies(data)
+    } catch (err) {
+      console.error('Failed to load available currencies:', err)
+      setAvailableCurrencies([]) // Set to empty on error
     }
   }
 
@@ -478,20 +486,40 @@ function GridCraftingSimulator() {
     setLoading(true)
     setMessage('')
 
+    // Store the current item state to compare later
+    const initialItemState = JSON.stringify(item)
+
     try {
-      const craftParams: any = {
-        currency: currencyType,
-        omens: selectedOmens
+      // Debug logging
+      const initialModCount = item.prefix_mods.length + item.suffix_mods.length
+      console.log(`[DEBUG] Crafting ${currencyType} on item with ${initialModCount} mods (${item.prefix_mods.length}P, ${item.suffix_mods.length}S)${selectedOmens.length > 0 ? ` with omens: ${selectedOmens.join(', ')}` : ''}`)
+
+      let result
+
+      // Use appropriate API based on whether omens are selected
+      if (selectedOmens.length > 0) {
+        result = await craftingApi.simulateCraftingWithOmens(
+          item,
+          currencyType,
+          selectedOmens
+        )
+      } else {
+        result = await craftingApi.simulateCrafting({
+          item,
+          currency_name: currencyType
+        })
       }
 
-      if (currencyType.includes('Essence')) {
-        craftParams.essence = selectedEssence || currencyType
-      }
+      // Debug logging for result
+      if (result.result_item) {
+        const finalModCount = result.result_item.prefix_mods.length + result.result_item.suffix_mods.length
+        const modDifference = finalModCount - initialModCount
+        console.log(`[DEBUG] Result: ${finalModCount} mods (${result.result_item.prefix_mods.length}P, ${result.result_item.suffix_mods.length}S), difference: ${modDifference}`)
 
-      const result = await craftingApi.simulateCrafting({
-        item,
-        currency_name: currencyType
-      })
+        if (currencyType === 'Chaos Orb' && Math.abs(modDifference) > 0) {
+          console.warn(`[WARNING] Chaos Orb changed mod count by ${modDifference}! This should not happen.`)
+        }
+      }
 
       // Add to history before updating item
       setHistory([...history, `Applied ${currencyType}${selectedOmens.length > 0 ? ` with ${selectedOmens.join(', ')}` : ''}`])
@@ -502,6 +530,14 @@ function GridCraftingSimulator() {
         ...prev,
         [currencyType]: (prev[currencyType] || 0) + 1
       }))
+
+      // Check if item state changed during the async operation (race condition protection)
+      const currentItemState = JSON.stringify(item)
+      if (currentItemState !== initialItemState) {
+        setMessage(`Warning: Item changed during crafting. Operation may have been interrupted.`)
+        setLoading(false)
+        return
+      }
 
       if (result.result_item) {
         setItem(result.result_item)
@@ -1411,8 +1447,10 @@ function GridCraftingSimulator() {
                           <h4 className="mods-title">Prefixes ({item.prefix_mods.length}/3)</h4>
                           {item.prefix_mods.map((mod, idx) => {
                             const isTagFiltered = activeTagFilters.size > 0 && !isModMatchingTagFilters(mod)
+                            const isDesecrated = mod.tags && (mod.tags.includes('desecrated') || mod.tags.includes('desecrated_only'))
+                            const modClasses = `mod-line prefix ${isTagFiltered ? 'tag-filtered' : ''} ${isDesecrated ? 'desecrated' : ''}`
                             return (
-                              <div key={idx} className={`mod-line prefix ${isTagFiltered ? 'tag-filtered' : ''}`}>
+                              <div key={idx} className={modClasses}>
                                 <div className="mod-stat">{renderModifier(mod)}</div>
                                 <div className="mod-metadata">
                                   <span className="mod-tier">T{mod.tier}</span>
@@ -1429,8 +1467,10 @@ function GridCraftingSimulator() {
                           <h4 className="mods-title">Suffixes ({item.suffix_mods.length}/3)</h4>
                           {item.suffix_mods.map((mod, idx) => {
                             const isTagFiltered = activeTagFilters.size > 0 && !isModMatchingTagFilters(mod)
+                            const isDesecrated = mod.tags && (mod.tags.includes('desecrated') || mod.tags.includes('desecrated_only'))
+                            const modClasses = `mod-line suffix ${isTagFiltered ? 'tag-filtered' : ''} ${isDesecrated ? 'desecrated' : ''}`
                             return (
-                              <div key={idx} className={`mod-line suffix ${isTagFiltered ? 'tag-filtered' : ''}`}>
+                              <div key={idx} className={modClasses}>
                                 <div className="mod-stat">{renderModifier(mod)}</div>
                                 <div className="mod-metadata">
                                   <span className="mod-tier">T{mod.tier}</span>
@@ -1461,13 +1501,15 @@ function GridCraftingSimulator() {
                       <button
                         className="reset-button"
                         onClick={() => {
-                          setItem({
+                          const resetItem = {
                             ...item,
                             prefix_mods: [],
                             suffix_mods: [],
-                            rarity: 'normal' as ItemRarity
-                          })
+                            rarity: 'Normal' as ItemRarity
+                          }
+                          setItem(resetItem)
                           handleHistoryReset()
+                          setMessage('Item reset to Normal rarity')
                         }}
                       >
                         🔄 Reset Item
@@ -1513,6 +1555,7 @@ function GridCraftingSimulator() {
             {/* Unified Currency Stash - Clean Grid Layout */}
             <UnifiedCurrencyStash
               categorizedCurrencies={categorizedCurrencies}
+              availableCurrencies={availableCurrencies}
               availableOmens={availableOmens}
               selectedOmens={selectedOmens}
               setSelectedOmens={setSelectedOmens}

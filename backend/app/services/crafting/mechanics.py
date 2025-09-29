@@ -133,7 +133,7 @@ class AugmentationMechanic(CraftingMechanic):
 
 
 class AlchemyMechanic(CraftingMechanic):
-    """Alchemy: Normal → Rare with 4-6 modifiers."""
+    """Alchemy: Normal → Rare with 4 modifiers."""
 
     def can_apply(self, item: CraftableItem) -> Tuple[bool, Optional[str]]:
         if item.rarity != ItemRarity.NORMAL:
@@ -150,10 +150,8 @@ class AlchemyMechanic(CraftingMechanic):
         manager = ItemStateManager(item)
         manager.upgrade_rarity(ItemRarity.RARE)
 
-        # Get configuration
-        min_mods = self.config.get("min_mods", 4)
-        max_mods = self.config.get("max_mods", 6)
-        num_mods = random.randint(min_mods, max_mods)
+        # Get configuration - Alchemy always creates exactly 4 modifiers
+        num_mods = self.config.get("num_mods", 4)
 
         # Balance prefixes and suffixes
         num_prefixes = min(3, random.randint(2, num_mods // 2 + 1))
@@ -294,9 +292,16 @@ class ChaosMechanic(CraftingMechanic):
         # Remove random modifier
         all_mods = manager.item.prefix_mods + manager.item.suffix_mods
         mod_to_replace = random.choice(all_mods)
+        mod_type_enum = mod_to_replace.mod_type
         mod_type = mod_to_replace.mod_type.value
 
-        manager.remove_modifier(mod_to_replace)
+        # Find the index of the modifier to remove
+        if mod_type_enum == ModType.PREFIX:
+            mod_index = manager.item.prefix_mods.index(mod_to_replace)
+        else:
+            mod_index = manager.item.suffix_mods.index(mod_to_replace)
+
+        manager.remove_modifier(mod_type_enum, mod_index)
 
         # Add new modifier of same type
         new_mod = modifier_pool.roll_random_modifier(
@@ -472,8 +477,9 @@ class DesecrationMechanic(CraftingMechanic):
 
     def __init__(self, config: Dict[str, Any]):
         super().__init__(config)
-        # Get bone type from config
-        self.bone_type = config.get('bone_type', 'unknown')
+        # Get bone info from config
+        self.bone_type = config.get('bone_type', 'unknown')  # gnawed/preserved/ancient
+        self.bone_part = config.get('bone_part', 'unknown')  # jawbone/rib/collarbone/etc
         self.quality = config.get('quality', 'regular')  # regular or ancient
 
     def can_apply(self, item: CraftableItem) -> Tuple[bool, Optional[str]]:
@@ -492,46 +498,73 @@ class DesecrationMechanic(CraftingMechanic):
         # Check if item already has a desecrated modifier
         all_mods = item.prefix_mods + item.suffix_mods + item.implicit_mods
         for mod in all_mods:
-            if ModType.DESECRATED in mod.tags or 'desecrated' in mod.tags:
+            if 'desecrated' in mod.tags or 'desecrated_only' in mod.tags:
                 return False, "Item already has a desecrated modifier"
 
-        # Check if item type is compatible with this bone type
-        applicable_items = self._get_applicable_items_for_bone_type(self.bone_type)
+        # Check if item type is compatible with this bone part
+        applicable_items = self._get_applicable_items_for_bone_type(self.bone_part)
         if item.base_category not in applicable_items:
             bone_name = f"Abyssal {self.bone_type.title()}"
             return False, f"{bone_name} cannot be applied to {item.base_category}. Valid item types: {', '.join(applicable_items)}"
 
         return True, None
 
-    def _get_applicable_items_for_bone_type(self, bone_type: str) -> List[str]:
-        """Get list of item types this bone can be applied to based on logical modifier placement."""
-        type_restrictions = {
-            'jawbone': [
-                # Damage modifiers - weapons only
-                "One Handed Sword", "Two Handed Sword", "Bow", "Crossbow",
-                "Wand", "Staff", "Sceptre"
-            ],
-            'rib': [
-                # Defensive modifiers - armor pieces only
-                "Body Armour", "Helmet", "Gloves", "Boots", "Shield", "Belt"
-            ],
-            'collarbone': [
-                # Resistance modifiers - armor and jewelry
-                "Body Armour", "Helmet", "Gloves", "Boots", "Shield", "Belt",
-                "Ring", "Amulet"
-            ],
-            'cranium': [
-                # Caster modifiers - caster weapons and jewelry
-                "Wand", "Staff", "Sceptre", "Ring", "Amulet"
-            ],
-            'vertebrae': [
-                # Attribute modifiers - any equipment
-                "Body Armour", "Helmet", "Gloves", "Boots", "Shield", "Belt",
-                "Ring", "Amulet", "One Handed Sword", "Two Handed Sword",
-                "Bow", "Crossbow", "Wand", "Staff", "Sceptre", "Quiver"
-            ]
-        }
-        return type_restrictions.get(bone_type.lower(), [])
+    def _get_applicable_items_for_bone_type(self, bone_part: str) -> List[str]:
+        """Get list of item categories this bone can be applied to based on configuration data."""
+        # Import the bone config service here to avoid circular imports
+        from app.services.crafting.config_service import get_bone_configs_for_part
+
+        bone_configs = get_bone_configs_for_part(bone_part)
+        if not bone_configs:
+            # Fallback to hardcoded logic if no config found
+            type_restrictions = {
+                'jawbone': [
+                    # Damage modifiers - weapons and quivers
+                    "weapon", "one_handed_sword", "two_handed_sword", "bow", "crossbow",
+                    "wand", "staff", "sceptre", "quiver"
+                ],
+                'rib': [
+                    # Defensive modifiers - armor pieces
+                    "armour", "body_armour", "int_armour", "str_armour", "dex_armour",
+                    "str_dex_armour", "str_int_armour", "dex_int_armour", "str_dex_int_armour",
+                    "helmet", "gloves", "boots", "shield", "belt"
+                ],
+                'collarbone': [
+                    # Resistance modifiers - jewelry and belts
+                    "ring", "amulet", "belt"
+                ],
+                'cranium': [
+                    # Special modifiers - jewels
+                    "jewel"
+                ],
+                'vertebrae': [
+                    # Special modifiers - waystones
+                    "waystone"
+                ]
+            }
+            return type_restrictions.get(bone_part.lower(), [])
+
+        # Use config data to build applicable items list
+        applicable_items = set()
+        for bone_config in bone_configs:
+            for item_type in bone_config.applicable_items:
+                # Map broad categories to specific item categories
+                if item_type == "armour":
+                    applicable_items.update([
+                        "armour", "body_armour", "int_armour", "str_armour", "dex_armour",
+                        "str_dex_armour", "str_int_armour", "dex_int_armour", "str_dex_int_armour",
+                        "helmet", "gloves", "boots", "shield"
+                    ])
+                elif item_type == "weapon":
+                    applicable_items.update([
+                        "weapon", "one_handed_sword", "two_handed_sword", "bow", "crossbow",
+                        "wand", "staff", "sceptre", "dagger", "claw", "mace", "axe", "flail"
+                    ])
+                else:
+                    # Direct mapping for specific types like ring, amulet, belt, jewel, waystone, quiver
+                    applicable_items.add(item_type)
+
+        return list(applicable_items)
 
     def apply(
         self, item: CraftableItem, modifier_pool: ModifierPool
@@ -555,8 +588,19 @@ class DesecrationMechanic(CraftingMechanic):
         # Create the desecrated modifier
         desecrated_modifier = self._create_desecrated_modifier(selected_mod)
 
-        # Add as implicit modifier (desecrated mods are typically implicit)
-        manager.item.implicit_mods.append(desecrated_modifier)
+        # If item has 6 modifiers (full), must remove one first (according to design document)
+        if item.total_explicit_mods >= 6:
+            all_explicit = item.prefix_mods + item.suffix_mods
+            mod_to_remove = random.choice(all_explicit)
+            if mod_to_remove.mod_type == ModType.PREFIX:
+                index = item.prefix_mods.index(mod_to_remove)
+                manager.remove_modifier(ModType.PREFIX, index)
+            else:
+                index = item.suffix_mods.index(mod_to_remove)
+                manager.remove_modifier(ModType.SUFFIX, index)
+
+        # Add the desecrated modifier as an explicit modifier
+        manager.add_modifier(desecrated_modifier)
 
         success_message = f"Added desecrated modifier: {selected_mod.name}"
         if self.quality == 'ancient':
@@ -577,7 +621,7 @@ class DesecrationMechanic(CraftingMechanic):
             'vertebrae': ['critical', 'accuracy']
         }
 
-        specialization_tags = bone_specializations.get(self.bone_type, [])
+        specialization_tags = bone_specializations.get(self.bone_part, [])
 
         # Get modifiers that match the bone's specialization
         suitable_mods = []
@@ -600,9 +644,10 @@ class DesecrationMechanic(CraftingMechanic):
         enhanced_max = base_mod.stat_max * multiplier if base_mod.stat_max else None
         enhanced_value = base_mod.current_value * multiplier if base_mod.current_value else None
 
+        # Preserve original mod_type (prefix/suffix) but add desecrated tags for visual detection
         return ItemModifier(
             name=f"Desecrated {base_mod.name}",
-            mod_type=ModType.DESECRATED,
+            mod_type=base_mod.mod_type,  # Keep original prefix/suffix type
             tier=max(1, base_mod.tier - 2),  # Better tier
             stat_text=f"[DESECRATED] {base_mod.stat_text}",
             stat_min=enhanced_min,
@@ -611,7 +656,7 @@ class DesecrationMechanic(CraftingMechanic):
             required_ilvl=base_mod.required_ilvl,
             mod_group=base_mod.mod_group,
             applicable_items=base_mod.applicable_items,
-            tags=base_mod.tags + ['desecrated', self.bone_type],
+            tags=base_mod.tags + ['desecrated', 'desecrated_only', self.bone_type],
             is_exclusive=True  # Desecrated mods are unique
         )
 

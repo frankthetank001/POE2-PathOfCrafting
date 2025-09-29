@@ -886,7 +886,8 @@
   border: 2px solid #444;
   border-radius: 8px;
   padding: 1.5rem;
-  max-height: 90vh;
+  height: calc(100vh - 220px);
+  max-height: calc(100vh - 220px);
   min-height: 500px;
   overflow-y: auto;
   display: flex;
@@ -986,9 +987,8 @@
 .mods-pool-columns {
   display: flex;
   gap: 1rem;
-  flex: 1 1 400px;
-  overflow: hidden;
-  min-height: 400px;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 /* Special mods (essence/desecrated) sections stack vertically */
@@ -1018,9 +1018,9 @@
 }
 
 .special-mods-column .mods-pool-list {
-  flex: 1;
+  flex: 1 1 auto;
   overflow-y: auto;
-  max-height: 250px;
+  max-height: 300px;
 }
 
 .special-section-title {
@@ -1045,10 +1045,9 @@
 .mods-pool-column {
   display: flex;
   flex-direction: column;
-  overflow: hidden;
   min-height: 0;
   width: 100%;
-  flex: 1;
+  flex: 1 1 50%;
 }
 
 .column-title {
@@ -1060,12 +1059,11 @@
 }
 
 .mods-pool-list {
-  flex: 1;
+  flex: 1 1 auto;
   overflow-y: auto;
   display: block;
   padding-right: 0.25rem;
-  min-height: 200px;
-  max-height: 100%;
+  min-height: 0;
 }
 
 .mods-pool-list::-webkit-scrollbar {
@@ -1130,23 +1128,27 @@
   padding: 0.4rem 0.75rem;
   min-height: 32px;
   cursor: pointer;
-  flex-wrap: wrap;
-  gap: 0.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
 }
 
 .compact-mod-info {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 0.5rem;
   font-size: 0.85rem;
-  flex-shrink: 0;
   flex-wrap: wrap;
+  width: 100%;
 }
 
 .compact-single-line .pool-mod-stat-main {
-  flex: 1;
+  flex: 0 0 auto;
   min-width: 0;
   font-size: 0.9rem;
+  display: block;
+  width: 100%;
+  margin-bottom: 0.25rem;
 }
 
 
@@ -1456,13 +1458,13 @@
 /* Compact tags for mods - small colored squares */
 /* Mod tags displayed at end of mod bar with domino/tab stacking effect */
 .mod-tags-line {
-  display: flex;
+  display: inline-flex;
   flex-wrap: wrap;
   align-items: center;
-  margin-left: 0.5rem;
   flex-shrink: 0;
   /* Remove gap to allow stacking */
   position: relative;
+  max-width: fit-content;
 }
 
 .mod-tag-text {
@@ -2022,6 +2024,81 @@
 
 .currency-section-compact .currency-buttons-grid::-webkit-scrollbar-thumb:hover {
   background: #555;
+}
+
+/* New currency layout styles */
+.currency-layout-new {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  height: 100%;
+}
+
+.currency-section-horizontal {
+  flex: 0 0 auto;
+}
+
+.currency-section-horizontal.bones-section {
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 0.5rem;
+  background: rgba(101, 67, 33, 0.1);
+}
+
+.currency-horizontal-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.currency-main-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.currency-table.essences-wide {
+  flex: 1 1 auto;
+}
+
+.essences-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.essence-selector-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 48px;
+  height: 48px;
+  background: #444;
+  border: 1px solid #666;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex-direction: column;
+  font-size: 0.7rem;
+  color: #ccc;
+}
+
+.essence-selector-button:hover {
+  background: #555;
+  border-color: #888;
+}
+
+.essences-icon {
+  font-size: 1.2rem;
+  margin-bottom: 2px;
+}
+
+.essence-selector-text {
+  font-size: 0.7rem;
 }
 
 .currency-section-header {

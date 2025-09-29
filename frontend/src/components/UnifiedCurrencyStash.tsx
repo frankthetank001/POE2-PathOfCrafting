@@ -1,5 +1,5 @@
 import React from 'react'
-import { Tooltip, CurrencyTooltip } from './Tooltip'
+import { Tooltip } from './Tooltip'
 import { CurrencyTooltipWrapper } from './CurrencyTooltipWrapper'
 
 interface UnifiedCurrencyStashProps {
@@ -8,6 +8,7 @@ interface UnifiedCurrencyStashProps {
     essences: { implemented: string[], disabled: string[] }
     bones: { implemented: string[], disabled: string[] }
   }
+  availableCurrencies: string[]
   availableOmens: string[]
   selectedOmens: string[]
   setSelectedOmens: React.Dispatch<React.SetStateAction<string[]>>
@@ -18,6 +19,7 @@ interface UnifiedCurrencyStashProps {
 
 export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
   categorizedCurrencies,
+  availableCurrencies,
   availableOmens,
   selectedOmens,
   setSelectedOmens,
@@ -34,27 +36,41 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
 
       {/* Main Currency Grid - Unified Layout */}
       <div className="currency-unified-grid">
-        {/* Row 1: Special Orbs */}
-        <div className="currency-row special-row">
-          <div className="currency-row-label">Special</div>
+        {/* Row 1: Abyssal Bones - Horizontal section at top */}
+        <div className="currency-row bones-row">
+          <div className="currency-row-label">Abyssal Bones</div>
           <div className="currency-icons-row">
-            {['Orb of Alchemy', 'Vaal Orb', 'Orb of Annulment', 'Orb of Fracturing', 'Divine Orb'].map((currency) => {
-              const isImplemented = categorizedCurrencies.orbs.implemented.includes(currency)
+            {[
+              // Gnawed Bones (Max Item Level: 64)
+              'Gnawed Jawbone', 'Gnawed Rib', 'Gnawed Collarbone',
+              // Preserved Bones (Mid-tier)
+              'Preserved Jawbone', 'Preserved Rib', 'Preserved Collarbone', 'Preserved Cranium', 'Preserved Vertebrae',
+              // Ancient Bones (Min Modifier Level: 40)
+              'Ancient Jawbone', 'Ancient Rib', 'Ancient Collarbone'
+            ].map((currency) => {
+              const isImplemented = categorizedCurrencies.bones.implemented.includes(currency)
+              const isAvailable = availableCurrencies.includes(currency) && isImplemented
+              const additionalMechanics = !isImplemented
+                ? "Not implemented yet"
+                : isAvailable
+                  ? "Double-click to apply"
+                  : "Not available for this item"
+
               return (
                 <Tooltip
                   key={currency}
                   content={
                     <CurrencyTooltipWrapper
                       currencyName={currency}
-                      additionalMechanics={!isImplemented ? "Not implemented yet" : "Double-click to apply"}
+                      additionalMechanics={additionalMechanics}
                     />
                   }
                   delay={0}
                   position="right"
                 >
                   <div
-                    className={`currency-slot ${!isImplemented ? 'currency-disabled' : ''}`}
-                    onClick={() => isImplemented && handleCraft(currency)}
+                    className={`currency-slot ${!isAvailable ? 'currency-disabled' : ''}`}
+                    onClick={() => isAvailable && handleCraft(currency)}
                   >
                     <img
                       src={getCurrencyIconUrl(currency)}
@@ -71,7 +87,51 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
           </div>
         </div>
 
-        {/* Row 2: Basic Orbs - Organized by Family */}
+        {/* Row 2: Special Orbs */}
+        <div className="currency-row special-row">
+          <div className="currency-row-label">Special</div>
+          <div className="currency-icons-row">
+            {['Orb of Alchemy', 'Vaal Orb', 'Orb of Annulment', 'Orb of Fracturing', 'Divine Orb'].map((currency) => {
+              const isImplemented = categorizedCurrencies.orbs.implemented.includes(currency)
+              const isAvailable = availableCurrencies.includes(currency) && isImplemented
+              const additionalMechanics = !isImplemented
+                ? "Not implemented yet"
+                : isAvailable
+                  ? "Double-click to apply"
+                  : "Not available for this item"
+
+              return (
+                <Tooltip
+                  key={currency}
+                  content={
+                    <CurrencyTooltipWrapper
+                      currencyName={currency}
+                      additionalMechanics={additionalMechanics}
+                    />
+                  }
+                  delay={0}
+                  position="right"
+                >
+                  <div
+                    className={`currency-slot ${!isAvailable ? 'currency-disabled' : ''}`}
+                    onClick={() => isAvailable && handleCraft(currency)}
+                  >
+                    <img
+                      src={getCurrencyIconUrl(currency)}
+                      alt={currency}
+                      className="currency-icon"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
+                      }}
+                    />
+                  </div>
+                </Tooltip>
+              )
+            })}
+          </div>
+        </div>
+
+        {/* Row 3: Basic Orbs - Organized by Family */}
         <div className="currency-row orbs-row">
           <div className="currency-row-label">Orbs</div>
           <div className="currency-icons-row">
@@ -85,21 +145,28 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
               <div key={familyIndex} className="currency-family">
                 {family.map((currency) => {
                   const isImplemented = categorizedCurrencies.orbs.implemented.includes(currency)
+                  const isAvailable = availableCurrencies.includes(currency) && isImplemented
+                  const additionalMechanics = !isImplemented
+                    ? "Not implemented yet"
+                    : isAvailable
+                      ? "Double-click to apply"
+                      : "Not available for this item"
+
                   return (
                     <Tooltip
                       key={currency}
                       content={
                         <CurrencyTooltipWrapper
                           currencyName={currency}
-                          additionalMechanics={!isImplemented ? "Not implemented yet" : "Double-click to apply"}
+                          additionalMechanics={additionalMechanics}
                         />
                       }
                       delay={0}
                       position="right"
                     >
                       <div
-                        className={`currency-slot ${!isImplemented ? 'currency-disabled' : ''}`}
-                        onClick={() => isImplemented && handleCraft(currency)}
+                        className={`currency-slot ${!isAvailable ? 'currency-disabled' : ''}`}
+                        onClick={() => isAvailable && handleCraft(currency)}
                       >
                         <img
                           src={getCurrencyIconUrl(currency)}
@@ -118,7 +185,7 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
           </div>
         </div>
 
-        {/* Row 3: Omens - Compact Grid */}
+        {/* Row 4: Omens - Compact Grid */}
         {availableOmens.length > 0 && (
           <div className="currency-row omens-row">
             <div className="currency-row-label">Omens</div>
@@ -170,10 +237,10 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
           </div>
         )}
 
-        {/* Row 4: Essences and Bones - Side by Side */}
-        <div className="currency-row essences-bones-row">
-          <div className="currency-row-label">Essences & Bones</div>
-          <div className="essences-bones-content">
+        {/* Row 5: Essences - Wider layout with corrupted essences */}
+        <div className="currency-row essences-row">
+          <div className="currency-row-label">Essences</div>
+          <div className="essences-content">
             {/* Essences Section */}
             <div className="essences-section">
             <div className="essence-grid-clean">
@@ -223,7 +290,12 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
                   'the Infinite', 'Alacrity', 'Seeking', 'Opulence'
                 ]
 
-                return allEssenceTypes.map((baseType) => {
+                // Handle corrupted essences separately
+                const corruptedEssences = [
+                  'Essence of Delirium', 'Essence of Horror', 'Essence of Hysteria', 'Essence of Insanity', 'Essence of the Abyss'
+                ]
+
+                const normalEssencePairs = allEssenceTypes.map((baseType) => {
                   const group = groupedEssences[baseType]
                   if (!group || (group.base.length === 0 && group.perfect.length === 0)) return null
 
@@ -233,15 +305,21 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
                       {group.base.length > 0 && (
                         <Tooltip
                           content={
-                            <div className="essence-tooltip">
-                              <h4>Essence of {baseType}</h4>
-                              <div>{group.base.join(', ')}</div>
-                            </div>
+                            <CurrencyTooltipWrapper
+                              currencyName={group.base[group.base.length - 1]}
+                              additionalMechanics={
+                                !availableCurrencies.includes(group.base[group.base.length - 1])
+                                  ? "Not available for this item"
+                                  : "Double-click to apply"
+                              }
+                            />
                           }
+                          delay={0}
+                          position="right"
                         >
                           <div
-                            className="currency-slot essence-base"
-                            onClick={() => handleCraft(group.base[group.base.length - 1])}
+                            className={`currency-slot essence-base ${!availableCurrencies.includes(group.base[group.base.length - 1]) ? 'currency-disabled' : ''}`}
+                            onClick={() => availableCurrencies.includes(group.base[group.base.length - 1]) && handleCraft(group.base[group.base.length - 1])}
                           >
                             <img
                               src={getCurrencyIconUrl(group.base[0])}
@@ -258,14 +336,21 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
                       {group.perfect.length > 0 && (
                         <Tooltip
                           content={
-                            <div className="essence-tooltip">
-                              <h4>Perfect Essence of {baseType}</h4>
-                            </div>
+                            <CurrencyTooltipWrapper
+                              currencyName={group.perfect[0]}
+                              additionalMechanics={
+                                !availableCurrencies.includes(group.perfect[0])
+                                  ? "Not available for this item"
+                                  : "Double-click to apply"
+                              }
+                            />
                           }
+                          delay={0}
+                          position="right"
                         >
                           <div
-                            className="currency-slot essence-perfect"
-                            onClick={() => handleCraft(group.perfect[0])}
+                            className={`currency-slot essence-perfect ${!availableCurrencies.includes(group.perfect[0]) ? 'currency-disabled' : ''}`}
+                            onClick={() => availableCurrencies.includes(group.perfect[0]) && handleCraft(group.perfect[0])}
                           >
                             <img
                               src={getCurrencyIconUrl(group.perfect[0])}
@@ -281,48 +366,51 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
                     </div>
                   )
                 }).filter(Boolean)
-              })()}
-            </div>
-          </div>
 
-            {/* Bones Section */}
-            <div className="bones-section">
-            <div className="bones-grid-clean">
-              {[
-                // Gnawed Bones (Max Item Level: 64)
-                'Gnawed Jawbone', 'Gnawed Rib', 'Gnawed Collarbone',
-                // Preserved Bones (Mid-tier)
-                'Preserved Jawbone', 'Preserved Rib', 'Preserved Collarbone', 'Preserved Cranium', 'Preserved Vertebrae',
-                // Ancient Bones (Min Modifier Level: 40)
-                'Ancient Jawbone', 'Ancient Rib', 'Ancient Collarbone'
-              ].map((currency) => {
-                const isImplemented = categorizedCurrencies.bones.implemented.includes(currency)
-                return (
-                  <Tooltip
-                    key={currency}
-                    content={
-                      <CurrencyTooltip
-                        name={currency}
-                        description={!isImplemented ? "Not implemented yet" : "Double-click to apply"}
-                      />
-                    }
-                  >
-                    <div
-                      className={`currency-slot ${!isImplemented ? 'currency-disabled' : ''}`}
-                      onClick={() => isImplemented && handleCraft(currency)}
-                    >
-                      <img
-                        src={getCurrencyIconUrl(currency)}
-                        alt={currency}
-                        className="currency-icon"
-                        onError={(e) => {
-                          (e.target as HTMLImageElement).src = "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
-                        }}
-                      />
+                // Add corrupted essences
+                const corruptedEssencePairs = corruptedEssences.filter(essence =>
+                  categorizedCurrencies.essences.implemented.includes(essence) || categorizedCurrencies.essences.disabled.includes(essence)
+                ).map((essence) => {
+                  const isImplemented = categorizedCurrencies.essences.implemented.includes(essence)
+                  const isAvailable = availableCurrencies.includes(essence) && isImplemented
+                  const additionalMechanics = !isImplemented
+                    ? "Not implemented yet"
+                    : isAvailable
+                      ? "Double-click to apply"
+                      : "Not available for this item"
+
+                  return (
+                    <div key={essence} className="essence-pair corrupted">
+                      <Tooltip
+                        content={
+                          <CurrencyTooltipWrapper
+                            currencyName={essence}
+                            additionalMechanics={additionalMechanics}
+                          />
+                        }
+                        delay={0}
+                        position="right"
+                      >
+                        <div
+                          className={`currency-slot essence-corrupted ${!isAvailable ? 'currency-disabled' : ''}`}
+                          onClick={() => isAvailable && handleCraft(essence)}
+                        >
+                          <img
+                            src={getCurrencyIconUrl(essence)}
+                            alt={essence}
+                            className="currency-icon"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
+                            }}
+                          />
+                        </div>
+                      </Tooltip>
                     </div>
-                  </Tooltip>
-                )
-              })}
+                  )
+                })
+
+                return [...normalEssencePairs, ...corruptedEssencePairs]
+              })()}
             </div>
             </div>
           </div>

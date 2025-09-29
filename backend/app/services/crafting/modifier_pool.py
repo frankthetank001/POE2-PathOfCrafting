@@ -32,7 +32,7 @@ class ModifierPool:
             excluded_patterns = []
 
         eligible_mods = self._filter_eligible_mods(
-            pool, item_category, item_level, excluded_groups or [], min_mod_level, excluded_tags=excluded_tags, excluded_patterns=excluded_patterns
+            pool, item_category, item_level, excluded_groups or [], min_mod_level, excluded_tags=excluded_tags, excluded_patterns=excluded_patterns, exclude_desecrated=True
         )
 
         if not eligible_mods:
@@ -50,6 +50,7 @@ class ModifierPool:
         exclude_exclusive: bool = True,
         excluded_tags: Optional[List[str]] = None,
         excluded_patterns: Optional[List[str]] = None,
+        exclude_desecrated: bool = True,
     ) -> List[ItemModifier]:
         eligible = []
 
@@ -78,8 +79,12 @@ class ModifierPool:
             if not mod.applicable_items:
                 continue
 
-            # Exclude mods marked as exclusive-only (unique items only), but allow essence-only and desecrated-only mods
-            if exclude_exclusive and mod.is_exclusive and "essence_only" not in mod.tags and "desecrated_only" not in mod.tags:
+            # Exclude desecrated-only mods unless specifically allowed (only for desecration mechanics)
+            if exclude_desecrated and mod.tags and "desecrated_only" in mod.tags:
+                continue
+
+            # Exclude mods marked as exclusive-only (unique items only), but allow essence-only mods
+            if exclude_exclusive and mod.is_exclusive and "essence_only" not in mod.tags:
                 continue
 
             # Manual override for known unique-only mod groups
@@ -160,6 +165,34 @@ class ModifierPool:
                 return mod
         return None
 
+    def get_desecrated_only_mods(
+        self,
+        item_category: str,
+        mod_type: str,
+        item_level: int = None,
+        item=None
+    ) -> List[ItemModifier]:
+        """Get modifiers that are marked as 'desecrated_only' - only available through desecration."""
+        pool = self._prefix_pool if mod_type == "prefix" else self._suffix_pool
+
+        desecrated_mods = []
+        for mod in pool:
+            # Only include mods marked as desecrated_only
+            if not (mod.tags and "desecrated_only" in mod.tags):
+                continue
+
+            # Check item level requirements if specified
+            if item_level and mod.required_ilvl and mod.required_ilvl > item_level:
+                continue
+
+            # Check if mod applies to this item category
+            if not self._modifier_applies_to_item(mod, item) if item else not self._is_mod_applicable_to_category(mod, item_category):
+                continue
+
+            desecrated_mods.append(mod)
+
+        return desecrated_mods
+
     def get_eligible_mods(
         self,
         item_category: str,
@@ -180,7 +213,7 @@ class ModifierPool:
             excluded_patterns = self._get_excluded_patterns_from_item(item, mod_type)
 
         return self._filter_eligible_mods(
-            pool, item_category, item_level, excluded_groups, None, exclude_exclusive, excluded_tags, excluded_patterns
+            pool, item_category, item_level, excluded_groups, None, exclude_exclusive, excluded_tags, excluded_patterns, exclude_desecrated=True
         )
 
     def get_all_mods_for_category(
@@ -356,7 +389,8 @@ class ModifierPool:
             None,  # min_mod_level
             True,  # exclude_exclusive
             excluded_tags,
-            excluded_patterns
+            excluded_patterns,
+            exclude_desecrated=True
         )
 
         if not eligible_mods:

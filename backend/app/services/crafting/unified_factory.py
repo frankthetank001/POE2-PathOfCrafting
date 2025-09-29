@@ -28,9 +28,26 @@ class UnifiedCraftingFactory:
         """Create a crafting currency with optional omen modifications."""
         # Get base currency configuration
         currency_config = get_currency_config(currency_name)
+
+        # If no currency config found, try bone config
         if not currency_config:
-            logger.warning(f"No configuration found for currency: {currency_name}")
-            return None
+            bone_config = get_bone_config(currency_name)
+            if bone_config:
+                # Create a synthetic currency config for bones
+                from app.schemas.crafting import CurrencyConfigInfo
+                currency_config = CurrencyConfigInfo(
+                    id=None,
+                    name=currency_name,
+                    currency_type="desecration",
+                    tier=bone_config.bone_type,
+                    stack_size=bone_config.stack_size,
+                    rarity="common",
+                    mechanic_class="DesecrationMechanic",
+                    config_data={}
+                )
+            else:
+                logger.warning(f"No configuration found for currency: {currency_name}")
+                return None
 
         # Create base mechanic
         base_mechanic = self._create_base_mechanic(currency_config)
@@ -141,7 +158,26 @@ class UnifiedCraftingFactory:
 
     def get_currency_info(self, currency_name: str) -> Optional[CurrencyConfigInfo]:
         """Get detailed information about a currency."""
-        return get_currency_config(currency_name)
+        currency_config = get_currency_config(currency_name)
+
+        # If no currency config found, try bone config
+        if not currency_config:
+            bone_config = get_bone_config(currency_name)
+            if bone_config:
+                # Create a synthetic currency config for bones
+                from app.schemas.crafting import CurrencyConfigInfo
+                currency_config = CurrencyConfigInfo(
+                    id=None,
+                    name=currency_name,
+                    currency_type="desecration",
+                    tier=bone_config.bone_type,
+                    stack_size=bone_config.stack_size,
+                    rarity="common",
+                    mechanic_class="DesecrationMechanic",
+                    config_data={}
+                )
+
+        return currency_config
 
     def get_essence_info(self, essence_name: str) -> Optional[EssenceInfo]:
         """Get detailed information about an essence."""

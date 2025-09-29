@@ -83,12 +83,13 @@ function CraftingSimulator() {
   // Vertical resize state
   const [verticalSizes, setVerticalSizes] = useState(() => {
     const saved = localStorage.getItem('verticalSizes')
-    return saved ? JSON.parse(saved) : {
-      currencyCompact: 100,
-      itemDisplay: 350,
-      currencySection: 150,
-      historySection: 200
+    const defaultHeights = {
+      currencyCompact: Math.max(120, Math.floor(window.innerHeight * 0.12)),
+      itemDisplay: Math.max(250, Math.floor(window.innerHeight * 0.25)),
+      currencySection: Math.max(100, Math.floor(window.innerHeight * 0.10)),
+      historySection: Math.max(120, Math.floor(window.innerHeight * 0.15))
     }
+    return saved ? JSON.parse(saved) : defaultHeights
   })
   const [verticalResizing, setVerticalResizing] = useState<{
     active: boolean
@@ -201,6 +202,26 @@ function CraftingSimulator() {
       document.body.style.userSelect = ''
     }
   }, [verticalResizing, verticalSizes])
+
+  // Handle window resize to keep panels proportional
+  useEffect(() => {
+    const handleResize = () => {
+      // Only update if no saved sizes exist (first time or after localStorage clear)
+      const saved = localStorage.getItem('verticalSizes')
+      if (!saved) {
+        const newHeights = {
+          currencyCompact: Math.max(120, Math.floor(window.innerHeight * 0.12)),
+          itemDisplay: Math.max(250, Math.floor(window.innerHeight * 0.25)),
+          currencySection: Math.max(100, Math.floor(window.innerHeight * 0.10)),
+          historySection: Math.max(120, Math.floor(window.innerHeight * 0.15))
+        }
+        setVerticalSizes(newHeights)
+      }
+    }
+
+    window.addEventListener('resize', handleResize)
+    return () => window.removeEventListener('resize', handleResize)
+  }, [])
 
   const handleVerticalResizeStart = (section: string, e: React.MouseEvent): void => {
     setVerticalResizing({
@@ -395,24 +416,24 @@ function CraftingSimulator() {
     setMessage('↶ Undone last action')
   }
 
-  const handleReset = () => {
-    setItem({
-      base_name: selectedBase || getDisplayName(selectedSlot, selectedCategory),
-      base_category: selectedCategory,
+  const handleReset = async () => {
+    setItem(prevItem => ({
+      ...prevItem,
       rarity: 'Normal' as ItemRarity,
-      item_level: 65,
-      quality: 20,
       implicit_mods: [],
       prefix_mods: [],
       suffix_mods: [],
       corrupted: false,
-      base_stats: {},
-      calculated_stats: {},
-    })
+    }))
     setMessage('')
     setHistory([])
     setItemHistory([])
     setCurrencySpent({})
+
+    // Reload available currencies after state update
+    setTimeout(() => {
+      loadAvailableCurrencies()
+    }, 0)
   }
 
   const getRarityColor = (rarity: string) => {
@@ -1455,8 +1476,68 @@ function CraftingSimulator() {
             className="currency-section-compact"
             style={{ height: `${verticalSizes.currencyCompact}px`, overflow: 'auto' }}
           >
-            {/* All currencies and omens in five tables */}
-            <div className="currency-five-tables">
+            {/* All currencies and omens - restructured layout */}
+            <div className="currency-layout-new">
+
+              {/* Abyssal Bones - Horizontal section at top */}
+              <div className="currency-section-horizontal bones-section">
+                <h5 className="currency-table-title">Abyssal Bones</h5>
+                <div className="currency-horizontal-grid">
+                  {categorizedCurrencies.bones.implemented.concat(categorizedCurrencies.bones.disabled).map((currency) => {
+                    const isImplemented = categorizedCurrencies.bones.implemented.includes(currency)
+                    const isAvailable = availableCurrencies.includes(currency) && isImplemented
+                    const isSelected = selectedCurrency === currency
+                    const additionalMechanics = !isImplemented
+                      ? "Not implemented yet - coming soon!"
+                      : isAvailable
+                        ? "Double-click to apply"
+                        : "Not available for this item"
+
+                    return (
+                      <Tooltip
+                        key={currency}
+                        content={
+                          <CurrencyTooltipWrapper
+                            currencyName={currency}
+                            additionalMechanics={additionalMechanics}
+                          />
+                        }
+                        delay={0}
+                        position="top"
+                      >
+                        <div
+                          className={`currency-icon-button has-tooltip ${!isAvailable ? 'currency-disabled' : ''} ${isSelected ? 'currency-selected' : ''}`}
+                          onClick={() => {
+                            if (isAvailable) {
+                              if (selectedCurrency === currency) {
+                                setSelectedCurrency('')
+                                setAvailableOmens([])
+                                setSelectedOmens([])
+                              } else {
+                                setSelectedCurrency(currency)
+                                loadAvailableOmens(currency)
+                                setSelectedOmens([])
+                              }
+                            }
+                          }}
+                          onDoubleClick={() => isAvailable && handleCraft(currency)}
+                        >
+                          <img
+                            src={getCurrencyIconUrl(currency)}
+                            alt={currency}
+                            className="currency-icon-img"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
+                            }}
+                          />
+                        </div>
+                      </Tooltip>
+                    )
+                  })}
+                </div>
+              </div>
+
+              <div className="currency-main-grid">
               {/* Table 1: All orb families */}
               <div className="currency-table">
                 <h5 className="currency-table-title">Orbs</h5>
@@ -1800,19 +1881,29 @@ function CraftingSimulator() {
                 </div>
               </div>
 
-              {/* Table 3: Bones */}
-              <div className="currency-table">
-                <h5 className="currency-table-title">Abyssal Bones</h5>
-                <div className="currency-horizontal-rows">
-                  <div className="currency-family-row">
-                    {categorizedCurrencies.bones.implemented.concat(categorizedCurrencies.bones.disabled).map((currency) => {
-                      const isImplemented = categorizedCurrencies.bones.implemented.includes(currency)
+
+              {/* Essences - Wider layout showing multiple essences */}
+              <div className="currency-table essences-wide">
+                <h5 className="currency-table-title">Essences</h5>
+                <div className="essences-grid">
+                  {/* Show top-tier essences directly */}
+                  {(() => {
+                    const topEssences = [
+                      'Perfect Essence of the Body', 'Perfect Essence of the Mind', 'Perfect Essence of Enhancement',
+                      'Perfect Essence of Flames', 'Perfect Essence of Ice', 'Perfect Essence of Electricity',
+                      'Perfect Essence of Ruin', 'Perfect Essence of Command', 'Perfect Essence of Abrasion',
+                      'Perfect Essence of Sorcery', 'Perfect Essence of Haste', 'Perfect Essence of Alacrity',
+                      // Corrupted essences
+                      'Essence of Delirium', 'Essence of Horror', 'Essence of Hysteria', 'Essence of Insanity', 'Essence of the Abyss'
+                    ]
+                    return topEssences.filter(essence => categorizedCurrencies.essences.implemented.includes(essence) || categorizedCurrencies.essences.disabled.includes(essence)).map((currency) => {
+                      const isImplemented = categorizedCurrencies.essences.implemented.includes(currency)
                       const isAvailable = availableCurrencies.includes(currency) && isImplemented
-                      const isSelected = selectedCurrency === currency
+                      const isSelected = selectedCurrency === currency || selectedEssence === currency
                       const additionalMechanics = !isImplemented
                         ? "Not implemented yet - coming soon!"
                         : isAvailable
-                          ? "Double-click to apply"
+                          ? "Click to select, Double-click to apply"
                           : "Not available for this item"
 
                       return (
@@ -1832,14 +1923,14 @@ function CraftingSimulator() {
                             onClick={() => {
                               if (isAvailable) {
                                 if (selectedCurrency === currency) {
-                                  // Deselect if same currency is clicked
                                   setSelectedCurrency('')
                                   setAvailableOmens([])
                                   setSelectedOmens([])
                                 } else {
                                   setSelectedCurrency(currency)
+                                  setSelectedEssence(currency)
                                   loadAvailableOmens(currency)
-                                  setSelectedOmens([]) // Clear omens when switching currency
+                                  setSelectedOmens([])
                                 }
                               }
                             }}
@@ -1856,76 +1947,13 @@ function CraftingSimulator() {
                           </div>
                         </Tooltip>
                       )
-                    })}
-                  </div>
-                </div>
-              </div>
+                    })
+                  })()}
 
-              {/* Table 5: Essences */}
-              <div className="currency-table">
-                <h5 className="currency-table-title">Essences</h5>
-                <div className="currency-horizontal-rows">
-                  <div className="currency-family-row essence-selector-row">
-                    {selectedEssence ? (
-                      <Tooltip
-                        content={
-                          <CurrencyTooltipWrapper
-                            currencyName={selectedEssence}
-                            additionalMechanics="Click to select as active currency, Double-click to apply, Click arrow for more essences"
-                          />
-                        }
-                        delay={0}
-                        position="top"
-                      >
-                        <div
-                          className={`currency-icon-button has-tooltip ${selectedCurrency === selectedEssence ? 'currency-selected' : ''}`}
-                          onClick={() => {
-                            if (selectedCurrency === selectedEssence) {
-                              setSelectedCurrency('')
-                              setAvailableOmens([])
-                              setSelectedOmens([])
-                            } else {
-                              setSelectedCurrency(selectedEssence)
-                              loadAvailableOmens(selectedEssence)
-                              setSelectedOmens([])
-                            }
-                          }}
-                          onDoubleClick={() => handleCraft(selectedEssence)}
-                          style={{ position: 'relative' }}
-                        >
-                          <img
-                            src={getCurrencyIconUrl(selectedEssence)}
-                            alt={selectedEssence}
-                            className="currency-icon-img"
-                          />
-                          <button
-                            className="essence-expand-arrow"
-                            onClick={(e) => {
-                              e.stopPropagation()
-                              setEssencesModalOpen(true)
-                            }}
-                            title="Choose different essence"
-                          >
-                            ▼
-                          </button>
-                        </div>
-                      </Tooltip>
-                    ) : (
-                      <div className="essence-placeholder-button" title={`Click arrow to choose Essence (${categorizedCurrencies.essences.implemented.length + categorizedCurrencies.essences.disabled.length} available)`}>
-                        <span className="essences-icon">💎</span>
-                        <span className="essence-placeholder-text">Select</span>
-                        <button
-                          className="essence-expand-arrow"
-                          onClick={(e) => {
-                            e.preventDefault()
-                            setEssencesModalOpen(true)
-                          }}
-                          title="Choose Essence"
-                        >
-                          ▼
-                        </button>
-                      </div>
-                    )}
+                  {/* Essence selector button */}
+                  <div className="essence-selector-button" onClick={() => setEssencesModalOpen(true)}>
+                    <span className="essences-icon">💎</span>
+                    <span className="essence-selector-text">More...</span>
                   </div>
                 </div>
               </div>
@@ -2454,6 +2482,7 @@ function CraftingSimulator() {
                   </div>
                 </div>
               )}
+            </div>
             </div>
 
             {message && (

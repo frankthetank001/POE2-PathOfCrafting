@@ -225,6 +225,14 @@ class CraftingConfigService:
         self.ensure_loaded()
         return list(self._bone_configs.keys())
 
+    def get_bone_configs_for_part(self, bone_part: str) -> List[DesecrationBoneInfo]:
+        """Get all bone configurations for a specific bone part (e.g., 'rib', 'jawbone')."""
+        self.ensure_loaded()
+        return [
+            config for config in self._bone_configs.values()
+            if config.bone_part == bone_part
+        ]
+
     def get_currencies_by_type(self, currency_type: str) -> List[CurrencyConfigInfo]:
         """Get all currencies of a specific type."""
         self.ensure_loaded()
@@ -269,6 +277,10 @@ def get_omen_config(omen_name: str) -> Optional[OmenInfo]:
 
 def get_bone_config(bone_name: str) -> Optional[DesecrationBoneInfo]:
     return crafting_config_service.get_bone_config(bone_name)
+
+
+def get_bone_configs_for_part(bone_part: str) -> List[DesecrationBoneInfo]:
+    return crafting_config_service.get_bone_configs_for_part(bone_part)
 
 
 def reload_crafting_configs():
