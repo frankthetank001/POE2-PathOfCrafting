@@ -1,4 +1,6 @@
 import random
+import json
+import os
 from typing import List, Optional
 
 from app.schemas.crafting import ItemModifier, ModType
@@ -9,6 +11,41 @@ class ModifierPool:
         self.modifiers = modifiers
         self._prefix_pool = [m for m in modifiers if m.mod_type == ModType.PREFIX]
         self._suffix_pool = [m for m in modifiers if m.mod_type == ModType.SUFFIX]
+        self._exclusions = self._load_exclusions()
+
+    def _load_exclusions(self) -> List[dict]:
+        """Load modifier exclusions from JSON file."""
+        try:
+            # Go up from app/services/crafting to backend, then to source_data
+            exclusions_path = os.path.join(
+                os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),
+                "source_data",
+                "modifier_exclusions.json"
+            )
+            if os.path.exists(exclusions_path):
+                with open(exclusions_path, 'r') as f:
+                    return json.load(f)
+        except Exception as e:
+            print(f"Warning: Could not load modifier exclusions: {e}")
+        return []
+
+    def _apply_exclusions(self, mods: List[ItemModifier], item_slot: Optional[str]) -> List[ItemModifier]:
+        """Apply exclusions based on item slot and modifier stat text."""
+        if not item_slot or not self._exclusions:
+            return mods
+
+        filtered_mods = []
+        for mod in mods:
+            should_exclude = False
+            for exclusion in self._exclusions:
+                if exclusion["stat_text"] == mod.stat_text:
+                    if item_slot in exclusion["exclude_from"]:
+                        should_exclude = True
+                        break
+            if not should_exclude:
+                filtered_mods.append(mod)
+
+        return filtered_mods
 
     def roll_random_modifier(
         self,
@@ -32,7 +69,7 @@ class ModifierPool:
             excluded_patterns = []
 
         eligible_mods = self._filter_eligible_mods(
-            pool, item_category, item_level, excluded_groups or [], min_mod_level, excluded_tags=excluded_tags, excluded_patterns=excluded_patterns, exclude_desecrated=True
+            pool, item_category, item_level, excluded_groups or [], min_mod_level, excluded_tags=excluded_tags, excluded_patterns=excluded_patterns, exclude_desecrated=True, item=item
         )
 
         if not eligible_mods:
@@ -51,6 +88,7 @@ class ModifierPool:
         excluded_tags: Optional[List[str]] = None,
         excluded_patterns: Optional[List[str]] = None,
         exclude_desecrated: bool = True,
+        item=None,
     ) -> List[ItemModifier]:
         eligible = []
 
@@ -91,7 +129,7 @@ class ModifierPool:
             if exclude_exclusive and self._is_unique_only_mod_group(mod.mod_group, item_category):
                 continue
 
-            if not self._is_mod_applicable_to_category(mod, item_category):
+            if not self._is_mod_applicable_to_category(mod, item_category, item):
                 continue
 
             eligible.append(mod)
@@ -119,10 +157,21 @@ class ModifierPool:
             cumulative += weight
             if rand_value <= cumulative:
                 rolled_mod = mod.model_copy()
-                if rolled_mod.stat_min is not None and rolled_mod.stat_max is not None:
+
+                # Roll values for hybrid modifiers (multiple stat ranges)
+                if rolled_mod.stat_ranges and len(rolled_mod.stat_ranges) > 0:
+                    rolled_mod.current_values = [
+                        random.uniform(stat_range.min, stat_range.max)
+                        for stat_range in rolled_mod.stat_ranges
+                    ]
+                    # Set legacy current_value to first value for backwards compatibility
+                    rolled_mod.current_value = rolled_mod.current_values[0]
+                # Fall back to legacy single value for older mods
+                elif rolled_mod.stat_min is not None and rolled_mod.stat_max is not None:
                     rolled_mod.current_value = random.uniform(
                         rolled_mod.stat_min, rolled_mod.stat_max
                     )
+
                 return rolled_mod
 
         return modifiers[-1].model_copy()
@@ -212,9 +261,25 @@ class ModifierPool:
             excluded_tags = self._get_excluded_tags_from_item(item, mod_type)
             excluded_patterns = self._get_excluded_patterns_from_item(item, mod_type)
 
-        return self._filter_eligible_mods(
-            pool, item_category, item_level, excluded_groups, None, exclude_exclusive, excluded_tags, excluded_patterns, exclude_desecrated=True
+        eligible = self._filter_eligible_mods(
+            pool, item_category, item_level, excluded_groups, None, exclude_exclusive, excluded_tags, excluded_patterns, exclude_desecrated=True, item=item
         )
+
+        # Get item slot for exclusions
+        item_slot = None
+        if item:
+            from app.models.base import SessionLocal
+            from app.models.crafting import BaseItem
+            session = SessionLocal()
+            try:
+                base_item = session.query(BaseItem).filter(BaseItem.name == item.base_name).first()
+                if base_item:
+                    item_slot = base_item.slot
+            finally:
+                session.close()
+
+        # Apply exclusions based on slot
+        return self._apply_exclusions(eligible, item_slot)
 
     def get_all_mods_for_category(
         self,
@@ -266,16 +331,83 @@ class ModifierPool:
 
             # Check if mod applies to this item category
             # For defence mods, be more specific based on mod group
-            if not self._is_mod_applicable_to_category(mod, item_category):
+            if not self._is_mod_applicable_to_category(mod, item_category, item):
                 continue
 
             eligible.append(mod)
 
-        return eligible
+        # Get item slot for exclusions
+        item_slot = None
+        if item:
+            from app.models.base import SessionLocal
+            from app.models.crafting import BaseItem
+            session = SessionLocal()
+            try:
+                base_item = session.query(BaseItem).filter(BaseItem.name == item.base_name).first()
+                if base_item:
+                    item_slot = base_item.slot
+            finally:
+                session.close()
 
-    def _is_mod_applicable_to_category(self, mod: ItemModifier, item_category: str) -> bool:
+        # Apply exclusions based on slot
+        return self._apply_exclusions(eligible, item_slot)
+
+    def _is_mod_applicable_to_category(self, mod: ItemModifier, item_category: str, item=None) -> bool:
         """Check if a mod is applicable to an item category"""
+
+        # Get slot from item if available
+        item_slot = None
+        if item:
+            # Determine slot from base_name if we have the item
+            from app.models.base import SessionLocal
+            from app.models.crafting import BaseItem
+            session = SessionLocal()
+            try:
+                base_item = session.query(BaseItem).filter(BaseItem.name == item.base_name).first()
+                if base_item:
+                    item_slot = base_item.slot
+            finally:
+                session.close()
+
+        # Check if category matches directly
         if item_category in mod.applicable_items:
+            return True
+
+        # Check if slot matches (for slot-specific mods)
+        # BUT for body_armour slot, need to check defence type filtering first
+        if item_slot and item_slot in mod.applicable_items:
+            # Special handling for body_armour slot: check defence type compatibility
+            if item_slot == "body_armour" and item_category in ["int_armour", "str_armour", "dex_armour", "str_dex_armour", "str_int_armour", "dex_int_armour", "str_dex_int_armour"]:
+                # Check if this is a defence % mod (these are stat-specific)
+                if "% increased" in mod.stat_text:
+                    # Map armour types to their EXACT defence combinations
+                    armour_defence_patterns = {
+                        "str_armour": ["% increased Armour"],
+                        "dex_armour": ["% increased Evasion"],
+                        "int_armour": ["% increased Energy Shield"],
+                        "str_dex_armour": ["% increased Armour and Evasion"],
+                        "str_int_armour": ["% increased Armour and Energy Shield"],
+                        "dex_int_armour": ["% increased Evasion and Energy Shield"],
+                        "str_dex_int_armour": ["% increased Armour", "% increased Evasion", "% increased Energy Shield",
+                                               "% increased Armour and Evasion", "% increased Armour and Energy Shield",
+                                               "% increased Evasion and Energy Shield"]
+                    }
+
+                    # Get expected defence patterns for this armour type
+                    expected_patterns = armour_defence_patterns.get(item_category, [])
+
+                    # Check if the mod matches any expected pattern
+                    for pattern in expected_patterns:
+                        if pattern in mod.stat_text:
+                            return True
+
+                    # If it's a defence % mod but doesn't match, reject it
+                    if any(def_type in mod.stat_text for def_type in ["Armour", "Evasion", "Energy Shield"]):
+                        return False
+
+                # Non-defence mods from body_armour apply to all armour types
+                return True
+            # For non-body_armour slots, slot match is sufficient
             return True
 
         # PathOfBuilding uses generic categories for universal mods
@@ -284,21 +416,11 @@ class ModifierPool:
             if "armour" in mod.applicable_items:
                 return True
 
-            # "body_armour" is used for some universal mods, but exclude defence percentage mods
-            # that only have ["body_armour", "shield"] (these shouldn't roll on specific bases)
-            if "body_armour" in mod.applicable_items:
-                # Exclude defence % mods that only have generic categories
-                if (mod.applicable_items == ["body_armour", "shield"] and
-                    "% increased" in mod.stat_text and
-                    any(defence in mod.stat_text for defence in ["Armour", "Evasion", "Energy Shield"])):
-                    return False
-                return True
-
         return False
 
     def _modifier_applies_to_item(self, modifier: ItemModifier, item) -> bool:
         """Check if a modifier can be applied to a specific item instance."""
-        return self._is_mod_applicable_to_category(modifier, item.base_category)
+        return self._is_mod_applicable_to_category(modifier, item.base_category, item)
 
     def _get_excluded_groups_from_item(self, item) -> List[str]:
         """Build a list of excluded modifier groups from item's existing mods."""
@@ -390,7 +512,8 @@ class ModifierPool:
             True,  # exclude_exclusive
             excluded_tags,
             excluded_patterns,
-            exclude_desecrated=True
+            exclude_desecrated=True,
+            item=item
         )
 
         if not eligible_mods:

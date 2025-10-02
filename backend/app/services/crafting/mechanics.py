@@ -336,7 +336,17 @@ class DivineMechanic(CraftingMechanic):
         rerolled_count = 0
 
         for mod in manager.item.prefix_mods + manager.item.suffix_mods:
-            if mod.stat_min is not None and mod.stat_max is not None:
+            # Reroll hybrid modifiers (multiple stat ranges)
+            if mod.stat_ranges and len(mod.stat_ranges) > 0:
+                mod.current_values = [
+                    random.uniform(stat_range.min, stat_range.max)
+                    for stat_range in mod.stat_ranges
+                ]
+                # Set legacy current_value to first value for backwards compatibility
+                mod.current_value = mod.current_values[0]
+                rerolled_count += 1
+            # Fall back to legacy single value for older mods
+            elif mod.stat_min is not None and mod.stat_max is not None:
                 mod.current_value = random.uniform(mod.stat_min, mod.stat_max)
                 rerolled_count += 1
 
@@ -451,9 +461,11 @@ class FracturingMechanic(CraftingMechanic):
             mod_type=fractured_mod.mod_type,
             tier=fractured_mod.tier,
             stat_text=fractured_mod.stat_text,
+            stat_ranges=fractured_mod.stat_ranges,
             stat_min=fractured_mod.stat_min,
             stat_max=fractured_mod.stat_max,
             current_value=fractured_mod.current_value,
+            current_values=fractured_mod.current_values,
             required_ilvl=fractured_mod.required_ilvl,
             mod_group=fractured_mod.mod_group,
             applicable_items=fractured_mod.applicable_items,
@@ -487,10 +499,6 @@ class DesecrationMechanic(CraftingMechanic):
         if item.rarity != ItemRarity.RARE:
             return False, f"Desecration can only be applied to Rare items"
 
-        # Item must have at least one modifier to work with
-        if item.total_explicit_mods == 0:
-            return False, f"Desecration requires existing modifiers"
-
         # Desecration can be applied to any item that's not corrupted
         if item.corrupted:
             return False, "Cannot apply desecration to corrupted items"
@@ -507,6 +515,21 @@ class DesecrationMechanic(CraftingMechanic):
             bone_name = f"Abyssal {self.bone_type.title()}"
             return False, f"{bone_name} cannot be applied to {item.base_category}. Valid item types: {', '.join(applicable_items)}"
 
+        # Check item level restrictions
+        max_item_level = self.config.get('max_item_level')
+        if max_item_level and item.item_level > max_item_level:
+            bone_name = f"Abyssal {self.bone_type.title()}"
+            return False, f"{bone_name} can only be applied to items up to level {max_item_level} (item is level {item.item_level})"
+
+        # Check minimum modifier level for ancient bones
+        min_modifier_level = self.config.get('min_modifier_level')
+        if min_modifier_level:
+            # This would require checking existing modifiers, but for now we'll assume it passes
+            # In a full implementation, we'd check if any modifier meets the minimum level requirement
+            bone_name = f"Abyssal {self.bone_type.title()}"
+            # Note: This is a simplified check - full implementation would verify modifier levels
+            pass
+
         return True, None
 
     def _get_applicable_items_for_bone_type(self, bone_part: str) -> List[str]:
@@ -516,29 +539,29 @@ class DesecrationMechanic(CraftingMechanic):
 
         bone_configs = get_bone_configs_for_part(bone_part)
         if not bone_configs:
-            # Fallback to hardcoded logic if no config found
+            # Fallback to hardcoded logic if no config found (based on design document)
             type_restrictions = {
                 'jawbone': [
-                    # Damage modifiers - weapons and quivers
+                    # Weapons and Quivers only
                     "weapon", "one_handed_sword", "two_handed_sword", "bow", "crossbow",
-                    "wand", "staff", "sceptre", "quiver"
+                    "wand", "staff", "sceptre", "dagger", "claw", "mace", "axe", "flail", "quiver"
                 ],
                 'rib': [
-                    # Defensive modifiers - armor pieces
+                    # Armour only (all armor pieces)
                     "armour", "body_armour", "int_armour", "str_armour", "dex_armour",
                     "str_dex_armour", "str_int_armour", "dex_int_armour", "str_dex_int_armour",
-                    "helmet", "gloves", "boots", "shield", "belt"
+                    "helmet", "gloves", "boots", "shield"
                 ],
                 'collarbone': [
-                    # Resistance modifiers - jewelry and belts
+                    # Amulet, Ring or Belt only
                     "ring", "amulet", "belt"
                 ],
                 'cranium': [
-                    # Special modifiers - jewels
+                    # Jewel only (Preserved bones only)
                     "jewel"
                 ],
                 'vertebrae': [
-                    # Special modifiers - waystones
+                    # Waystone only (Preserved bones only)
                     "waystone"
                 ]
             }
@@ -588,6 +611,8 @@ class DesecrationMechanic(CraftingMechanic):
         # Create the desecrated modifier
         desecrated_modifier = self._create_desecrated_modifier(selected_mod)
 
+        success_message = f"Added desecrated modifier: {selected_mod.name}"
+
         # If item has 6 modifiers (full), must remove one first (according to design document)
         if item.total_explicit_mods >= 6:
             all_explicit = item.prefix_mods + item.suffix_mods
@@ -598,12 +623,12 @@ class DesecrationMechanic(CraftingMechanic):
             else:
                 index = item.suffix_mods.index(mod_to_remove)
                 manager.remove_modifier(ModType.SUFFIX, index)
+            success_message = f"Removed {mod_to_remove.name}, added desecrated modifier: {selected_mod.name}"
 
         # Add the desecrated modifier as an explicit modifier
         manager.add_modifier(desecrated_modifier)
 
-        success_message = f"Added desecrated modifier: {selected_mod.name}"
-        if self.quality == 'ancient':
+        if self.bone_type == 'ancient':
             success_message += " (enhanced by ancient bone)"
 
         return True, success_message, manager.get_item()
@@ -640,9 +665,23 @@ class DesecrationMechanic(CraftingMechanic):
         # Desecrated modifiers are enhanced versions
         multiplier = 1.5 if self.quality == 'ancient' else 1.2
 
+        # Handle hybrid modifiers (multiple stat ranges)
+        enhanced_stat_ranges = []
+        if base_mod.stat_ranges:
+            from app.schemas.crafting import StatRange
+            enhanced_stat_ranges = [
+                StatRange(min=stat_range.min * multiplier, max=stat_range.max * multiplier)
+                for stat_range in base_mod.stat_ranges
+            ]
+
         enhanced_min = base_mod.stat_min * multiplier if base_mod.stat_min else None
         enhanced_max = base_mod.stat_max * multiplier if base_mod.stat_max else None
         enhanced_value = base_mod.current_value * multiplier if base_mod.current_value else None
+
+        # Handle current_values for hybrid mods
+        enhanced_current_values = None
+        if base_mod.current_values:
+            enhanced_current_values = [val * multiplier for val in base_mod.current_values]
 
         # Preserve original mod_type (prefix/suffix) but add desecrated tags for visual detection
         return ItemModifier(
@@ -650,9 +689,11 @@ class DesecrationMechanic(CraftingMechanic):
             mod_type=base_mod.mod_type,  # Keep original prefix/suffix type
             tier=max(1, base_mod.tier - 2),  # Better tier
             stat_text=f"[DESECRATED] {base_mod.stat_text}",
+            stat_ranges=enhanced_stat_ranges,
             stat_min=enhanced_min,
             stat_max=enhanced_max,
             current_value=enhanced_value,
+            current_values=enhanced_current_values,
             required_ilvl=base_mod.required_ilvl,
             mod_group=base_mod.mod_group,
             applicable_items=base_mod.applicable_items,
@@ -671,20 +712,55 @@ class EssenceMechanic(CraftingMechanic):
     def can_apply(self, item: CraftableItem) -> Tuple[bool, Optional[str]]:
         # Check item type compatibility first
         if not self._has_compatible_item_type(item):
+            logger.debug(f"{self.essence_info.name} incompatible with {item.base_category} - no matching item_effects")
             return False, f"{self.essence_info.name} cannot be applied to {item.base_category} items"
 
+        # Check if the essence mod group already exists on the item
+        target_mod_group = self._get_target_mod_group()
+        if target_mod_group:
+            existing_mod_groups = [mod.mod_group for mod in item.prefix_mods + item.suffix_mods]
+            if target_mod_group in existing_mod_groups:
+                return False, f"{self.essence_info.name} mod already exists on item"
+
         if self.essence_info.mechanic == "magic_to_rare":
-            # Lesser/Normal/Greater essences
-            if item.rarity not in [ItemRarity.NORMAL, ItemRarity.MAGIC]:
-                return False, f"{self.essence_info.name} can only be applied to Normal or Magic items"
+            # Lesser/Normal/Greater essences - require Magic items only
+            if item.rarity != ItemRarity.MAGIC:
+                return False, f"{self.essence_info.name} can only be applied to Magic items"
         elif self.essence_info.mechanic == "remove_add_rare":
             # Perfect/Corrupted essences - only work on Rare items
             if item.rarity != ItemRarity.RARE:
+                logger.debug(f"{self.essence_info.name} failed: item is {item.rarity}, needs RARE")
                 return False, f"{self.essence_info.name} can only be applied to Rare items"
             elif item.total_explicit_mods == 0:
+                logger.debug(f"{self.essence_info.name} failed: item has 0 mods, needs at least 1")
                 return False, f"{self.essence_info.name} requires existing modifiers to replace"
 
         return True, None
+
+    def _get_target_mod_group(self) -> Optional[str]:
+        """Get the mod group this essence will add."""
+        essence_to_mod_group = {
+            "insulation": "fireresistance",
+            "thawing": "coldresistance",
+            "grounding": "lightningresistance",
+            "ruin": "chaosresistance",
+            "body": "life",
+            "mind": "mana",
+            "enhancement": "defences",
+            "abrasion": "physicaldamage",
+            "flames": "firedamage",
+            "ice": "colddamage",
+            "electricity": "lightningdamage",
+            "battle": "accuracy",
+            "sorcery": "spelldamage",
+            "infinite": "attributes",
+            "seeking": "critical",
+            "alacrity": "castspeed",
+            "haste": "attackspeed",
+            "command": "minion",
+            "opulence": "itemrarity"
+        }
+        return essence_to_mod_group.get(self.essence_info.essence_type)
 
     def _has_compatible_item_type(self, item: CraftableItem) -> bool:
         """Check if essence has compatible effects for this item type."""
@@ -743,14 +819,13 @@ class EssenceMechanic(CraftingMechanic):
     def _apply_magic_to_rare(
         self, item: CraftableItem, manager: ItemStateManager, modifier_pool: ModifierPool
     ) -> Tuple[bool, str, CraftableItem]:
-        """Apply Lesser/Normal/Greater essence."""
-        # Upgrade to Magic if Normal
-        if item.rarity == ItemRarity.NORMAL:
-            manager.upgrade_rarity(ItemRarity.MAGIC)
+        """Apply Lesser/Normal/Greater essence - upgrades Magic to Rare."""
+        # This mechanic only works on Magic items (validation already done in can_apply)
+        if item.rarity != ItemRarity.MAGIC:
+            return False, f"{self.essence_info.name} requires a Magic item", item
 
         # Upgrade to Rare
-        if item.rarity == ItemRarity.MAGIC:
-            manager.upgrade_rarity(ItemRarity.RARE)
+        manager.upgrade_rarity(ItemRarity.RARE)
 
         # Get guaranteed modifier
         guaranteed_mod = self._create_guaranteed_modifier(item, modifier_pool)
@@ -769,11 +844,21 @@ class EssenceMechanic(CraftingMechanic):
 
         # Remove random modifier if item has any
         if item.total_explicit_mods > 0:
-            all_mods = item.prefix_mods + item.suffix_mods
-            if all_mods:
-                mod_to_remove = random.choice(all_mods)
-                removed_mod_name = mod_to_remove.name
-                manager.remove_modifier(mod_to_remove)
+            # Randomly choose between prefix and suffix
+            if item.prefix_mods and item.suffix_mods:
+                mod_type = random.choice([ModType.PREFIX, ModType.SUFFIX])
+            elif item.prefix_mods:
+                mod_type = ModType.PREFIX
+            else:
+                mod_type = ModType.SUFFIX
+
+            # Get the list of mods for that type
+            mods_list = item.prefix_mods if mod_type == ModType.PREFIX else item.suffix_mods
+            if mods_list:
+                # Choose random index
+                index = random.randint(0, len(mods_list) - 1)
+                removed_mod_name = mods_list[index].name
+                manager.remove_modifier(mod_type, index)
 
         # Upgrade to Rare if not already
         if item.rarity != ItemRarity.RARE:
@@ -786,7 +871,7 @@ class EssenceMechanic(CraftingMechanic):
 
         manager.add_modifier(guaranteed_mod)
 
-        return True, f"Applied {self.essence_info.name}, removed {removed_mod_name}, added {guaranteed_mod.name}", item
+        return True, f"Applied {self.essence_info.name}, removed {removed_mod_name}, added {guaranteed_mod.name}", manager.item
 
     def _create_guaranteed_modifier(self, item: CraftableItem, modifier_pool: ModifierPool) -> Optional[ItemModifier]:
         """Get guaranteed modifier from modifier pool based on essence effect."""
@@ -860,9 +945,11 @@ class EssenceMechanic(CraftingMechanic):
                 mod_type=best_mod.mod_type,
                 tier=best_mod.tier,
                 stat_text=matching_effect.effect_text,  # Use essence effect text
+                stat_ranges=best_mod.stat_ranges,  # Preserve any existing stat_ranges
                 stat_min=matching_effect.value_min,
                 stat_max=matching_effect.value_max,
                 current_value=current_value,
+                current_values=best_mod.current_values,  # Preserve any existing current_values
                 required_ilvl=best_mod.required_ilvl,
                 mod_group=best_mod.mod_group,
                 applicable_items=best_mod.applicable_items,

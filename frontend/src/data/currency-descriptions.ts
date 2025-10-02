@@ -600,6 +600,61 @@ export const CURRENCY_DESCRIPTIONS: Record<string, CurrencyDescription> = {
     description: "Desecration: Offers 3 caster modifier choices from the Well of Souls",
     mechanics: "Targets mana/spell/cast modifiers. Removes 1 random modifier if item has 6 modifiers."
   },
+  "Ancient Collarbone": {
+    name: "Ancient Collarbone",
+    description: "Desecrates a Rare Amulet, Ring or Belt (Minimum Modifier Level: 40)",
+    mechanics: "Offers 3 ancient modifier choices. Removes 1 random modifier if item has 6 modifiers."
+  },
+  "Gnawed Collarbone": {
+    name: "Gnawed Collarbone",
+    description: "Desecrates a Rare Amulet, Ring or Belt (Maximum Item Level: 64)",
+    mechanics: "Offers 3 gnawed modifier choices. Removes 1 random modifier if item has 6 modifiers."
+  },
+  "Preserved Collarbone": {
+    name: "Preserved Collarbone",
+    description: "Desecrates a Rare Amulet, Ring or Belt",
+    mechanics: "Offers 3 preserved modifier choices. Removes 1 random modifier if item has 6 modifiers."
+  },
+  "Ancient Jawbone": {
+    name: "Ancient Jawbone",
+    description: "Desecrates a Rare Weapon or Quiver (Minimum Modifier Level: 40)",
+    mechanics: "Offers 3 ancient modifier choices. Removes 1 random modifier if item has 6 modifiers."
+  },
+  "Gnawed Jawbone": {
+    name: "Gnawed Jawbone",
+    description: "Desecrates a Rare Weapon or Quiver (Maximum Item Level: 64)",
+    mechanics: "Offers 3 gnawed modifier choices. Removes 1 random modifier if item has 6 modifiers."
+  },
+  "Preserved Jawbone": {
+    name: "Preserved Jawbone",
+    description: "Desecrates a Rare Weapon or Quiver",
+    mechanics: "Offers 3 preserved modifier choices. Removes 1 random modifier if item has 6 modifiers."
+  },
+  "Ancient Rib": {
+    name: "Ancient Rib",
+    description: "Desecrates a Rare Armour (Minimum Modifier Level: 40)",
+    mechanics: "Offers 3 ancient modifier choices. Removes 1 random modifier if item has 6 modifiers."
+  },
+  "Gnawed Rib": {
+    name: "Gnawed Rib",
+    description: "Desecrates a Rare Armour (Maximum Item Level: 64)",
+    mechanics: "Offers 3 gnawed modifier choices. Removes 1 random modifier if item has 6 modifiers."
+  },
+  "Preserved Rib": {
+    name: "Preserved Rib",
+    description: "Desecrates a Rare Armour",
+    mechanics: "Offers 3 preserved modifier choices. Removes 1 random modifier if item has 6 modifiers."
+  },
+  "Preserved Cranium": {
+    name: "Preserved Cranium",
+    description: "Desecrates a Rare Jewel",
+    mechanics: "Offers 3 preserved modifier choices. Removes 1 random modifier if item has 6 modifiers."
+  },
+  "Preserved Vertebrae": {
+    name: "Preserved Vertebrae",
+    description: "Desecrates a Rare Waystone",
+    mechanics: "Offers 3 preserved modifier choices. Removes 1 random modifier if item has 6 modifiers."
+  },
   "Ancient Abyssal Cranium": {
     name: "Ancient Abyssal Cranium",
     description: "Desecration: Offers 3 high-tier caster modifier choices from the Well of Souls",

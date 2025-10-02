@@ -135,6 +135,33 @@ async def get_categorized_currencies() -> dict:
             if bone_name not in bones["implemented"]:
                 bones["implemented"].append(bone_name)
 
+        # Custom sort for bones: group by bone type with singles at the end
+        def sort_bones(bone_name: str) -> tuple:
+            # Extract bone part (last word) and prefix (Ancient, Gnawed, Preserved)
+            parts = bone_name.split()
+            if len(parts) >= 2:
+                prefix = parts[0]  # Ancient, Gnawed, Preserved
+                bone_part = " ".join(parts[1:])  # Collarbone, Jawbone, Rib, etc.
+
+                # Define order for prefixes within each bone type
+                prefix_order = {"Ancient": 0, "Gnawed": 1, "Preserved": 2}
+
+                # Define bone type priority: groups of 3 first, then singles together
+                bone_type_groups = {
+                    "Collarbone": 0,  # Group of 3
+                    "Jawbone": 1,     # Group of 3
+                    "Rib": 2,         # Group of 3
+                    "Cranium": 3,     # Single
+                    "Vertebrae": 3    # Single (same priority as Cranium)
+                }
+
+                bone_priority = bone_type_groups.get(bone_part, 999)
+
+                # Return tuple: (bone_priority, bone_part, prefix_order)
+                # This groups: all Collarbones, all Jawbones, all Ribs, then Cranium+Vertebrae
+                return (bone_priority, bone_part, prefix_order.get(prefix, 999))
+            return (999, bone_name, 999)
+
         return {
             "orbs": {
                 "implemented": sorted(orbs["implemented"]),
@@ -145,8 +172,8 @@ async def get_categorized_currencies() -> dict:
                 "disabled": sorted(essences["disabled"])
             },
             "bones": {
-                "implemented": sorted(bones["implemented"]),
-                "disabled": sorted(bones["disabled"])
+                "implemented": sorted(bones["implemented"], key=sort_bones),
+                "disabled": sorted(bones["disabled"], key=sort_bones)
             },
             "omens": sorted(all_omens),
             "total": len(all_currencies) + len(all_essences) + len(all_bones) + len(all_omens),
@@ -384,10 +411,17 @@ async def get_currency_tooltip(currency_name: str) -> dict:
         # Check if it's a desecration bone
         bone_config = get_bone_config(currency_name)
         if bone_config:
+            # Use function_description if available, otherwise build a description
+            if bone_config.function_description:
+                main_description = bone_config.function_description
+            else:
+                # Fallback to generic description
+                main_description = f"Desecration: Offers 3 {bone_config.bone_type} modifier choices from the Well of Souls"
+
             return {
                 "name": currency_name,
-                "description": f"Desecration: Offers 3 {bone_config.bone_type} modifier choices from the Well of Souls",
-                "mechanics": f"Targets {bone_config.bone_type} modifiers. Removes 1 random modifier if item has 6 modifiers.",
+                "description": main_description,
+                "mechanics": f"Offers 3 {bone_config.bone_type} modifier choices. Removes 1 random modifier if item has 6 modifiers.",
                 "tier": bone_config.bone_type,
                 "type": "desecration"
             }

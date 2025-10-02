@@ -1,0 +1,17 @@
+[
+  {
+    "comment": "ES hybrid mods should only appear on body armour, not boots/gloves/helmet",
+    "stat_text": "{}% increased Energy Shield, +{} to maximum Life",
+    "exclude_from": ["boots", "gloves"]
+  },
+  {
+    "comment": "ES hybrid mods should only appear on body armour, not boots/gloves/helmet",
+    "stat_text": "{}% increased Energy Shield, +{} to maximum Mana",
+    "exclude_from": ["boots", "gloves"]
+  },
+  {
+    "comment": "ES hybrid mods should only appear on body armour, not boots/gloves/helmet",
+    "stat_text": "+{} to maximum Energy Shield, {}% increased Energy Shield",
+    "exclude_from": ["boots", "gloves"]
+  }
+]

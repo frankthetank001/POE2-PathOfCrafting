@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react'
 import { craftingApi } from '@/services/crafting-api'
 import { UnifiedCurrencyStash } from '@/components/UnifiedCurrencyStash'
 import type { CraftableItem, ItemModifier, ItemRarity, ItemBasesBySlot } from '@/types/crafting'
+import { CURRENCY_DESCRIPTIONS } from '@/data/currency-descriptions'
 import './GridCraftingSimulator.css'
 
 interface TabContentProps {
@@ -23,6 +24,7 @@ function ItemTab({ setItem, onHistoryReset, setMessage, onItemCreated }: TabCont
   const [selectedCategory, setSelectedCategory] = useState<string>('int_armour')
   const [availableBases, setAvailableBases] = useState<Array<{name: string, description: string, default_ilvl: number, base_stats: Record<string, number>}>>([])
   const [selectedBase, setSelectedBase] = useState<string>('Vile Robe')
+  const [selectedItemLevel, setSelectedItemLevel] = useState<number>(82)
   const [itemPasteText, setItemPasteText] = useState('')
   const [pasteExpanded, setPasteExpanded] = useState(false)
   const [pasteMessage, setPasteMessage] = useState('')
@@ -80,38 +82,36 @@ function ItemTab({ setItem, onHistoryReset, setMessage, onItemCreated }: TabCont
     if (!baseData) return
 
     try {
+      // Calculate initial stats with quality (no mods yet)
+      const initialStats = { ...baseData.base_stats }
+      for (const [stat, value] of Object.entries(initialStats)) {
+        if (['armour', 'evasion', 'energy_shield'].includes(stat)) {
+          initialStats[stat] = Math.floor(value * 1.2) // 20% quality
+        }
+      }
+
       const newItem: CraftableItem = {
         base_name: selectedBase,
         base_category: selectedCategory,
         rarity: 'Normal' as ItemRarity,
-        item_level: baseData.default_ilvl,
+        item_level: selectedItemLevel,
         quality: 20,
         implicit_mods: [],
         prefix_mods: [],
         suffix_mods: [],
         corrupted: false,
         base_stats: baseData.base_stats,
-        calculated_stats: calculateItemStats(baseData.base_stats, 20),
+        calculated_stats: initialStats,
       }
 
       setItem(newItem)
       onHistoryReset()
-      setMessage(`Selected base: ${selectedBase}`)
+      setMessage(`Selected base: ${selectedBase} (ilvl ${selectedItemLevel})`)
       onItemCreated?.()
     } catch (err) {
       console.error('Failed to create item from base:', err)
       setMessage('Failed to create item from base')
     }
-  }
-
-  const calculateItemStats = (baseStats: Record<string, number>, quality: number): Record<string, number> => {
-    const calculated = { ...baseStats }
-    for (const [stat, value] of Object.entries(calculated)) {
-      if (['armour', 'evasion', 'energy_shield'].includes(stat)) {
-        calculated[stat] = Math.floor(value * (1 + quality / 100))
-      }
-    }
-    return calculated
   }
 
   const handlePasteItem = async () => {
@@ -230,6 +230,26 @@ function ItemTab({ setItem, onHistoryReset, setMessage, onItemCreated }: TabCont
                     <option key={base.name} value={base.name}>{base.name}</option>
                   ))}
                 </select>
+              </div>
+
+              <div className="base-selector">
+                <label>Item Level:</label>
+                <input
+                  type="number"
+                  value={selectedItemLevel}
+                  onChange={(e) => setSelectedItemLevel(Math.max(1, Math.min(100, parseInt(e.target.value) || 82)))}
+                  min="1"
+                  max="100"
+                  style={{
+                    padding: '0.5rem',
+                    background: '#0a0a0a',
+                    border: '2px solid #444',
+                    borderRadius: '6px',
+                    color: '#e0e0e0',
+                    fontSize: '0.9rem',
+                    width: '80px'
+                  }}
+                />
               </div>
             </div>
 
@@ -388,6 +408,7 @@ function GridCraftingSimulator() {
   const [activeTagFilters, setActiveTagFilters] = useState<Set<string>>(new Set())
   const [expandedModGroups, setExpandedModGroups] = useState<Set<string>>(new Set())
   const [activeTab, setActiveTab] = useState<'item' | 'history' | 'currency'>('item')
+  const [searchQuery, setSearchQuery] = useState<string>('')
 
   // Panel collapse state
   const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(false)
@@ -395,6 +416,10 @@ function GridCraftingSimulator() {
 
   // Item creation state - track if user has created/selected an item
   const [itemCreated, setItemCreated] = useState(false)
+
+  // Drag and drop state
+  const [draggedMod, setDraggedMod] = useState<ItemModifier | null>(null)
+  const [draggedCurrency, setDraggedCurrency] = useState<string | null>(null)
 
   function handleItemCreated() {
     setItemCreated(true)
@@ -442,6 +467,119 @@ function GridCraftingSimulator() {
     setCurrencySpent({})
   }
 
+  // Drag and drop handlers
+  function handleDragStart(mod: ItemModifier, modType: 'prefix' | 'suffix') {
+    setDraggedMod({ ...mod, mod_type: modType })
+  }
+
+  function handleDragEnd() {
+    setDraggedMod(null)
+  }
+
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault()
+
+    // Handle currency drop
+    if (draggedCurrency) {
+      handleCraft(draggedCurrency)
+      setDraggedCurrency(null)
+      return
+    }
+
+    // Handle mod drop
+    if (!draggedMod) return
+
+    const modType = draggedMod.mod_type as 'prefix' | 'suffix'
+    const currentMods = modType === 'prefix' ? item.prefix_mods : item.suffix_mods
+
+    // Check if we can add more mods
+    if (currentMods.length >= 3) {
+      setMessage(`Cannot add more than 3 ${modType} mods`)
+      setDraggedMod(null)
+      return
+    }
+
+    // Check if this mod group already exists
+    const existingModGroups = [...item.prefix_mods, ...item.suffix_mods].map(m => m.mod_group)
+    if (draggedMod.mod_group && existingModGroups.includes(draggedMod.mod_group)) {
+      setMessage(`Cannot add mod: ${draggedMod.mod_group} already exists on item`)
+      setDraggedMod(null)
+      return
+    }
+
+    // Add to history before making changes
+    setHistory([...history, `Manually added ${draggedMod.name}`])
+    setItemHistory([...itemHistory, item])
+
+    // Add the mod to the item - support hybrid mods
+    const newItem = { ...item }
+
+    // Roll values for hybrid modifiers (multiple stat ranges)
+    let modWithValue: ItemModifier
+    if (draggedMod.stat_ranges && draggedMod.stat_ranges.length > 0) {
+      // Roll one value per stat range
+      const rolledValues = draggedMod.stat_ranges.map(range =>
+        Math.random() * (range.max - range.min) + range.min
+      )
+      modWithValue = {
+        ...draggedMod,
+        current_values: rolledValues,
+        current_value: rolledValues[0] // Legacy compatibility
+      }
+    } else {
+      // Legacy single value rolling
+      const randomValue = Math.floor(Math.random() * (draggedMod.stat_max! - draggedMod.stat_min! + 1)) + draggedMod.stat_min!
+      modWithValue = { ...draggedMod, current_value: randomValue }
+    }
+
+    if (modType === 'prefix') {
+      newItem.prefix_mods = [...newItem.prefix_mods, modWithValue]
+    } else {
+      newItem.suffix_mods = [...newItem.suffix_mods, modWithValue]
+    }
+
+    // Update rarity if needed
+    const totalMods = newItem.prefix_mods.length + newItem.suffix_mods.length
+    if (totalMods === 1 && newItem.rarity === 'Normal') {
+      newItem.rarity = 'Magic'
+    } else if (totalMods >= 2 && newItem.rarity !== 'Rare') {
+      newItem.rarity = 'Rare'
+    }
+
+    setItem(newItem)
+    setMessage(`Added ${draggedMod.name} to item`)
+    setDraggedMod(null)
+  }
+
+  function handleDragOver(e: React.DragEvent) {
+    e.preventDefault()
+  }
+
+  function handleRemoveMod(modIndex: number, modType: 'prefix' | 'suffix') {
+    // Add to history before making changes
+    const modName = modType === 'prefix' ? item.prefix_mods[modIndex].name : item.suffix_mods[modIndex].name
+    setHistory([...history, `Manually removed ${modName}`])
+    setItemHistory([...itemHistory, item])
+
+    const newItem = { ...item }
+    if (modType === 'prefix') {
+      newItem.prefix_mods = newItem.prefix_mods.filter((_, idx) => idx !== modIndex)
+    } else {
+      newItem.suffix_mods = newItem.suffix_mods.filter((_, idx) => idx !== modIndex)
+    }
+
+    // Update rarity if needed
+    const totalMods = newItem.prefix_mods.length + newItem.suffix_mods.length
+    if (totalMods === 0) {
+      newItem.rarity = 'Normal'
+    } else if (totalMods === 1) {
+      newItem.rarity = 'Magic'
+    }
+
+    setItem(newItem)
+    setMessage(`Removed ${modName} from item`)
+  }
+
   // Load available mods and currencies when item changes
   useEffect(() => {
     if (item.base_name && item.base_name !== "Int Armour Body Armour") {
@@ -450,6 +588,126 @@ function GridCraftingSimulator() {
       loadAvailableCurrencies()
     }
   }, [item])
+
+  // Recalculate stats whenever mods change
+  useEffect(() => {
+    if (item.base_stats && Object.keys(item.base_stats).length > 0) {
+      const allMods = [...item.prefix_mods, ...item.suffix_mods]
+      const newCalculatedStats = calculateItemStats(item.base_stats, item.quality, allMods)
+
+      // Only update if stats actually changed to avoid infinite loop
+      if (JSON.stringify(newCalculatedStats) !== JSON.stringify(item.calculated_stats)) {
+        setItem(prev => ({
+          ...prev,
+          calculated_stats: newCalculatedStats
+        }))
+      }
+    }
+  }, [item.prefix_mods, item.suffix_mods, item.quality, item.base_stats])
+
+  const calculateItemStats = (baseStats: Record<string, number>, quality: number, mods: ItemModifier[] = []): Record<string, number> => {
+    const calculated = { ...baseStats }
+
+    // Step 1: Collect flat modifiers
+    let flatArmour = 0
+    let flatEvasion = 0
+    let flatEnergyShield = 0
+
+    for (const mod of mods) {
+      const statText = mod.stat_text.toLowerCase()
+
+      // For multi-stat mods, current_values[0] is the flat component
+      const flatValue = (mod.current_values && mod.current_values.length > 0)
+        ? mod.current_values[0]
+        : (mod.current_value || 0)
+
+      // Hybrid mods with flat + % (e.g., "+X to ES, X% increased ES")
+      if (statText.includes('to maximum energy shield') && statText.includes('% increased energy shield')) {
+        flatEnergyShield += flatValue
+        // The % part is handled in step 2
+      }
+      else if (statText.includes('to armour') && statText.includes('% increased armour') && !statText.includes('energy shield') && !statText.includes('evasion')) {
+        flatArmour += flatValue
+      }
+      else if (statText.includes('to evasion') && statText.includes('% increased evasion') && !statText.includes('armour') && !statText.includes('energy shield')) {
+        flatEvasion += flatValue
+      }
+      // Pure flat modifiers
+      else if (statText.includes('to maximum energy shield') && !statText.includes('%')) {
+        flatEnergyShield += flatValue
+      }
+      else if (statText.includes('to armour') && !statText.includes('%') && !statText.includes('energy shield')) {
+        flatArmour += flatValue
+      }
+      else if (statText.includes('to evasion') && !statText.includes('%')) {
+        flatEvasion += flatValue
+      }
+    }
+
+    // Step 2: Collect percentage modifiers (quality + increased stack additively)
+    let armourIncrease = quality
+    let evasionIncrease = quality
+    let energyShieldIncrease = quality
+
+    for (const mod of mods) {
+      const statText = mod.stat_text.toLowerCase()
+
+      // For hybrid mods with flat + %, current_values[1] is the % component
+      const percentValue = (mod.current_values && mod.current_values.length > 1)
+        ? mod.current_values[1]
+        : (mod.current_value || 0)
+
+      // Hybrid flat + % mods (e.g., "+X to ES, X% increased ES")
+      if (statText.includes('to maximum energy shield') && statText.includes('% increased energy shield')) {
+        energyShieldIncrease += percentValue
+      }
+      else if (statText.includes('to armour') && statText.includes('% increased armour') && !statText.includes('energy shield') && !statText.includes('evasion')) {
+        armourIncrease += percentValue
+      }
+      else if (statText.includes('to evasion') && statText.includes('% increased evasion') && !statText.includes('armour') && !statText.includes('energy shield')) {
+        evasionIncrease += percentValue
+      }
+      // Pure % increased mods (use first value since they only have one stat)
+      else if (statText.includes('% increased energy shield') &&
+          !statText.includes('armour') && !statText.includes('evasion') && !statText.includes('to maximum')) {
+        energyShieldIncrease += percentValue
+      }
+      else if (statText.includes('% increased armour') &&
+               !statText.includes('energy shield') && !statText.includes('evasion') && !statText.includes('to ')) {
+        armourIncrease += percentValue
+      }
+      else if (statText.includes('% increased evasion') &&
+               !statText.includes('armour') && !statText.includes('energy shield') && !statText.includes('to ')) {
+        evasionIncrease += percentValue
+      }
+      // Dual defence % mods (e.g., "% increased Armour and Energy Shield")
+      else if (statText.includes('% increased armour and energy shield')) {
+        armourIncrease += percentValue
+        energyShieldIncrease += percentValue
+      }
+      else if (statText.includes('% increased armour and evasion')) {
+        armourIncrease += percentValue
+        evasionIncrease += percentValue
+      }
+      else if (statText.includes('% increased evasion and energy shield')) {
+        evasionIncrease += percentValue
+        energyShieldIncrease += percentValue
+      }
+    }
+
+    // Step 3: Apply formula: (Base + Flat) × (1 + Quality% + Increased%)
+    if (calculated.armour !== undefined) {
+      calculated.armour = Math.floor((baseStats.armour + flatArmour) * (1 + armourIncrease / 100))
+    }
+    if (calculated.evasion !== undefined) {
+      calculated.evasion = Math.floor((baseStats.evasion + flatEvasion) * (1 + evasionIncrease / 100))
+    }
+    if (calculated.energy_shield !== undefined) {
+      calculated.energy_shield = Math.floor((baseStats.energy_shield + flatEnergyShield) * (1 + energyShieldIncrease / 100))
+    }
+
+    return calculated
+  }
 
   const loadAvailableMods = async () => {
     try {
@@ -580,28 +838,75 @@ function GridCraftingSimulator() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [itemHistory])
 
+  // Auto-dismiss message after 3 seconds
+  useEffect(() => {
+    if (message) {
+      const timer = setTimeout(() => {
+        setMessage('')
+      }, 3000)
+      return () => clearTimeout(timer)
+    }
+  }, [message])
+
   // Sophisticated mod filtering and grouping functions
   const renderModifier = (mod: ItemModifier) => {
-    const value = mod.current_value !== undefined
-      ? Math.round(mod.current_value)
-      : mod.stat_min !== undefined && mod.stat_max !== undefined
-        ? `${mod.stat_min}-${mod.stat_max}`
-        : '?'
+    // Get values for all stats (multi-stat mods have multiple values)
+    const values: (number | string)[] = []
 
-    const statText = mod.stat_text.replace('{}', value.toString())
+    if (mod.current_values && mod.current_values.length > 0) {
+      // Use rolled values for each stat
+      values.push(...mod.current_values.map(v => Math.round(v)))
+    } else if (mod.current_value !== undefined) {
+      // Legacy: single value, duplicate for all placeholders
+      const roundedValue = Math.round(mod.current_value)
+      const placeholderCount = (mod.stat_text.match(/\{\}/g) || []).length
+      values.push(...Array(placeholderCount).fill(roundedValue))
+    } else if (mod.stat_ranges && mod.stat_ranges.length > 0) {
+      // Show ranges for each stat
+      values.push(...mod.stat_ranges.map(r => `${r.min}-${r.max}`))
+    } else if (mod.stat_min !== undefined && mod.stat_max !== undefined) {
+      // Legacy: single range, duplicate for all placeholders
+      const rangeText = `${mod.stat_min}-${mod.stat_max}`
+      const placeholderCount = (mod.stat_text.match(/\{\}/g) || []).length
+      values.push(...Array(placeholderCount).fill(rangeText))
+    } else {
+      values.push('?')
+    }
+
+    // Replace {} placeholders with corresponding values
+    let statText = mod.stat_text
+    for (const value of values) {
+      statText = statText.replace('{}', value.toString())
+    }
     const modName = mod.name || 'Unknown'
-    const rangeText = mod.stat_min !== undefined && mod.stat_max !== undefined
-      ? `(${mod.stat_min}-${mod.stat_max})`
-      : ''
+
+    // Build range text for display - support hybrid mods with multiple ranges
+    let rangeText = ''
+    if (mod.stat_ranges && mod.stat_ranges.length > 0) {
+      // Hybrid mods: show all ranges
+      if (mod.stat_ranges.length > 1) {
+        rangeText = `(${mod.stat_ranges.map(r => `${r.min}-${r.max}`).join(', ')})`
+      } else {
+        rangeText = `(${mod.stat_ranges[0].min}-${mod.stat_ranges[0].max})`
+      }
+    } else if (mod.stat_min !== undefined && mod.stat_max !== undefined) {
+      // Legacy single range
+      rangeText = `(${mod.stat_min}-${mod.stat_max})`
+    }
+
+    // Build tooltip with all ranges
+    const rangeTooltip = mod.stat_ranges && mod.stat_ranges.length > 0
+      ? `Ranges: ${mod.stat_ranges.map(r => `${r.min}-${r.max}`).join(', ')}`
+      : (mod.stat_min !== undefined && mod.stat_max !== undefined
+        ? `Range: ${mod.stat_min}-${mod.stat_max}`
+        : null)
 
     const tooltipText = [
       `Name: ${modName}`,
       `Tier: ${mod.tier}`,
       mod.required_ilvl ? `Required ilvl: ${mod.required_ilvl}` : null,
       mod.mod_group ? `Group: ${mod.mod_group}` : null,
-      mod.stat_min !== undefined && mod.stat_max !== undefined
-        ? `Range: ${mod.stat_min}-${mod.stat_max}`
-        : null,
+      rangeTooltip,
       mod.tags && mod.tags.length > 0 ? `Tags: ${mod.tags.join(', ')}` : null,
     ].filter(Boolean).join('\n')
 
@@ -689,11 +994,86 @@ function GridCraftingSimulator() {
     return Array.from(activeTagFilters).every(filter => mod.tags.includes(filter))
   }
 
+  const isModMatchingSearch = (mod: any) => {
+    if (!searchQuery.trim()) return true
+
+    const searchableText = [
+      mod.name || '',
+      mod.stat_text || '',
+      ...(mod.tags || [])
+    ].join(' ')
+
+    // Check if query contains spaces (multiple keywords)
+    const keywords = searchQuery.trim().split(/\s+/)
+    if (keywords.length > 1) {
+      // Multiple keywords: apply AND logic
+      return keywords.every(keyword => {
+        try {
+          // Try each keyword as regex
+          const regex = new RegExp(keyword, 'i')
+          return regex.test(searchableText)
+        } catch (err) {
+          // Fall back to simple string search
+          return searchableText.toLowerCase().includes(keyword.toLowerCase())
+        }
+      })
+    } else {
+      // Single keyword: try as regex first
+      try {
+        const regex = new RegExp(searchQuery, 'i')
+        return regex.test(searchableText)
+      } catch (e) {
+        // Fall back to simple string search
+        return searchableText.toLowerCase().includes(searchQuery.toLowerCase())
+      }
+    }
+  }
+
+  const isCurrencyMatchingSearch = (currencyName: string) => {
+    if (!searchQuery.trim()) return true
+
+    // Get currency description data
+    const currencyData = CURRENCY_DESCRIPTIONS[currencyName]
+
+    // Build searchable text from name + description + mechanics
+    const searchableText = [
+      currencyName,
+      currencyData?.description || '',
+      currencyData?.mechanics || ''
+    ].join(' ')
+
+    // Check if query contains spaces (multiple keywords)
+    const keywords = searchQuery.trim().split(/\s+/)
+    if (keywords.length > 1) {
+      // Multiple keywords: apply AND logic
+      return keywords.every(keyword => {
+        try {
+          // Try each keyword as regex
+          const regex = new RegExp(keyword, 'i')
+          return regex.test(searchableText)
+        } catch (err) {
+          // Fall back to simple string search
+          return searchableText.toLowerCase().includes(keyword.toLowerCase())
+        }
+      })
+    } else {
+      // Single keyword: try as regex first
+      try {
+        const regex = new RegExp(searchQuery, 'i')
+        return regex.test(searchableText)
+      } catch (e) {
+        // Fall back to simple string search
+        return searchableText.toLowerCase().includes(searchQuery.toLowerCase())
+      }
+    }
+  }
+
   const shouldGreyOutModGroup = (groupMods: ItemModifier[], modType: 'prefix' | 'suffix'): boolean => {
-    // Check if group should be greyed out due to omen incompatibility or tag filtering
+    // Check if group should be greyed out due to omen incompatibility, tag filtering, or search
     const omenIncompatible = groupMods.every(mod => shouldGreyOutMod(mod, modType))
     const tagFiltered = activeTagFilters.size > 0 && !groupMods.some(mod => isModMatchingTagFilters(mod))
-    return omenIncompatible || tagFiltered
+    const searchFiltered = searchQuery.trim() && !groupMods.some(mod => isModMatchingSearch(mod))
+    return omenIncompatible || tagFiltered || searchFiltered
   }
 
   const getGroupedMods = (modType: 'prefix' | 'suffix') => {
@@ -828,39 +1208,23 @@ function GridCraftingSimulator() {
       }
     }
 
-    // Handle Bones
-    if (currency.includes('Bone') || currency.includes('bone') || currency.startsWith('Abyssal') || currency.startsWith('Ancient')) {
+    // Handle Bones - use wiki URLs with correct hash paths (verified)
+    if (currency.includes('Bone') || currency.includes('bone') || currency.startsWith('Abyssal') || currency.startsWith('Ancient') || currency.includes('Cranium') || currency.includes('Vertebrae')) {
       const boneIconMap: Record<string, string> = {
-        // Ancient Bones (Min Modifier Level: 40)
         'Ancient Collarbone': 'https://www.poe2wiki.net/images/2/29/Ancient_Collarbone_inventory_icon.png',
         'Ancient Jawbone': 'https://www.poe2wiki.net/images/7/79/Ancient_Jawbone_inventory_icon.png',
         'Ancient Rib': 'https://www.poe2wiki.net/images/9/9d/Ancient_Rib_inventory_icon.png',
-
-        // Preserved Bones (Mid-tier)
+        'Gnawed Collarbone': 'https://www.poe2wiki.net/images/2/2f/Gnawed_Collarbone_inventory_icon.png',
+        'Gnawed Jawbone': 'https://www.poe2wiki.net/images/7/75/Gnawed_Jawbone_inventory_icon.png',
+        'Gnawed Rib': 'https://www.poe2wiki.net/images/6/61/Gnawed_Rib_inventory_icon.png?v=2',
         'Preserved Collarbone': 'https://www.poe2wiki.net/images/7/7a/Preserved_Collarbone_inventory_icon.png',
         'Preserved Jawbone': 'https://www.poe2wiki.net/images/4/47/Preserved_Jawbone_inventory_icon.png',
-        'Preserved Rib': 'https://www.poe2wiki.net/images/c/ce/Preserved_Rib_inventory_icon.png',
-        'Preserved Cranium': 'https://www.poe2wiki.net/images/6/69/Preserved_Cranium_inventory_icon.png',
-        'Preserved Vertebrae': 'https://www.poe2wiki.net/images/7/78/Preserved_Vertebrae_inventory_icon.png',
-
-        // Gnawed Bones (Max Item Level: 64)
-        'Gnawed Collarbone': 'https://www.poe2wiki.net/images/b/bc/Gnawed_Collarbone_inventory_icon.png',
-        'Gnawed Jawbone': 'https://www.poe2wiki.net/images/a/a8/Gnawed_Jawbone_inventory_icon.png',
-        'Gnawed Rib': 'https://www.poe2wiki.net/images/8/81/Gnawed_Rib_inventory_icon.png',
+        'Preserved Rib': 'https://www.poe2wiki.net/images/e/e8/Preserved_Rib_inventory_icon.png?v=2',
+        'Preserved Cranium': 'https://www.poe2wiki.net/images/5/50/Preserved_Cranium_inventory_icon.png',
+        'Preserved Vertebrae': 'https://www.poe2wiki.net/images/e/e2/Preserved_Vertebrae_inventory_icon.png',
       }
 
-      if (boneIconMap[currency]) {
-        return boneIconMap[currency]
-      }
-
-      // Fallback logic for bone types
-      if (currency.includes('Collarbone')) return 'https://www.poe2wiki.net/images/2/29/Ancient_Collarbone_inventory_icon.png'
-      if (currency.includes('Jawbone')) return 'https://www.poe2wiki.net/images/7/79/Ancient_Jawbone_inventory_icon.png'
-      if (currency.includes('Rib')) return 'https://www.poe2wiki.net/images/9/9d/Ancient_Rib_inventory_icon.png'
-      if (currency.includes('Cranium')) return 'https://www.poe2wiki.net/images/6/69/Preserved_Cranium_inventory_icon.png'
-      if (currency.includes('Vertebrae')) return 'https://www.poe2wiki.net/images/7/78/Preserved_Vertebrae_inventory_icon.png'
-
-      return 'https://www.poe2wiki.net/images/2/29/Ancient_Collarbone_inventory_icon.png'
+      return boneIconMap[currency] || 'https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png'
     }
 
     return iconMap[currency] || "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
@@ -890,10 +1254,24 @@ function GridCraftingSimulator() {
       "Omen of Sinistral Annulment": "https://www.poe2wiki.net/images/4/45/Omen_of_Sinistral_Annulment_inventory_icon.png",
       "Omen of Dextral Annulment": "https://www.poe2wiki.net/images/e/ef/Omen_of_Dextral_Annulment_inventory_icon.png",
 
-      // Alchemy & Other Omens
-      "Omen of Sinistral Alchemy": "https://www.poe2wiki.net/images/4/43/Omen_of_Sinistral_Alchemy_inventory_icon.png",
-      "Omen of Dextral Alchemy": "https://www.poe2wiki.net/images/b/bc/Omen_of_Dextral_Alchemy_inventory_icon.png",
-      "Omen of Corruption": "https://www.poe2wiki.net/images/f/f4/Omen_of_Corruption_inventory_icon.png",
+      // Alchemy & Essence Omens (verified from wiki)
+      "Omen of Sinistral Alchemy": "https://www.poe2wiki.net/images/1/1f/Omen_of_Sinistral_Alchemy_inventory_icon.png",
+      "Omen of Dextral Alchemy": "https://www.poe2wiki.net/images/e/ee/Omen_of_Dextral_Alchemy_inventory_icon.png",
+      "Omen of Sinistral Crystallisation": "https://www.poe2wiki.net/images/e/ec/Omen_of_Sinistral_Crystallisation_inventory_icon.png",
+      "Omen of Dextral Crystallisation": "https://www.poe2wiki.net/images/7/7c/Omen_of_Dextral_Crystallisation_inventory_icon.png",
+
+      // Desecration/Abyssal Omens (verified from wiki)
+      "Omen of Abyssal Echoes": "https://www.poe2wiki.net/images/8/8a/Omen_of_Abyssal_Echoes_inventory_icon.png",
+      "Omen of Sinistral Necromancy": "https://www.poe2wiki.net/images/2/2e/Omen_of_Sinistral_Necromancy_inventory_icon.png",
+      "Omen of Dextral Necromancy": "https://www.poe2wiki.net/images/8/84/Omen_of_Dextral_Necromancy_inventory_icon.png",
+      "Omen of the Sovereign": "https://www.poe2wiki.net/images/b/b5/Omen_of_the_Sovereign_inventory_icon.png",
+      "Omen of the Liege": "https://www.poe2wiki.net/images/9/96/Omen_of_the_Liege_inventory_icon.png",
+      "Omen of the Blackblooded": "https://www.poe2wiki.net/images/6/60/Omen_of_the_Blackblooded_inventory_icon.png",
+      "Omen of Putrefaction": "https://www.poe2wiki.net/images/b/b8/Omen_of_Putrefaction_inventory_icon.png",
+      "Omen of Light": "https://www.poe2wiki.net/images/1/12/Omen_of_Light_inventory_icon.png",
+
+      // Corruption (verified from wiki)
+      "Omen of Corruption": "https://www.poe2wiki.net/images/a/a2/Omen_of_Corruption_inventory_icon.png",
     }
 
     return omenIconMap[omen] || "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
@@ -940,6 +1318,13 @@ function GridCraftingSimulator() {
 
   return (
     <div className="grid-crafting-simulator">
+      {/* Toast Message */}
+      {message && (
+        <div className={`message ${message.includes('Error') ? 'error' : message.includes('success') ? 'success' : 'info'}`}>
+          {message}
+        </div>
+      )}
+
       {/* Global Tag Filters - Floating at Top */}
       <div className="global-tag-filters">
         <div className="global-tag-filters-content">
@@ -968,6 +1353,25 @@ function GridCraftingSimulator() {
               <span className="tag-count-indicator">
                 +{allAvailableTags.length - 15} more
               </span>
+            )}
+          </div>
+          <div className="search-container">
+            <input
+              type="text"
+              className="mod-search-input"
+              placeholder="🔍 Search mods (supports regex)..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              title="Search mod names, stats, and tags. Supports regex patterns like 'fire|cold' or '^Adds.*to Attacks$'"
+            />
+            {searchQuery && (
+              <button
+                className="clear-search-btn"
+                onClick={() => setSearchQuery('')}
+                title="Clear search"
+              >
+                ✕
+              </button>
             )}
           </div>
         </div>
@@ -1006,21 +1410,13 @@ function GridCraftingSimulator() {
               </div>
             </div>
 
-            <div className="mods-pool-filters">
-              <input
-                type="text"
-                className="search-input"
-                placeholder="Search mods..."
-                value={modPoolFilter.search}
-                onChange={e => setModPoolFilter({ ...modPoolFilter, search: e.target.value })}
-              />
-
-            </div>
+            {/* Search bar removed - will be global instead */}
 
             <div className="mods-pool-columns">
               <div className="mods-pool-column">
-                <h4 className="column-title">Prefixes ({Object.keys(getGroupedMods('prefix')).length} groups)</h4>
+                <h4 className="column-title">Prefixes ({Object.keys(getGroupedMods('prefix')).length + availableMods.essence_prefixes.length + availableMods.desecrated_prefixes.length} total)</h4>
                 <div className="mods-pool-list">
+                  {/* Normal Prefixes */}
                   {Object.entries(getGroupedMods('prefix')).map(([groupKey, groupMods]) => {
                     const bestTier = groupMods[0] // Tier 1 (highest)
                     const maxIlvl = Math.max(...groupMods.map(m => m.required_ilvl || 1))
@@ -1041,7 +1437,10 @@ function GridCraftingSimulator() {
                           className={`pool-mod-group-header prefix compact-single-line ${allUnavailable ? 'all-unavailable' : ''} mod-group-clickable`}
                           onClick={() => toggleModGroup(`prefix-${groupKey}`)}
                           onDoubleClick={() => applyAllModTags(bestTier)}
-                          title="Click to expand/collapse, double-click to filter by all tags"
+                          draggable={!allUnavailable && itemCreated}
+                          onDragStart={() => handleDragStart(bestTier, 'prefix')}
+                          onDragEnd={handleDragEnd}
+                          title="Click to expand/collapse, double-click to filter by all tags, drag to add to item"
                         >
                           <span className="pool-mod-stat-main">{bestTier.stat_text}</span>
                           <div className="compact-mod-info">
@@ -1079,9 +1478,20 @@ function GridCraftingSimulator() {
                         {isExpanded && (
                           <div className="mod-tier-details">
                             {groupMods.map(mod => {
-                              // Format the value range for this tier
+                              // Format the value range for this tier - support hybrid mods
                               let valueText = ''
-                              if (mod.stat_min !== undefined && mod.stat_max !== undefined) {
+                              if (mod.stat_ranges && mod.stat_ranges.length > 0) {
+                                // Hybrid mods: show all ranges
+                                if (mod.stat_ranges.length > 1) {
+                                  valueText = mod.stat_ranges.map(r =>
+                                    r.min === r.max ? `${r.min}` : `${r.min}-${r.max}`
+                                  ).join(', ')
+                                } else {
+                                  const r = mod.stat_ranges[0]
+                                  valueText = r.min === r.max ? `${r.min}` : `${r.min}-${r.max}`
+                                }
+                              } else if (mod.stat_min !== undefined && mod.stat_max !== undefined) {
+                                // Legacy single range
                                 if (mod.stat_min === mod.stat_max) {
                                   valueText = `${mod.stat_min}`
                                 } else {
@@ -1106,12 +1516,53 @@ function GridCraftingSimulator() {
                       </div>
                     )
                   })}
+
+                  {/* Essence Prefixes */}
+                  {availableMods.essence_prefixes.map((mod, idx) => {
+                    const isTagFiltered = activeTagFilters.size > 0 && !isModMatchingTagFilters(mod)
+                    const isSearchFiltered = searchQuery.trim() && !isModMatchingSearch(mod)
+                    const isFiltered = isTagFiltered || isSearchFiltered
+                    return (
+                      <div key={`essence-prefix-${idx}`} className={`pool-mod-group essence-only ${isFiltered ? 'tag-filtered' : ''}`}>
+                        <div
+                          className="pool-mod-group-header prefix compact-single-line mod-group-clickable"
+                          onDoubleClick={() => applyAllModTags(mod)}
+                          draggable={itemCreated}
+                          onDragStart={() => handleDragStart(mod, 'prefix')}
+                          onDragEnd={handleDragEnd}
+                          title="Essence-only mod - Double-click to filter by all tags, drag to add to item"
+                        >
+                          <span className="pool-mod-stat-main">{mod.stat_text}</span>
+                        </div>
+                      </div>
+                    )
+                  })}
+
+                  {/* Desecrated Prefixes */}
+                  {availableMods.desecrated_prefixes.map((mod, idx) => {
+                    const isTagFiltered = activeTagFilters.size > 0 && !isModMatchingTagFilters(mod)
+                    return (
+                      <div key={`desecrated-prefix-${idx}`} className={`pool-mod-group desecrated-only ${isTagFiltered ? 'tag-filtered' : ''}`}>
+                        <div
+                          className="pool-mod-group-header prefix compact-single-line mod-group-clickable"
+                          onDoubleClick={() => applyAllModTags(mod)}
+                          draggable={itemCreated}
+                          onDragStart={() => handleDragStart(mod, 'prefix')}
+                          onDragEnd={handleDragEnd}
+                          title="Desecrated-only mod - Double-click to filter by all tags, drag to add to item"
+                        >
+                          <span className="pool-mod-stat-main">{mod.stat_text}</span>
+                        </div>
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
 
               <div className="mods-pool-column">
-                <h4 className="column-title">Suffixes ({Object.keys(getGroupedMods('suffix')).length} groups)</h4>
+                <h4 className="column-title">Suffixes ({Object.keys(getGroupedMods('suffix')).length + availableMods.essence_suffixes.length + availableMods.desecrated_suffixes.length} total)</h4>
                 <div className="mods-pool-list">
+                  {/* Normal Suffixes */}
                   {Object.entries(getGroupedMods('suffix')).map(([groupKey, groupMods]) => {
                     const bestTier = groupMods[0] // Tier 1 (highest)
                     const maxIlvl = Math.max(...groupMods.map(m => m.required_ilvl || 1))
@@ -1132,7 +1583,10 @@ function GridCraftingSimulator() {
                           className={`pool-mod-group-header suffix compact-single-line ${allUnavailable ? 'all-unavailable' : ''} mod-group-clickable`}
                           onClick={() => toggleModGroup(`suffix-${groupKey}`)}
                           onDoubleClick={() => applyAllModTags(bestTier)}
-                          title="Click to expand/collapse, double-click to filter by all tags"
+                          draggable={!allUnavailable && itemCreated}
+                          onDragStart={() => handleDragStart(bestTier, 'suffix')}
+                          onDragEnd={handleDragEnd}
+                          title="Click to expand/collapse, double-click to filter by all tags, drag to add to item"
                         >
                           <span className="pool-mod-stat-main">{bestTier.stat_text}</span>
                           <div className="compact-mod-info">
@@ -1170,9 +1624,20 @@ function GridCraftingSimulator() {
                         {isExpanded && (
                           <div className="mod-tier-details">
                             {groupMods.map(mod => {
-                              // Format the value range for this tier
+                              // Format the value range for this tier - support hybrid mods
                               let valueText = ''
-                              if (mod.stat_min !== undefined && mod.stat_max !== undefined) {
+                              if (mod.stat_ranges && mod.stat_ranges.length > 0) {
+                                // Hybrid mods: show all ranges
+                                if (mod.stat_ranges.length > 1) {
+                                  valueText = mod.stat_ranges.map(r =>
+                                    r.min === r.max ? `${r.min}` : `${r.min}-${r.max}`
+                                  ).join(', ')
+                                } else {
+                                  const r = mod.stat_ranges[0]
+                                  valueText = r.min === r.max ? `${r.min}` : `${r.min}-${r.max}`
+                                }
+                              } else if (mod.stat_min !== undefined && mod.stat_max !== undefined) {
+                                // Legacy single range
                                 if (mod.stat_min === mod.stat_max) {
                                   valueText = `${mod.stat_min}`
                                 } else {
@@ -1197,11 +1662,49 @@ function GridCraftingSimulator() {
                       </div>
                     )
                   })}
+
+                  {/* Essence Suffixes */}
+                  {availableMods.essence_suffixes.map((mod, idx) => {
+                    const isTagFiltered = activeTagFilters.size > 0 && !isModMatchingTagFilters(mod)
+                    return (
+                      <div key={`essence-suffix-${idx}`} className={`pool-mod-group essence-only ${isTagFiltered ? 'tag-filtered' : ''}`}>
+                        <div
+                          className="pool-mod-group-header suffix compact-single-line mod-group-clickable"
+                          onDoubleClick={() => applyAllModTags(mod)}
+                          draggable={itemCreated}
+                          onDragStart={() => handleDragStart(mod, 'suffix')}
+                          onDragEnd={handleDragEnd}
+                          title="Essence-only mod - Double-click to filter by all tags, drag to add to item"
+                        >
+                          <span className="pool-mod-stat-main">{mod.stat_text}</span>
+                        </div>
+                      </div>
+                    )
+                  })}
+
+                  {/* Desecrated Suffixes */}
+                  {availableMods.desecrated_suffixes.map((mod, idx) => {
+                    const isTagFiltered = activeTagFilters.size > 0 && !isModMatchingTagFilters(mod)
+                    return (
+                      <div key={`desecrated-suffix-${idx}`} className={`pool-mod-group desecrated-only ${isTagFiltered ? 'tag-filtered' : ''}`}>
+                        <div
+                          className="pool-mod-group-header suffix compact-single-line mod-group-clickable"
+                          onDoubleClick={() => applyAllModTags(mod)}
+                          draggable={itemCreated}
+                          onDragStart={() => handleDragStart(mod, 'suffix')}
+                          onDragEnd={handleDragEnd}
+                          title="Desecrated-only mod - Double-click to filter by all tags, drag to add to item"
+                        >
+                          <span className="pool-mod-stat-main">{mod.stat_text}</span>
+                        </div>
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
             </div>
 
-            {/* Essence-Only Modifiers Section */}
+            {/* Essence-Only Modifiers Section - HIDDEN NOW */}
             {(availableMods.essence_prefixes.length > 0 || availableMods.essence_suffixes.length > 0) && (
               <div className="special-mods-section essence-section">
                 <h4 className="special-section-title">
@@ -1218,7 +1721,10 @@ function GridCraftingSimulator() {
                           <div
                             className="pool-mod-group-header essence prefix compact-single-line mod-group-clickable"
                             onDoubleClick={() => applyAllModTags(mod)}
-                            title="Double-click to filter by all tags"
+                            draggable={itemCreated}
+                            onDragStart={() => handleDragStart(mod, 'prefix')}
+                            onDragEnd={handleDragEnd}
+                            title="Double-click to filter by all tags, drag to add to item"
                           >
                             <span className="pool-mod-stat-main">{mod.stat_text}</span>
                             {mod.tags && mod.tags.length > 0 && (
@@ -1256,7 +1762,10 @@ function GridCraftingSimulator() {
                           <div
                             className="pool-mod-group-header essence suffix compact-single-line mod-group-clickable"
                             onDoubleClick={() => applyAllModTags(mod)}
-                            title="Double-click to filter by all tags"
+                            draggable={itemCreated}
+                            onDragStart={() => handleDragStart(mod, 'suffix')}
+                            onDragEnd={handleDragEnd}
+                            title="Double-click to filter by all tags, drag to add to item"
                           >
                             <span className="pool-mod-stat-main">{mod.stat_text}</span>
                             {mod.tags && mod.tags.length > 0 && (
@@ -1304,7 +1813,10 @@ function GridCraftingSimulator() {
                           <div
                             className="pool-mod-group-header desecrated prefix compact-single-line mod-group-clickable"
                             onDoubleClick={() => applyAllModTags(mod)}
-                            title="Double-click to filter by all tags"
+                            draggable={itemCreated}
+                            onDragStart={() => handleDragStart(mod, 'prefix')}
+                            onDragEnd={handleDragEnd}
+                            title="Double-click to filter by all tags, drag to add to item"
                           >
                             <span className="pool-mod-stat-main">{mod.stat_text}</span>
                             {mod.tags && mod.tags.length > 0 && (
@@ -1342,7 +1854,10 @@ function GridCraftingSimulator() {
                           <div
                             className="pool-mod-group-header desecrated suffix compact-single-line mod-group-clickable"
                             onDoubleClick={() => applyAllModTags(mod)}
-                            title="Double-click to filter by all tags"
+                            draggable={itemCreated}
+                            onDragStart={() => handleDragStart(mod, 'suffix')}
+                            onDragEnd={handleDragEnd}
+                            title="Double-click to filter by all tags, drag to add to item"
                           >
                             <span className="pool-mod-stat-main">{mod.stat_text}</span>
                             {mod.tags && mod.tags.length > 0 && (
@@ -1409,7 +1924,11 @@ function GridCraftingSimulator() {
                     // Show sophisticated item preview after creation
                     <div className="item-created-view">
                       <div className="current-item-display">
-                    <div className="item-display">
+                    <div
+                      className={`item-display rarity-${item.rarity.toLowerCase()}`}
+                      onDrop={handleDrop}
+                      onDragOver={handleDragOver}
+                    >
                       <div className="item-header">
                         <h2 className={`item-name rarity-${item.rarity.toLowerCase()}`}>{item.base_name}</h2>
                         <div className="item-rarity-badge">{item.rarity}</div>
@@ -1451,11 +1970,20 @@ function GridCraftingSimulator() {
                             const modClasses = `mod-line prefix ${isTagFiltered ? 'tag-filtered' : ''} ${isDesecrated ? 'desecrated' : ''}`
                             return (
                               <div key={idx} className={modClasses}>
-                                <div className="mod-stat">{renderModifier(mod)}</div>
-                                <div className="mod-metadata">
-                                  <span className="mod-tier">T{mod.tier}</span>
-                                  <span className="mod-name">{mod.name}</span>
+                                <div className="mod-content">
+                                  <div className="mod-stat">{renderModifier(mod)}</div>
+                                  <div className="mod-metadata">
+                                    <span className="mod-tier">T{mod.tier}</span>
+                                    <span className="mod-name">{mod.name}</span>
+                                  </div>
                                 </div>
+                                <button
+                                  className="mod-remove-btn"
+                                  onClick={() => handleRemoveMod(idx, 'prefix')}
+                                  title="Remove this modifier"
+                                >
+                                  ✕
+                                </button>
                               </div>
                             )
                           })}
@@ -1471,11 +1999,20 @@ function GridCraftingSimulator() {
                             const modClasses = `mod-line suffix ${isTagFiltered ? 'tag-filtered' : ''} ${isDesecrated ? 'desecrated' : ''}`
                             return (
                               <div key={idx} className={modClasses}>
-                                <div className="mod-stat">{renderModifier(mod)}</div>
-                                <div className="mod-metadata">
-                                  <span className="mod-tier">T{mod.tier}</span>
-                                  <span className="mod-name">{mod.name}</span>
+                                <div className="mod-content">
+                                  <div className="mod-stat">{renderModifier(mod)}</div>
+                                  <div className="mod-metadata">
+                                    <span className="mod-tier">T{mod.tier}</span>
+                                    <span className="mod-name">{mod.name}</span>
+                                  </div>
                                 </div>
+                                <button
+                                  className="mod-remove-btn"
+                                  onClick={() => handleRemoveMod(idx, 'suffix')}
+                                  title="Remove this modifier"
+                                >
+                                  ✕
+                                </button>
                               </div>
                             )
                           })}
@@ -1534,12 +2071,6 @@ function GridCraftingSimulator() {
               {activeTab === 'currency' && <CurrencyTab {...tabContentProps} />}
             </div>
           </div>
-
-          {message && (
-            <div className={`message ${message.includes('Error') ? 'error' : message.includes('success') ? 'success' : 'info'}`}>
-              {message}
-            </div>
-          )}
         </div>
 
         {/* Right Panel - Crafting Controls */}
@@ -1562,6 +2093,9 @@ function GridCraftingSimulator() {
               handleCraft={handleCraft}
               getCurrencyIconUrl={getCurrencyIconUrl}
               getOmenIconUrl={getOmenIconUrl}
+              onCurrencyDragStart={(currency) => setDraggedCurrency(currency)}
+              onCurrencyDragEnd={() => setDraggedCurrency(null)}
+              searchFilter={isCurrencyMatchingSearch}
             />
           </div>
         </div>

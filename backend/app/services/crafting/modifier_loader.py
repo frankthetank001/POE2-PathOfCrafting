@@ -35,12 +35,25 @@ class ModifierLoader:
             for db_mod in db_modifiers:
                 mod_type = ModType.PREFIX if db_mod.mod_type == "prefix" else ModType.SUFFIX
 
+                # Parse stat_ranges from JSON if present
+                from app.schemas.crafting import StatRange
+                stat_ranges = []
+                if db_mod.stat_ranges:
+                    if isinstance(db_mod.stat_ranges, str):
+                        import json
+                        ranges_data = json.loads(db_mod.stat_ranges)
+                    else:
+                        ranges_data = db_mod.stat_ranges
+
+                    stat_ranges = [StatRange(min=r["min"], max=r["max"]) for r in ranges_data]
+
                 cls._modifiers.append(
                     ItemModifier(
                         name=db_mod.name,
                         mod_type=mod_type,
                         tier=db_mod.tier,
                         stat_text=db_mod.stat_text,
+                        stat_ranges=stat_ranges,
                         stat_min=db_mod.stat_min,
                         stat_max=db_mod.stat_max,
                         required_ilvl=db_mod.required_ilvl,
@@ -100,7 +113,11 @@ class ModifierLoader:
 
     @classmethod
     def _add_essence_only_modifiers(cls, session) -> None:
-        """Add Perfect/Corrupted essence-only modifiers to the pool."""
+        """Add Perfect/Corrupted essence-only modifiers to the pool.
+
+        Tries to match essence effects to existing modifiers first. If no match is found,
+        creates essence-specific modifiers.
+        """
         logger.info("Adding essence-only modifiers...")
 
         # Query Perfect and Corrupted essence effects by joining with Essence table
@@ -109,41 +126,71 @@ class ModifierLoader:
         ).all()
 
         for effect in essence_effects:
-            # Determine modifier type - these are typically prefix for damage/life modifiers
-            mod_type = ModType.PREFIX if effect.modifier_type == "prefix" else ModType.SUFFIX
-
-            # Create a unique modifier name based on essence name and effect
-            essence_name_parts = effect.essence.name.split()
-            essence_type = essence_name_parts[-1] if essence_name_parts else "Unknown"
-            tier_name = essence_name_parts[0] if essence_name_parts else "Unknown"
-
-            mod_name = f"{tier_name} {essence_type} Modifier"
-
             # Map item types to applicable items list
             applicable_items = cls._map_essence_item_type_to_categories(effect.item_type)
 
-            # Determine modifier group based on essence type
-            mod_group = cls._get_essence_mod_group(essence_type.lower())
+            # Try to find a matching regular modifier first
+            matched_mod = cls._find_matching_modifier_for_essence(effect, applicable_items)
 
-            essence_mod = ItemModifier(
-                name=mod_name,
-                mod_type=mod_type,
-                tier=1,  # Perfect/Corrupted are highest tier
-                stat_text=effect.effect_text,
-                stat_min=effect.value_min,
-                stat_max=effect.value_max,
-                current_value=None,
-                required_ilvl=0,  # Essences ignore ilvl
-                mod_group=mod_group,
-                applicable_items=applicable_items,
-                tags=["essence_only", f"essence_{essence_type.lower()}", tier_name.lower()],
-                is_exclusive=True  # These are unique to essences
-            )
+            if matched_mod:
+                # Matching regular modifier found - don't add to pool, essence will use the existing mod
+                # The regular mod is already in the pool and will be used by essences at runtime
+                continue
+            else:
+                # No matching modifier - create essence-specific modifier
+                essence_name_parts = effect.essence.name.split()
+                essence_type = essence_name_parts[-1] if essence_name_parts else "Unknown"
+                tier_name = essence_name_parts[0] if essence_name_parts else "Unknown"
 
-            cls._modifiers.append(essence_mod)
+                mod_name = f"{tier_name} {essence_type} Modifier"
+                mod_type = ModType.PREFIX if effect.modifier_type == "prefix" else ModType.SUFFIX
+                mod_group = cls._get_essence_mod_group(essence_type.lower())
+
+                essence_mod = ItemModifier(
+                    name=mod_name,
+                    mod_type=mod_type,
+                    tier=1,
+                    stat_text=effect.effect_text,
+                    stat_min=effect.value_min,
+                    stat_max=effect.value_max,
+                    current_value=None,
+                    required_ilvl=0,
+                    mod_group=mod_group,
+                    applicable_items=applicable_items,
+                    tags=["essence_only", f"essence_{essence_type.lower()}", tier_name.lower()],
+                    is_exclusive=True
+                )
+
+                cls._modifiers.append(essence_mod)
 
         essence_count = len([m for m in cls._modifiers if "essence_only" in m.tags])
         logger.info(f"Added {essence_count} essence-only modifiers")
+
+    @classmethod
+    def _find_matching_modifier_for_essence(cls, effect: EssenceItemEffect, applicable_items: List[str]) -> ItemModifier | None:
+        """Try to find an existing modifier that matches the essence effect."""
+        import re
+
+        # Normalize the effect text to match mod templates (replace specific values with {})
+        normalized_effect = re.sub(r'\d+(\.\d+)?', '{}', effect.effect_text)
+
+        # Look for stat_text match with matching values in already-loaded modifiers
+        for mod in cls._modifiers:
+            # Check if any of the applicable items overlap
+            if not any(item in mod.applicable_items for item in applicable_items):
+                continue
+
+            # Check if stat_text matches (after normalization)
+            if mod.stat_text == normalized_effect or mod.stat_text == effect.effect_text:
+                # Check if the value ranges match
+                if effect.value_min is not None and effect.value_max is not None:
+                    if mod.stat_min == effect.value_min and mod.stat_max == effect.value_max:
+                        return mod
+                else:
+                    # No value specified, just match by stat_text
+                    return mod
+
+        return None
 
     @classmethod
     def _map_essence_item_type_to_categories(cls, item_type: str) -> List[str]:

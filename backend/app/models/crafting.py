@@ -37,8 +37,9 @@ class Modifier(Base):
     mod_type = Column(String(20), nullable=False, index=True)  # prefix, suffix, implicit
     tier = Column(Integer, nullable=False, index=True)
     stat_text = Column(Text, nullable=False)  # "+{} to Strength"
-    stat_min = Column(Float, nullable=True)
-    stat_max = Column(Float, nullable=True)
+    stat_ranges = Column(JSON, default=[])  # [{"min": 26, "max": 30}, {"min": 39, "max": 42}] for multi-stat mods
+    stat_min = Column(Float, nullable=True)  # Legacy: use stat_ranges[0]["min"]
+    stat_max = Column(Float, nullable=True)  # Legacy: use stat_ranges[0]["max"]
     required_ilvl = Column(Integer, default=0)
     weight = Column(Integer, default=1000)
     mod_group = Column(String(100), nullable=True, index=True)  # "strength", "life", etc.

@@ -15,6 +15,9 @@ interface UnifiedCurrencyStashProps {
   handleCraft: (currency: string) => void
   getCurrencyIconUrl: (currency: string) => string
   getOmenIconUrl: (omen: string) => string
+  onCurrencyDragStart?: (currency: string) => void
+  onCurrencyDragEnd?: () => void
+  searchFilter?: (currencyName: string) => boolean
 }
 
 export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
@@ -25,7 +28,10 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
   setSelectedOmens,
   handleCraft,
   getCurrencyIconUrl,
-  getOmenIconUrl
+  getOmenIconUrl,
+  onCurrencyDragStart,
+  onCurrencyDragEnd,
+  searchFilter = () => true
 }) => {
   return (
     <div className="currency-stash-unified">
@@ -36,18 +42,16 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
 
       {/* Main Currency Grid - Unified Layout */}
       <div className="currency-unified-grid">
-        {/* Row 1: Abyssal Bones - Horizontal section at top */}
+        {/* Row 1: Abyssal Bones - Compact column layout */}
         <div className="currency-row bones-row">
           <div className="currency-row-label">Abyssal Bones</div>
-          <div className="currency-icons-row">
+          <div className="currency-icons-row bones-grid">
             {[
-              // Gnawed Bones (Max Item Level: 64)
-              'Gnawed Jawbone', 'Gnawed Rib', 'Gnawed Collarbone',
-              // Preserved Bones (Mid-tier)
-              'Preserved Jawbone', 'Preserved Rib', 'Preserved Collarbone', 'Preserved Cranium', 'Preserved Vertebrae',
-              // Ancient Bones (Min Modifier Level: 40)
-              'Ancient Jawbone', 'Ancient Rib', 'Ancient Collarbone'
-            ].map((currency) => {
+              'Ancient Collarbone', 'Gnawed Collarbone', 'Preserved Collarbone',
+              'Ancient Jawbone', 'Gnawed Jawbone', 'Preserved Jawbone',
+              'Ancient Rib', 'Gnawed Rib', 'Preserved Rib',
+              'Preserved Cranium', 'Preserved Vertebrae'
+            ].filter(searchFilter).map((currency) => {
               const isImplemented = categorizedCurrencies.bones.implemented.includes(currency)
               const isAvailable = availableCurrencies.includes(currency) && isImplemented
               const additionalMechanics = !isImplemented
@@ -71,6 +75,10 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
                   <div
                     className={`currency-slot ${!isAvailable ? 'currency-disabled' : ''}`}
                     onClick={() => isAvailable && handleCraft(currency)}
+                    draggable={isAvailable}
+                    onDragStart={() => isAvailable && onCurrencyDragStart?.(currency)}
+                    onDragEnd={() => onCurrencyDragEnd?.()}
+                    style={{ cursor: isAvailable ? 'grab' : 'not-allowed' }}
                   >
                     <img
                       src={getCurrencyIconUrl(currency)}
@@ -91,7 +99,7 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
         <div className="currency-row special-row">
           <div className="currency-row-label">Special</div>
           <div className="currency-icons-row">
-            {['Orb of Alchemy', 'Vaal Orb', 'Orb of Annulment', 'Orb of Fracturing', 'Divine Orb'].map((currency) => {
+            {['Orb of Alchemy', 'Vaal Orb', 'Divine Orb', 'Orb of Annulment', 'Orb of Fracturing'].filter(searchFilter).map((currency) => {
               const isImplemented = categorizedCurrencies.orbs.implemented.includes(currency)
               const isAvailable = availableCurrencies.includes(currency) && isImplemented
               const additionalMechanics = !isImplemented
@@ -115,6 +123,10 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
                   <div
                     className={`currency-slot ${!isAvailable ? 'currency-disabled' : ''}`}
                     onClick={() => isAvailable && handleCraft(currency)}
+                    draggable={isAvailable}
+                    onDragStart={() => isAvailable && onCurrencyDragStart?.(currency)}
+                    onDragEnd={() => onCurrencyDragEnd?.()}
+                    style={{ cursor: isAvailable ? 'grab' : 'not-allowed' }}
                   >
                     <img
                       src={getCurrencyIconUrl(currency)}
@@ -141,7 +153,7 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
               ['Regal Orb', 'Greater Regal Orb', 'Perfect Regal Orb'],
               ['Chaos Orb', 'Greater Chaos Orb', 'Perfect Chaos Orb'],
               ['Exalted Orb', 'Greater Exalted Orb', 'Perfect Exalted Orb']
-            ].map((family, familyIndex) => (
+            ].map(family => family.filter(searchFilter)).filter(family => family.length > 0).map((family, familyIndex) => (
               <div key={familyIndex} className="currency-family">
                 {family.map((currency) => {
                   const isImplemented = categorizedCurrencies.orbs.implemented.includes(currency)
@@ -167,6 +179,10 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
                       <div
                         className={`currency-slot ${!isAvailable ? 'currency-disabled' : ''}`}
                         onClick={() => isAvailable && handleCraft(currency)}
+                        draggable={isAvailable}
+                        onDragStart={() => isAvailable && onCurrencyDragStart?.(currency)}
+                        onDragEnd={() => onCurrencyDragEnd?.()}
+                        style={{ cursor: isAvailable ? 'grab' : 'not-allowed' }}
                       >
                         <img
                           src={getCurrencyIconUrl(currency)}
@@ -191,13 +207,26 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
             <div className="currency-row-label">Omens</div>
             <div className="currency-icons-row omens-grid">
               {[
+                // Exalted Omens
                 'Omen of Greater Exaltation', 'Omen of Sinistral Exaltation', 'Omen of Dextral Exaltation',
                 'Omen of Homogenising Exaltation', 'Omen of Catalysing Exaltation',
+                // Regal Omens
                 'Omen of Sinistral Coronation', 'Omen of Dextral Coronation', 'Omen of Homogenising Coronation',
+                // Chaos Omens
                 'Omen of Whittling', 'Omen of Sinistral Erasure', 'Omen of Dextral Erasure',
+                // Annulment Omens
                 'Omen of Greater Annulment', 'Omen of Sinistral Annulment', 'Omen of Dextral Annulment',
-                'Omen of Sinistral Alchemy', 'Omen of Dextral Alchemy', 'Omen of Corruption'
-              ].filter(omen => availableOmens.includes(omen)).map((omen) => {
+                // Alchemy Omens
+                'Omen of Sinistral Alchemy', 'Omen of Dextral Alchemy',
+                // Essence Omens
+                'Omen of Sinistral Crystallisation', 'Omen of Dextral Crystallisation',
+                // Desecration/Abyssal Omens
+                'Omen of Abyssal Echoes', 'Omen of Sinistral Necromancy', 'Omen of Dextral Necromancy',
+                'Omen of the Sovereign', 'Omen of the Liege', 'Omen of the Blackblooded',
+                'Omen of Putrefaction', 'Omen of Light',
+                // Corruption
+                'Omen of Corruption'
+              ].filter(omen => availableOmens.includes(omen) && searchFilter(omen)).map((omen) => {
                 const isActive = selectedOmens.includes(omen)
                 return (
                   <Tooltip
@@ -249,7 +278,7 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
                 const groupedEssences: Record<string, { base: string[], perfect: string[] }> = {}
                 const allEssences = [...categorizedCurrencies.essences.implemented, ...categorizedCurrencies.essences.disabled]
 
-                allEssences.forEach(essence => {
+                allEssences.filter(searchFilter).forEach(essence => {
                   let baseType = ''
                   if (essence.includes('the Body')) baseType = 'the Body'
                   else if (essence.includes('the Mind')) baseType = 'the Mind'
@@ -320,6 +349,10 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
                           <div
                             className={`currency-slot essence-base ${!availableCurrencies.includes(group.base[group.base.length - 1]) ? 'currency-disabled' : ''}`}
                             onClick={() => availableCurrencies.includes(group.base[group.base.length - 1]) && handleCraft(group.base[group.base.length - 1])}
+                            draggable={availableCurrencies.includes(group.base[group.base.length - 1])}
+                            onDragStart={() => availableCurrencies.includes(group.base[group.base.length - 1]) && onCurrencyDragStart?.(group.base[group.base.length - 1])}
+                            onDragEnd={() => onCurrencyDragEnd?.()}
+                            style={{ cursor: availableCurrencies.includes(group.base[group.base.length - 1]) ? 'grab' : 'not-allowed' }}
                           >
                             <img
                               src={getCurrencyIconUrl(group.base[0])}
@@ -351,6 +384,10 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
                           <div
                             className={`currency-slot essence-perfect ${!availableCurrencies.includes(group.perfect[0]) ? 'currency-disabled' : ''}`}
                             onClick={() => availableCurrencies.includes(group.perfect[0]) && handleCraft(group.perfect[0])}
+                            draggable={availableCurrencies.includes(group.perfect[0])}
+                            onDragStart={() => availableCurrencies.includes(group.perfect[0]) && onCurrencyDragStart?.(group.perfect[0])}
+                            onDragEnd={() => onCurrencyDragEnd?.()}
+                            style={{ cursor: availableCurrencies.includes(group.perfect[0]) ? 'grab' : 'not-allowed' }}
                           >
                             <img
                               src={getCurrencyIconUrl(group.perfect[0])}
@@ -394,6 +431,10 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
                         <div
                           className={`currency-slot essence-corrupted ${!isAvailable ? 'currency-disabled' : ''}`}
                           onClick={() => isAvailable && handleCraft(essence)}
+                          draggable={isAvailable}
+                          onDragStart={() => isAvailable && onCurrencyDragStart?.(essence)}
+                          onDragEnd={() => onCurrencyDragEnd?.()}
+                          style={{ cursor: isAvailable ? 'grab' : 'not-allowed' }}
                         >
                           <img
                             src={getCurrencyIconUrl(essence)}

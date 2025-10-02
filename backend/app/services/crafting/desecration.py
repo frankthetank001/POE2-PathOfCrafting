@@ -276,9 +276,11 @@ class BaseAbyssalBone(CraftingCurrency, ABC):
             mod_type=ModType.DESECRATED,  # Special desecrated type
             tier=base_modifier.tier,
             stat_text=base_modifier.stat_text,
+            stat_ranges=base_modifier.stat_ranges,
             stat_min=base_modifier.stat_min,
             stat_max=base_modifier.stat_max,
             current_value=base_modifier.current_value,
+            current_values=base_modifier.current_values,
             required_ilvl=base_modifier.required_ilvl,
             mod_group=f"desecrated_{base_modifier.mod_group}" if base_modifier.mod_group else None,
             applicable_items=base_modifier.applicable_items,
@@ -286,8 +288,16 @@ class BaseAbyssalBone(CraftingCurrency, ABC):
             is_exclusive=False
         )
 
-        # Apply value roll
-        if desecrated_mod.stat_min is not None and desecrated_mod.stat_max is not None:
+        # Apply value roll for hybrid modifiers (multiple stat ranges)
+        if desecrated_mod.stat_ranges and len(desecrated_mod.stat_ranges) > 0:
+            desecrated_mod.current_values = [
+                random.uniform(stat_range.min, stat_range.max)
+                for stat_range in desecrated_mod.stat_ranges
+            ]
+            # Set legacy current_value to first value for backwards compatibility
+            desecrated_mod.current_value = desecrated_mod.current_values[0]
+        # Fall back to legacy single value for older mods
+        elif desecrated_mod.stat_min is not None and desecrated_mod.stat_max is not None:
             desecrated_mod.current_value = random.uniform(
                 desecrated_mod.stat_min, desecrated_mod.stat_max
             )

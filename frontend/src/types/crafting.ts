@@ -12,15 +12,22 @@ export enum ModType {
   DESECRATED = 'desecrated',
 }
 
+export interface StatRange {
+  min: number
+  max: number
+}
+
 export interface ItemModifier {
   id?: number
   name: string
   mod_type: ModType
   tier: number
   stat_text: string
-  stat_min?: number
-  stat_max?: number
-  current_value?: number
+  stat_ranges?: StatRange[]  // Multiple ranges for hybrid mods
+  stat_min?: number  // Legacy: first range min
+  stat_max?: number  // Legacy: first range max
+  current_value?: number  // Legacy: first value
+  current_values?: number[]  // All rolled values for multi-stat mods
   required_ilvl?: number
   mod_group?: string
   tags?: string[]

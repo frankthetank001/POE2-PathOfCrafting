@@ -1,11 +1,12 @@
 /* Grid Crafting Simulator - 3 Column Layout */
 .grid-crafting-simulator {
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
   background: #0a0a0a;
   color: #e0e0e0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   position: relative;
+  overflow: hidden;
 }
 
 /* Global Tag Filters - Floating at Top */
@@ -15,22 +16,23 @@
   z-index: 1000;
   background: rgba(26, 26, 26, 0.95);
   backdrop-filter: blur(10px);
-  border-bottom: 2px solid #444;
-  padding: 0.75rem 1rem;
-  margin-bottom: 1rem;
+  border-bottom: 1px solid #444;
+  padding: 0.4rem 0.75rem;
+  margin-bottom: 0.5rem;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
 .global-tag-filters-content {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  gap: 0.75rem;
   max-width: 100%;
   flex-wrap: wrap;
 }
 
 .global-tag-filters-label {
   font-weight: 600;
+  font-size: 0.85rem;
   color: #d4af37;
   white-space: nowrap;
 }
@@ -38,18 +40,64 @@
 .global-tag-list {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.4rem;
   flex: 1;
   min-width: 0;
 }
 
+.search-container {
+  position: relative;
+  margin-left: auto;
+  min-width: 250px;
+}
+
+.mod-search-input {
+  width: 100%;
+  padding: 0.4rem 2rem 0.4rem 0.75rem;
+  background: rgba(30, 30, 30, 0.9);
+  border: 1px solid #555;
+  border-radius: 4px;
+  color: #fff;
+  font-size: 0.85rem;
+  transition: all 0.2s;
+}
+
+.mod-search-input:focus {
+  outline: none;
+  border-color: #d4af37;
+  box-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
+}
+
+.mod-search-input::placeholder {
+  color: #888;
+}
+
+.clear-search-btn {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #888;
+  font-size: 1rem;
+  cursor: pointer;
+  padding: 0.2rem;
+  line-height: 1;
+  transition: color 0.2s;
+}
+
+.clear-search-btn:hover {
+  color: #d4af37;
+}
+
 .global-tag-item {
-  padding: 0.25rem 0.5rem;
+  padding: 0.2rem 0.4rem;
   background: rgba(68, 68, 68, 0.8);
   color: #ccc;
-  border-radius: 4px;
+  border-radius: 3px;
   cursor: pointer;
-  font-size: 0.8rem;
+  font-size: 0.75rem;
   font-weight: 500;
   transition: all 0.2s;
   border: 1px solid transparent;
@@ -128,20 +176,20 @@
 
 .three-column-layout {
   display: flex;
-  height: calc(100vh - 120px);
-  max-height: calc(100vh - 120px);
+  height: calc(100vh - 110px);
+  max-height: calc(100vh - 110px);
   max-width: 100%;
-  gap: 1rem;
-  padding: 1rem;
+  gap: 0.5rem;
+  padding: 0.5rem;
   box-sizing: border-box;
   overflow: hidden;
 }
 
 /* Left Panel - Available Mods (flexible) */
 .left-panel {
-  flex: 1;
-  min-width: 300px;
-  max-width: 500px;
+  flex: 1.3;
+  min-width: 320px;
+  height: 100%;
   background: #1a1a1a;
   border: 2px solid #444;
   border-radius: 8px;
@@ -161,21 +209,25 @@
 }
 
 .mods-pool-panel {
-  height: 100%;
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 0.75rem;
   display: flex;
   flex-direction: column;
-  padding: 1rem;
-  overflow: hidden;
+  gap: 0.75rem;
 }
 
 .mods-pool-header {
-  margin-bottom: 1rem;
+  display: none;
 }
 
 .mods-pool-header h3 {
   color: #d4af37;
-  font-size: 1.2rem;
-  margin: 0 0 0.5rem 0;
+  font-size: 1rem;
+  margin: 0 0 0.25rem 0;
 }
 
 .mods-pool-stats {
@@ -203,7 +255,7 @@
 }
 
 .mods-pool-filters {
-  margin-bottom: 1rem;
+  /* Grid auto-sized */
 }
 
 .search-input {
@@ -222,32 +274,45 @@
 }
 
 .mods-pool-columns {
-  display: flex;
-  gap: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+  min-height: 0;
   flex: 1;
   overflow: hidden;
 }
 
 .mods-pool-column {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto 1fr;
+  min-width: 0;
   min-height: 0;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 8px;
+  border: 1px solid #333;
+  overflow: hidden;
 }
 
 .column-title {
   color: #d4af37;
-  font-size: 1rem;
-  margin: 0 0 0.75rem 0;
-  padding-bottom: 0.5rem;
-  border-bottom: 1px solid #444;
+  font-size: 0.75rem;
+  font-weight: 600;
+  margin: 0;
+  padding: 0.4rem;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(212, 175, 55, 0.05));
+  border-bottom: 1px solid #d4af37;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
 }
 
 .mods-pool-list {
-  flex: 1;
+  padding: 0.35rem;
+  font-size: 0.75rem;
   overflow-y: auto;
-  padding-right: 0.25rem;
+  overflow-x: hidden;
+  min-height: 0;
 }
 
 .mods-pool-list::-webkit-scrollbar {
@@ -270,20 +335,62 @@
 
 .pool-mod-group {
   background: #0f0f0f;
-  border-radius: 6px;
-  margin-bottom: 0.5rem;
+  border-radius: 3px;
+  margin-bottom: 0.2rem;
   overflow: hidden;
+  position: relative;
+}
+
+.pool-mod-group.essence-only {
+  border-left: 3px solid #9c4dd4;
+  background: rgba(156, 77, 212, 0.1);
+}
+
+.pool-mod-group.essence-only::before {
+  content: "ESSENCE";
+  position: absolute;
+  top: 0.2rem;
+  right: 0.3rem;
+  font-size: 0.5rem;
+  font-weight: 700;
+  color: #9c4dd4;
+  background: rgba(156, 77, 212, 0.2);
+  padding: 0.1rem 0.3rem;
+  border-radius: 2px;
+  letter-spacing: 0.5px;
+  z-index: 10;
+}
+
+.pool-mod-group.desecrated-only {
+  border-left: 3px solid #44ff88;
+  background: rgba(68, 255, 136, 0.1);
+}
+
+.pool-mod-group.desecrated-only::before {
+  content: "DESECRATED";
+  position: absolute;
+  top: 0.2rem;
+  right: 0.3rem;
+  font-size: 0.5rem;
+  font-weight: 700;
+  color: #44ff88;
+  background: rgba(68, 255, 136, 0.2);
+  padding: 0.1rem 0.3rem;
+  border-radius: 2px;
+  letter-spacing: 0.5px;
+  z-index: 10;
 }
 
 .pool-mod-group-header {
-  padding: 0.5rem 0.75rem;
+  padding: 0.25rem 0.35rem;
   border-left: 3px solid transparent;
   display: flex;
   justify-content: space-between;
   align-items: center;
-  min-height: 40px;
+  font-size: 0.7rem;
+  min-height: 32px;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.35rem;
 }
 
 /* When text is long, allow wrapping to new line */
@@ -351,7 +458,7 @@
 .pool-mod-stat-main {
   font-weight: 500;
   color: #e0e0e0;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   flex: 1;
   word-wrap: break-word;
   min-width: 0; /* Allow text to shrink */
@@ -377,8 +484,10 @@
 
 /* Center Panel - Flexible with Tabs */
 .center-panel {
-  flex: 1;
+  flex: 0.7;
   min-width: 0;
+  max-width: 420px;
+  height: 100%;
   display: flex;
   flex-direction: column;
 }
@@ -387,7 +496,7 @@
   background: #1a1a1a;
   border: 2px solid #444;
   border-radius: 8px;
-  flex: 1;
+  height: 100%;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -485,11 +594,28 @@
 
 .item-display {
   background: #2a2a2a;
-  border: 2px solid #444;
-  border-radius: 8px;
-  padding: 1.5rem;
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 0.5rem;
   flex: 1;
   overflow-y: auto;
+  font-size: 0.8rem;
+}
+
+/* Rarity-based borders */
+.item-display.rarity-normal {
+  border: 3px solid #c8c8c8;
+  box-shadow: 0 0 10px rgba(200, 200, 200, 0.3);
+}
+
+.item-display.rarity-magic {
+  border: 3px solid #8888ff;
+  box-shadow: 0 0 10px rgba(136, 136, 255, 0.4);
+}
+
+.item-display.rarity-rare {
+  border: 3px solid #ffff77;
+  box-shadow: 0 0 10px rgba(255, 255, 119, 0.4);
 }
 
 .item-header {
@@ -502,7 +628,7 @@
 }
 
 .item-name {
-  font-size: 1.5rem;
+  font-size: 0.95rem;
   font-weight: bold;
   margin: 0;
 }
@@ -576,6 +702,7 @@
   margin: 0.25rem 0;
   border-radius: 4px;
   font-size: 0.95rem;
+  position: relative;
 }
 
 .mod-line.prefix {
@@ -596,8 +723,14 @@
   box-shadow: 0 0 8px rgba(68, 255, 136, 0.2);
 }
 
+.mod-content {
+  flex: 1;
+  min-width: 0;
+}
+
 .mod-stat {
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.1rem;
+  font-size: 0.7rem;
 }
 
 .mod-metadata {
@@ -621,6 +754,58 @@
   font-style: italic;
 }
 
+.mod-remove-btn {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  background: rgba(220, 53, 69, 0.2);
+  border: 1px solid #dc3545;
+  color: #ff6666;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  font-size: 0.7rem;
+  font-weight: bold;
+  transition: all 0.2s;
+  padding: 0;
+  line-height: 1;
+  opacity: 0.6;
+}
+
+.mod-remove-btn:hover {
+  background: rgba(220, 53, 69, 0.6);
+  border-color: #e55666;
+  transform: scale(1.2);
+  opacity: 1;
+}
+
+.mod-remove-btn:active {
+  transform: scale(0.95);
+}
+
+/* Drag and drop visual feedback */
+.pool-mod-group-header[draggable="true"] {
+  cursor: grab;
+}
+
+.pool-mod-group-header[draggable="true"]:active {
+  cursor: grabbing;
+}
+
+.item-display {
+  transition: all 0.2s ease;
+}
+
+.item-display[data-drag-over="true"] {
+  background: rgba(212, 175, 55, 0.1);
+  border: 2px dashed #d4af37 !important;
+  box-shadow: 0 0 20px rgba(212, 175, 55, 0.3);
+}
+
 .empty-mods {
   text-align: center;
   padding: 2rem;
@@ -634,15 +819,16 @@
 }
 
 .reset-button, .undo-button {
-  padding: 0.75rem 1.5rem;
+  padding: 0.4rem 0.8rem;
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
   font-weight: 500;
+  font-size: 0.75rem;
   transition: all 0.2s;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.3rem;
 }
 
 .reset-button {
@@ -962,9 +1148,9 @@
 
 /* Right Panel - Crafting Controls (flexible) */
 .right-panel {
-  flex: 1;
-  min-width: 300px;
-  max-width: 500px;
+  flex: 1.3;
+  min-width: 320px;
+  height: 100%;
   transition: all 0.3s ease;
   position: relative;
 }
@@ -1030,11 +1216,13 @@
   background: #1a1a1a;
   border: 2px solid #444;
   border-radius: 8px;
-  padding: 1rem;
+  padding: 0.75rem;
   height: 100%;
   display: flex;
   flex-direction: column;
-  overflow: hidden;
+  overflow-y: auto;
+  width: 100%;
+  margin: 0;
 }
 
 .controls-header {
@@ -1194,30 +1382,48 @@
   justify-content: center;
 }
 
-/* Messages */
+/* Messages - Toast style */
 .message {
-  margin-top: 1rem;
-  padding: 1rem;
+  position: fixed;
+  top: 80px;
+  right: 20px;
+  padding: 0.75rem 1.25rem;
   border-radius: 8px;
   font-weight: 500;
   text-align: center;
+  z-index: 9999;
+  min-width: 250px;
+  max-width: 400px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(400px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
 }
 
 .message.success {
-  background: rgba(0, 255, 0, 0.1);
-  border: 1px solid #00ff00;
+  background: rgba(0, 255, 0, 0.15);
+  border: 2px solid #00ff00;
   color: #00ff88;
 }
 
 .message.error {
-  background: rgba(255, 0, 0, 0.1);
-  border: 1px solid #ff4444;
+  background: rgba(255, 0, 0, 0.15);
+  border: 2px solid #ff4444;
   color: #ff6666;
 }
 
 .message.info {
-  background: rgba(100, 149, 237, 0.1);
-  border: 1px solid #6495ed;
+  background: rgba(100, 149, 237, 0.15);
+  border: 2px solid #6495ed;
   color: #87ceeb;
 }
 
@@ -1391,10 +1597,14 @@
   background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
   border: 2px solid #444;
   border-radius: 8px;
-  padding: 1rem;
+  padding: 0.25rem;
   height: 100%;
-  max-height: calc(100vh - 200px);
   overflow-y: auto;
+  position: relative;
+  width: 100%;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
 }
 
 .currency-stash-header {
@@ -1415,18 +1625,20 @@
 .currency-unified-grid {
   display: flex;
   flex-direction: column;
-  gap: 1rem;
+  gap: 0.5rem;
+  flex: 1;
+  overflow-y: auto;
 }
 
 /* Currency Row Structure */
 .currency-row {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
+  gap: 0.25rem;
   min-height: auto;
-  padding: 0.75rem;
+  padding: 0.25rem;
   background: rgba(255, 255, 255, 0.03);
-  border-radius: 6px;
+  border-radius: 4px;
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
@@ -1445,26 +1657,27 @@
 .currency-icons-row {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: 0.4rem;
   flex: 1;
   align-items: center;
+  justify-content: flex-start;
 }
 
 /* Currency Families (for orbs) */
 .currency-family {
   display: flex;
-  gap: 0.25rem;
+  gap: 0.3rem;
   align-items: center;
-  padding: 0.25rem;
-  background: rgba(0, 0, 0, 0.2);
+  padding: 0.3rem;
+  background: rgba(0, 0, 0, 0.3);
   border-radius: 4px;
-  border: 1px solid rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 /* Individual Currency Slots */
 .currency-slot {
-  width: 48px;
-  height: 48px;
+  width: 40px !important;
+  height: 40px !important;
   border: 2px solid #666;
   border-radius: 4px;
   background: linear-gradient(135deg, #1e1e1e 0%, #2a2a2a 100%);
@@ -1474,12 +1687,17 @@
   cursor: pointer;
   transition: all 0.2s ease;
   position: relative;
+  user-select: none;
 }
 
 .currency-slot:hover {
   border-color: #d4af37;
   box-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
   transform: translateY(-2px);
+}
+
+.currency-slot:active {
+  cursor: grabbing;
 }
 
 .currency-slot.currency-disabled {
@@ -1495,14 +1713,14 @@
 }
 
 .currency-icon {
-  width: 40px;
-  height: 40px;
+  width: 32px !important;
+  height: 32px !important;
   object-fit: contain;
 }
 
 .omen-icon {
-  width: 36px;
-  height: 36px;
+  width: 28px !important;
+  height: 28px !important;
 }
 
 /* Essences and Bones Row */
@@ -1555,6 +1773,26 @@
   align-items: center;
 }
 
+/* Bones Grid - Compact column layout */
+.bones-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 0.35rem;
+  max-width: 100%;
+}
+
+@media (max-width: 1200px) {
+  .bones-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+}
+
+@media (max-width: 800px) {
+  .bones-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
 /* Omens Grid */
 .omens-grid {
   display: grid;
@@ -1564,8 +1802,8 @@
 }
 
 .omen-slot {
-  width: 42px;
-  height: 42px;
+  width: 36px !important;
+  height: 36px !important;
 }
 
 /* Responsive Design */
@@ -1579,17 +1817,17 @@
 @media (max-width: 800px) {
   .currency-family {
     flex-direction: column;
-    gap: 0.125rem;
+    gap: 0.1rem;
   }
 
   .currency-slot {
-    width: 40px;
-    height: 40px;
+    width: 24px;
+    height: 24px;
   }
 
   .currency-icon {
-    width: 32px;
-    height: 32px;
+    width: 18px;
+    height: 18px;
   }
 }
 
@@ -1909,8 +2147,22 @@
 }
 
 .bones-row .currency-icons-row {
+  display: grid;
+  grid-template-columns: repeat(6, 50px);
+  gap: 8px;
   justify-content: flex-start;
-  flex-wrap: wrap;
+}
+
+@media (max-width: 1200px) {
+  .bones-row .currency-icons-row {
+    grid-template-columns: repeat(4, 50px);
+  }
+}
+
+@media (max-width: 800px) {
+  .bones-row .currency-icons-row {
+    grid-template-columns: repeat(3, 50px);
+  }
 }
 
 /* Essences Row - Wider layout with corrupted essences */
@@ -2220,4 +2472,82 @@
   .essence-tier-icons {
     gap: 0.2rem;
   }
+}
+
+/* Special Modifier Sections (Essence & Desecrated) - Added for better visibility */
+.special-mods-section {
+  display: none;
+}
+
+.special-mods-section.essence-section {
+  border-color: #9c4dd4;
+  background: rgba(156, 77, 212, 0.05);
+}
+
+.special-mods-section.desecrated-section {
+  border-color: #44ff88;
+  background: rgba(68, 255, 136, 0.05);
+}
+
+.special-section-title {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #d4af37;
+  margin: 0 0 0.5rem 0;
+  padding: 0.4rem;
+  background: linear-gradient(135deg, rgba(212, 175, 55, 0.15), rgba(212, 175, 55, 0.05));
+  border-bottom: 1px solid #d4af37;
+  text-align: center;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.special-mods-columns {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.75rem;
+}
+
+.special-mods-column {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 6px;
+  border: 1px solid #444;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.special-column-title {
+  font-size: 0.7rem;
+  font-weight: 600;
+  color: #d4af37;
+  margin: 0;
+  padding: 0.35rem;
+  background: rgba(255, 255, 255, 0.05);
+  border-bottom: 1px solid #555;
+  text-align: center;
+}
+
+.special-mods-column .mods-pool-list {
+  padding: 0.5rem;
+}
+
+/* Fix overall scrolling for entire mods panel */
+.mods-pool-panel::-webkit-scrollbar {
+  width: 8px;
+}
+
+.mods-pool-panel::-webkit-scrollbar-track {
+  background: #1a1a1a;
+}
+
+.mods-pool-panel::-webkit-scrollbar-thumb {
+  background: #555;
+  border-radius: 4px;
+}
+
+.mods-pool-panel::-webkit-scrollbar-thumb:hover {
+  background: #666;
 }

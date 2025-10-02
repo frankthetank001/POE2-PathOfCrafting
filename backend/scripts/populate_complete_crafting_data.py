@@ -122,8 +122,8 @@ def load_modifiers(db: Session):
     seen_keys = set()
 
     for mod_data in modifiers_data:
-        # Create unique key from name and mod_type
-        mod_key = (mod_data["name"], mod_data["mod_type"])
+        # Create unique key from name, mod_type, and tier (since same name can have different effects)
+        mod_key = (mod_data["name"], mod_data["mod_type"], mod_data["tier"])
 
         # Skip if we've already seen this combination in this batch
         if mod_key in seen_keys:
@@ -134,7 +134,8 @@ def load_modifiers(db: Session):
         # Check if modifier already exists in database
         existing = db.query(Modifier).filter(
             Modifier.name == mod_data["name"],
-            Modifier.mod_type == mod_data["mod_type"]
+            Modifier.mod_type == mod_data["mod_type"],
+            Modifier.tier == mod_data["tier"]
         ).first()
         if existing:
             continue
@@ -144,6 +145,7 @@ def load_modifiers(db: Session):
             mod_type=mod_data["mod_type"],
             tier=mod_data["tier"],
             stat_text=mod_data["stat_text"],
+            stat_ranges=mod_data.get("stat_ranges", []),
             stat_min=mod_data.get("stat_min"),
             stat_max=mod_data.get("stat_max"),
             required_ilvl=mod_data.get("required_ilvl", 0),
@@ -179,6 +181,7 @@ def load_desecrated_modifiers(db: Session):
             mod_type=mod_data["mod_type"],
             tier=mod_data["tier"],
             stat_text=mod_data["stat_text"],
+            stat_ranges=mod_data.get("stat_ranges", []),
             stat_min=mod_data.get("stat_min"),
             stat_max=mod_data.get("stat_max"),
             required_ilvl=mod_data["required_ilvl"],

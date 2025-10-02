@@ -71,11 +71,15 @@ class DataDrivenEssence(CraftingCurrency):
 
     def can_apply(self, item: CraftableItem) -> tuple[bool, Optional[str]]:
         """Check if essence can be applied to item based on tier, mechanic, and item type."""
+        print(f"[ESSENCE DEBUG] {self.name}: mechanic='{self.essence_info.mechanic}' item_rarity={item.rarity}")
+        logger.debug(f"Checking {self.name} can_apply: mechanic={self.essence_info.mechanic}, item_rarity={item.rarity}")
+
         # First check rarity requirements
         if self.essence_info.mechanic == "magic_to_rare":
-            # Lesser/Normal/Greater essences: require Magic items or can upgrade from Normal
-            if item.rarity not in [ItemRarity.NORMAL, ItemRarity.MAGIC]:
-                return False, f"{self.name} can only be applied to Normal or Magic items"
+            # Lesser/Normal/Greater essences: require Magic items only
+            if item.rarity != ItemRarity.MAGIC:
+                logger.debug(f"{self.name} rejected: requires Magic item, got {item.rarity}")
+                return False, f"{self.name} can only be applied to Magic items"
         elif self.essence_info.mechanic == "remove_add_rare":
             # Perfect/Corrupted essences: work on Rare items with existing mods
             if item.rarity != ItemRarity.RARE:
@@ -121,16 +125,15 @@ class DataDrivenEssence(CraftingCurrency):
         self, item: CraftableItem, manager: ItemStateManager, modifier_pool: ModifierPool
     ) -> tuple[bool, str, CraftableItem]:
         """Apply Lesser/Normal/Greater essence - upgrades Magic to Rare with guaranteed modifier."""
-        # Upgrade to Magic if Normal
-        if item.rarity == ItemRarity.NORMAL:
-            manager.upgrade_rarity(ItemRarity.MAGIC)
+        # This mechanic only works on Magic items (validation already done in can_apply)
+        if item.rarity != ItemRarity.MAGIC:
+            return False, f"{self.name} requires a Magic item", item
 
-        # Upgrade to Rare if Magic
-        if item.rarity == ItemRarity.MAGIC:
-            manager.upgrade_rarity(ItemRarity.RARE)
+        # Upgrade to Rare
+        manager.upgrade_rarity(ItemRarity.RARE)
 
         # Get guaranteed modifier from item-specific effects
-        guaranteed_mod = self._get_guaranteed_modifier_from_effects(item)
+        guaranteed_mod = self._get_guaranteed_modifier_from_effects(item, modifier_pool)
         if not guaranteed_mod:
             return False, f"No suitable {self.essence_info.essence_type} modifiers found for {item.base_category}", item
 
@@ -170,7 +173,7 @@ class DataDrivenEssence(CraftingCurrency):
             manager.upgrade_rarity(ItemRarity.RARE)
 
         # Get guaranteed modifier from item-specific effects
-        guaranteed_mod = self._get_guaranteed_modifier_from_effects(item)
+        guaranteed_mod = self._get_guaranteed_modifier_from_effects(item, modifier_pool)
         if not guaranteed_mod:
             return False, f"No suitable {self.essence_info.essence_type} modifiers found for {item.base_category}", item
 
@@ -182,8 +185,12 @@ class DataDrivenEssence(CraftingCurrency):
         message = f"Applied {self.name}, removed {removed_mod_name}, added {guaranteed_mod.name}"
         return True, message, item
 
-    def _get_guaranteed_modifier_from_effects(self, item: CraftableItem) -> Optional[ItemModifier]:
-        """Get the guaranteed modifier based on item type and essence effects."""
+    def _get_guaranteed_modifier_from_effects(self, item: CraftableItem, modifier_pool: ModifierPool = None) -> Optional[ItemModifier]:
+        """Get the guaranteed modifier based on item type and essence effects.
+
+        Tries to match essence effects to existing modifiers first. If no match is found,
+        creates an essence-specific modifier.
+        """
         # Find matching effect for this item type
         matching_effect = None
         for effect in self.essence_info.item_effects:
@@ -195,9 +202,20 @@ class DataDrivenEssence(CraftingCurrency):
             logger.warning(f"No matching effect found for {item.base_category} in {self.name}")
             return None
 
-        # Create modifier from effect
+        # Try to find an existing modifier with matching stat_text
+        if modifier_pool:
+            existing_mod = self._find_matching_modifier(matching_effect, item, modifier_pool)
+            if existing_mod:
+                # Roll the value for the matched modifier
+                if existing_mod.stat_min is not None and existing_mod.stat_max is not None:
+                    rolled_mod = existing_mod.model_copy()
+                    rolled_mod.current_value = random.uniform(existing_mod.stat_min, existing_mod.stat_max)
+                    return rolled_mod
+                return existing_mod
+
+        # No matching modifier found - create essence-specific modifier
         mod = ItemModifier(
-            name=f"{self.essence_info.essence_type.title()} {matching_effect.modifier_type}",
+            name=f"Essence {self.essence_info.essence_type.title()} Modifier",
             mod_type=ModType.PREFIX if matching_effect.modifier_type == "prefix" else ModType.SUFFIX,
             tier=self._get_tier_number(),
             stat_text=matching_effect.effect_text,
@@ -207,23 +225,75 @@ class DataDrivenEssence(CraftingCurrency):
             required_ilvl=0,  # Essences ignore item level requirements
             mod_group=f"essence_{self.essence_info.essence_type}",
             applicable_items=[item.base_category],
-            tags=[self.essence_info.essence_type, "essence_guaranteed"]
+            tags=[self.essence_info.essence_type, "essence_guaranteed"],
+            is_exclusive=True  # Mark as essence-specific
         )
 
         return mod
 
+    def _find_matching_modifier(self, effect, item: CraftableItem, modifier_pool: ModifierPool) -> Optional[ItemModifier]:
+        """Try to find an existing modifier that matches the essence effect."""
+        # Get all mods for this item
+        all_prefixes = modifier_pool.get_all_mods_for_category(item.base_category, "prefix", item, exclude_exclusive=False)
+        all_suffixes = modifier_pool.get_all_mods_for_category(item.base_category, "suffix", item, exclude_exclusive=False)
+
+        all_mods = all_prefixes + all_suffixes
+
+        # Normalize the effect text to match mod templates (replace specific values with {})
+        import re
+        normalized_effect = re.sub(r'\d+(\.\d+)?', '{}', effect.effect_text)
+
+        # Look for stat_text match with matching values
+        for mod in all_mods:
+            # Check if stat_text matches (after normalization)
+            if mod.stat_text == normalized_effect or mod.stat_text == effect.effect_text:
+                # Check if the value ranges match
+                if effect.value_min is not None and effect.value_max is not None:
+                    if mod.stat_min == effect.value_min and mod.stat_max == effect.value_max:
+                        return mod
+                else:
+                    # No value specified, just match by stat_text
+                    return mod
+
+        return None
+
     def _item_matches_effect_type(self, item: CraftableItem, effect_item_type: str) -> bool:
         """Check if item matches the effect's item type specification."""
-        # Map item categories to effect item types
+        # Get item slot from base_name
+        from app.models.base import SessionLocal
+        from app.models.crafting import BaseItem
+
+        item_slot = None
+        session = SessionLocal()
+        try:
+            base_item = session.query(BaseItem).filter(BaseItem.name == item.base_name).first()
+            if base_item:
+                item_slot = base_item.slot
+        finally:
+            session.close()
+
+        # Map slots to effect item types
+        slot_mapping = {
+            "belt": ["Belt"],
+            "body_armour": ["Body Armour", "Armour"],
+            "helmet": ["Helmet", "Armour"],
+            "gloves": ["Gloves", "Armour"],
+            "boots": ["Boots", "Armour"],
+            "shield": ["Shield", "Armour"],
+            "ring": ["Ring", "Jewellery"],
+            "amulet": ["Amulet", "Jewellery"],
+            "quiver": ["Quiver"],
+            "focus": ["Focus", "Wand"],
+        }
+
+        # Try slot-based matching first
+        if item_slot:
+            item_types = slot_mapping.get(item_slot.lower(), [])
+            if effect_item_type in item_types:
+                return True
+
+        # Fall back to category matching for weapons and other items
         category_mapping = {
-            "Belt": ["Belt"],
-            "Body Armour": ["Body Armour", "Armour"],
-            "Helmet": ["Helmet", "Armour"],
-            "Gloves": ["Gloves", "Armour"],
-            "Boots": ["Boots", "Armour"],
-            "Shield": ["Shield", "Armour"],
-            "Ring": ["Ring", "Jewellery"],
-            "Amulet": ["Amulet", "Jewellery"],
             "One Handed Sword": ["One Handed Melee Weapon", "Martial Weapon"],
             "Two Handed Sword": ["Two Handed Melee Weapon", "Martial Weapon"],
             "Bow": ["Bow", "Martial Weapon"],
@@ -231,20 +301,6 @@ class DataDrivenEssence(CraftingCurrency):
             "Wand": ["Wand", "Focus"],
             "Staff": ["Staff"],
             "Sceptre": ["Sceptre"],
-            "Quiver": ["Quiver"],
-            # Additional categories for different armour types
-            "str_armour": ["Body Armour", "Armour"],
-            "dex_armour": ["Body Armour", "Armour"],
-            "int_armour": ["Body Armour", "Armour"],
-            "str_helmet": ["Helmet", "Armour"],
-            "dex_helmet": ["Helmet", "Armour"],
-            "int_helmet": ["Helmet", "Armour"],
-            "str_gloves": ["Gloves", "Armour"],
-            "dex_gloves": ["Gloves", "Armour"],
-            "int_gloves": ["Gloves", "Armour"],
-            "str_boots": ["Boots", "Armour"],
-            "dex_boots": ["Boots", "Armour"],
-            "int_boots": ["Boots", "Armour"],
         }
 
         item_types = category_mapping.get(item.base_category, [item.base_category])

@@ -25,15 +25,22 @@ class ModifierValue(BaseModel):
     max_value: float
 
 
+class StatRange(BaseModel):
+    min: float
+    max: float
+
+
 class ItemModifier(BaseModel):
     id: Optional[int] = None
     name: str
     mod_type: ModType
     tier: int
     stat_text: str
-    stat_min: Optional[float] = None
-    stat_max: Optional[float] = None
-    current_value: Optional[float] = None
+    stat_ranges: List[StatRange] = Field(default_factory=list)  # Multiple ranges for hybrid mods
+    stat_min: Optional[float] = None  # Legacy: first range min
+    stat_max: Optional[float] = None  # Legacy: first range max
+    current_value: Optional[float] = None  # Legacy: first value
+    current_values: Optional[List[float]] = None  # All rolled values for multi-stat mods
     required_ilvl: Optional[int] = None
     mod_group: Optional[str] = None
     applicable_items: List[str] = Field(default_factory=list)
