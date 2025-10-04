@@ -107,7 +107,7 @@
     "rarity": "rare",
     "mechanic_class": "RegalMechanic",
     "config_data": {
-      "min_mod_level": 70
+      "min_mod_level": 45
     }
   },
   {
@@ -138,7 +138,7 @@
     "rarity": "very_rare",
     "mechanic_class": "ExaltedMechanic",
     "config_data": {
-      "min_mod_level": 70
+      "min_mod_level": 45
     }
   },
   {
@@ -169,7 +169,7 @@
     "rarity": "very_rare",
     "mechanic_class": "ChaosMechanic",
     "config_data": {
-      "min_mod_level": 70
+      "min_mod_level": 45
     }
   },
   {

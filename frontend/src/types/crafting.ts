@@ -31,6 +31,19 @@ export interface ItemModifier {
   required_ilvl?: number
   mod_group?: string
   tags?: string[]
+  is_desecrated?: boolean  // Flag for desecrated mods (set by filter_mod_tags)
+  is_unrevealed?: boolean  // True if this is an unrevealed desecrated modifier
+  unrevealed_id?: string  // ID linking to UnrevealedModifier metadata
+}
+
+export interface UnrevealedModifier {
+  id: string
+  mod_type: ModType
+  bone_type: string
+  bone_part: string
+  min_modifier_level?: number
+  required_boss_tag?: string
+  has_abyssal_echoes?: boolean
 }
 
 export interface ItemBase {
@@ -56,6 +69,7 @@ export interface CraftableItem {
   implicit_mods: ItemModifier[]
   prefix_mods: ItemModifier[]
   suffix_mods: ItemModifier[]
+  unrevealed_mods: UnrevealedModifier[]
 
   corrupted: boolean
   base_stats: Record<string, number>

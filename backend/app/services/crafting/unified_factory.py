@@ -125,8 +125,17 @@ class UnifiedCraftingFactory:
                 logger.warning(f"No omen configuration found for: {omen_name}")
                 continue
 
-            # Check if omen affects this currency
-            if omen_config.affected_currency != currency_name:
+            # Check if omen affects this currency (support variants like "Perfect Exalted Orb")
+            # Match if affected_currency is contained in currency_name OR exact match
+            affected = omen_config.affected_currency
+            is_match = affected == currency_name or affected in currency_name
+
+            # Special case: Check if this is a desecration currency (bone) and omen affects "Desecration"
+            if not is_match and affected == "Desecration":
+                bone_config = get_bone_config(currency_name)
+                is_match = bone_config is not None
+
+            if not is_match:
                 logger.warning(f"Omen {omen_name} does not affect {currency_name}")
                 continue
 

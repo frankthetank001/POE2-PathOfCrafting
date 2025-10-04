@@ -409,6 +409,41 @@ class AnnulmentMechanic(CraftingMechanic):
         return True, success_message, manager.get_item()
 
 
+class ScouringMechanic(CraftingMechanic):
+    """Orb of Scouring: Removes all modifiers from an item, making it Normal."""
+
+    def can_apply(self, item: CraftableItem) -> Tuple[bool, Optional[str]]:
+        # Can apply to any item (Normal, Magic, or Rare)
+        return True, None
+
+    def apply(
+        self, item: CraftableItem, modifier_pool: ModifierPool
+    ) -> Tuple[bool, str, CraftableItem]:
+        can_apply, error = self.can_apply(item)
+        if not can_apply:
+            return False, error or "Cannot apply", item
+
+        manager = ItemStateManager(item)
+
+        # Remove all modifiers
+        total_removed = item.total_explicit_mods
+
+        # Clear all prefixes
+        while item.prefix_mods:
+            manager.remove_prefix(0)
+
+        # Clear all suffixes
+        while item.suffix_mods:
+            manager.remove_suffix(0)
+
+        # Set item to Normal rarity
+        manager.set_rarity(ItemRarity.NORMAL)
+
+        success_message = f"Removed all {total_removed} modifiers (item is now Normal)"
+
+        return True, success_message, manager.get_item()
+
+
 class FracturingMechanic(CraftingMechanic):
     """Fracturing: Makes one modifier permanent and unchangeable."""
 
@@ -598,35 +633,69 @@ class DesecrationMechanic(CraftingMechanic):
 
         manager = ItemStateManager(item)
 
-        # Get desecrated modifiers for this bone type
-        desecrated_mods = self._get_desecrated_modifiers(modifier_pool)
-
-        if not desecrated_mods:
-            return False, f"No desecrated modifiers available for {self.bone_type}", item
-
-        # Select a random desecrated modifier
+        # Import UnrevealedModifier
+        from app.schemas.crafting import UnrevealedModifier
+        import uuid
         import random
-        selected_mod = random.choice(desecrated_mods)
 
-        # Create the desecrated modifier
-        desecrated_modifier = self._create_desecrated_modifier(selected_mod)
+        # Desecration uses entire mod pool (excluding essence-only)
+        # Boss omens only apply when using OmenModifiedMechanic
+        min_mod_level = self.config.get('min_modifier_level')
+        prefix_mods = modifier_pool.get_eligible_mods(
+            item.base_category, item.item_level, "prefix", item,
+            min_mod_level=min_mod_level, exclude_essence=True
+        )
+        suffix_mods = modifier_pool.get_eligible_mods(
+            item.base_category, item.item_level, "suffix", item,
+            min_mod_level=min_mod_level, exclude_essence=True
+        )
 
-        success_message = f"Added desecrated modifier: {selected_mod.name}"
+        # Choose mod type based on availability AND available slots
+        can_add_prefix = item.can_add_prefix and prefix_mods
+        can_add_suffix = item.can_add_suffix and suffix_mods
 
-        # If item has 6 modifiers (full), must remove one first (according to design document)
-        if item.total_explicit_mods >= 6:
-            all_explicit = item.prefix_mods + item.suffix_mods
-            mod_to_remove = random.choice(all_explicit)
-            if mod_to_remove.mod_type == ModType.PREFIX:
-                index = item.prefix_mods.index(mod_to_remove)
-                manager.remove_modifier(ModType.PREFIX, index)
-            else:
-                index = item.suffix_mods.index(mod_to_remove)
-                manager.remove_modifier(ModType.SUFFIX, index)
-            success_message = f"Removed {mod_to_remove.name}, added desecrated modifier: {selected_mod.name}"
+        if can_add_prefix and can_add_suffix:
+            mod_type = random.choice([ModType.PREFIX, ModType.SUFFIX])
+        elif can_add_prefix:
+            mod_type = ModType.PREFIX
+        elif can_add_suffix:
+            mod_type = ModType.SUFFIX
+        else:
+            return False, f"Item has no room for additional modifiers", item
 
-        # Add the desecrated modifier as an explicit modifier
-        manager.add_modifier(desecrated_modifier)
+        # Create unrevealed modifier metadata
+        # Note: Omen of Abyssal Echoes is NOT stored here - it's consumed when revealing
+        unrevealed_id = str(uuid.uuid4())
+        unrevealed_mod = UnrevealedModifier(
+            id=unrevealed_id,
+            mod_type=mod_type,
+            bone_type=self.bone_type,
+            bone_part=self.bone_part,
+            min_modifier_level=min_mod_level,
+            has_abyssal_echoes=False  # Always False - checked at reveal time
+        )
+
+        # Add unrevealed modifier metadata to item
+        item.unrevealed_mods.append(unrevealed_mod)
+
+        # Create placeholder modifier to show in prefix/suffix list
+        from app.schemas.crafting import ItemModifier
+        placeholder_mod = ItemModifier(
+            name="Unrevealed Desecrated Modifier",
+            mod_type=mod_type,
+            tier=0,
+            stat_text=f"??? Unrevealed {mod_type.value} modifier",
+            is_unrevealed=True,
+            unrevealed_id=unrevealed_id
+        )
+
+        # Add placeholder to the appropriate mod list
+        if mod_type == ModType.PREFIX:
+            item.prefix_mods.append(placeholder_mod)
+        else:
+            item.suffix_mods.append(placeholder_mod)
+
+        success_message = f"Added unrevealed {mod_type.value} desecrated modifier"
 
         if self.bone_type == 'ancient':
             success_message += " (enhanced by ancient bone)"
@@ -771,34 +840,39 @@ class EssenceMechanic(CraftingMechanic):
 
     def _item_matches_effect_type(self, item: CraftableItem, effect_item_type: str) -> bool:
         """Check if item matches the effect's target item type."""
-        item_category = item.base_category
+        item_category = item.base_category.lower()  # Normalize to lowercase
+        effect_type_lower = effect_item_type.lower()  # Normalize to lowercase
 
         # Handle broad categories first
         if effect_item_type == "All" or effect_item_type == "Equipment":
             return True
         elif effect_item_type == "Weapon":
-            return item_category in ["One Handed Sword", "Two Handed Sword", "Bow", "Crossbow", "Wand", "Staff", "Sceptre", "Dagger", "Claw", "Mace", "Axe", "Flail"]
+            weapon_types = ["one handed sword", "two handed sword", "bow", "crossbow", "wand", "staff", "sceptre", "dagger", "claw", "mace", "axe", "flail"]
+            return item_category in weapon_types
         elif effect_item_type == "Armour":
-            return item_category in ["Body Armour", "Helmet", "Gloves", "Boots", "Shield", "str_armour", "dex_armour", "int_armour", "str_helmet", "dex_helmet", "int_helmet", "str_gloves", "dex_gloves", "int_gloves", "str_boots", "dex_boots", "int_boots"]
+            armour_types = ["body armour", "helmet", "gloves", "boots", "shield", "str_armour", "dex_armour", "int_armour", "str_helmet", "dex_helmet", "int_helmet", "str_gloves", "dex_gloves", "int_gloves", "str_boots", "dex_boots", "int_boots", "body_armour"]
+            return item_category in armour_types
         elif effect_item_type == "Jewellery":
-            return item_category in ["Ring", "Amulet"]
+            # Support both lowercase (from item_bases.json) and uppercase variants
+            return item_category in ["ring", "amulet", "belt"]
 
-        # Direct category matches with mappings for new item categories
+        # Direct category matches with mappings - normalize all to lowercase
         category_mappings = {
-            "Body Armour": ["Body Armour", "str_armour", "dex_armour", "int_armour"],
-            "Helmet": ["Helmet", "str_helmet", "dex_helmet", "int_helmet"],
-            "Gloves": ["Gloves", "str_gloves", "dex_gloves", "int_gloves"],
-            "Boots": ["Boots", "str_boots", "dex_boots", "int_boots"],
-            "Shield": ["Shield"],  # Shields might need their own categories later
-            "Ring": ["Ring"],
-            "Amulet": ["Amulet"],
-            "Belt": ["Belt"],
+            "body armour": ["body armour", "body_armour", "str_armour", "dex_armour", "int_armour"],
+            "helmet": ["helmet", "str_helmet", "dex_helmet", "int_helmet"],
+            "gloves": ["gloves", "str_gloves", "dex_gloves", "int_gloves"],
+            "boots": ["boots", "str_boots", "dex_boots", "int_boots"],
+            "shield": ["shield"],
+            "ring": ["ring"],
+            "amulet": ["amulet"],
+            "belt": ["belt"],
         }
 
-        if effect_item_type in category_mappings:
-            return item_category in category_mappings[effect_item_type]
+        if effect_type_lower in category_mappings:
+            return item_category in category_mappings[effect_type_lower]
 
-        return item_category == effect_item_type
+        # Fallback to case-insensitive direct comparison
+        return item_category == effect_type_lower
 
     def apply(
         self, item: CraftableItem, modifier_pool: ModifierPool
@@ -980,29 +1054,747 @@ class OmenModifiedMechanic(CraftingMechanic):
     def __init__(self, base_mechanic: CraftingMechanic, omen_info: OmenInfo):
         self.base_mechanic = base_mechanic
         self.omen_info = omen_info
+        self._collect_omen_effects()
+
+    def _collect_omen_effects(self):
+        """Collect all omen effects from the chain of wrappers."""
+        self.omen_chain = []
+        current = self
+        while isinstance(current, OmenModifiedMechanic):
+            self.omen_chain.append(current.omen_info)
+            current = current.base_mechanic
+        self.omen_chain.reverse()  # Apply in order they were added
 
     def can_apply(self, item: CraftableItem) -> Tuple[bool, Optional[str]]:
-        return self.base_mechanic.can_apply(item)
+        # Get the innermost base mechanic
+        base = self.base_mechanic
+        while isinstance(base, OmenModifiedMechanic):
+            base = base.base_mechanic
+        return base.can_apply(item)
 
     def apply(
         self, item: CraftableItem, modifier_pool: ModifierPool
     ) -> Tuple[bool, str, CraftableItem]:
-        # Apply omen modifications to the base mechanic
-        modified_mechanic = self._apply_omen_modifications(self.base_mechanic)
+        # Get the innermost base mechanic
+        base = self.base_mechanic
+        while isinstance(base, OmenModifiedMechanic):
+            base = base.base_mechanic
 
-        success, message, result_item = modified_mechanic.apply(item, modifier_pool)
+        # Apply omen-modified logic based on mechanic type
+        if isinstance(base, ExaltedMechanic):
+            return self._apply_exalted_with_omens(item, modifier_pool, base)
+        elif isinstance(base, RegalMechanic):
+            return self._apply_regal_with_omens(item, modifier_pool, base)
+        elif isinstance(base, ChaosMechanic):
+            return self._apply_chaos_with_omens(item, modifier_pool, base)
+        elif isinstance(base, AlchemyMechanic):
+            return self._apply_alchemy_with_omens(item, modifier_pool, base)
+        elif isinstance(base, DesecrationMechanic):
+            return self._apply_desecration_with_omens(item, modifier_pool, base)
+        elif isinstance(base, AnnulmentMechanic):
+            return self._apply_annulment_with_omens(item, modifier_pool, base)
+        else:
+            # For unimplemented omen types, just apply base mechanic
+            return base.apply(item, modifier_pool)
 
-        if success:
-            message += f" (with {self.omen_info.name})"
+    def _apply_exalted_with_omens(
+        self, item: CraftableItem, modifier_pool: ModifierPool, base: ExaltedMechanic
+    ) -> Tuple[bool, str, CraftableItem]:
+        """Apply Exalted Orb with omen modifications."""
+        can_apply, error = base.can_apply(item)
+        if not can_apply:
+            return False, error or "Cannot apply", item
 
-        return success, message, result_item
+        manager = ItemStateManager(item)
+        min_mod_level = base.config.get("min_mod_level")
 
-    def _apply_omen_modifications(self, mechanic: CraftingMechanic) -> CraftingMechanic:
-        """Apply omen rules to modify the base mechanic behavior."""
-        # This would contain the complex omen logic based on omen rules
-        # For now, return the base mechanic unchanged
-        # TODO: Implement specific omen modifications based on rules
-        return mechanic
+        # Parse omen effects
+        force_prefix = False
+        force_suffix = False
+        force_homogenising = False
+        add_two_mods = False
+
+        for omen in self.omen_chain:
+            if "Sinistral Exaltation" in omen.name:
+                force_prefix = True
+            elif "Dextral Exaltation" in omen.name:
+                force_suffix = True
+            elif "Homogenising Exaltation" in omen.name:
+                force_homogenising = True
+            elif "Greater Exaltation" in omen.name:
+                add_two_mods = True
+
+        # Handle Greater Exaltation (add two modifiers)
+        if add_two_mods:
+            # If also using homogenising, capture INITIAL tags before adding any mods
+            initial_homogenising_tags = None
+            if force_homogenising:
+                # Filter out hidden tags that shouldn't affect matching
+                hidden_tags = {
+                    'essence_only', 'desecrated_only', 'drop', 'resource',
+                    'energy_shield', 'flat_life_regen', 'armour',
+                    'caster_damage', 'attack_damage'
+                }
+
+                existing_mods = item.prefix_mods + item.suffix_mods
+                mods_with_tags = [m for m in existing_mods if m.tags]
+                if mods_with_tags:
+                    chosen_mod = random.choice(mods_with_tags)
+                    # Filter to visible tags only
+                    initial_homogenising_tags = [tag for tag in chosen_mod.tags if tag.lower() not in hidden_tags]
+                    logger.info(f"[Greater+Homogenising] Captured initial visible tags: {initial_homogenising_tags} (filtered from {chosen_mod.tags})")
+
+            added_mods = []
+            for i in range(2):
+                if manager.item.total_explicit_mods >= 6:
+                    break
+
+                # Determine which type to add
+                available_types = []
+                if manager.item.can_add_prefix:
+                    available_types.append("prefix")
+                if manager.item.can_add_suffix:
+                    available_types.append("suffix")
+
+                if not available_types:
+                    break
+
+                mod_type = random.choice(available_types)
+
+                # If homogenising, filter by INITIAL tags (not updated after 1st mod)
+                if force_homogenising and initial_homogenising_tags:
+                    all_mods = modifier_pool.get_eligible_mods(
+                        item.base_category, item.item_level, mod_type, manager.item,
+                        min_mod_level=min_mod_level
+                    )
+                    matching_mods = [
+                        m for m in all_mods
+                        if m.tags and any(tag in m.tags for tag in initial_homogenising_tags)
+                    ]
+                    if not matching_mods:
+                        # No matching mods - homogenising fails
+                        logger.error(f"[Greater+Homogenising] No mods with matching tags found for {mod_type}")
+                        return False, f"No {mod_type} modifiers with matching tags available for Greater+Homogenising Exaltation", item
+                    new_mod = modifier_pool._weighted_random_choice(matching_mods)
+                elif force_homogenising:
+                    # Homogenising but no initial tags - this shouldn't happen but handle it
+                    logger.error(f"[Greater+Homogenising] No initial tags captured")
+                    return False, "No tags available for Greater+Homogenising Exaltation", item
+                else:
+                    new_mod = modifier_pool.roll_random_modifier(
+                        mod_type, item.base_category, item.item_level,
+                        min_mod_level=min_mod_level, item=manager.item
+                    )
+
+                if new_mod:
+                    manager.add_modifier(new_mod)
+                    added_mods.append(new_mod.name)
+
+            if added_mods:
+                tier_text = f" (ilvl {min_mod_level}+)" if min_mod_level else ""
+                omen_text = f" with {', '.join([o.name for o in self.omen_chain])}"
+                return True, f"Added {len(added_mods)} modifiers: {', '.join(added_mods)}{tier_text}{omen_text}", manager.item
+            else:
+                return False, "Failed to add modifiers", item
+
+        # Priority: Dextral/Sinistral > Homogenising
+        # If both Dextral and Homogenising are present, Dextral takes priority
+        if force_suffix:
+            if not manager.item.can_add_suffix:
+                return False, "No room for suffix modifiers", item
+            mod = modifier_pool.roll_random_modifier(
+                "suffix", item.base_category, item.item_level,
+                min_mod_level=min_mod_level, item=item
+            )
+            if mod:
+                manager.add_modifier(mod)
+                tier_text = f" (ilvl {min_mod_level}+)" if min_mod_level else ""
+                omen_text = f" with {', '.join([o.name for o in self.omen_chain])}"
+                return True, f"Added {mod.name}{tier_text}{omen_text}", manager.item
+            return False, "Failed to generate suffix modifier", item
+        elif force_prefix:
+            if not manager.item.can_add_prefix:
+                return False, "No room for prefix modifiers", item
+            mod = modifier_pool.roll_random_modifier(
+                "prefix", item.base_category, item.item_level,
+                min_mod_level=min_mod_level, item=item
+            )
+            if mod:
+                manager.add_modifier(mod)
+                tier_text = f" (ilvl {min_mod_level}+)" if min_mod_level else ""
+                omen_text = f" with {', '.join([o.name for o in self.omen_chain])}"
+                return True, f"Added {mod.name}{tier_text}{omen_text}", manager.item
+            return False, "Failed to generate prefix modifier", item
+        elif force_homogenising:
+            # Get mod type from existing mods and filter by matching tags
+            existing_mods = item.prefix_mods + item.suffix_mods
+            if not existing_mods:
+                return False, "No existing modifiers to match type", item
+
+            # Only choose from mods that have tags (otherwise we can't filter properly)
+            mods_with_tags = [m for m in existing_mods if m.tags]
+            if not mods_with_tags:
+                return False, "No existing modifiers with tags to match", item
+
+            # Randomly choose an existing mod to match tags with
+            chosen_mod = random.choice(mods_with_tags)
+            logger.info(f"[Homogenising] Chosen mod: {chosen_mod.name} with tags: {chosen_mod.tags}")
+
+            mod_type = chosen_mod.mod_type.value
+            # If switching types due to no room, try to pick a new mod of the target type
+            # If no mods of target type exist, keep using the original chosen mod's tags
+            if mod_type == "prefix" and not manager.item.can_add_prefix:
+                if manager.item.can_add_suffix:
+                    suffix_mods_with_tags = [m for m in item.suffix_mods if m.tags]
+                    if suffix_mods_with_tags:
+                        mod_type = "suffix"
+                        chosen_mod = random.choice(suffix_mods_with_tags)
+                        logger.info(f"[Homogenising] Switched to suffix (no prefix room), re-picked mod: {chosen_mod.name} with tags: {chosen_mod.tags}")
+                    else:
+                        # No suffix mods with tags, keep original chosen_mod's tags
+                        mod_type = "suffix"
+                        logger.info(f"[Homogenising] Switched to suffix but no suffix mods with tags, using original tags: {chosen_mod.tags}")
+                else:
+                    return False, "No room for modifiers", item
+            elif mod_type == "suffix" and not manager.item.can_add_suffix:
+                if manager.item.can_add_prefix:
+                    prefix_mods_with_tags = [m for m in item.prefix_mods if m.tags]
+                    if prefix_mods_with_tags:
+                        mod_type = "prefix"
+                        chosen_mod = random.choice(prefix_mods_with_tags)
+                        logger.info(f"[Homogenising] Switched to prefix (no suffix room), re-picked mod: {chosen_mod.name} with tags: {chosen_mod.tags}")
+                    else:
+                        # No prefix mods with tags, keep original chosen_mod's tags
+                        mod_type = "prefix"
+                        logger.info(f"[Homogenising] Switched to prefix but no prefix mods with tags, using original tags: {chosen_mod.tags}")
+                else:
+                    return False, "No room for modifiers", item
+
+            # Get all mods of the same type
+            all_mods = modifier_pool.get_eligible_mods(
+                item.base_category, item.item_level, mod_type, item,
+                min_mod_level=min_mod_level
+            )
+            logger.info(f"[Homogenising] Found {len(all_mods)} eligible {mod_type} mods (min_mod_level: {min_mod_level})")
+
+            # Filter by tags from the chosen mod (OR logic - match ANY tag)
+            # IMPORTANT: Exclude internal/system tags that shouldn't affect matching
+            hidden_tags = {
+                'essence_only', 'desecrated_only', 'drop', 'resource',
+                'energy_shield', 'flat_life_regen', 'armour',
+                'caster_damage', 'attack_damage'
+            }
+
+            if chosen_mod.tags:
+                # Filter out hidden tags before matching
+                visible_tags = [tag for tag in chosen_mod.tags if tag.lower() not in hidden_tags]
+                logger.info(f"[Homogenising] Using visible tags for matching: {visible_tags} (filtered from {chosen_mod.tags})")
+
+                if not visible_tags:
+                    # No visible tags to match - homogenising cannot work
+                    logger.error(f"[Homogenising] No visible tags after filtering, cannot use homogenising")
+                    return False, "No visible tags to match for Homogenising Exaltation", item
+
+                matching_mods = [
+                    m for m in all_mods
+                    if m.tags and any(tag in m.tags for tag in visible_tags)
+                ]
+                logger.info(f"[Homogenising] Filtered to {len(matching_mods)} mods with matching tags")
+
+                if not matching_mods:
+                    # No matching mods found - homogenising fails
+                    logger.error(f"[Homogenising] No mods with matching tags found")
+                    return False, "No modifiers with matching tags available for Homogenising Exaltation", item
+
+                mod = modifier_pool._weighted_random_choice(matching_mods)
+            else:
+                # No tags at all - homogenising cannot work
+                logger.error(f"[Homogenising] Chosen mod has no tags, cannot use homogenising")
+                return False, "Chosen modifier has no tags for Homogenising Exaltation", item
+
+            if mod:
+                manager.add_modifier(mod)
+                tier_text = f" (ilvl {min_mod_level}+)" if min_mod_level else ""
+                omen_text = f" with {', '.join([o.name for o in self.omen_chain])}"
+                logger.info(f"[Homogenising] Added mod: {mod.name} with tags: {mod.tags}")
+                return True, f"Added {mod.name}{tier_text}{omen_text}", manager.item
+            return False, "Failed to generate modifier with matching tags", item
+        else:
+            # No special omens - determine available affix types
+            available_types = []
+            if manager.item.can_add_prefix:
+                available_types.append("prefix")
+            if manager.item.can_add_suffix:
+                available_types.append("suffix")
+            if not available_types:
+                return False, "No open affix slots", item
+
+            mod_type = random.choice(available_types)
+            mod = modifier_pool.roll_random_modifier(
+                mod_type, item.base_category, item.item_level,
+                min_mod_level=min_mod_level, item=item
+            )
+
+            if mod:
+                manager.add_modifier(mod)
+                tier_text = f" (ilvl {min_mod_level}+)" if min_mod_level else ""
+                omen_text = f" with {', '.join([o.name for o in self.omen_chain])}" if self.omen_chain else ""
+                return True, f"Added {mod.name}{tier_text}{omen_text}", manager.item
+
+            return False, "Failed to generate modifier", item
+
+    def _apply_regal_with_omens(
+        self, item: CraftableItem, modifier_pool: ModifierPool, base: RegalMechanic
+    ) -> Tuple[bool, str, CraftableItem]:
+        """Apply Regal Orb with omen modifications."""
+        can_apply, error = base.can_apply(item)
+        if not can_apply:
+            return False, error or "Cannot apply", item
+
+        manager = ItemStateManager(item)
+        manager.upgrade_rarity(ItemRarity.RARE)
+        min_mod_level = base.config.get("min_mod_level")
+
+        # Parse omen effects
+        force_prefix = False
+        force_suffix = False
+        force_homogenising = False
+
+        for omen in self.omen_chain:
+            if "Sinistral Coronation" in omen.name:
+                force_prefix = True
+            elif "Dextral Coronation" in omen.name:
+                force_suffix = True
+            elif "Homogenising Coronation" in omen.name:
+                force_homogenising = True
+
+        if force_suffix:
+            mod_type = "suffix"
+        elif force_prefix:
+            mod_type = "prefix"
+        elif force_homogenising:
+            existing_mods = item.prefix_mods + item.suffix_mods
+            if existing_mods:
+                # Only choose from mods that have tags (otherwise we can't filter properly)
+                mods_with_tags = [m for m in existing_mods if m.tags]
+                if not mods_with_tags:
+                    return False, "No existing modifiers with tags to match", item
+
+                chosen_mod = random.choice(mods_with_tags)
+                mod_type = chosen_mod.mod_type.value
+
+                # If switching types due to no room, try to pick a new mod of the target type
+                # If no mods of target type exist, keep using the original chosen mod's tags
+                if mod_type == "prefix" and not manager.item.can_add_prefix:
+                    if manager.item.can_add_suffix:
+                        suffix_mods_with_tags = [m for m in item.suffix_mods if m.tags]
+                        if suffix_mods_with_tags:
+                            mod_type = "suffix"
+                            chosen_mod = random.choice(suffix_mods_with_tags)
+                            logger.info(f"[Regal Homogenising] Switched to suffix, re-picked mod: {chosen_mod.name} with tags: {chosen_mod.tags}")
+                        else:
+                            mod_type = "suffix"
+                            logger.info(f"[Regal Homogenising] Switched to suffix but no suffix mods with tags, using original tags: {chosen_mod.tags}")
+                elif mod_type == "suffix" and not manager.item.can_add_suffix:
+                    if manager.item.can_add_prefix:
+                        prefix_mods_with_tags = [m for m in item.prefix_mods if m.tags]
+                        if prefix_mods_with_tags:
+                            mod_type = "prefix"
+                            chosen_mod = random.choice(prefix_mods_with_tags)
+                            logger.info(f"[Regal Homogenising] Switched to prefix, re-picked mod: {chosen_mod.name} with tags: {chosen_mod.tags}")
+                        else:
+                            mod_type = "prefix"
+                            logger.info(f"[Regal Homogenising] Switched to prefix but no prefix mods with tags, using original tags: {chosen_mod.tags}")
+
+                # Get all mods of the same type
+                all_mods = modifier_pool.get_eligible_mods(
+                    item.base_category, item.item_level, mod_type, item,
+                    min_mod_level=min_mod_level
+                )
+                logger.info(f"[Regal Homogenising] Found {len(all_mods)} eligible {mod_type} mods (min_mod_level: {min_mod_level})")
+
+                # Filter by tags from the chosen mod (OR logic - match ANY tag)
+                if chosen_mod.tags:
+                    matching_mods = [
+                        m for m in all_mods
+                        if m.tags and any(tag in m.tags for tag in chosen_mod.tags)
+                    ]
+                    if matching_mods:
+                        mod = modifier_pool._weighted_random_choice(matching_mods)
+                    else:
+                        # Fallback to any eligible mod if no tag matches found
+                        mod = modifier_pool._weighted_random_choice(all_mods) if all_mods else None
+                else:
+                    mod = modifier_pool._weighted_random_choice(all_mods) if all_mods else None
+
+                if mod:
+                    manager.add_modifier(mod)
+                    tier_text = f" (ilvl {min_mod_level}+)" if min_mod_level else ""
+                    omen_text = f" with {', '.join([o.name for o in self.omen_chain])}"
+                    return True, f"Upgraded to Rare and added {mod.name}{tier_text}{omen_text}", manager.item
+                return False, "Failed to generate modifier with matching tags", item
+            else:
+                mod_type = "prefix"
+        else:
+            if manager.item.prefix_count < 3:
+                mod_type = "prefix"
+            elif manager.item.suffix_count < 3:
+                mod_type = "suffix"
+            else:
+                mod_type = random.choice(["prefix", "suffix"])
+
+        # Only roll if not homogenising (homogenising is handled above)
+        if not force_homogenising:
+            mod = modifier_pool.roll_random_modifier(
+                mod_type, item.base_category, item.item_level,
+                min_mod_level=min_mod_level, item=item
+            )
+
+            if mod:
+                manager.add_modifier(mod)
+                tier_text = f" (ilvl {min_mod_level}+)" if min_mod_level else ""
+                omen_text = f" with {', '.join([o.name for o in self.omen_chain])}"
+                return True, f"Upgraded to Rare and added {mod.name}{tier_text}{omen_text}", manager.item
+
+        return False, "Failed to generate modifier", item
+
+    def _apply_chaos_with_omens(
+        self, item: CraftableItem, modifier_pool: ModifierPool, base: ChaosMechanic
+    ) -> Tuple[bool, str, CraftableItem]:
+        """Apply Chaos Orb with omen modifications."""
+        can_apply, error = base.can_apply(item)
+        if not can_apply:
+            return False, error or "Cannot apply", item
+
+        manager = ItemStateManager(item)
+        min_mod_level = base.config.get("min_mod_level")
+
+        # Parse omen effects
+        force_prefix = False
+        force_suffix = False
+        force_lowest = False
+
+        for omen in self.omen_chain:
+            if "Sinistral Erasure" in omen.name or "Sinistral Annulment" in omen.name:
+                force_prefix = True
+            elif "Dextral Erasure" in omen.name or "Dextral Annulment" in omen.name:
+                force_suffix = True
+            elif "Whittling" in omen.name:
+                force_lowest = True
+
+        # Remove modifier based on omen
+        all_mods = manager.item.prefix_mods + manager.item.suffix_mods
+
+        if force_lowest:
+            mod_to_replace = min(all_mods, key=lambda m: m.required_ilvl or 0)
+        elif force_prefix:
+            if not manager.item.prefix_mods:
+                return False, "No prefix modifiers to remove", item
+            mod_to_replace = random.choice(manager.item.prefix_mods)
+        elif force_suffix:
+            if not manager.item.suffix_mods:
+                return False, "No suffix modifiers to remove", item
+            mod_to_replace = random.choice(manager.item.suffix_mods)
+        else:
+            mod_to_replace = random.choice(all_mods)
+
+        mod_type_enum = mod_to_replace.mod_type
+        mod_type = mod_to_replace.mod_type.value
+
+        # Find the index of the modifier to remove
+        if mod_type_enum == ModType.PREFIX:
+            mod_index = manager.item.prefix_mods.index(mod_to_replace)
+        else:
+            mod_index = manager.item.suffix_mods.index(mod_to_replace)
+
+        manager.remove_modifier(mod_type_enum, mod_index)
+
+        # Add new modifier of same type
+        new_mod = modifier_pool.roll_random_modifier(
+            mod_type, item.base_category, item.item_level,
+            min_mod_level=min_mod_level, item=item
+        )
+
+        if new_mod:
+            manager.add_modifier(new_mod)
+            tier_text = f" (ilvl {min_mod_level}+)" if min_mod_level else ""
+            omen_text = f" with {', '.join([o.name for o in self.omen_chain])}"
+            return True, f"Replaced {mod_to_replace.name} with {new_mod.name}{tier_text}{omen_text}", manager.item
+
+        return False, "Failed to generate replacement modifier", item
+
+    def _apply_alchemy_with_omens(
+        self, item: CraftableItem, modifier_pool: ModifierPool, base: AlchemyMechanic
+    ) -> Tuple[bool, str, CraftableItem]:
+        """Apply Alchemy Orb with omen modifications."""
+        can_apply, error = base.can_apply(item)
+        if not can_apply:
+            return False, error or "Cannot apply", item
+
+        manager = ItemStateManager(item)
+        manager.upgrade_rarity(ItemRarity.RARE)
+
+        # Parse omen effects
+        force_max_prefix = False
+        force_max_suffix = False
+
+        for omen in self.omen_chain:
+            if "Sinistral Alchemy" in omen.name:
+                force_max_prefix = True
+            elif "Dextral Alchemy" in omen.name:
+                force_max_suffix = True
+
+        if force_max_prefix:
+            num_prefixes = 3
+            num_suffixes = 1
+        elif force_max_suffix:
+            num_prefixes = 1
+            num_suffixes = 3
+        else:
+            # Get configuration - Alchemy always creates exactly 4 modifiers
+            num_mods = base.config.get("num_mods", 4)
+            num_prefixes = min(3, random.randint(2, num_mods // 2 + 1))
+            num_suffixes = min(3, num_mods - num_prefixes)
+
+        added_count = 0
+
+        # Add prefixes
+        for _ in range(num_prefixes):
+            excluded_groups = modifier_pool._get_excluded_groups_from_item(manager.item)
+            mod = modifier_pool.roll_random_modifier(
+                "prefix", item.base_category, item.item_level,
+                excluded_groups=excluded_groups
+            )
+            if mod:
+                manager.add_modifier(mod)
+                added_count += 1
+
+        # Add suffixes
+        for _ in range(num_suffixes):
+            excluded_groups = modifier_pool._get_excluded_groups_from_item(manager.item)
+            mod = modifier_pool.roll_random_modifier(
+                "suffix", item.base_category, item.item_level,
+                excluded_groups=excluded_groups
+            )
+            if mod:
+                manager.add_modifier(mod)
+                added_count += 1
+
+        omen_text = f" with {', '.join([o.name for o in self.omen_chain])}"
+        return True, f"Upgraded to Rare with {added_count} mods{omen_text}", manager.item
+
+    def _apply_desecration_with_omens(
+        self, item: CraftableItem, modifier_pool: ModifierPool, base: DesecrationMechanic
+    ) -> Tuple[bool, str, CraftableItem]:
+        """Apply Desecration (bone currency) with omen modifications.
+
+        Boss-specific omens (Sovereign/Liege/Blackblooded) are consumed HERE when applying bone.
+        Omen of Abyssal Echoes is consumed later during reveal for reroll functionality.
+        """
+        can_apply, error = base.can_apply(item)
+        if not can_apply:
+            return False, error or "Cannot apply", item
+
+        manager = ItemStateManager(item)
+
+        # Import UnrevealedModifier
+        from app.schemas.crafting import UnrevealedModifier
+        import uuid
+        import random
+
+        # Check for boss-specific omens (consumed here, stored on unrevealed mod)
+        boss_tag_map = {
+            "Omen of the Sovereign": "ulaman",
+            "Omen of the Liege": "amanamu",
+            "Omen of the Blackblooded": "kurgal"
+        }
+
+        required_boss_tag = None
+        for omen in self.omen_chain:
+            if omen.name in boss_tag_map:
+                required_boss_tag = boss_tag_map[omen.name]
+                break
+
+        # Get modifier pool based on whether boss omen is present
+        min_mod_level = base.config.get('min_modifier_level')
+
+        if required_boss_tag:
+            # Boss omen: use only desecrated mods with that specific boss tag
+            prefix_mods = modifier_pool.get_desecrated_only_mods(
+                item.base_category, "prefix", item.item_level, item
+            )
+            suffix_mods = modifier_pool.get_desecrated_only_mods(
+                item.base_category, "suffix", item.item_level, item
+            )
+            # Filter to only mods with the required boss tag
+            prefix_mods = [m for m in prefix_mods if m.tags and required_boss_tag in m.tags]
+            suffix_mods = [m for m in suffix_mods if m.tags and required_boss_tag in m.tags]
+
+            # Apply minimum modifier level filter for ancient bones
+            if min_mod_level:
+                prefix_mods = [m for m in prefix_mods if m.required_ilvl and m.required_ilvl >= min_mod_level]
+                suffix_mods = [m for m in suffix_mods if m.required_ilvl and m.required_ilvl >= min_mod_level]
+        else:
+            # No boss omen: use entire mod pool (excluding essence-only)
+            prefix_mods = modifier_pool.get_eligible_mods(
+                item.base_category, item.item_level, "prefix", item,
+                min_mod_level=min_mod_level, exclude_essence=True
+            )
+            suffix_mods = modifier_pool.get_eligible_mods(
+                item.base_category, item.item_level, "suffix", item,
+                min_mod_level=min_mod_level, exclude_essence=True
+            )
+
+        # Choose mod type based on availability AND available slots
+        can_add_prefix = item.can_add_prefix and prefix_mods
+        can_add_suffix = item.can_add_suffix and suffix_mods
+
+        if can_add_prefix and can_add_suffix:
+            mod_type = random.choice([ModType.PREFIX, ModType.SUFFIX])
+        elif can_add_prefix:
+            mod_type = ModType.PREFIX
+        elif can_add_suffix:
+            mod_type = ModType.SUFFIX
+        else:
+            return False, f"Item has no room for additional modifiers", item
+
+        # Create unrevealed modifier metadata with omen data
+        # Note: Omen of Abyssal Echoes is NOT stored here - it's consumed when revealing
+        unrevealed_id = str(uuid.uuid4())
+        unrevealed_mod = UnrevealedModifier(
+            id=unrevealed_id,
+            mod_type=mod_type,
+            bone_type=base.bone_type,
+            bone_part=base.bone_part,
+            min_modifier_level=min_mod_level,
+            required_boss_tag=required_boss_tag,
+            has_abyssal_echoes=False  # Always False - checked at reveal time
+        )
+
+        # Add unrevealed modifier metadata to item
+        item.unrevealed_mods.append(unrevealed_mod)
+
+        # Create placeholder modifier to show in prefix/suffix list
+        from app.schemas.crafting import ItemModifier
+        placeholder_mod = ItemModifier(
+            name="Unrevealed Desecrated Modifier",
+            mod_type=mod_type,
+            tier=0,
+            stat_text=f"??? Unrevealed {mod_type.value} modifier",
+            is_unrevealed=True,
+            unrevealed_id=unrevealed_id
+        )
+
+        # Add placeholder to the appropriate mod list
+        if mod_type == ModType.PREFIX:
+            item.prefix_mods.append(placeholder_mod)
+        else:
+            item.suffix_mods.append(placeholder_mod)
+
+        success_message = f"Added unrevealed {mod_type.value} desecrated modifier"
+
+        if base.bone_type == 'ancient':
+            success_message += " (enhanced by ancient bone)"
+
+        if required_boss_tag:
+            boss_name = {
+                "ulaman": "Sovereign",
+                "amanamu": "Liege",
+                "kurgal": "Blackblooded"
+            }.get(required_boss_tag, required_boss_tag)
+            success_message += f" ({boss_name})"
+
+        # Note: Omen of Abyssal Echoes is not mentioned here - it's consumed when revealing
+
+        return True, success_message, manager.get_item()
+
+    def _apply_annulment_with_omens(
+        self, item: CraftableItem, modifier_pool: ModifierPool, base: AnnulmentMechanic
+    ) -> Tuple[bool, str, CraftableItem]:
+        """Apply Orb of Annulment with omen modifications."""
+        can_apply, error = base.can_apply(item)
+        if not can_apply:
+            return False, error or "Cannot apply", item
+
+        manager = ItemStateManager(item)
+
+        # Parse omen effects
+        force_prefix = False
+        force_suffix = False
+        force_lowest = False
+        only_desecrated = False
+
+        for omen in self.omen_chain:
+            if "Sinistral Annulment" in omen.name:
+                force_prefix = True
+            elif "Dextral Annulment" in omen.name:
+                force_suffix = True
+            elif "Whittling" in omen.name:
+                force_lowest = True
+            elif "Light" in omen.name:
+                only_desecrated = True
+
+        # Build list of removable mods based on omen effects
+        removable_mods = []
+
+        if force_prefix:
+            candidate_mods = [(i, mod) for i, mod in enumerate(manager.item.prefix_mods)]
+        elif force_suffix:
+            candidate_mods = [(i, mod) for i, mod in enumerate(manager.item.suffix_mods)]
+        else:
+            # Can remove from either type
+            prefix_candidates = [('prefix', i, mod) for i, mod in enumerate(manager.item.prefix_mods)]
+            suffix_candidates = [('suffix', i, mod) for i, mod in enumerate(manager.item.suffix_mods)]
+            candidate_mods = prefix_candidates + suffix_candidates
+
+        # Filter by desecrated status if Omen of Light is active
+        if only_desecrated:
+            if force_prefix or force_suffix:
+                # Already filtered to prefix or suffix
+                candidate_mods = [(i, mod) for i, mod in candidate_mods if getattr(mod, 'is_desecrated', False)]
+            else:
+                # Filter prefix and suffix lists
+                candidate_mods = [(mod_type, i, mod) for mod_type, i, mod in candidate_mods
+                                 if getattr(mod, 'is_desecrated', False)]
+
+        if not candidate_mods:
+            if only_desecrated:
+                return False, "No desecrated modifiers to remove", item
+            else:
+                return False, "No modifiers available to remove", item
+
+        # Select mod to remove
+        import random
+        if force_lowest:
+            # Remove lowest tier (by required_ilvl)
+            if force_prefix or force_suffix:
+                mod_to_remove_idx, mod_to_remove = min(candidate_mods, key=lambda x: x[1].required_ilvl or 0)
+                mod_type = 'prefix' if force_prefix else 'suffix'
+            else:
+                mod_type, mod_to_remove_idx, mod_to_remove = min(candidate_mods, key=lambda x: x[2].required_ilvl or 0)
+        else:
+            # Random selection
+            if force_prefix or force_suffix:
+                mod_to_remove_idx, mod_to_remove = random.choice(candidate_mods)
+                mod_type = 'prefix' if force_prefix else 'suffix'
+            else:
+                mod_type, mod_to_remove_idx, mod_to_remove = random.choice(candidate_mods)
+
+        # Remove the modifier
+        if mod_type == 'prefix':
+            manager.remove_prefix(mod_to_remove_idx)
+        else:
+            manager.remove_suffix(mod_to_remove_idx)
+
+        omen_text = f" with {', '.join([o.name for o in self.omen_chain])}"
+        success_message = f"Removed {mod_to_remove.name}{omen_text}"
+
+        # If item has no mods left, it becomes normal
+        result_item = manager.get_item()
+        if result_item.total_explicit_mods == 0:
+            result_item.rarity = ItemRarity.NORMAL
+
+        return True, success_message, result_item
 
 
 class VaalMechanic(CraftingMechanic):

@@ -433,9 +433,17 @@ class OmenOfCatalysingExaltation(BaseOmen):
     ) -> Tuple[bool, str, CraftableItem]:
         """Add modifier with increased chance for mods matching existing tags."""
 
-        # For now, simulate catalyst behavior by preferring mods with same tags
+        # Filter out hidden tags that shouldn't affect matching
+        hidden_tags = {
+            'essence_only', 'desecrated_only', 'drop', 'resource',
+            'energy_shield', 'flat_life_regen', 'armour',
+            'caster_damage', 'attack_damage'
+        }
+
+        # Get existing tags, but only use visible tags for matching
         existing_mods = item.prefix_mods + item.suffix_mods
-        existing_tags = [tag for mod in existing_mods for tag in (mod.tags or [])]
+        all_tags = [tag for mod in existing_mods for tag in (mod.tags or [])]
+        existing_tags = [tag for tag in all_tags if tag.lower() not in hidden_tags]
 
         manager = ItemStateManager(item)
 
@@ -574,9 +582,17 @@ class OmenOfHomogenisingCoronation(BaseOmen):
         if not existing_mods:
             return False, "No existing modifiers to match type", item
 
-        # Get existing mod groups and tags
+        # Filter out hidden tags that shouldn't affect matching
+        hidden_tags = {
+            'essence_only', 'desecrated_only', 'drop', 'resource',
+            'energy_shield', 'flat_life_regen', 'armour',
+            'caster_damage', 'attack_damage'
+        }
+
+        # Get existing mod groups and visible tags only
         existing_groups = [mod.mod_group for mod in existing_mods if mod.mod_group]
-        existing_tags = [tag for mod in existing_mods for tag in (mod.tags or [])]
+        all_tags = [tag for mod in existing_mods for tag in (mod.tags or [])]
+        existing_tags = [tag for tag in all_tags if tag.lower() not in hidden_tags]
 
         if not existing_groups and not existing_tags:
             return False, "No compatible modifier types found", item
@@ -590,7 +606,7 @@ class OmenOfHomogenisingCoronation(BaseOmen):
                 item.base_category, item.item_level, mod_type, item
             )
 
-            # Filter for mods with matching groups or tags
+            # Filter for mods with matching groups or visible tags only
             homogenous_mods = []
             for mod in eligible_mods:
                 if mod.mod_group in existing_groups:
@@ -693,6 +709,242 @@ class OmenOfDextralAlchemy(BaseOmen):
         return True, f"Created Rare with {len(added_suffixes)} suffixes", item
 
 
+# ===== DESECRATION OMENS =====
+
+class OmenOfAbyssalEchoes(BaseOmen):
+    """Can reroll desecrated options once when revealing."""
+
+    def __init__(self):
+        super().__init__("Omen of Abyssal Echoes", OmenCategory.DARK)
+
+    def can_apply_to_currency(self, currency_name: str) -> bool:
+        # Works with all bone currencies (desecration)
+        return "bone" in currency_name.lower() or "Jawbone" in currency_name or "Rib" in currency_name or "Collarbone" in currency_name
+
+    def modify_currency_behavior(
+        self,
+        item: CraftableItem,
+        currency_apply_func: Callable,
+        modifier_pool: ModifierPool
+    ) -> Tuple[bool, str, CraftableItem]:
+        """Allow reroll of desecrated options (simulation: try twice, pick best)."""
+        # Simulate by rolling twice and picking better result
+        result1 = currency_apply_func(item.model_copy(), modifier_pool)
+        result2 = currency_apply_func(item.model_copy(), modifier_pool)
+
+        # Pick the result with more mods or better quality
+        if result1[0] and result2[0]:
+            item1 = result1[2]
+            item2 = result2[2]
+            if item2.total_explicit_mods > item1.total_explicit_mods:
+                return True, "Rerolled desecrated options (better result)", item2
+            return True, "Rerolled desecrated options", item1
+        elif result1[0]:
+            return result1
+        return result2
+
+
+class OmenOfSinistralNecromancy(BaseOmen):
+    """Adds only prefix desecrated modifiers."""
+
+    def __init__(self):
+        super().__init__("Omen of Sinistral Necromancy", OmenCategory.DARK)
+
+    def can_apply_to_currency(self, currency_name: str) -> bool:
+        return "bone" in currency_name.lower() or "Jawbone" in currency_name or "Rib" in currency_name or "Collarbone" in currency_name
+
+    def modify_currency_behavior(
+        self,
+        item: CraftableItem,
+        currency_apply_func: Callable,
+        modifier_pool: ModifierPool
+    ) -> Tuple[bool, str, CraftableItem]:
+        """Force desecration to add prefix only."""
+
+        if not item.can_add_prefix:
+            return False, "No room for prefix modifiers", item
+
+        # Get desecrated prefix mods only
+        desecrated_mods = modifier_pool.get_desecrated_only_mods(
+            item.base_category, "prefix", item.item_level, item
+        )
+
+        if not desecrated_mods:
+            return False, "No desecrated prefix modifiers available", item
+
+        manager = ItemStateManager(item)
+        selected_mod = modifier_pool._weighted_random_choice(desecrated_mods)
+
+        if selected_mod and manager.add_modifier(selected_mod):
+            return True, f"Added desecrated prefix: {selected_mod.name}", item
+        return False, "Failed to add desecrated prefix", item
+
+
+class OmenOfDextralNecromancy(BaseOmen):
+    """Adds only suffix desecrated modifiers."""
+
+    def __init__(self):
+        super().__init__("Omen of Dextral Necromancy", OmenCategory.DARK)
+
+    def can_apply_to_currency(self, currency_name: str) -> bool:
+        return "bone" in currency_name.lower() or "Jawbone" in currency_name or "Rib" in currency_name or "Collarbone" in currency_name
+
+    def modify_currency_behavior(
+        self,
+        item: CraftableItem,
+        currency_apply_func: Callable,
+        modifier_pool: ModifierPool
+    ) -> Tuple[bool, str, CraftableItem]:
+        """Force desecration to add suffix only."""
+
+        if not item.can_add_suffix:
+            return False, "No room for suffix modifiers", item
+
+        # Get desecrated suffix mods only
+        desecrated_mods = modifier_pool.get_desecrated_only_mods(
+            item.base_category, "suffix", item.item_level, item
+        )
+
+        if not desecrated_mods:
+            return False, "No desecrated suffix modifiers available", item
+
+        manager = ItemStateManager(item)
+        selected_mod = modifier_pool._weighted_random_choice(desecrated_mods)
+
+        if selected_mod and manager.add_modifier(selected_mod):
+            return True, f"Added desecrated suffix: {selected_mod.name}", item
+        return False, "Failed to add desecrated suffix", item
+
+
+class OmenOfTheSovereign(BaseOmen):
+    """Guarantees random Ulaman modifier."""
+
+    def __init__(self):
+        super().__init__("Omen of the Sovereign", OmenCategory.DARK)
+        self.required_tag = "ulaman"
+
+    def can_apply_to_currency(self, currency_name: str) -> bool:
+        return "bone" in currency_name.lower() or "Jawbone" in currency_name or "Rib" in currency_name or "Collarbone" in currency_name
+
+    def modify_currency_behavior(
+        self,
+        item: CraftableItem,
+        currency_apply_func: Callable,
+        modifier_pool: ModifierPool
+    ) -> Tuple[bool, str, CraftableItem]:
+        """Add a random Ulaman-tagged desecrated modifier."""
+
+        if not item.has_open_affix:
+            return False, "No room for modifiers", item
+
+        # Get all desecrated mods with ulaman tag
+        all_desecrated_prefix = modifier_pool.get_desecrated_only_mods(
+            item.base_category, "prefix", item.item_level, item
+        )
+        all_desecrated_suffix = modifier_pool.get_desecrated_only_mods(
+            item.base_category, "suffix", item.item_level, item
+        )
+
+        ulaman_mods = [m for m in (all_desecrated_prefix + all_desecrated_suffix)
+                       if m.tags and self.required_tag in m.tags]
+
+        if not ulaman_mods:
+            return False, f"No {self.required_tag} desecrated modifiers available", item
+
+        manager = ItemStateManager(item)
+        selected_mod = modifier_pool._weighted_random_choice(ulaman_mods)
+
+        if selected_mod and manager.add_modifier(selected_mod):
+            return True, f"Added Ulaman modifier: {selected_mod.name}", item
+        return False, "Failed to add Ulaman modifier", item
+
+
+class OmenOfTheLiege(BaseOmen):
+    """Guarantees random Amanamu modifier."""
+
+    def __init__(self):
+        super().__init__("Omen of the Liege", OmenCategory.DARK)
+        self.required_tag = "amanamu"
+
+    def can_apply_to_currency(self, currency_name: str) -> bool:
+        return "bone" in currency_name.lower() or "Jawbone" in currency_name or "Rib" in currency_name or "Collarbone" in currency_name
+
+    def modify_currency_behavior(
+        self,
+        item: CraftableItem,
+        currency_apply_func: Callable,
+        modifier_pool: ModifierPool
+    ) -> Tuple[bool, str, CraftableItem]:
+        """Add a random Amanamu-tagged desecrated modifier."""
+
+        if not item.has_open_affix:
+            return False, "No room for modifiers", item
+
+        # Get all desecrated mods with amanamu tag
+        all_desecrated_prefix = modifier_pool.get_desecrated_only_mods(
+            item.base_category, "prefix", item.item_level, item
+        )
+        all_desecrated_suffix = modifier_pool.get_desecrated_only_mods(
+            item.base_category, "suffix", item.item_level, item
+        )
+
+        amanamu_mods = [m for m in (all_desecrated_prefix + all_desecrated_suffix)
+                        if m.tags and self.required_tag in m.tags]
+
+        if not amanamu_mods:
+            return False, f"No {self.required_tag} desecrated modifiers available", item
+
+        manager = ItemStateManager(item)
+        selected_mod = modifier_pool._weighted_random_choice(amanamu_mods)
+
+        if selected_mod and manager.add_modifier(selected_mod):
+            return True, f"Added Amanamu modifier: {selected_mod.name}", item
+        return False, "Failed to add Amanamu modifier", item
+
+
+class OmenOfTheBlackblooded(BaseOmen):
+    """Guarantees random Kurgal modifier."""
+
+    def __init__(self):
+        super().__init__("Omen of the Blackblooded", OmenCategory.DARK)
+        self.required_tag = "kurgal"
+
+    def can_apply_to_currency(self, currency_name: str) -> bool:
+        return "bone" in currency_name.lower() or "Jawbone" in currency_name or "Rib" in currency_name or "Collarbone" in currency_name
+
+    def modify_currency_behavior(
+        self,
+        item: CraftableItem,
+        currency_apply_func: Callable,
+        modifier_pool: ModifierPool
+    ) -> Tuple[bool, str, CraftableItem]:
+        """Add a random Kurgal-tagged desecrated modifier."""
+
+        if not item.has_open_affix:
+            return False, "No room for modifiers", item
+
+        # Get all desecrated mods with kurgal tag
+        all_desecrated_prefix = modifier_pool.get_desecrated_only_mods(
+            item.base_category, "prefix", item.item_level, item
+        )
+        all_desecrated_suffix = modifier_pool.get_desecrated_only_mods(
+            item.base_category, "suffix", item.item_level, item
+        )
+
+        kurgal_mods = [m for m in (all_desecrated_prefix + all_desecrated_suffix)
+                       if m.tags and self.required_tag in m.tags]
+
+        if not kurgal_mods:
+            return False, f"No {self.required_tag} desecrated modifiers available", item
+
+        manager = ItemStateManager(item)
+        selected_mod = modifier_pool._weighted_random_choice(kurgal_mods)
+
+        if selected_mod and manager.add_modifier(selected_mod):
+            return True, f"Added Kurgal modifier: {selected_mod.name}", item
+        return False, "Failed to add Kurgal modifier", item
+
+
 # ===== CORRUPTION OMENS =====
 
 class OmenOfCorruption(BaseOmen):
@@ -774,6 +1026,14 @@ class OmenFactory:
         # Alchemy Omens
         "Omen of Sinistral Alchemy": OmenOfSinistralAlchemy,
         "Omen of Dextral Alchemy": OmenOfDextralAlchemy,
+
+        # Desecration Omens
+        "Omen of Abyssal Echoes": OmenOfAbyssalEchoes,
+        "Omen of Sinistral Necromancy": OmenOfSinistralNecromancy,
+        "Omen of Dextral Necromancy": OmenOfDextralNecromancy,
+        "Omen of the Sovereign": OmenOfTheSovereign,
+        "Omen of the Liege": OmenOfTheLiege,
+        "Omen of the Blackblooded": OmenOfTheBlackblooded,
 
         # Corruption Omens
         "Omen of Corruption": OmenOfCorruption,

@@ -6092,5 +6092,428 @@
       "armour": 66,
       "energy_shield": 23
     }
+  },
+  {
+    "name": "Crimson Amulet",
+    "category": "amulet",
+    "slot": "amulet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Unknown amulet",
+    "base_stats": {}
+  },
+  {
+    "name": "Azure Amulet",
+    "category": "amulet",
+    "slot": "amulet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Unknown amulet",
+    "base_stats": {}
+  },
+  {
+    "name": "Amber Amulet",
+    "category": "amulet",
+    "slot": "amulet",
+    "attribute_requirements": [],
+    "default_ilvl": 8,
+    "description": "Unknown amulet",
+    "base_stats": {}
+  },
+  {
+    "name": "Jade Amulet",
+    "category": "amulet",
+    "slot": "amulet",
+    "attribute_requirements": [],
+    "default_ilvl": 8,
+    "description": "Unknown amulet",
+    "base_stats": {}
+  },
+  {
+    "name": "Lapis Amulet",
+    "category": "amulet",
+    "slot": "amulet",
+    "attribute_requirements": [],
+    "default_ilvl": 8,
+    "description": "Unknown amulet",
+    "base_stats": {}
+  },
+  {
+    "name": "Lunar Amulet",
+    "category": "amulet",
+    "slot": "amulet",
+    "attribute_requirements": [],
+    "default_ilvl": 14,
+    "description": "Unknown amulet",
+    "base_stats": {}
+  },
+  {
+    "name": "Bloodstone Amulet",
+    "category": "amulet",
+    "slot": "amulet",
+    "attribute_requirements": [],
+    "default_ilvl": 18,
+    "description": "Unknown amulet",
+    "base_stats": {}
+  },
+  {
+    "name": "Stellar Amulet",
+    "category": "amulet",
+    "slot": "amulet",
+    "attribute_requirements": [],
+    "default_ilvl": 24,
+    "description": "Unknown amulet",
+    "base_stats": {}
+  },
+  {
+    "name": "Solar Amulet",
+    "category": "amulet",
+    "slot": "amulet",
+    "attribute_requirements": [],
+    "default_ilvl": 30,
+    "description": "Unknown amulet",
+    "base_stats": {}
+  },
+  {
+    "name": "Gold Amulet",
+    "category": "amulet",
+    "slot": "amulet",
+    "attribute_requirements": [],
+    "default_ilvl": 35,
+    "description": "Unknown amulet",
+    "base_stats": {}
+  },
+  {
+    "name": "Pearlescent Amulet",
+    "category": "amulet",
+    "slot": "amulet",
+    "attribute_requirements": [],
+    "default_ilvl": 30,
+    "description": "Unknown amulet",
+    "base_stats": {}
+  },
+  {
+    "name": "Dusk Amulet",
+    "category": "amulet",
+    "slot": "amulet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Unknown amulet",
+    "base_stats": {}
+  },
+  {
+    "name": "Gloam Amulet",
+    "category": "amulet",
+    "slot": "amulet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Unknown amulet",
+    "base_stats": {}
+  },
+  {
+    "name": "Penumbra Amulet",
+    "category": "amulet",
+    "slot": "amulet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Unknown amulet",
+    "base_stats": {}
+  },
+  {
+    "name": "Tenebrous Amulet",
+    "category": "amulet",
+    "slot": "amulet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Unknown amulet",
+    "base_stats": {}
+  },
+  {
+    "name": "Distorted Amulet",
+    "category": "amulet",
+    "slot": "amulet",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Unknown amulet",
+    "base_stats": {}
+  },
+  {
+    "name": "Golden Hoop",
+    "category": "ring",
+    "slot": "ring",
+    "attribute_requirements": [],
+    "default_ilvl": 12,
+    "description": "Unknown ring",
+    "base_stats": {}
+  },
+  {
+    "name": "Iron Ring",
+    "category": "ring",
+    "slot": "ring",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Unknown ring",
+    "base_stats": {}
+  },
+  {
+    "name": "Lazuli Ring",
+    "category": "ring",
+    "slot": "ring",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Unknown ring",
+    "base_stats": {}
+  },
+  {
+    "name": "Ruby Ring",
+    "category": "ring",
+    "slot": "ring",
+    "attribute_requirements": [],
+    "default_ilvl": 8,
+    "description": "Unknown ring",
+    "base_stats": {}
+  },
+  {
+    "name": "Sapphire Ring",
+    "category": "ring",
+    "slot": "ring",
+    "attribute_requirements": [],
+    "default_ilvl": 12,
+    "description": "Unknown ring",
+    "base_stats": {}
+  },
+  {
+    "name": "Topaz Ring",
+    "category": "ring",
+    "slot": "ring",
+    "attribute_requirements": [],
+    "default_ilvl": 16,
+    "description": "Unknown ring",
+    "base_stats": {}
+  },
+  {
+    "name": "Amethyst Ring",
+    "category": "ring",
+    "slot": "ring",
+    "attribute_requirements": [],
+    "default_ilvl": 20,
+    "description": "Unknown ring",
+    "base_stats": {}
+  },
+  {
+    "name": "Emerald Ring",
+    "category": "ring",
+    "slot": "ring",
+    "attribute_requirements": [],
+    "default_ilvl": 26,
+    "description": "Unknown ring",
+    "base_stats": {}
+  },
+  {
+    "name": "Pearl Ring",
+    "category": "ring",
+    "slot": "ring",
+    "attribute_requirements": [],
+    "default_ilvl": 32,
+    "description": "Unknown ring",
+    "base_stats": {}
+  },
+  {
+    "name": "Prismatic Ring",
+    "category": "ring",
+    "slot": "ring",
+    "attribute_requirements": [],
+    "default_ilvl": 35,
+    "description": "Unknown ring",
+    "base_stats": {}
+  },
+  {
+    "name": "Gold Ring",
+    "category": "ring",
+    "slot": "ring",
+    "attribute_requirements": [],
+    "default_ilvl": 40,
+    "description": "Unknown ring",
+    "base_stats": {}
+  },
+  {
+    "name": "Unset Ring",
+    "category": "ring",
+    "slot": "ring",
+    "attribute_requirements": [],
+    "default_ilvl": 44,
+    "description": "Unknown ring",
+    "base_stats": {}
+  },
+  {
+    "name": "Abyssal Signet",
+    "category": "ring",
+    "slot": "ring",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Unknown ring",
+    "base_stats": {}
+  },
+  {
+    "name": "Ring",
+    "category": "ring",
+    "slot": "ring",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Unknown ring",
+    "base_stats": {}
+  },
+  {
+    "name": "Dusk Ring",
+    "category": "ring",
+    "slot": "ring",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Unknown ring",
+    "base_stats": {}
+  },
+  {
+    "name": "Gloam Ring",
+    "category": "ring",
+    "slot": "ring",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Unknown ring",
+    "base_stats": {}
+  },
+  {
+    "name": "Penumbra Ring",
+    "category": "ring",
+    "slot": "ring",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Unknown ring",
+    "base_stats": {}
+  },
+  {
+    "name": "Tenebrous Ring",
+    "category": "ring",
+    "slot": "ring",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Unknown ring",
+    "base_stats": {}
+  },
+  {
+    "name": "Breach Ring",
+    "category": "ring",
+    "slot": "ring",
+    "attribute_requirements": [],
+    "default_ilvl": 40,
+    "description": "Unknown ring",
+    "base_stats": {}
+  },
+  {
+    "name": "Golden Obi",
+    "category": "belt",
+    "slot": "belt",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Unknown belt",
+    "base_stats": {}
+  },
+  {
+    "name": "Rawhide Belt",
+    "category": "belt",
+    "slot": "belt",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Unknown belt",
+    "base_stats": {}
+  },
+  {
+    "name": "Linen Belt",
+    "category": "belt",
+    "slot": "belt",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Unknown belt",
+    "base_stats": {}
+  },
+  {
+    "name": "Wide Belt",
+    "category": "belt",
+    "slot": "belt",
+    "attribute_requirements": [],
+    "default_ilvl": 14,
+    "description": "Unknown belt",
+    "base_stats": {}
+  },
+  {
+    "name": "Long Belt",
+    "category": "belt",
+    "slot": "belt",
+    "attribute_requirements": [],
+    "default_ilvl": 20,
+    "description": "Unknown belt",
+    "base_stats": {}
+  },
+  {
+    "name": "Plate Belt",
+    "category": "belt",
+    "slot": "belt",
+    "attribute_requirements": [],
+    "default_ilvl": 24,
+    "description": "Unknown belt",
+    "base_stats": {}
+  },
+  {
+    "name": "Ornate Belt",
+    "category": "belt",
+    "slot": "belt",
+    "attribute_requirements": [],
+    "default_ilvl": 31,
+    "description": "Unknown belt",
+    "base_stats": {}
+  },
+  {
+    "name": "Mail Belt",
+    "category": "belt",
+    "slot": "belt",
+    "attribute_requirements": [],
+    "default_ilvl": 40,
+    "description": "Unknown belt",
+    "base_stats": {}
+  },
+  {
+    "name": "Double Belt",
+    "category": "belt",
+    "slot": "belt",
+    "attribute_requirements": [],
+    "default_ilvl": 44,
+    "description": "Unknown belt",
+    "base_stats": {}
+  },
+  {
+    "name": "Heavy Belt",
+    "category": "belt",
+    "slot": "belt",
+    "attribute_requirements": [],
+    "default_ilvl": 50,
+    "description": "Unknown belt",
+    "base_stats": {}
+  },
+  {
+    "name": "Utility Belt",
+    "category": "belt",
+    "slot": "belt",
+    "attribute_requirements": [],
+    "default_ilvl": 55,
+    "description": "Unknown belt",
+    "base_stats": {}
+  },
+  {
+    "name": "Fine Belt",
+    "category": "belt",
+    "slot": "belt",
+    "attribute_requirements": [],
+    "default_ilvl": 62,
+    "description": "Unknown belt",
+    "base_stats": {}
   }
 ]

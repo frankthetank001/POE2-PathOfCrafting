@@ -54,6 +54,11 @@ async def simulate_crafting(
 
         result = simulator.simulate_currency(request.item, request.currency_name)
 
+        # Filter tags on the result item
+        if result.success and result.result_item:
+            filtered_item_dict = filter_item_tags(result.result_item)
+            result.result_item = CraftableItem(**filtered_item_dict)
+
         return result
 
     except Exception as e:
@@ -74,6 +79,11 @@ async def simulate_crafting_with_omens(
             request.item, request.currency_name, request.omen_names
         )
 
+        # Filter tags on the result item
+        if result.success and result.result_item:
+            filtered_item_dict = filter_item_tags(result.result_item)
+            result.result_item = CraftableItem(**filtered_item_dict)
+
         return result
 
     except Exception as e:
@@ -88,6 +98,42 @@ async def get_available_omens_for_currency(currency_name: str) -> List[str]:
         return omens
     except Exception as e:
         logger.error(f"Error fetching omens for {currency_name}: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/omen-filter-info/{omen_name}")
+async def get_omen_filter_info(omen_name: str) -> dict:
+    """Get filtering information for a specific omen (e.g., which tags it requires)."""
+    try:
+        from app.services.crafting.omens import OmenFactory
+
+        omen = OmenFactory.create(omen_name)
+        if not omen:
+            raise HTTPException(status_code=404, detail=f"Omen '{omen_name}' not found")
+
+        # Check if it's a boss-specific omen with required tags
+        filter_info = {
+            "name": omen_name,
+            "required_tag": None,
+            "forces_prefix": False,
+            "forces_suffix": False,
+        }
+
+        if hasattr(omen, 'required_tag'):
+            filter_info["required_tag"] = omen.required_tag
+
+        # Check for directional omens
+        if "Sinistral" in omen_name:
+            filter_info["forces_prefix"] = True
+        elif "Dextral" in omen_name:
+            filter_info["forces_suffix"] = True
+
+        return filter_info
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting omen filter info for {omen_name}: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 
@@ -271,29 +317,51 @@ async def create_base_item(slot: str, category: str, item_level: int = 65):
 
 
 def filter_mod_tags(mod):
-    """Filter to include only known valid tags from mod"""
+    """Filter out internal/system tags that shouldn't be displayed to users"""
     if hasattr(mod, 'tags') and mod.tags:
-        # Known valid tags (positive match from screenshot)
-        valid_tags = {
-            'ailment', 'amanamu', 'attack', 'attribute', 'cold', 'critical',
-            'elemental', 'fire', 'gem', 'intelligence', 'kurgal', 'life',
-            'lightning', 'mana', 'minion', 'physical', 'speed', 'strength',
-            'dexterity', 'chaos', 'aura', 'curse', 'resistance', 'non-attack',
-            'non-cold', 'non-critical', 'non-lightning', 'non-physical',
-            'non-speed', 'non-influence', 'influence', 'ulaman'
+        # Blacklist: tags to hide from users (internal/system tags)
+        hidden_tags = {
+            'essence_only',     # Internal flag for essence-only mods
+            'desecrated_only',  # Internal flag for desecrated mods
+            'drop', 'resource', 'energy_shield', 'flat_life_regen', 'armour',
+            'caster_damage', 'attack_damage'
         }
 
-        # Only include tags that are in our known valid set
+        # Check if this is a desecrated mod before filtering (from tags OR existing flag)
+        is_desecrated = 'desecrated_only' in mod.tags or (hasattr(mod, 'is_desecrated') and mod.is_desecrated)
+
+        # Keep all tags EXCEPT those in the blacklist
         filtered_tags = [
             tag for tag in mod.tags
-            if tag.lower() in valid_tags
+            if tag.lower() not in hidden_tags
         ]
 
         # Create a copy of the mod with filtered tags
         mod_dict = mod.model_dump()
         mod_dict['tags'] = filtered_tags
+        mod_dict['is_desecrated'] = is_desecrated  # Preserve desecrated flag
         return mod_dict
-    return mod.model_dump()
+
+    # If no tags, still preserve is_desecrated if it exists
+    mod_dict = mod.model_dump()
+    if hasattr(mod, 'is_desecrated') and mod.is_desecrated:
+        mod_dict['is_desecrated'] = True
+    return mod_dict
+
+
+def filter_item_tags(item: CraftableItem):
+    """Filter tags on all mods in an item"""
+    item_dict = item.model_dump()
+
+    # Filter tags on all mod lists
+    if item_dict.get('implicit_mods'):
+        item_dict['implicit_mods'] = [filter_mod_tags(mod) for mod in item.implicit_mods]
+    if item_dict.get('prefix_mods'):
+        item_dict['prefix_mods'] = [filter_mod_tags(mod) for mod in item.prefix_mods]
+    if item_dict.get('suffix_mods'):
+        item_dict['suffix_mods'] = [filter_mod_tags(mod) for mod in item.suffix_mods]
+
+    return item_dict
 
 
 @router.post("/available-mods")
@@ -481,4 +549,123 @@ async def get_currency_tooltip(currency_name: str) -> dict:
 
     except Exception as e:
         logger.error(f"Error generating tooltip for {currency_name}: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/reveal-modifier")
+async def reveal_modifier(request: dict) -> dict:
+    """
+    Reveal an unrevealed desecrated modifier by providing 3 choices.
+
+    Request should contain:
+    - unrevealed_id: ID of the unrevealed modifier
+    - item: The current item state
+    - omen_names: Optional list of omen names to apply when revealing
+    """
+    try:
+        unrevealed_id = request.get('unrevealed_id')
+        item_dict = request.get('item')
+        omen_names = request.get('omen_names', [])
+
+        if not unrevealed_id or not item_dict:
+            raise HTTPException(status_code=400, detail="Missing unrevealed_id or item")
+
+        # Parse item
+        from app.schemas.crafting import CraftableItem
+        item = CraftableItem(**item_dict)
+
+        # Find the unrevealed modifier
+        unrevealed_mod = None
+        for mod in item.unrevealed_mods:
+            if mod.id == unrevealed_id:
+                unrevealed_mod = mod
+                break
+
+        if not unrevealed_mod:
+            raise HTTPException(status_code=404, detail="Unrevealed modifier not found")
+
+        # Get modifiers based on whether boss tag is present
+        if unrevealed_mod.required_boss_tag:
+            # Boss tag present: use only desecrated mods with that boss tag
+            available_mods = simulator.modifier_pool.get_desecrated_only_mods(
+                item.base_category,
+                unrevealed_mod.mod_type.value,
+                item.item_level,
+                item
+            )
+            # Filter to only mods with the required boss tag
+            available_mods = [
+                mod for mod in available_mods
+                if mod.tags and unrevealed_mod.required_boss_tag in mod.tags
+            ]
+            # Apply minimum modifier level filter for ancient bones
+            if unrevealed_mod.min_modifier_level:
+                available_mods = [
+                    mod for mod in available_mods
+                    if mod.required_ilvl and mod.required_ilvl >= unrevealed_mod.min_modifier_level
+                ]
+            logger.info(f"Boss tag '{unrevealed_mod.required_boss_tag}': {len(available_mods)} desecrated mods available")
+        else:
+            # No boss tag: use entire mod pool (excluding essence-only)
+            available_mods = simulator.modifier_pool.get_eligible_mods(
+                item.base_category,
+                item.item_level,
+                unrevealed_mod.mod_type.value,
+                item,
+                min_mod_level=unrevealed_mod.min_modifier_level,
+                exclude_essence=True
+            )
+            logger.info(f"No boss tag: {len(available_mods)} total mods available (excluding essence-only)")
+
+        if not available_mods:
+            raise HTTPException(status_code=500, detail="No modifiers available")
+
+        # Get 3 random choices (or fewer if less than 3 available)
+        import random
+        num_choices = min(3, len(available_mods))
+        choices = random.sample(available_mods, num_choices)
+
+        # Roll values for each choice so they show absolute numbers, not ranges
+        rolled_choices = []
+        for choice in choices:
+            rolled_choice = choice.model_copy(deep=True)
+
+            # Roll values for hybrid modifiers (multiple stat ranges)
+            if rolled_choice.stat_ranges and len(rolled_choice.stat_ranges) > 0:
+                rolled_choice.current_values = [
+                    random.uniform(stat_range.min, stat_range.max)
+                    for stat_range in rolled_choice.stat_ranges
+                ]
+                # Set legacy current_value to first value for backwards compatibility
+                rolled_choice.current_value = rolled_choice.current_values[0]
+            # Fall back to legacy single value for older mods
+            elif rolled_choice.stat_min is not None and rolled_choice.stat_max is not None:
+                rolled_choice.current_value = random.uniform(
+                    rolled_choice.stat_min, rolled_choice.stat_max
+                )
+
+            # Mark all desecration reveals with green tint (regardless of mod type)
+            rolled_choice.is_desecrated = True
+
+            rolled_choices.append(rolled_choice)
+
+        # Convert to dict for response
+        choices_data = [filter_mod_tags(choice) for choice in rolled_choices]
+
+        # Abyssal Echoes is consumed during reveal (for reroll)
+        # Check if Omen of Abyssal Echoes is currently selected
+        has_abyssal_echoes = "Omen of Abyssal Echoes" in omen_names
+        logger.info(f"[Reveal] Omen names: {omen_names}")
+        logger.info(f"[Reveal] has_abyssal_echoes: {has_abyssal_echoes}")
+
+        return {
+            "unrevealed_id": unrevealed_id,
+            "choices": choices_data,
+            "has_abyssal_echoes": has_abyssal_echoes
+        }
+
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error revealing modifier: {e}")
         raise HTTPException(status_code=500, detail=str(e))

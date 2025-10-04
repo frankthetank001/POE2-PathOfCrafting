@@ -4,7 +4,7 @@ import re
 from app.core.logging import get_logger
 from app.schemas.item import ParsedItem, ItemMod
 from app.schemas.crafting import CraftableItem, ItemModifier, ModType, ItemRarity
-from app.schemas.item_bases import get_item_base_by_name, ITEM_BASES
+from app.schemas.item_bases import get_item_base_by_name, ITEM_BASES, ItemBase
 from app.services.crafting.modifier_pool import ModifierPool
 from app.services.stat_calculator import StatCalculator
 
@@ -26,10 +26,47 @@ class ItemConverter:
                 base = self._fuzzy_match_base(parsed_item.base_type)
                 if not base:
                     logger.warning(f"Could not find base for: {parsed_item.base_type}")
-                    # Use first body_armour base as fallback
-                    base = next((b for b in ITEM_BASES if b.slot == "body_armour"), None)
-                    if not base:
-                        raise ValueError(f"Could not find or fallback base for: {parsed_item.base_type}")
+                    # Determine slot from base type name
+                    base_type_lower = parsed_item.base_type.lower()
+                    if 'amulet' in base_type_lower:
+                        # Create a temporary amulet base
+                        base = ItemBase(
+                            name=parsed_item.base_type,
+                            category="amulet",
+                            slot="amulet",
+                            attribute_requirements=[],
+                            default_ilvl=1,
+                            description="Amulet",
+                            base_stats={}
+                        )
+                        logger.info(f"Created temporary amulet base for: {parsed_item.base_type}")
+                    elif 'ring' in base_type_lower:
+                        base = ItemBase(
+                            name=parsed_item.base_type,
+                            category="ring",
+                            slot="ring",
+                            attribute_requirements=[],
+                            default_ilvl=1,
+                            description="Ring",
+                            base_stats={}
+                        )
+                        logger.info(f"Created temporary ring base for: {parsed_item.base_type}")
+                    elif 'belt' in base_type_lower:
+                        base = ItemBase(
+                            name=parsed_item.base_type,
+                            category="belt",
+                            slot="belt",
+                            attribute_requirements=[],
+                            default_ilvl=1,
+                            description="Belt",
+                            base_stats={}
+                        )
+                        logger.info(f"Created temporary belt base for: {parsed_item.base_type}")
+                    else:
+                        # Last resort fallback
+                        base = next((b for b in ITEM_BASES if b.slot == "body_armour"), None)
+                        if not base:
+                            raise ValueError(f"Could not find or fallback base for: {parsed_item.base_type}")
 
             # Convert parsed mods to ItemModifiers
             prefix_mods = []
@@ -134,15 +171,22 @@ class ItemConverter:
             ]
 
         # Filter by applicable item category
-        candidates = [
-            m for m in candidates
-            if base_category in m.applicable_items or
-               (base_category.endswith('_armour') and 'body_armour' in m.applicable_items) or
-               (base_category.endswith('_armour') and 'armour' in m.applicable_items)
-        ]
+        def is_applicable(mod):
+            # Direct category match
+            if base_category in mod.applicable_items:
+                return True
+            # Handle jewellery category mapping to ring/amulet/belt
+            if 'jewellery' in mod.applicable_items and base_category in ['ring', 'amulet', 'belt']:
+                return True
+            # Use modifier pool's logic for other cases
+            return self.modifier_pool._is_mod_applicable_to_category(mod, base_category)
+
+        candidates = [m for m in candidates if is_applicable(m)]
 
         # Match by stat text pattern
+        # Strip special markers like (desecrated), (fractured), etc.
         parsed_text = item_mod.text.lower()
+        parsed_text = re.sub(r'\s*\((desecrated|fractured|corrupted)\)\s*$', '', parsed_text).strip()
 
         for candidate in candidates:
             # Replace {} placeholder with \d+ regex pattern
@@ -153,9 +197,27 @@ class ItemConverter:
             pattern = re.escape(pattern)
             pattern = pattern.replace(r'\\d\+', r'\d+')
 
+            # Also handle ranges like (13-17) in stat_text
+            # After escape, pattern contains: \(13\-17\) as literal chars
+            # Replace with: \d+\(13-17\) to match "16(13-17)" in parsed text
+            def replace_range(match):
+                min_val = match.group(1)
+                max_val = match.group(2)
+                return rf'\d+\({min_val}-{max_val}\)'
+            # Regex: \\\ matches \,  \( matches (,  etc.
+            pattern = re.sub(r'\\\(' + r'(\d+)' + r'\\\-' + r'(\d+)' + r'\\\)', replace_range, pattern)
+
             if re.search(pattern, parsed_text):
                 result_mod = candidate.model_copy()
                 result_mod.current_value = self._extract_value_from_text(item_mod.text)
+
+                # If the original text had (desecrated), ensure the tag is present
+                if '(desecrated)' in item_mod.text.lower():
+                    if not result_mod.tags:
+                        result_mod.tags = []
+                    if 'desecrated_only' not in result_mod.tags:
+                        result_mod.tags.append('desecrated_only')
+
                 return result_mod
 
         # If no match found, create a basic modifier

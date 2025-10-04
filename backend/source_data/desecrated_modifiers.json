@@ -1,9 +1,9 @@
 [
   {
-    "name": "+(9-15) to Dexterity and Intelligence",
+    "name": "+{} to Dexterity and Intelligence",
     "mod_type": "suffix",
     "tier": 1,
-    "stat_text": "+(9-15) to Dexterity and Intelligence",
+    "stat_text": "+{} to Dexterity and Intelligence",
     "stat_min": 9,
     "stat_max": 15,
     "required_ilvl": 65,
@@ -12,7 +12,8 @@
     "applicable_items": [
       "body_armour",
       "boots",
-      "charm"
+      "charm",
+      "jewellery"
     ],
     "tags": [
       "desecrated_only",
@@ -22,10 +23,10 @@
     "is_exclusive": true
   },
   {
-    "name": "+(9-15) to Strength and Dexterity",
+    "name": "+{} to Strength and Dexterity",
     "mod_type": "suffix",
     "tier": 1,
-    "stat_text": "+(9-15) to Strength and Dexterity",
+    "stat_text": "+{} to Strength and Dexterity",
     "stat_min": 9,
     "stat_max": 15,
     "required_ilvl": 65,
@@ -34,7 +35,8 @@
     "applicable_items": [
       "body_armour",
       "boots",
-      "charm"
+      "charm",
+      "jewellery"
     ],
     "tags": [
       "desecrated_only",
@@ -44,10 +46,10 @@
     "is_exclusive": true
   },
   {
-    "name": "+(9-15) to Strength and Intelligence",
+    "name": "+{} to Strength and Intelligence",
     "mod_type": "suffix",
     "tier": 1,
-    "stat_text": "+(9-15) to Strength and Intelligence",
+    "stat_text": "+{} to Strength and Intelligence",
     "stat_min": 9,
     "stat_max": 15,
     "required_ilvl": 65,
@@ -56,7 +58,8 @@
     "applicable_items": [
       "body_armour",
       "boots",
-      "charm"
+      "charm",
+      "jewellery"
     ],
     "tags": [
       "desecrated_only",
@@ -66,10 +69,10 @@
     "is_exclusive": true
   },
   {
-    "name": "+(13-17)% to Cold and Chaos Resistances",
+    "name": "+{}% to Cold and Chaos Resistances",
     "mod_type": "suffix",
     "tier": 1,
-    "stat_text": "+(13-17)% to Cold and Chaos Resistances",
+    "stat_text": "+{}% to Cold and Chaos Resistances",
     "stat_min": 13,
     "stat_max": 17,
     "required_ilvl": 65,
@@ -78,7 +81,8 @@
     "applicable_items": [
       "body_armour",
       "boots",
-      "charm"
+      "charm",
+      "jewellery"
     ],
     "tags": [
       "desecrated_only",
@@ -91,10 +95,10 @@
     "is_exclusive": true
   },
   {
-    "name": "+(13-17)% to Fire and Chaos Resistances",
+    "name": "+{}% to Fire and Chaos Resistances",
     "mod_type": "suffix",
     "tier": 1,
-    "stat_text": "+(13-17)% to Fire and Chaos Resistances",
+    "stat_text": "+{}% to Fire and Chaos Resistances",
     "stat_min": 13,
     "stat_max": 17,
     "required_ilvl": 65,
@@ -103,7 +107,8 @@
     "applicable_items": [
       "body_armour",
       "boots",
-      "charm"
+      "charm",
+      "jewellery"
     ],
     "tags": [
       "desecrated_only",
@@ -116,10 +121,10 @@
     "is_exclusive": true
   },
   {
-    "name": "+(13-17)% to Lightning and Chaos Resistances",
+    "name": "+{}% to Lightning and Chaos Resistances",
     "mod_type": "suffix",
     "tier": 1,
-    "stat_text": "+(13-17)% to Lightning and Chaos Resistances",
+    "stat_text": "+{}% to Lightning and Chaos Resistances",
     "stat_min": 13,
     "stat_max": 17,
     "required_ilvl": 65,
@@ -128,7 +133,8 @@
     "applicable_items": [
       "body_armour",
       "boots",
-      "charm"
+      "charm",
+      "jewellery"
     ],
     "tags": [
       "desecrated_only",
@@ -141,10 +147,10 @@
     "is_exclusive": true
   },
   {
-    "name": "(4-9)% increased Spirit Reservation Efficiency of Skills",
+    "name": "{}% increased Spirit Reservation Efficiency of Skills",
     "mod_type": "suffix",
     "tier": 1,
-    "stat_text": "(4-9)% increased Spirit Reservation Efficiency of Skills",
+    "stat_text": "{}% increased Spirit Reservation Efficiency of Skills",
     "stat_min": 4,
     "stat_max": 9,
     "required_ilvl": 65,
@@ -160,10 +166,10 @@
     "is_exclusive": true
   },
   {
-    "name": "(10-20)% of Damage taken Recouped as Mana",
+    "name": "{}% of Damage taken Recouped as Mana",
     "mod_type": "suffix",
     "tier": 1,
-    "stat_text": "(10-20)% of Damage taken Recouped as Mana",
+    "stat_text": "{}% of Damage taken Recouped as Mana",
     "stat_min": 10,
     "stat_max": 20,
     "required_ilvl": 65,
@@ -182,10 +188,10 @@
     "is_exclusive": true
   },
   {
-    "name": "(25-35)% reduced effect of Curses on you",
+    "name": "{}% reduced effect of Curses on you",
     "mod_type": "suffix",
     "tier": 1,
-    "stat_text": "(25-35)% reduced effect of Curses on you",
+    "stat_text": "{}% reduced effect of Curses on you",
     "stat_min": 25,
     "stat_max": 35,
     "required_ilvl": 65,
@@ -204,10 +210,10 @@
     "is_exclusive": true
   },
   {
-    "name": "Hits have (17-25)% reduced Critical Hit Chance against you",
+    "name": "Hits have {}% reduced Critical Hit Chance against you",
     "mod_type": "suffix",
     "tier": 1,
-    "stat_text": "Hits have (17-25)% reduced Critical Hit Chance against you",
+    "stat_text": "Hits have {}% reduced Critical Hit Chance against you",
     "stat_min": 17,
     "stat_max": 25,
     "required_ilvl": 65,
@@ -225,10 +231,10 @@
     "is_exclusive": true
   },
   {
-    "name": "(8-12)% increased Mana Cost Efficiency if you have Dodge Rolled Recently",
+    "name": "{}% increased Mana Cost Efficiency if you have Dodge Rolled Recently",
     "mod_type": "suffix",
     "tier": 1,
-    "stat_text": "(8-12)% increased Mana Cost Efficiency if you have Dodge Rolled Recently",
+    "stat_text": "{}% increased Mana Cost Efficiency if you have Dodge Rolled Recently",
     "stat_min": 8,
     "stat_max": 12,
     "required_ilvl": 65,
@@ -245,10 +251,10 @@
     "is_exclusive": true
   },
   {
-    "name": "(40-50)% increased Mana Regeneration Rate while stationary",
+    "name": "{}% increased Mana Regeneration Rate while stationary",
     "mod_type": "suffix",
     "tier": 1,
-    "stat_text": "(40-50)% increased Mana Regeneration Rate while stationary",
+    "stat_text": "{}% increased Mana Regeneration Rate while stationary",
     "stat_min": 40,
     "stat_max": 50,
     "required_ilvl": 65,
@@ -265,17 +271,18 @@
     "is_exclusive": true
   },
   {
-    "name": "(20-30)% reduced Duration of Bleeding on You",
+    "name": "{}% reduced Duration of Bleeding on You",
     "mod_type": "suffix",
     "tier": 1,
-    "stat_text": "(20-30)% reduced Duration of Bleeding on You",
+    "stat_text": "{}% reduced Duration of Bleeding on You",
     "stat_min": 20,
     "stat_max": 30,
     "required_ilvl": 65,
     "weight": 1,
     "mod_group": "ailment_duration",
     "applicable_items": [
-      "charm"
+      "charm",
+      "belt"
     ],
     "tags": [
       "desecrated_only",
@@ -287,17 +294,18 @@
     "is_exclusive": true
   },
   {
-    "name": "(20-30)% reduced Ignite Duration on you",
+    "name": "{}% reduced Ignite Duration on you",
     "mod_type": "suffix",
     "tier": 1,
-    "stat_text": "(20-30)% reduced Ignite Duration on you",
+    "stat_text": "{}% reduced Ignite Duration on you",
     "stat_min": 20,
     "stat_max": 30,
     "required_ilvl": 65,
     "weight": 1,
     "mod_group": "ailment_duration",
     "applicable_items": [
-      "charm"
+      "charm",
+      "belt"
     ],
     "tags": [
       "desecrated_only",
@@ -308,10 +316,10 @@
     "is_exclusive": true
   },
   {
-    "name": "(6-10)% reduced Movement Speed Penalty from using Skills while moving",
+    "name": "{}% reduced Movement Speed Penalty from using Skills while moving",
     "mod_type": "suffix",
     "tier": 1,
-    "stat_text": "(6-10)% reduced Movement Speed Penalty from using Skills while moving",
+    "stat_text": "{}% reduced Movement Speed Penalty from using Skills while moving",
     "stat_min": 6,
     "stat_max": 10,
     "required_ilvl": 65,
@@ -328,17 +336,18 @@
     "is_exclusive": true
   },
   {
-    "name": "(20-30)% reduced Poison Duration on you",
+    "name": "{}% reduced Poison Duration on you",
     "mod_type": "suffix",
     "tier": 1,
-    "stat_text": "(20-30)% reduced Poison Duration on you",
+    "stat_text": "{}% reduced Poison Duration on you",
     "stat_min": 20,
     "stat_max": 30,
     "required_ilvl": 65,
     "weight": 1,
     "mod_group": "ailment_duration",
     "applicable_items": [
-      "charm"
+      "charm",
+      "belt"
     ],
     "tags": [
       "desecrated_only",
@@ -350,10 +359,10 @@
     "is_exclusive": true
   },
   {
-    "name": "(12-20)% reduced Slowing Potency of Debuffs on You",
+    "name": "{}% reduced Slowing Potency of Debuffs on You",
     "mod_type": "suffix",
     "tier": 1,
-    "stat_text": "(12-20)% reduced Slowing Potency of Debuffs on You",
+    "stat_text": "{}% reduced Slowing Potency of Debuffs on You",
     "stat_min": 12,
     "stat_max": 20,
     "required_ilvl": 65,
@@ -369,10 +378,10 @@
     "is_exclusive": true
   },
   {
-    "name": "+(0.1-0.2) metres to Dodge Roll distance",
+    "name": "+{} metres to Dodge Roll distance",
     "mod_type": "suffix",
     "tier": 1,
-    "stat_text": "+(0.1-0.2) metres to Dodge Roll distance",
+    "stat_text": "+{} metres to Dodge Roll distance",
     "stat_min": 0.1,
     "stat_max": 0.2,
     "required_ilvl": 65,
@@ -406,6 +415,821 @@
       "physical",
       "ailment",
       "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Armour from Equipped Body Armour",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Armour from Equipped Body Armour",
+    "stat_min": 35,
+    "stat_max": 50,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "armour_from_body",
+    "applicable_items": [
+      "amulet"
+    ],
+    "tags": [
+      "desecrated_only",
+      "defences",
+      "armour",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Attack Damage when on Low Life",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Attack Damage when on Low Life",
+    "stat_min": 15,
+    "stat_max": 25,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "attack_damage_low_life",
+    "applicable_items": [
+      "jewellery"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "attack",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Deflection Rating",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Deflection Rating",
+    "stat_min": 10,
+    "stat_max": 20,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "deflection",
+    "applicable_items": [
+      "amulet"
+    ],
+    "tags": [
+      "desecrated_only",
+      "defences",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Energy Shield from Equipped Body Armour",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Energy Shield from Equipped Body Armour",
+    "stat_min": 35,
+    "stat_max": 50,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "es_from_body",
+    "applicable_items": [
+      "amulet"
+    ],
+    "tags": [
+      "desecrated_only",
+      "defences",
+      "energy_shield",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Evasion Rating from Equipped Body Armour",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Evasion Rating from Equipped Body Armour",
+    "stat_min": 35,
+    "stat_max": 50,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "evasion_from_body",
+    "applicable_items": [
+      "amulet"
+    ],
+    "tags": [
+      "desecrated_only",
+      "defences",
+      "evasion",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Global Defences",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Global Defences",
+    "stat_min": 15,
+    "stat_max": 25,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "global_defences",
+    "applicable_items": [
+      "amulet"
+    ],
+    "tags": [
+      "desecrated_only",
+      "defences",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Spell Damage while on Full Energy Shield",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Spell Damage while on Full Energy Shield",
+    "stat_min": 15,
+    "stat_max": 25,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "spell_damage_full_es",
+    "applicable_items": [
+      "jewellery"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "spell",
+      "caster",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Invocated Spells have {}% chance to consume half as much Energy",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Invocated Spells have {}% chance to consume half as much Energy",
+    "stat_min": 10,
+    "stat_max": 20,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "invocation_energy",
+    "applicable_items": [
+      "amulet"
+    ],
+    "tags": [
+      "desecrated_only",
+      "caster",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Minions deal {}% increased Damage if you've Hit Recently",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Minions deal {}% increased Damage if you've Hit Recently",
+    "stat_min": 15,
+    "stat_max": 25,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "minion_damage",
+    "applicable_items": [
+      "jewellery"
+    ],
+    "tags": [
+      "desecrated_only",
+      "minion",
+      "damage",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Remnants have {}% increased effect",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Remnants have {}% increased effect",
+    "stat_min": 8,
+    "stat_max": 15,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "remnant_effect",
+    "applicable_items": [
+      "jewellery"
+    ],
+    "tags": [
+      "desecrated_only",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Skills have a {}% chance to not consume Glory",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Skills have a {}% chance to not consume Glory",
+    "stat_min": 10,
+    "stat_max": 15,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "glory_conservation",
+    "applicable_items": [
+      "amulet"
+    ],
+    "tags": [
+      "desecrated_only",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Cooldown Recovery Rate",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Cooldown Recovery Rate",
+    "stat_min": 8,
+    "stat_max": 12,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "cooldown_recovery",
+    "applicable_items": [
+      "jewellery"
+    ],
+    "tags": [
+      "desecrated_only",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Exposure Effect",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Exposure Effect",
+    "stat_min": 10,
+    "stat_max": 15,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "exposure_effect",
+    "applicable_items": [
+      "jewellery"
+    ],
+    "tags": [
+      "desecrated_only",
+      "elemental",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Reservation Efficiency of Herald Skills",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Reservation Efficiency of Herald Skills",
+    "stat_min": 10,
+    "stat_max": 20,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "herald_efficiency",
+    "applicable_items": [
+      "amulet"
+    ],
+    "tags": [
+      "desecrated_only",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Skill Effect Duration",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Skill Effect Duration",
+    "stat_min": 8,
+    "stat_max": 12,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "skill_duration",
+    "applicable_items": [
+      "jewellery"
+    ],
+    "tags": [
+      "desecrated_only",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Skill Speed",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Skill Speed",
+    "stat_min": 3,
+    "stat_max": 6,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "skill_speed",
+    "applicable_items": [
+      "jewellery"
+    ],
+    "tags": [
+      "desecrated_only",
+      "speed",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% of Damage is taken from Mana before Life",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% of Damage is taken from Mana before Life",
+    "stat_min": 10,
+    "stat_max": 20,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "mom",
+    "applicable_items": [
+      "amulet"
+    ],
+    "tags": [
+      "desecrated_only",
+      "life",
+      "mana",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "+1 to Level of all Skills",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+1 to Level of all Skills",
+    "stat_min": 1,
+    "stat_max": 1,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "skill_level",
+    "applicable_items": [
+      "amulet"
+    ],
+    "tags": [
+      "desecrated_only",
+      "gem",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "+{}% to Quality of all Skills",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+{}% to Quality of all Skills",
+    "stat_min": 3,
+    "stat_max": 5,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "skill_quality",
+    "applicable_items": [
+      "amulet"
+    ],
+    "tags": [
+      "desecrated_only",
+      "gem",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Aura Skills have {}% increased Magnitudes",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Aura Skills have {}% increased Magnitudes",
+    "stat_min": 8,
+    "stat_max": 16,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "aura_effect",
+    "applicable_items": [
+      "amulet"
+    ],
+    "tags": [
+      "desecrated_only",
+      "aura",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Equipment and Skill Gems have {}% reduced Attribute Requirements",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Equipment and Skill Gems have {}% reduced Attribute Requirements",
+    "stat_min": 10,
+    "stat_max": 15,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "attribute_requirements",
+    "applicable_items": [
+      "amulet"
+    ],
+    "tags": [
+      "desecrated_only",
+      "attribute",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Minions have {}% increased Cooldown Recovery Rate",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Minions have {}% increased Cooldown Recovery Rate",
+    "stat_min": 12,
+    "stat_max": 20,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "minion_cooldown",
+    "applicable_items": [
+      "amulet"
+    ],
+    "tags": [
+      "desecrated_only",
+      "minion",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Recover {}% of maximum Life on Kill",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Recover {}% of maximum Life on Kill",
+    "stat_min": 2,
+    "stat_max": 3,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "life_on_kill",
+    "applicable_items": [
+      "jewellery"
+    ],
+    "tags": [
+      "desecrated_only",
+      "life",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Recover {}% of maximum Mana on Kill",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Recover {}% of maximum Mana on Kill",
+    "stat_min": 2,
+    "stat_max": 3,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "mana_on_kill",
+    "applicable_items": [
+      "jewellery"
+    ],
+    "tags": [
+      "desecrated_only",
+      "mana",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Remnants can be collected from {}% further away",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Remnants can be collected from {}% further away",
+    "stat_min": 15,
+    "stat_max": 25,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "remnant_radius",
+    "applicable_items": [
+      "jewellery"
+    ],
+    "tags": [
+      "desecrated_only",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Freeze Buildup if you've consumed an Power Charge Recently",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Freeze Buildup if you've consumed an Power Charge Recently",
+    "stat_min": 20,
+    "stat_max": 30,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "freeze_buildup",
+    "applicable_items": [
+      "ring"
+    ],
+    "tags": [
+      "desecrated_only",
+      "ailment",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Magnitude of Ignite if you've consumed an Endurance Charge Recently",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Magnitude of Ignite if you've consumed an Endurance Charge Recently",
+    "stat_min": 20,
+    "stat_max": 30,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "ignite_magnitude",
+    "applicable_items": [
+      "ring"
+    ],
+    "tags": [
+      "desecrated_only",
+      "ailment",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Magnitude of Shock if you've consumed a Frenzy Charge Recently",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Magnitude of Shock if you've consumed a Frenzy Charge Recently",
+    "stat_min": 20,
+    "stat_max": 30,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "shock_magnitude",
+    "applicable_items": [
+      "ring"
+    ],
+    "tags": [
+      "desecrated_only",
+      "ailment",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased amount of Life Leeched",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased amount of Life Leeched",
+    "stat_min": 12,
+    "stat_max": 20,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "life_leech",
+    "applicable_items": [
+      "ring"
+    ],
+    "tags": [
+      "desecrated_only",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased amount of Mana Leeched",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased amount of Mana Leeched",
+    "stat_min": 12,
+    "stat_max": 20,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "mana_leech",
+    "applicable_items": [
+      "ring"
+    ],
+    "tags": [
+      "desecrated_only",
+      "mana",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "2 to 4 Fire Thorns damage per 100 maximum Life",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "2 to 4 Fire Thorns damage per 100 maximum Life",
+    "stat_min": 2,
+    "stat_max": 4,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "fire_thorns",
+    "applicable_items": [
+      "belt"
+    ],
+    "tags": [
+      "desecrated_only",
+      "elemental",
+      "fire",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% chance for Charms you use to not consume Charges",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% chance for Charms you use to not consume Charges",
+    "stat_min": 10,
+    "stat_max": 18,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "charm_charge_conservation",
+    "applicable_items": [
+      "belt"
+    ],
+    "tags": [
+      "desecrated_only",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% chance for Flasks you use to not consume Charges",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% chance for Flasks you use to not consume Charges",
+    "stat_min": 10,
+    "stat_max": 18,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "flask_charge_conservation",
+    "applicable_items": [
+      "belt"
+    ],
+    "tags": [
+      "desecrated_only",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Life Regeneration rate during Effect of any Life Flask",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Life Regeneration rate during Effect of any Life Flask",
+    "stat_min": 20,
+    "stat_max": 30,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "life_regen_flask",
+    "applicable_items": [
+      "belt"
+    ],
+    "tags": [
+      "desecrated_only",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Charms gain {} charges per Second",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Charms gain {} charges per Second",
+    "stat_min": 0.1,
+    "stat_max": 0.2,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "charm_charge_gain",
+    "applicable_items": [
+      "belt"
+    ],
+    "tags": [
+      "desecrated_only",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Gain {}% of Maximum Mana as Armour",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Maximum Mana as Armour",
+    "stat_min": 6,
+    "stat_max": 12,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "mana_as_armour",
+    "applicable_items": [
+      "belt"
+    ],
+    "tags": [
+      "desecrated_only",
+      "mana",
+      "defences",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Life Flasks gain {} charges per second",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Life Flasks gain {} charges per second",
+    "stat_min": 0.1,
+    "stat_max": 0.2,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "life_flask_charge_gain",
+    "applicable_items": [
+      "belt"
+    ],
+    "tags": [
+      "desecrated_only",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Mana Flasks gain {} charges per Second",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Mana Flasks gain {} charges per Second",
+    "stat_min": 0.1,
+    "stat_max": 0.2,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "mana_flask_charge_gain",
+    "applicable_items": [
+      "belt"
+    ],
+    "tags": [
+      "desecrated_only",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Mana Regeneration Rate",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Mana Regeneration Rate",
+    "stat_min": 30,
+    "stat_max": 40,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "mana_regen",
+    "applicable_items": [
+      "belt"
+    ],
+    "tags": [
+      "desecrated_only",
+      "mana",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% reduced Slowing Potency of Debuffs on You if you've used a Charm Recently",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% reduced Slowing Potency of Debuffs on You if you've used a Charm Recently",
+    "stat_min": 17,
+    "stat_max": 25,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "debuff_protection_conditional",
+    "applicable_items": [
+      "belt"
+    ],
+    "tags": [
+      "desecrated_only",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "+{}% to Thorns Critical Hit Chance",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+{}% to Thorns Critical Hit Chance",
+    "stat_min": 2,
+    "stat_max": 4,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "thorns_crit",
+    "applicable_items": [
+      "belt"
+    ],
+    "tags": [
+      "desecrated_only",
+      "amanamu"
     ],
     "is_exclusive": true
   }

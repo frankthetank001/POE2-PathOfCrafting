@@ -42,10 +42,26 @@ class ItemModifier(BaseModel):
     current_value: Optional[float] = None  # Legacy: first value
     current_values: Optional[List[float]] = None  # All rolled values for multi-stat mods
     required_ilvl: Optional[int] = None
+    weight: int = 100  # Weighting for random selection
     mod_group: Optional[str] = None
     applicable_items: List[str] = Field(default_factory=list)
     tags: List[str] = Field(default_factory=list)
     is_exclusive: bool = False  # True if mod is only available on unique/special items
+    is_essence_only: bool = False  # True if mod is only available from essences
+    is_unrevealed: bool = False  # True if this is an unrevealed desecrated modifier
+    unrevealed_id: Optional[str] = None  # ID linking to UnrevealedModifier metadata
+    is_desecrated: bool = False  # True if this mod was added via desecration (for green tint)
+
+
+class UnrevealedModifier(BaseModel):
+    """Represents an unrevealed desecrated modifier that needs to be revealed by the player"""
+    id: str  # Unique ID for this unrevealed mod
+    mod_type: ModType  # Whether it will be a prefix or suffix
+    bone_type: str  # Type of bone used (gnawed/preserved/ancient)
+    bone_part: str  # Part of bone (jawbone/rib/collarbone/cranium/vertebrae)
+    min_modifier_level: Optional[int] = None  # For ancient bones
+    required_boss_tag: Optional[str] = None  # ulaman/amanamu/kurgal if boss omen was used
+    has_abyssal_echoes: bool = False  # True if Omen of Abyssal Echoes was active
 
 
 class CraftableItem(BaseModel):
@@ -58,6 +74,7 @@ class CraftableItem(BaseModel):
     implicit_mods: List[ItemModifier] = Field(default_factory=list)
     prefix_mods: List[ItemModifier] = Field(default_factory=list)
     suffix_mods: List[ItemModifier] = Field(default_factory=list)
+    unrevealed_mods: List[UnrevealedModifier] = Field(default_factory=list)  # Unrevealed desecrated mods
 
     corrupted: bool = False
     base_stats: Dict[str, int] = Field(default_factory=dict)  # Base stats from item base
@@ -65,10 +82,14 @@ class CraftableItem(BaseModel):
 
     @property
     def prefix_count(self) -> int:
+        # Count all prefixes (including unrevealed placeholders)
+        # Unrevealed mods are now stored as placeholders in prefix_mods with is_unrevealed=True
         return len(self.prefix_mods)
 
     @property
     def suffix_count(self) -> int:
+        # Count all suffixes (including unrevealed placeholders)
+        # Unrevealed mods are now stored as placeholders in suffix_mods with is_unrevealed=True
         return len(self.suffix_mods)
 
     @property

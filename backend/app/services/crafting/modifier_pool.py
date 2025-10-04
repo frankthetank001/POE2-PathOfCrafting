@@ -88,6 +88,7 @@ class ModifierPool:
         excluded_tags: Optional[List[str]] = None,
         excluded_patterns: Optional[List[str]] = None,
         exclude_desecrated: bool = True,
+        exclude_essence: bool = False,
         item=None,
     ) -> List[ItemModifier]:
         eligible = []
@@ -121,6 +122,10 @@ class ModifierPool:
             if exclude_desecrated and mod.tags and "desecrated_only" in mod.tags:
                 continue
 
+            # Exclude essence-only mods if requested
+            if exclude_essence and mod.tags and "essence_only" in mod.tags:
+                continue
+
             # Exclude mods marked as exclusive-only (unique items only), but allow essence-only mods
             if exclude_exclusive and mod.is_exclusive and "essence_only" not in mod.tags:
                 continue
@@ -142,18 +147,30 @@ class ModifierPool:
         if not modifiers:
             return None
 
-        total_weight = sum(
-            mod.stat_max if mod.stat_max else 1000 for mod in modifiers
-        )
+        # Filter out zero-weight modifiers (handle weight as int or str)
+        weighted_mods = []
+        for mod in modifiers:
+            try:
+                weight = int(mod.weight) if isinstance(mod.weight, str) else mod.weight
+                if weight > 0:
+                    weighted_mods.append(mod)
+            except (ValueError, TypeError):
+                # Skip mods with invalid weights
+                continue
+
+        if not weighted_mods:
+            return None
+
+        total_weight = sum(int(mod.weight) if isinstance(mod.weight, str) else mod.weight for mod in weighted_mods)
 
         if total_weight == 0:
-            return random.choice(modifiers)
+            return None
 
         rand_value = random.uniform(0, total_weight)
         cumulative = 0
 
-        for mod in modifiers:
-            weight = mod.stat_max if mod.stat_max else 1000
+        for mod in weighted_mods:
+            weight = int(mod.weight) if isinstance(mod.weight, str) else mod.weight
             cumulative += weight
             if rand_value <= cumulative:
                 rolled_mod = mod.model_copy()
@@ -174,7 +191,8 @@ class ModifierPool:
 
                 return rolled_mod
 
-        return modifiers[-1].model_copy()
+        # Fallback to last weighted modifier if we somehow didn't select one
+        return weighted_mods[-1].model_copy() if weighted_mods else None
 
     def _is_unique_only_mod_group(self, mod_group: Optional[str], item_category: str = "") -> bool:
         """Check if a mod group is known to be unique-only"""
@@ -249,6 +267,9 @@ class ModifierPool:
         mod_type: str,
         item=None,
         exclude_exclusive: bool = True,
+        min_mod_level: int = None,
+        exclude_desecrated: bool = True,
+        exclude_essence: bool = False,
     ) -> List[ItemModifier]:
         pool = self._prefix_pool if mod_type == "prefix" else self._suffix_pool
 
@@ -262,8 +283,12 @@ class ModifierPool:
             excluded_patterns = self._get_excluded_patterns_from_item(item, mod_type)
 
         eligible = self._filter_eligible_mods(
-            pool, item_category, item_level, excluded_groups, None, exclude_exclusive, excluded_tags, excluded_patterns, exclude_desecrated=True, item=item
+            pool, item_category, item_level, excluded_groups, None, exclude_exclusive, excluded_tags, excluded_patterns, exclude_desecrated=exclude_desecrated, exclude_essence=exclude_essence, item=item
         )
+
+        # Filter by min_mod_level if specified
+        if min_mod_level is not None:
+            eligible = [mod for mod in eligible if (mod.required_ilvl or 0) >= min_mod_level]
 
         # Get item slot for exclusions
         item_slot = None
@@ -372,6 +397,11 @@ class ModifierPool:
         # Check if category matches directly
         if item_category in mod.applicable_items:
             return True
+
+        # Handle "jewellery" category - expands to amulet, ring, belt
+        if "jewellery" in mod.applicable_items:
+            if item_slot in ["amulet", "ring", "belt"]:
+                return True
 
         # Check if slot matches (for slot-specific mods)
         # BUT for body_armour slot, need to check defence type filtering first

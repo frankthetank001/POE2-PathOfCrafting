@@ -16,7 +16,11 @@ This script loads from the comprehensive JSON reference files.
 import sys
 import os
 import json
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Change to backend directory to ensure database is created there
+backend_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+os.chdir(backend_dir)
+sys.path.insert(0, backend_dir)
 
 from app.models.crafting import (
     BaseItem, Modifier, CurrencyConfig, Essence, EssenceItemEffect,
@@ -371,6 +375,7 @@ def load_desecration_bones(db: Session):
 
 def main():
     """Main function to populate ALL crafting data from JSON files."""
+    print(f"Working directory: {os.getcwd()}")
     print("Starting COMPLETE crafting data population from JSON files...")
     print("Loading all data from backend/source_data/")
 

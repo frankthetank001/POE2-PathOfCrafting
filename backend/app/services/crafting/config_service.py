@@ -250,12 +250,28 @@ class CraftingConfigService:
         ]
 
     def get_omens_for_currency(self, currency_name: str) -> List[OmenInfo]:
-        """Get all omens that affect a specific currency."""
+        """Get all omens that affect a specific currency (supports variants)."""
         self.ensure_loaded()
-        return [
+
+        # Check if this is a desecration currency (bone)
+        bone_config = self.get_bone_config(currency_name)
+        is_desecration = bone_config is not None
+
+        omens = [
             omen for omen in self._omen_configs.values()
-            if omen.affected_currency == currency_name
+            if omen.affected_currency == currency_name or omen.affected_currency in currency_name
         ]
+
+        # If this is a desecration currency, also include omens with affected_currency "Desecration"
+        if is_desecration:
+            desecration_omens = [
+                omen for omen in self._omen_configs.values()
+                if omen.affected_currency == "Desecration"
+            ]
+            # Merge and deduplicate
+            omens = list({omen.name: omen for omen in omens + desecration_omens}.values())
+
+        return omens
 
 
 # Global instance

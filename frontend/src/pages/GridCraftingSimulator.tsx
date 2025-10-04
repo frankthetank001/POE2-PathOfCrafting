@@ -99,6 +99,7 @@ function ItemTab({ setItem, onHistoryReset, setMessage, onItemCreated }: TabCont
         implicit_mods: [],
         prefix_mods: [],
         suffix_mods: [],
+        unrevealed_mods: [],
         corrupted: false,
         base_stats: baseData.base_stats,
         calculated_stats: initialStats,
@@ -357,6 +358,7 @@ function GridCraftingSimulator() {
     implicit_mods: [],
     prefix_mods: [],
     suffix_mods: [],
+    unrevealed_mods: [],
     corrupted: false,
     base_stats: {},
     calculated_stats: {},
@@ -420,6 +422,12 @@ function GridCraftingSimulator() {
   // Drag and drop state
   const [draggedMod, setDraggedMod] = useState<ItemModifier | null>(null)
   const [draggedCurrency, setDraggedCurrency] = useState<string | null>(null)
+
+  // Reveal modal state
+  const [revealModalOpen, setRevealModalOpen] = useState(false)
+  const [revealingModId, setRevealingModId] = useState<string | null>(null)
+  const [revealChoices, setRevealChoices] = useState<ItemModifier[]>([])
+  const [rerollUsed, setRerollUsed] = useState(false)
 
   function handleItemCreated() {
     setItemCreated(true)
@@ -578,6 +586,117 @@ function GridCraftingSimulator() {
 
     setItem(newItem)
     setMessage(`Removed ${modName} from item`)
+  }
+
+  async function handleClickUnrevealedMod(unrevealedId: string) {
+    try {
+      setLoading(true)
+      console.log('[Reveal] Selected omens:', selectedOmens)
+      const response = await fetch('http://localhost:8000/api/v1/crafting/reveal-modifier', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          unrevealed_id: unrevealedId,
+          item: item,
+          omen_names: selectedOmens
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to reveal modifier')
+      }
+
+      const data = await response.json()
+      console.log('[Reveal] Received choices:', data.choices.map((c: any) => ({ name: c.name, tags: c.tags })))
+      setRevealingModId(unrevealedId)
+      setRevealChoices(data.choices)
+      setRerollUsed(!data.has_abyssal_echoes) // If no Abyssal Echoes, mark as used
+      setRevealModalOpen(true)
+    } catch (error) {
+      console.error('Error revealing modifier:', error)
+      setMessage('Error revealing modifier')
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  function handleSelectRevealChoice(choice: ItemModifier) {
+    if (!revealingModId) return
+
+    // Add to history
+    setHistory([...history, `Revealed desecrated modifier: ${choice.name}`])
+    setItemHistory([...itemHistory, item])
+
+    // Remove unrevealed mod and replace the placeholder with chosen revealed mod
+    const newItem = { ...item }
+    newItem.unrevealed_mods = newItem.unrevealed_mods.filter(mod => mod.id !== revealingModId)
+
+    // Replace the placeholder modifier with the chosen modifier
+    if (choice.mod_type === 'prefix') {
+      newItem.prefix_mods = newItem.prefix_mods.map(mod =>
+        mod.unrevealed_id === revealingModId ? choice : mod
+      )
+    } else {
+      newItem.suffix_mods = newItem.suffix_mods.map(mod =>
+        mod.unrevealed_id === revealingModId ? choice : mod
+      )
+    }
+
+    setItem(newItem)
+
+    // Consume Omen of Abyssal Echoes if it was used
+    const hasAbyssalEchoes = selectedOmens.some(omen => omen.includes('Abyssal Echoes'))
+    if (hasAbyssalEchoes) {
+      const newOmens = selectedOmens.filter(omen => !omen.includes('Abyssal Echoes'))
+      setSelectedOmens(newOmens)
+      setMessage(`Revealed: ${choice.name} (Omen of Abyssal Echoes consumed)`)
+    } else {
+      setMessage(`Revealed: ${choice.name}`)
+    }
+
+    // Close modal
+    setRevealModalOpen(false)
+    setRevealingModId(null)
+    setRevealChoices([])
+    setRerollUsed(false)
+  }
+
+  function handleCloseRevealModal() {
+    setRevealModalOpen(false)
+    setRevealingModId(null)
+    setRevealChoices([])
+    setRerollUsed(false)
+  }
+
+  async function handleRerollRevealChoices() {
+    if (!revealingModId || rerollUsed) return
+
+    try {
+      setLoading(true)
+      const response = await fetch('http://localhost:8000/api/v1/crafting/reveal-modifier', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          unrevealed_id: revealingModId,
+          item: item,
+          omen_names: selectedOmens
+        })
+      })
+
+      if (!response.ok) {
+        throw new Error('Failed to reroll modifier choices')
+      }
+
+      const data = await response.json()
+      setRevealChoices(data.choices)
+      setRerollUsed(true)
+      setMessage('Rerolled modifier choices (Omen of Abyssal Echoes consumed)')
+    } catch (error) {
+      console.error('Error rerolling choices:', error)
+      setMessage('Error rerolling choices')
+    } finally {
+      setLoading(false)
+    }
   }
 
   // Load available mods and currencies when item changes
@@ -848,6 +967,29 @@ function GridCraftingSimulator() {
     }
   }, [message])
 
+  // Auto-apply tag filters when Homogenising or Catalysing omen is selected
+  useEffect(() => {
+    const hasHomogenising = selectedOmens.some(omen => omen.includes('Homogenising'))
+    const hasCatalysing = selectedOmens.some(omen => omen.includes('Catalysing'))
+
+    if (hasHomogenising || hasCatalysing) {
+      // Get all tags from existing mods
+      const existingMods = [...item.prefix_mods, ...item.suffix_mods]
+      const existingTags = existingMods.flatMap(m => m.tags || [])
+
+      if (existingTags.length > 0) {
+        // Auto-apply all existing mod tags as filters
+        setActiveTagFilters(new Set(existingTags.filter(tag => tag !== 'desecrated_only')))
+      }
+    } else {
+      // Clear tag filters when omens are deselected
+      // Only clear if there are active filters (to avoid unnecessary re-renders)
+      if (activeTagFilters.size > 0) {
+        setActiveTagFilters(new Set())
+      }
+    }
+  }, [selectedOmens, item.prefix_mods, item.suffix_mods])
+
   // Sophisticated mod filtering and grouping functions
   const renderModifier = (mod: ItemModifier) => {
     // Get values for all stats (multi-stat mods have multiple values)
@@ -959,17 +1101,23 @@ function GridCraftingSimulator() {
       return false
     }
 
+    // Desecrated mods can only come from desecration (bones), not regular currency
+    // Always grey them out when any highlighting omen is active
+    if (mod.is_desecrated) {
+      return true
+    }
+
     // Check prefix/suffix highlighting - if omen targets specific type, grey out the other
     if (highlighting.highlightPrefixes && modType === 'suffix') return true
     if (highlighting.highlightSuffixes && modType === 'prefix') return true
 
-    // For same type highlighting (homogenising omens), grey out mods that don't match
+    // For same type highlighting (homogenising omens), grey out mods that don't match existing tags
     if (highlighting.highlightSameTypes) {
       const existingMods = [...item.prefix_mods, ...item.suffix_mods]
-      const existingModGroups = existingMods.map(m => m.mod_group).filter(Boolean)
+      const existingTags = existingMods.flatMap(m => m.tags || [])
 
-      // If mod doesn't match any existing group, grey it out
-      if (existingModGroups.length > 0 && (!mod.mod_group || !existingModGroups.includes(mod.mod_group))) {
+      // If mod has no tags that match existing tags, grey it out
+      if (existingTags.length > 0 && (!mod.tags || !mod.tags.some(tag => existingTags.includes(tag)))) {
         return true
       }
     }
@@ -990,8 +1138,19 @@ function GridCraftingSimulator() {
 
   const isModMatchingTagFilters = (mod: any) => {
     if (activeTagFilters.size === 0) return true
-    if (!mod.tags) return false
-    return Array.from(activeTagFilters).every(filter => mod.tags.includes(filter))
+
+    // Exclude desecrated mods when Homogenising/Catalysing omens are active
+    // (these omens only work with regular currency, not desecration bones)
+    const hasTagBasedOmen = selectedOmens.some(omen =>
+      omen.includes('Homogenising') || omen.includes('Catalysing')
+    )
+    if (hasTagBasedOmen && mod.is_desecrated) {
+      return false
+    }
+
+    if (!mod.tags || mod.tags.length === 0) return false
+    // OR logic: match if ANY selected tag is present
+    return Array.from(activeTagFilters).some(filter => mod.tags.includes(filter))
   }
 
   const isModMatchingSearch = (mod: any) => {
@@ -1109,6 +1268,42 @@ function GridCraftingSimulator() {
     })
 
     return grouped
+  }
+
+  // Count matching mods (for display in table titles)
+  const countMatchingMods = (modType: 'prefix' | 'suffix') => {
+    const groupedMods = getGroupedMods(modType)
+    const specialMods = modType === 'prefix' ? availableMods.essence_prefixes.concat(availableMods.desecrated_prefixes) : availableMods.essence_suffixes.concat(availableMods.desecrated_suffixes)
+
+    let matchingCount = 0
+    let totalCount = 0
+
+    // Count grouped regular mods (count groups, not individual tiers)
+    Object.values(groupedMods).forEach(groupMods => {
+      totalCount++ // Count the group, not individual tiers
+      const hasMatch = groupMods.some(mod => {
+        const tagMatch = isModMatchingTagFilters(mod)
+        const searchMatch = isModMatchingSearch(mod)
+        const notGreyedOut = !shouldGreyOutMod(mod, modType)
+        return tagMatch && searchMatch && notGreyedOut
+      })
+      if (hasMatch) {
+        matchingCount++
+      }
+    })
+
+    // Count special mods (essence + desecrated are individual mods, not grouped)
+    specialMods.forEach(mod => {
+      totalCount++
+      const tagMatch = isModMatchingTagFilters(mod)
+      const searchMatch = isModMatchingSearch(mod)
+      const notGreyedOut = !shouldGreyOutMod(mod, modType)
+      if (tagMatch && searchMatch && notGreyedOut) {
+        matchingCount++
+      }
+    })
+
+    return { matching: matchingCount, total: totalCount }
   }
 
   // Tag filtering functions
@@ -1414,7 +1609,10 @@ function GridCraftingSimulator() {
 
             <div className="mods-pool-columns">
               <div className="mods-pool-column">
-                <h4 className="column-title">Prefixes ({Object.keys(getGroupedMods('prefix')).length + availableMods.essence_prefixes.length + availableMods.desecrated_prefixes.length} total)</h4>
+                <h4 className="column-title">Prefixes ({(() => {
+                  const counts = countMatchingMods('prefix')
+                  return counts.matching === counts.total ? `${counts.total} total` : `${counts.matching}/${counts.total}`
+                })()})</h4>
                 <div className="mods-pool-list">
                   {/* Normal Prefixes */}
                   {Object.entries(getGroupedMods('prefix')).map(([groupKey, groupMods]) => {
@@ -1456,7 +1654,7 @@ function GridCraftingSimulator() {
                             <span className="group-max-ilvl">ilvl {maxIlvl}</span>
                             {bestTier.tags && bestTier.tags.length > 0 && (
                               <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
-                                {bestTier.tags.slice(0, 3).map((tag, i) => (
+                                {bestTier.tags.map((tag, i) => (
                                   <span
                                     key={i}
                                     className="mod-tag-text"
@@ -1533,6 +1731,26 @@ function GridCraftingSimulator() {
                           title="Essence-only mod - Double-click to filter by all tags, drag to add to item"
                         >
                           <span className="pool-mod-stat-main">{mod.stat_text}</span>
+                          <div className="compact-mod-info">
+                            {mod.tags && mod.tags.length > 0 && (
+                              <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
+                                {mod.tags.map((tag, i) => (
+                                  <span
+                                    key={i}
+                                    className="mod-tag-text"
+                                    data-tag={tag}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleTagFilter(tag);
+                                    }}
+                                    title={`Click to filter by "${tag}" tag`}
+                                  >
+                                    {tag}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                     )
@@ -1541,8 +1759,10 @@ function GridCraftingSimulator() {
                   {/* Desecrated Prefixes */}
                   {availableMods.desecrated_prefixes.map((mod, idx) => {
                     const isTagFiltered = activeTagFilters.size > 0 && !isModMatchingTagFilters(mod)
+                    const isSearchFiltered = searchQuery.trim() && !isModMatchingSearch(mod)
+                    const isFiltered = isTagFiltered || isSearchFiltered
                     return (
-                      <div key={`desecrated-prefix-${idx}`} className={`pool-mod-group desecrated-only ${isTagFiltered ? 'tag-filtered' : ''}`}>
+                      <div key={`desecrated-prefix-${idx}`} className={`pool-mod-group desecrated-only ${isFiltered ? 'tag-filtered' : ''}`}>
                         <div
                           className="pool-mod-group-header prefix compact-single-line mod-group-clickable"
                           onDoubleClick={() => applyAllModTags(mod)}
@@ -1552,6 +1772,26 @@ function GridCraftingSimulator() {
                           title="Desecrated-only mod - Double-click to filter by all tags, drag to add to item"
                         >
                           <span className="pool-mod-stat-main">{mod.stat_text}</span>
+                          <div className="compact-mod-info">
+                            {mod.tags && mod.tags.length > 0 && (
+                              <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
+                                {mod.tags.map((tag, i) => (
+                                  <span
+                                    key={i}
+                                    className="mod-tag-text"
+                                    data-tag={tag}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleTagFilter(tag);
+                                    }}
+                                    title={`Click to filter by "${tag}" tag`}
+                                  >
+                                    {tag}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                     )
@@ -1560,7 +1800,10 @@ function GridCraftingSimulator() {
               </div>
 
               <div className="mods-pool-column">
-                <h4 className="column-title">Suffixes ({Object.keys(getGroupedMods('suffix')).length + availableMods.essence_suffixes.length + availableMods.desecrated_suffixes.length} total)</h4>
+                <h4 className="column-title">Suffixes ({(() => {
+                  const counts = countMatchingMods('suffix')
+                  return counts.matching === counts.total ? `${counts.total} total` : `${counts.matching}/${counts.total}`
+                })()})</h4>
                 <div className="mods-pool-list">
                   {/* Normal Suffixes */}
                   {Object.entries(getGroupedMods('suffix')).map(([groupKey, groupMods]) => {
@@ -1602,7 +1845,7 @@ function GridCraftingSimulator() {
                             <span className="group-max-ilvl">ilvl {maxIlvl}</span>
                             {bestTier.tags && bestTier.tags.length > 0 && (
                               <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
-                                {bestTier.tags.slice(0, 3).map((tag, i) => (
+                                {bestTier.tags.map((tag, i) => (
                                   <span
                                     key={i}
                                     className="mod-tag-text"
@@ -1666,8 +1909,10 @@ function GridCraftingSimulator() {
                   {/* Essence Suffixes */}
                   {availableMods.essence_suffixes.map((mod, idx) => {
                     const isTagFiltered = activeTagFilters.size > 0 && !isModMatchingTagFilters(mod)
+                    const isSearchFiltered = searchQuery.trim() && !isModMatchingSearch(mod)
+                    const isFiltered = isTagFiltered || isSearchFiltered
                     return (
-                      <div key={`essence-suffix-${idx}`} className={`pool-mod-group essence-only ${isTagFiltered ? 'tag-filtered' : ''}`}>
+                      <div key={`essence-suffix-${idx}`} className={`pool-mod-group essence-only ${isFiltered ? 'tag-filtered' : ''}`}>
                         <div
                           className="pool-mod-group-header suffix compact-single-line mod-group-clickable"
                           onDoubleClick={() => applyAllModTags(mod)}
@@ -1677,6 +1922,26 @@ function GridCraftingSimulator() {
                           title="Essence-only mod - Double-click to filter by all tags, drag to add to item"
                         >
                           <span className="pool-mod-stat-main">{mod.stat_text}</span>
+                          <div className="compact-mod-info">
+                            {mod.tags && mod.tags.length > 0 && (
+                              <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
+                                {mod.tags.map((tag, i) => (
+                                  <span
+                                    key={i}
+                                    className="mod-tag-text"
+                                    data-tag={tag}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleTagFilter(tag);
+                                    }}
+                                    title={`Click to filter by "${tag}" tag`}
+                                  >
+                                    {tag}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                     )
@@ -1685,8 +1950,10 @@ function GridCraftingSimulator() {
                   {/* Desecrated Suffixes */}
                   {availableMods.desecrated_suffixes.map((mod, idx) => {
                     const isTagFiltered = activeTagFilters.size > 0 && !isModMatchingTagFilters(mod)
+                    const isSearchFiltered = searchQuery.trim() && !isModMatchingSearch(mod)
+                    const isFiltered = isTagFiltered || isSearchFiltered
                     return (
-                      <div key={`desecrated-suffix-${idx}`} className={`pool-mod-group desecrated-only ${isTagFiltered ? 'tag-filtered' : ''}`}>
+                      <div key={`desecrated-suffix-${idx}`} className={`pool-mod-group desecrated-only ${isFiltered ? 'tag-filtered' : ''}`}>
                         <div
                           className="pool-mod-group-header suffix compact-single-line mod-group-clickable"
                           onDoubleClick={() => applyAllModTags(mod)}
@@ -1696,6 +1963,26 @@ function GridCraftingSimulator() {
                           title="Desecrated-only mod - Double-click to filter by all tags, drag to add to item"
                         >
                           <span className="pool-mod-stat-main">{mod.stat_text}</span>
+                          <div className="compact-mod-info">
+                            {mod.tags && mod.tags.length > 0 && (
+                              <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
+                                {mod.tags.map((tag, i) => (
+                                  <span
+                                    key={i}
+                                    className="mod-tag-text"
+                                    data-tag={tag}
+                                    onClick={(e) => {
+                                      e.stopPropagation();
+                                      toggleTagFilter(tag);
+                                    }}
+                                    title={`Click to filter by "${tag}" tag`}
+                                  >
+                                    {tag}
+                                  </span>
+                                ))}
+                              </div>
+                            )}
+                          </div>
                         </div>
                       </div>
                     )
@@ -1966,24 +2253,72 @@ function GridCraftingSimulator() {
                           <h4 className="mods-title">Prefixes ({item.prefix_mods.length}/3)</h4>
                           {item.prefix_mods.map((mod, idx) => {
                             const isTagFiltered = activeTagFilters.size > 0 && !isModMatchingTagFilters(mod)
-                            const isDesecrated = mod.tags && (mod.tags.includes('desecrated') || mod.tags.includes('desecrated_only'))
-                            const modClasses = `mod-line prefix ${isTagFiltered ? 'tag-filtered' : ''} ${isDesecrated ? 'desecrated' : ''}`
+                            const isDesecrated = mod.is_desecrated === true
+                            const isUnrevealed = mod.is_unrevealed === true
+                            const modClasses = `mod-line prefix ${isTagFiltered ? 'tag-filtered' : ''} ${isDesecrated ? 'desecrated' : ''} ${isUnrevealed ? 'unrevealed' : ''}`
+
+                            // Get unrevealed metadata if this is an unrevealed mod
+                            const unrevealedMetadata = isUnrevealed && mod.unrevealed_id
+                              ? item.unrevealed_mods.find(um => um.id === mod.unrevealed_id)
+                              : null
+
                             return (
-                              <div key={idx} className={modClasses}>
+                              <div
+                                key={idx}
+                                className={modClasses}
+                                onClick={isUnrevealed && mod.unrevealed_id ? () => handleClickUnrevealedMod(mod.unrevealed_id!) : undefined}
+                                style={isUnrevealed ? { cursor: 'pointer' } : undefined}
+                                title={isUnrevealed ? 'Click to reveal this modifier' : undefined}
+                              >
                                 <div className="mod-content">
-                                  <div className="mod-stat">{renderModifier(mod)}</div>
+                                  <div className="mod-stat">
+                                    {renderModifier(mod)}
+                                    {unrevealedMetadata?.required_boss_tag && (
+                                      <span className="boss-tag-indicator">
+                                        {unrevealedMetadata.required_boss_tag === 'ulaman' && ' 🔱'}
+                                        {unrevealedMetadata.required_boss_tag === 'amanamu' && ' 👑'}
+                                        {unrevealedMetadata.required_boss_tag === 'kurgal' && ' 🩸'}
+                                      </span>
+                                    )}
+                                    {isUnrevealed && selectedOmens.some(omen => omen.includes('Abyssal Echoes')) && <span className="abyssal-indicator"> ✨</span>}
+                                  </div>
                                   <div className="mod-metadata">
-                                    <span className="mod-tier">T{mod.tier}</span>
-                                    <span className="mod-name">{mod.name}</span>
+                                    {isUnrevealed ? (
+                                      <span className="mod-tier">{unrevealedMetadata?.bone_type} {unrevealedMetadata?.bone_part}</span>
+                                    ) : (
+                                      <>
+                                        <span className="mod-tier">T{mod.tier}</span>
+                                        <span className="mod-name">{mod.name}</span>
+                                        {mod.tags && mod.tags.filter(tag => tag !== 'desecrated_only').length > 0 && (
+                                          <div className="mod-tags-inline">
+                                            {mod.tags.filter(tag => tag !== 'desecrated_only').map((tag, i) => (
+                                              <span
+                                                key={i}
+                                                className="mod-tag-badge"
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  toggleTagFilter(tag);
+                                                }}
+                                                title={`Click to filter by "${tag}" tag`}
+                                              >
+                                                {tag}
+                                              </span>
+                                            ))}
+                                          </div>
+                                        )}
+                                      </>
+                                    )}
                                   </div>
                                 </div>
-                                <button
-                                  className="mod-remove-btn"
-                                  onClick={() => handleRemoveMod(idx, 'prefix')}
-                                  title="Remove this modifier"
-                                >
-                                  ✕
-                                </button>
+                                {!isUnrevealed && (
+                                  <button
+                                    className="mod-remove-btn"
+                                    onClick={() => handleRemoveMod(idx, 'prefix')}
+                                    title="Remove this modifier"
+                                  >
+                                    ✕
+                                  </button>
+                                )}
                               </div>
                             )
                           })}
@@ -1995,24 +2330,72 @@ function GridCraftingSimulator() {
                           <h4 className="mods-title">Suffixes ({item.suffix_mods.length}/3)</h4>
                           {item.suffix_mods.map((mod, idx) => {
                             const isTagFiltered = activeTagFilters.size > 0 && !isModMatchingTagFilters(mod)
-                            const isDesecrated = mod.tags && (mod.tags.includes('desecrated') || mod.tags.includes('desecrated_only'))
-                            const modClasses = `mod-line suffix ${isTagFiltered ? 'tag-filtered' : ''} ${isDesecrated ? 'desecrated' : ''}`
+                            const isDesecrated = mod.is_desecrated === true
+                            const isUnrevealed = mod.is_unrevealed === true
+                            const modClasses = `mod-line suffix ${isTagFiltered ? 'tag-filtered' : ''} ${isDesecrated ? 'desecrated' : ''} ${isUnrevealed ? 'unrevealed' : ''}`
+
+                            // Get unrevealed metadata if this is an unrevealed mod
+                            const unrevealedMetadata = isUnrevealed && mod.unrevealed_id
+                              ? item.unrevealed_mods.find(um => um.id === mod.unrevealed_id)
+                              : null
+
                             return (
-                              <div key={idx} className={modClasses}>
+                              <div
+                                key={idx}
+                                className={modClasses}
+                                onClick={isUnrevealed && mod.unrevealed_id ? () => handleClickUnrevealedMod(mod.unrevealed_id!) : undefined}
+                                style={isUnrevealed ? { cursor: 'pointer' } : undefined}
+                                title={isUnrevealed ? 'Click to reveal this modifier' : undefined}
+                              >
                                 <div className="mod-content">
-                                  <div className="mod-stat">{renderModifier(mod)}</div>
+                                  <div className="mod-stat">
+                                    {renderModifier(mod)}
+                                    {unrevealedMetadata?.required_boss_tag && (
+                                      <span className="boss-tag-indicator">
+                                        {unrevealedMetadata.required_boss_tag === 'ulaman' && ' 🔱'}
+                                        {unrevealedMetadata.required_boss_tag === 'amanamu' && ' 👑'}
+                                        {unrevealedMetadata.required_boss_tag === 'kurgal' && ' 🩸'}
+                                      </span>
+                                    )}
+                                    {isUnrevealed && selectedOmens.some(omen => omen.includes('Abyssal Echoes')) && <span className="abyssal-indicator"> ✨</span>}
+                                  </div>
                                   <div className="mod-metadata">
-                                    <span className="mod-tier">T{mod.tier}</span>
-                                    <span className="mod-name">{mod.name}</span>
+                                    {isUnrevealed ? (
+                                      <span className="mod-tier">{unrevealedMetadata?.bone_type} {unrevealedMetadata?.bone_part}</span>
+                                    ) : (
+                                      <>
+                                        <span className="mod-tier">T{mod.tier}</span>
+                                        <span className="mod-name">{mod.name}</span>
+                                        {mod.tags && mod.tags.filter(tag => tag !== 'desecrated_only').length > 0 && (
+                                          <div className="mod-tags-inline">
+                                            {mod.tags.filter(tag => tag !== 'desecrated_only').map((tag, i) => (
+                                              <span
+                                                key={i}
+                                                className="mod-tag-badge"
+                                                onClick={(e) => {
+                                                  e.stopPropagation();
+                                                  toggleTagFilter(tag);
+                                                }}
+                                                title={`Click to filter by "${tag}" tag`}
+                                              >
+                                                {tag}
+                                              </span>
+                                            ))}
+                                          </div>
+                                        )}
+                                      </>
+                                    )}
                                   </div>
                                 </div>
-                                <button
-                                  className="mod-remove-btn"
-                                  onClick={() => handleRemoveMod(idx, 'suffix')}
-                                  title="Remove this modifier"
-                                >
-                                  ✕
-                                </button>
+                                {!isUnrevealed && (
+                                  <button
+                                    className="mod-remove-btn"
+                                    onClick={() => handleRemoveMod(idx, 'suffix')}
+                                    title="Remove this modifier"
+                                  >
+                                    ✕
+                                  </button>
+                                )}
                               </div>
                             )
                           })}
@@ -2100,6 +2483,64 @@ function GridCraftingSimulator() {
           </div>
         </div>
       </div>
+
+      {/* Reveal Modifier Modal */}
+      {revealModalOpen && (() => {
+        const unrevealedMod = item.unrevealed_mods.find(mod => mod.id === revealingModId)
+        // Check if Omen of Abyssal Echoes is currently selected
+        const hasAbyssalEchoes = selectedOmens.some(omen => omen.includes('Abyssal Echoes'))
+        const canReroll = hasAbyssalEchoes && !rerollUsed
+        const requiredBossTag = unrevealedMod?.required_boss_tag
+
+        return (
+          <div className="modal-overlay" onClick={handleCloseRevealModal}>
+            <div className="reveal-modal" onClick={(e) => e.stopPropagation()}>
+              <h3>Choose a Desecrated Modifier</h3>
+              <p>Select one of the following modifiers to reveal:</p>
+              {requiredBossTag === 'ulaman' && <p className="omen-hint">🔱 Filtered to Ulaman (Sovereign) mods only</p>}
+              {requiredBossTag === 'amanamu' && <p className="omen-hint">👑 Filtered to Amanamu (Liege) mods only</p>}
+              {requiredBossTag === 'kurgal' && <p className="omen-hint">🩸 Filtered to Kurgal (Blackblooded) mods only</p>}
+              {hasAbyssalEchoes && (
+                <p className="omen-hint">
+                  {canReroll ? '✨ Omen of Abyssal Echoes: You may reroll once' : '✨ Omen of Abyssal Echoes (used)'}
+                </p>
+              )}
+              <div className="reveal-choices">
+                {revealChoices.map((choice, idx) => (
+                  <div
+                    key={idx}
+                    className="reveal-choice"
+                    onClick={() => handleSelectRevealChoice(choice)}
+                  >
+                    <div className="choice-stat">{renderModifier(choice)}</div>
+                    <div className="choice-metadata">
+                      <span className="choice-tier">T{choice.tier}</span>
+                      <span className="choice-name">{choice.name}</span>
+                      {choice.tags && choice.tags.length > 0 && (
+                        <div className="choice-tags">
+                          {choice.tags.map((tag, i) => (
+                            <span key={i} className="choice-tag-badge">{tag}</span>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="modal-buttons">
+                {canReroll && (
+                  <button className="reroll-btn" onClick={handleRerollRevealChoices}>
+                    🔄 Reroll Choices
+                  </button>
+                )}
+                <button className="close-modal-btn" onClick={handleCloseRevealModal}>
+                  Cancel
+                </button>
+              </div>
+            </div>
+          </div>
+        )
+      })()}
     </div>
   )
 }

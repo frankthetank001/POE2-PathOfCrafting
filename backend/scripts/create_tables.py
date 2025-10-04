@@ -8,7 +8,11 @@ Run this before populating data.
 
 import sys
 import os
-sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+# Change to backend directory to ensure database is created there
+backend_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+os.chdir(backend_dir)
+sys.path.insert(0, backend_dir)
 
 from app.models.base import Base, engine
 from app.models.crafting import (
@@ -20,6 +24,7 @@ from app.models.crafting import (
 
 def create_all_tables():
     """Create all database tables."""
+    print(f"Working directory: {os.getcwd()}")
     print("Creating database tables...")
 
     try:
