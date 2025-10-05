@@ -6,6 +6,7 @@ import random
 from app.schemas.crafting import CraftableItem, ItemModifier, ItemRarity, ModType
 from app.services.crafting.item_state import ItemStateManager
 from app.services.crafting.modifier_pool import ModifierPool
+from app.services.crafting.constants import HIDDEN_TAGS_FOR_HOMOGENISING
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)
@@ -433,17 +434,10 @@ class OmenOfCatalysingExaltation(BaseOmen):
     ) -> Tuple[bool, str, CraftableItem]:
         """Add modifier with increased chance for mods matching existing tags."""
 
-        # Filter out hidden tags that shouldn't affect matching
-        hidden_tags = {
-            'essence_only', 'desecrated_only', 'drop', 'resource',
-            'energy_shield', 'flat_life_regen', 'armour',
-            'caster_damage', 'attack_damage'
-        }
-
         # Get existing tags, but only use visible tags for matching
         existing_mods = item.prefix_mods + item.suffix_mods
         all_tags = [tag for mod in existing_mods for tag in (mod.tags or [])]
-        existing_tags = [tag for tag in all_tags if tag.lower() not in hidden_tags]
+        existing_tags = [tag for tag in all_tags if tag.lower() not in HIDDEN_TAGS_FOR_HOMOGENISING]
 
         manager = ItemStateManager(item)
 
@@ -582,17 +576,10 @@ class OmenOfHomogenisingCoronation(BaseOmen):
         if not existing_mods:
             return False, "No existing modifiers to match type", item
 
-        # Filter out hidden tags that shouldn't affect matching
-        hidden_tags = {
-            'essence_only', 'desecrated_only', 'drop', 'resource',
-            'energy_shield', 'flat_life_regen', 'armour',
-            'caster_damage', 'attack_damage'
-        }
-
         # Get existing mod groups and visible tags only
         existing_groups = [mod.mod_group for mod in existing_mods if mod.mod_group]
         all_tags = [tag for mod in existing_mods for tag in (mod.tags or [])]
-        existing_tags = [tag for tag in all_tags if tag.lower() not in hidden_tags]
+        existing_tags = [tag for tag in all_tags if tag.lower() not in HIDDEN_TAGS_FOR_HOMOGENISING]
 
         if not existing_groups and not existing_tags:
             return False, "No compatible modifier types found", item

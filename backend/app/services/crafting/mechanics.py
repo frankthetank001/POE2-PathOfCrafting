@@ -16,6 +16,7 @@ from app.schemas.crafting import (
 )
 from app.services.crafting.item_state import ItemStateManager
 from app.services.crafting.modifier_pool import ModifierPool
+from app.services.crafting.constants import HIDDEN_TAGS_FOR_HOMOGENISING
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)
@@ -1129,19 +1130,12 @@ class OmenModifiedMechanic(CraftingMechanic):
             # If also using homogenising, capture INITIAL tags before adding any mods
             initial_homogenising_tags = None
             if force_homogenising:
-                # Filter out hidden tags that shouldn't affect matching
-                hidden_tags = {
-                    'essence_only', 'desecrated_only', 'drop', 'resource',
-                    'energy_shield', 'flat_life_regen', 'armour',
-                    'caster_damage', 'attack_damage'
-                }
-
                 existing_mods = item.prefix_mods + item.suffix_mods
                 mods_with_tags = [m for m in existing_mods if m.tags]
                 if mods_with_tags:
                     chosen_mod = random.choice(mods_with_tags)
                     # Filter to visible tags only
-                    initial_homogenising_tags = [tag for tag in chosen_mod.tags if tag.lower() not in hidden_tags]
+                    initial_homogenising_tags = [tag for tag in chosen_mod.tags if tag.lower() not in HIDDEN_TAGS_FOR_HOMOGENISING]
                     logger.info(f"[Greater+Homogenising] Captured initial visible tags: {initial_homogenising_tags} (filtered from {chosen_mod.tags})")
 
             added_mods = []
@@ -1278,16 +1272,9 @@ class OmenModifiedMechanic(CraftingMechanic):
             logger.info(f"[Homogenising] Found {len(all_mods)} eligible {mod_type} mods (min_mod_level: {min_mod_level})")
 
             # Filter by tags from the chosen mod (OR logic - match ANY tag)
-            # IMPORTANT: Exclude internal/system tags that shouldn't affect matching
-            hidden_tags = {
-                'essence_only', 'desecrated_only', 'drop', 'resource',
-                'energy_shield', 'flat_life_regen', 'armour',
-                'caster_damage', 'attack_damage'
-            }
-
             if chosen_mod.tags:
                 # Filter out hidden tags before matching
-                visible_tags = [tag for tag in chosen_mod.tags if tag.lower() not in hidden_tags]
+                visible_tags = [tag for tag in chosen_mod.tags if tag.lower() not in HIDDEN_TAGS_FOR_HOMOGENISING]
                 logger.info(f"[Homogenising] Using visible tags for matching: {visible_tags} (filtered from {chosen_mod.tags})")
 
                 if not visible_tags:
@@ -1415,17 +1402,32 @@ class OmenModifiedMechanic(CraftingMechanic):
 
                 # Filter by tags from the chosen mod (OR logic - match ANY tag)
                 if chosen_mod.tags:
+                    # Filter out hidden tags before matching
+                    visible_tags = [tag for tag in chosen_mod.tags if tag.lower() not in HIDDEN_TAGS_FOR_HOMOGENISING]
+                    logger.info(f"[Regal Homogenising] Using visible tags for matching: {visible_tags} (filtered from {chosen_mod.tags})")
+
+                    if not visible_tags:
+                        # No visible tags to match - homogenising cannot work
+                        logger.error(f"[Regal Homogenising] No visible tags after filtering, cannot use homogenising")
+                        return False, "No visible tags to match for Homogenising Coronation", item
+
                     matching_mods = [
                         m for m in all_mods
-                        if m.tags and any(tag in m.tags for tag in chosen_mod.tags)
+                        if m.tags and any(tag in m.tags for tag in visible_tags)
                     ]
-                    if matching_mods:
-                        mod = modifier_pool._weighted_random_choice(matching_mods)
-                    else:
-                        # Fallback to any eligible mod if no tag matches found
-                        mod = modifier_pool._weighted_random_choice(all_mods) if all_mods else None
+                    logger.info(f"[Regal Homogenising] Filtered to {len(matching_mods)} mods with matching tags")
+
+                    if not matching_mods:
+                        # No matching mods found - homogenising fails
+                        logger.error(f"[Regal Homogenising] No mods with matching tags found")
+                        return False, "No modifiers with matching tags available for Homogenising Coronation", item
+
+                    mod = modifier_pool._weighted_random_choice(matching_mods)
+                    logger.info(f"[Regal Homogenising] Added mod: {mod.name if mod else 'None'} with tags: {mod.tags if mod else 'N/A'}")
                 else:
-                    mod = modifier_pool._weighted_random_choice(all_mods) if all_mods else None
+                    # No tags at all - homogenising cannot work
+                    logger.error(f"[Regal Homogenising] Chosen mod has no tags, cannot use homogenising")
+                    return False, "Chosen modifier has no tags for Homogenising Coronation", item
 
                 if mod:
                     manager.add_modifier(mod)

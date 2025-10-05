@@ -1,53 +1,314 @@
-{
-  "comment": "Exclusion groups prevent certain mods from coexisting on the same item. Mods with the same exclusion_group value cannot appear together.",
-  "groups": {
-    "1": {
-      "description": "Dexterity attribute mods",
-      "rules": [
-        {
-          "match_type": "mod_group",
-          "pattern": "dexterity"
-        }
-      ]
-    },
-    "2": {
-      "description": "Intelligence attribute mods and Dex+Int hybrid",
-      "rules": [
-        {
-          "match_type": "mod_group",
-          "pattern": "intelligence"
-        },
-        {
-          "match_type": "stat_text",
-          "pattern": "to Dexterity and Intelligence"
-        }
-      ]
-    },
-    "3": {
-      "description": "All skill gem level modifiers",
-      "rules": [
-        {
-          "match_type": "stat_text",
-          "pattern": "to Level of all"
-        }
-      ]
-    },
-    "4": {
-      "description": "Strength attribute mods and Str hybrid mods",
-      "rules": [
-        {
-          "match_type": "mod_group",
-          "pattern": "strength"
-        },
-        {
-          "match_type": "stat_text",
-          "pattern": "to Strength and Dexterity"
-        },
-        {
-          "match_type": "stat_text",
-          "pattern": "to Strength and Intelligence"
-        }
-      ]
-    }
+[
+  {
+    "description": "Ailment mods within same type (prefix/suffix)",
+    "note": "More than one ailment mod can't go together within the same type",
+    "patterns": [],
+    "tags": "ailment"
+  },
+  {
+    "description": "Hybrid attributes - Str+Dex vs Str+Int",
+    "patterns": [
+      "+{} to Strength and Dexterity",
+      "+{} to Strength and Intelligence"
+    ]
+  },
+  {
+    "description": "Dodge roll mods",
+    "patterns": [
+      "{}% increased Mana Cost Efficiency if you have Dodge Rolled Recently",
+      "{} metres to Dodge Roll distance"
+    ]
+  },
+  {
+    "description": "Flask recovery amount variations",
+    "patterns": [
+      "{}% increased Amount Recovered",
+      "{}% increased Life Recovered, Removes {}% of Life Recovered from Mana when used",
+      "{}% more Recovery if used while on Low Life"
+    ]
+  },
+  {
+    "description": "Flask recovery rate vs instant",
+    "patterns": [
+      "{}% increased Recovery rate",
+      "{}% of Recovery applied Instantly"
+    ]
+  },
+  {
+    "description": "Flask charge gain mechanics",
+    "patterns": [
+      "{}% Chance to gain a Charge when you Kill an Enemy",
+      "{}% increased Charges gained"
+    ]
+  },
+  {
+    "description": "Skill gem levels",
+    "patterns": [
+      "+{} to Level of all Melee Skills",
+      "+{} to Level of all Minion Skills",
+      "+{} to Level of all Projectile Skills",
+      "+{} to Level of all Spell Skills",
+      "+{} to Level of all Skills"
+    ]
+  },
+  {
+    "description": "Hybrid attributes - Dex+Int vs Int",
+    "patterns": [
+      "+{} to Dexterity and Intelligence",
+      "+{} to Intelligence"
+    ]
+  },
+  {
+    "description": "Thorns damage types",
+    "patterns": [
+      "{} to {} Physical Thorns damage",
+      "{} to {} Fire Thorns damage per 100 maximum Life"
+    ]
+  },
+  {
+    "description": "Flask recovery rate - Life vs Mana",
+    "patterns": [
+      "{}% increased Flask Mana Recovery rate",
+      "{}% increased Flask Life Recovery rate"
+    ]
+  },
+  {
+    "description": "Armour sources",
+    "patterns": [
+      "+{} to Armour",
+      "Gain ({}-{})% of Maximum Mana as Armour"
+    ]
+  },
+  {
+    "description": "Flask charge generation - Life vs Mana",
+    "patterns": [
+      "Life Flasks gain ({}-{}) charges per Second",
+      "Mana Flasks gain ({}-{}) charges per Second"
+    ]
+  },
+  {
+    "description": "Life leech variations",
+    "patterns": [
+      "Leech {}% of Physical Attack Damage as Life",
+      "({}-{})% increased amount of Life Leeched"
+    ]
+  },
+  {
+    "description": "Focus - Elemental spell damage types",
+    "note": "offhand > focus only",
+    "patterns": [
+      "{}% increased Chaos Damage",
+      "{}% increased Cold Damage",
+      "{}% increased Fire Damage",
+      "{}% increased Lightning Damage",
+      "{}% increased Spell Physical Damage"
+    ],
+    "applicable_items": ["focus"]
+  },
+  {
+    "description": "Spell damage variations",
+    "patterns": [
+      "{}% increased Spell Damage",
+      "Invocated Spells deal ({}-{})% increased Damage"
+    ]
+  },
+  {
+    "description": "Mana cost efficiency tiers",
+    "patterns": [
+      "({}-{})% increased Mana Cost Efficiency",
+      "({}-{})% increased Mana Cost Efficiency"
+    ]
+  },
+  {
+    "description": "Minion vs Spell skill levels",
+    "patterns": [
+      "+({}-{}) to Level of all Minion Skills",
+      "+{} to Level of all Spell Skills"
+    ]
+  },
+  {
+    "description": "Critical damage bonus variations",
+    "patterns": [
+      "{}% increased Critical Damage Bonus for Attack Damage",
+      "{}% to Critical Damage Bonus",
+      "Projectiles have ({}-{})% increased Critical Damage Bonus against Enemies within 2m"
+    ]
+  },
+  {
+    "description": "Critical hit chance variations",
+    "patterns": [
+      "{}% increased Critical Hit Chance for Attacks",
+      "Projectiles have ({}-{})% increased Critical Hit Chance against Enemies further than 6m"
+    ]
+  },
+  {
+    "description": "Projectile damage variations",
+    "patterns": [
+      "Increases and Reductions to Projectile Speed also apply to Damage with Bows",
+      "Projectiles deal ({}-{})% increased Damage with Hits against Enemies further than 6m",
+      "Projectiles deal ({}-{})% increased Damage with Hits against Enemies within 2m"
+    ]
+  },
+  {
+    "description": "Maximum resistances",
+    "patterns": [
+      "+{}% to all Maximum Elemental Resistances",
+      "+{}% to all maximum Resistances"
+    ]
+  },
+  {
+    "description": "Parried debuff variations",
+    "patterns": [
+      "({}-{})% increased Parried Debuff Duration",
+      "({}-{})% increased Parried Debuff Magnitude"
+    ]
+  },
+  {
+    "description": "Cold damage vs elemental damage",
+    "patterns": [
+      "{}% increased Cold Damage",
+      "({}-{})% increased Elemental Damage"
+    ]
+  },
+  {
+    "description": "Spell damage variations - extended",
+    "patterns": [
+      "{}% increased Spell Damage",
+      "({}-{})% increased Spell Damage with Spells that cost Life",
+      "Invocated Spells deal ({}-{})% increased Damage",
+      "Minions deal ({}-{})% increased Damage, ({}-{})% increased Spell Damage"
+    ]
+  },
+  {
+    "description": "Cast speed variations",
+    "patterns": [
+      "{}% increased Cast Speed",
+      "({}-{})% increased Cast Speed for each different Non-Instant Spell you've Cast Recently",
+      "({}-{})% increased Cast Speed while on Full Mana"
+    ]
+  },
+  {
+    "description": "all spell levels",
+    "patterns": [
+      "+{} to Level of all Cold Spell Skills",
+      "+{} to Level of all Fire Spell Skills",
+      "+{} to Level of all Lightning Spell Skills",
+      "+{} to Level of all Physical Spell Skills",
+      "+{} to Level of all Chaos Spell Skills",
+      "+{} to Level of all Spell Skills",
+      "+{} to Level of all Melee Skills",
+      "+{} to Level of all Projectile Skills",
+      "+{} to Level of all Attack Skills",
+      "+{} to Level of all Minion Skills"
+    ]
+  },
+  {
+    "description": "Break armour mechanics",
+    "patterns": [
+      "Break ({}-{})% increased Armour",
+      "Break Armour on Critical Hit with Spells equal to ({}-{})% of Physical Damage dealt"
+    ]
+  },
+  {
+    "description": "Hindered enemy damage increases",
+    "patterns": [
+      "Enemies Hindered by you take ({}-{})% increased Chaos Damage",
+      "Enemies Hindered by you take ({}-{})% increased Elemental Damage",
+      "Enemies Hindered by you take ({}-{})% increased Physical Damage"
+    ]
+  },
+  {
+    "description": "Extra damage as element",
+    "note": "flail, axe, sword, spear, bow, crossbow, warstaff",
+    "applicable_items": ["flail", "axe", "sword", "spear", "bow", "crossbow", "warstaff"],
+    "patterns": [
+      "Gain ({}-{})% of Damage as Extra Cold Damage",
+      "Gain ({}-{})% of Damage as Extra Fire Damage",
+      "Gain ({}-{})% of Damage as Extra Lightning Damage",
+      "Gain ({}-{})% of Damage as Extra Physical Damage"
+    ]
+  },
+  {
+    "description": "Physical damage variations - mace",
+    "note": "mace only",
+    "applicable_items": ["mace"],
+    "patterns": [
+      "{}% increased Physical Damage",
+      "({}-{})% increased Physical Damage, {}% reduced Attack Speed"
+    ]
+  },
+  {
+    "description": "Melee vs attack skill levels",
+    "patterns": [
+      "+{} to Level of all Melee Skills",
+      "+{} to Level of all Attack Skills"
+    ]
+  },
+  {
+    "description": "Fire damage vs elemental damage - wand",
+    "note": "wand only",
+    "applicable_items": ["wand"],
+    "patterns": [
+      "{}% increased Fire Damage",
+      "({}-{})% increased Elemental Damage"
+    ]
+  },
+  {
+    "description": "Attack speed variations - companion",
+    "patterns": [
+      "{}% increased Attack Speed",
+      "({}-{})% increased Attack Speed, ({}-{})% increased Attack Speed while your Companion is in your Presence",
+      "({}-{})% increased Attack Speed, Companions have ({}-{})% increased Attack Speed"
+    ]
+  },
+  {
+    "description": "Critical hit chance - projectiles",
+    "patterns": [
+      "+{}% to Critical Hit Chance",
+      "Projectiles have ({}-{})% increased Critical Hit Chance against Enemies further than 6m"
+    ]
+  },
+  {
+    "description": "Bow additional arrows",
+    "note": "bow only",
+    "applicable_items": ["bow"],
+    "patterns": [
+      "Bow Attacks fire 2 additional Arrows",
+      "Bow Attacks fire an additional Arrow"
+    ]
+  },
+  {
+    "description": "Spell damage variations - per stat",
+    "patterns": [
+      "{}% increased Spell Damage",
+      "({}-{})% increased Spell Damage per 100 Maximum Life",
+      "({}-{})% increased Spell Damage per 100 maximum Mana",
+      "({}-{})% increased Spell Damage with Spells that cost Life"
+    ]
+  },
+  {
+    "description": "Crossbow additional bolts",
+    "note": "crossbow only",
+    "applicable_items": ["crossbow"],
+    "patterns": [
+      "Loads 2 additional bolts",
+      "Loads an additional bolt"
+    ]
+  },
+  {
+    "description": "Crossbow reload mechanics",
+    "note": "crossbow only",
+    "applicable_items": ["crossbow"],
+    "patterns": [
+      "({}-{})% chance when you Reload a Crossbow to be immediate",
+      "({}-{})% increased Reload Speed"
+    ]
+  },
+  {
+    "description": "Recover when expend combo",
+    "patterns": [
+      "Recover ({}-{})% of Maximum Life when you expend at least 10 Combo",
+      "Recover ({}-{})% of Maximum Mana when you expend at least 10 Combo"
+    ]
   }
-}
+]
