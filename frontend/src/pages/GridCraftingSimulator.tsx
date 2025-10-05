@@ -5,6 +5,79 @@ import type { CraftableItem, ItemModifier, ItemRarity, ItemBasesBySlot } from '@
 import { CURRENCY_DESCRIPTIONS } from '@/data/currency-descriptions'
 import './GridCraftingSimulator.css'
 
+// Tag color mapping for consistent tag colors across the UI
+const TAG_COLORS: Record<string, { bg: string; border: string; text: string; hover: string }> = {
+  // Damage types
+  physical: { bg: 'rgba(200, 150, 100, 0.15)', border: 'rgba(200, 150, 100, 0.4)', text: '#d4a574', hover: 'rgba(200, 150, 100, 0.25)' },
+  fire: { bg: 'rgba(255, 100, 50, 0.15)', border: 'rgba(255, 100, 50, 0.4)', text: '#ff8866', hover: 'rgba(255, 100, 50, 0.25)' },
+  cold: { bg: 'rgba(100, 180, 255, 0.15)', border: 'rgba(100, 180, 255, 0.4)', text: '#88ccff', hover: 'rgba(100, 180, 255, 0.25)' },
+  lightning: { bg: 'rgba(150, 150, 255, 0.15)', border: 'rgba(150, 150, 255, 0.4)', text: '#a8a8ff', hover: 'rgba(150, 150, 255, 0.25)' },
+  chaos: { bg: 'rgba(200, 100, 200, 0.15)', border: 'rgba(200, 100, 200, 0.4)', text: '#d888d8', hover: 'rgba(200, 100, 200, 0.25)' },
+  elemental: { bg: 'rgba(150, 255, 200, 0.15)', border: 'rgba(150, 255, 200, 0.4)', text: '#99ffcc', hover: 'rgba(150, 255, 200, 0.25)' },
+
+  // Defenses
+  life: { bg: 'rgba(255, 80, 80, 0.15)', border: 'rgba(255, 80, 80, 0.4)', text: '#ff9999', hover: 'rgba(255, 80, 80, 0.25)' },
+  mana: { bg: 'rgba(100, 120, 255, 0.15)', border: 'rgba(100, 120, 255, 0.4)', text: '#88aaff', hover: 'rgba(100, 120, 255, 0.25)' },
+  energy_shield: { bg: 'rgba(120, 200, 255, 0.15)', border: 'rgba(120, 200, 255, 0.4)', text: '#99ddff', hover: 'rgba(120, 200, 255, 0.25)' },
+  evasion: { bg: 'rgba(100, 200, 100, 0.15)', border: 'rgba(100, 200, 100, 0.4)', text: '#88cc88', hover: 'rgba(100, 200, 100, 0.25)' },
+  armour: { bg: 'rgba(180, 180, 180, 0.15)', border: 'rgba(180, 180, 180, 0.4)', text: '#cccccc', hover: 'rgba(180, 180, 180, 0.25)' },
+
+  // Resistances
+  resistance: { bg: 'rgba(150, 220, 150, 0.15)', border: 'rgba(150, 220, 150, 0.4)', text: '#aaddaa', hover: 'rgba(150, 220, 150, 0.25)' },
+
+  // Attributes
+  attribute: { bg: 'rgba(220, 200, 150, 0.15)', border: 'rgba(220, 200, 150, 0.4)', text: '#ddcc99', hover: 'rgba(220, 200, 150, 0.25)' },
+  strength: { bg: 'rgba(255, 100, 100, 0.15)', border: 'rgba(255, 100, 100, 0.4)', text: '#ff9999', hover: 'rgba(255, 100, 100, 0.25)' },
+  dexterity: { bg: 'rgba(100, 255, 100, 0.15)', border: 'rgba(100, 255, 100, 0.4)', text: '#99ff99', hover: 'rgba(100, 255, 100, 0.25)' },
+  intelligence: { bg: 'rgba(100, 150, 255, 0.15)', border: 'rgba(100, 150, 255, 0.4)', text: '#8899ff', hover: 'rgba(100, 150, 255, 0.25)' },
+
+  // Skills & Gems
+  gem: { bg: 'rgba(100, 255, 200, 0.15)', border: 'rgba(100, 255, 200, 0.4)', text: '#88ffcc', hover: 'rgba(100, 255, 200, 0.25)' },
+  skill: { bg: 'rgba(150, 200, 255, 0.15)', border: 'rgba(150, 200, 255, 0.4)', text: '#aaccff', hover: 'rgba(150, 200, 255, 0.25)' },
+  spell: { bg: 'rgba(180, 130, 255, 0.15)', border: 'rgba(180, 130, 255, 0.4)', text: '#bb99ff', hover: 'rgba(180, 130, 255, 0.25)' },
+  attack: { bg: 'rgba(255, 150, 100, 0.15)', border: 'rgba(255, 150, 100, 0.4)', text: '#ffaa88', hover: 'rgba(255, 150, 100, 0.25)' },
+
+  // Special mechanics
+  critical: { bg: 'rgba(255, 200, 50, 0.15)', border: 'rgba(255, 200, 50, 0.4)', text: '#ffdd66', hover: 'rgba(255, 200, 50, 0.25)' },
+  crit: { bg: 'rgba(255, 200, 50, 0.15)', border: 'rgba(255, 200, 50, 0.4)', text: '#ffdd66', hover: 'rgba(255, 200, 50, 0.25)' },
+  ailment: { bg: 'rgba(200, 100, 255, 0.15)', border: 'rgba(200, 100, 255, 0.4)', text: '#cc88ff', hover: 'rgba(200, 100, 255, 0.25)' },
+  curse: { bg: 'rgba(150, 50, 150, 0.15)', border: 'rgba(150, 50, 150, 0.4)', text: '#aa66aa', hover: 'rgba(150, 50, 150, 0.25)' },
+  minion: { bg: 'rgba(150, 255, 150, 0.15)', border: 'rgba(150, 255, 150, 0.4)', text: '#aaffaa', hover: 'rgba(150, 255, 150, 0.25)' },
+
+  // Item types
+  jewellery: { bg: 'rgba(212, 175, 55, 0.15)', border: 'rgba(212, 175, 55, 0.4)', text: '#d4af37', hover: 'rgba(212, 175, 55, 0.25)' },
+  weapon: { bg: 'rgba(200, 100, 100, 0.15)', border: 'rgba(200, 100, 100, 0.4)', text: '#cc8888', hover: 'rgba(200, 100, 100, 0.25)' },
+
+  // Boss tags
+  ulaman: { bg: 'rgba(255, 150, 50, 0.15)', border: 'rgba(255, 150, 50, 0.4)', text: '#ffaa66', hover: 'rgba(255, 150, 50, 0.25)' },
+  kurgal: { bg: 'rgba(100, 150, 200, 0.15)', border: 'rgba(100, 150, 200, 0.4)', text: '#88aacc', hover: 'rgba(100, 150, 200, 0.25)' },
+  amanamu: { bg: 'rgba(150, 100, 200, 0.15)', border: 'rgba(150, 100, 200, 0.4)', text: '#aa88cc', hover: 'rgba(150, 100, 200, 0.25)' },
+}
+
+// Generate a unique color for tags not in the predefined list
+function getTagColor(tag: string): { bg: string; border: string; text: string; hover: string } {
+  if (TAG_COLORS[tag.toLowerCase()]) {
+    return TAG_COLORS[tag.toLowerCase()]
+  }
+
+  // Generate a color based on tag name hash
+  let hash = 0
+  for (let i = 0; i < tag.length; i++) {
+    hash = tag.charCodeAt(i) + ((hash << 5) - hash)
+  }
+
+  const hue = Math.abs(hash % 360)
+  const saturation = 60 + (Math.abs(hash) % 20) // 60-80%
+  const lightness = 55 + (Math.abs(hash >> 8) % 15) // 55-70%
+
+  return {
+    bg: `hsla(${hue}, ${saturation}%, ${lightness}%, 0.15)`,
+    border: `hsla(${hue}, ${saturation}%, ${lightness}%, 0.4)`,
+    text: `hsl(${hue}, ${saturation}%, ${lightness}%)`,
+    hover: `hsla(${hue}, ${saturation}%, ${lightness}%, 0.25)`
+  }
+}
+
 interface TabContentProps {
   item: CraftableItem
   setItem: (item: CraftableItem) => void
@@ -429,6 +502,15 @@ function GridCraftingSimulator() {
   const [revealChoices, setRevealChoices] = useState<ItemModifier[]>([])
   const [rerollUsed, setRerollUsed] = useState(false)
 
+  // Global paste modal state
+  const [pastePreviewOpen, setPastePreviewOpen] = useState(false)
+  const [pastedItemText, setPastedItemText] = useState('')
+  const [pastedItemPreview, setPastedItemPreview] = useState<CraftableItem | null>(null)
+  const [pasteError, setPasteError] = useState('')
+
+  // Track the original import format for copying
+  const [importFormat, setImportFormat] = useState<'detailed' | 'simple'>('simple')
+
   function handleItemCreated() {
     setItemCreated(true)
   }
@@ -474,6 +556,166 @@ function GridCraftingSimulator() {
     setItemHistory([])
     setCurrencySpent({})
   }
+
+  // Global paste handler
+  const handleGlobalPaste = async (text: string) => {
+    // Check if it looks like an item (must contain "Item Class:")
+    if (!text.includes('Item Class:')) {
+      return // Not an item, ignore
+    }
+
+    setPastedItemText(text)
+    setPasteError('')
+    setPastedItemPreview(null)
+
+    // Detect format: detailed if it has "{ Prefix Modifier" or "{ Suffix Modifier"
+    const isDetailed = text.includes('{ Prefix Modifier') || text.includes('{ Suffix Modifier') || text.includes('{ Implicit Modifier')
+    setImportFormat(isDetailed ? 'detailed' : 'simple')
+
+    try {
+      const result = await craftingApi.parseItem(text)
+      setPastedItemPreview(result.item)
+      setPastePreviewOpen(true)
+    } catch (err: any) {
+      setPasteError(err.message || 'Failed to parse item')
+      setPastePreviewOpen(true)
+    }
+  }
+
+  const handleImportPastedItem = () => {
+    if (pastedItemPreview) {
+      setItem(pastedItemPreview)
+      handleHistoryReset()
+      setItemCreated(true)
+      setMessage('Item imported from clipboard')
+      setPastePreviewOpen(false)
+    }
+  }
+
+  const handleCancelPaste = () => {
+    setPastePreviewOpen(false)
+    setPastedItemText('')
+    setPastedItemPreview(null)
+    setPasteError('')
+  }
+
+  // Export item to clipboard in original format
+  const handleCopyItem = () => {
+    const itemText = exportItemToText(item, importFormat)
+    navigator.clipboard.writeText(itemText).then(() => {
+      setMessage('Item copied to clipboard!')
+    }).catch(() => {
+      setMessage('Failed to copy item to clipboard')
+    })
+  }
+
+  // Convert item to PoE2 text format
+  const exportItemToText = (item: CraftableItem, format: 'detailed' | 'simple'): string => {
+    const lines: string[] = []
+
+    // Header
+    lines.push('Item Class: ' + (item.base_category.includes('armour') ? 'Armours' :
+                item.base_category === 'amulet' ? 'Amulets' :
+                item.base_category === 'ring' ? 'Rings' :
+                item.base_category === 'belt' ? 'Belts' :
+                item.base_category.includes('weapon') ? 'Weapons' : 'Items'))
+    lines.push(`Rarity: ${item.rarity}`)
+
+    // Item name (for rare items, generate a name)
+    if (item.rarity === 'Rare') {
+      const prefixName = item.prefix_mods[0]?.name || 'Crafted'
+      const suffixName = item.suffix_mods[0]?.name || 'Item'
+      lines.push(`${prefixName} ${item.base_name} ${suffixName}`)
+    } else if (item.rarity === 'Magic') {
+      const prefixName = item.prefix_mods[0]?.name || ''
+      const suffixName = item.suffix_mods[0]?.name ? `of the ${item.suffix_mods[0].name.replace(/^of the /, '')}` : ''
+      lines.push(`${prefixName} ${item.base_name} ${suffixName}`.trim())
+    } else {
+      lines.push(item.base_name)
+    }
+
+    lines.push('--------')
+    lines.push(`Item Level: ${item.item_level}`)
+    lines.push('--------')
+
+    // Implicit mods
+    if (item.implicit_mods && item.implicit_mods.length > 0) {
+      if (format === 'detailed') {
+        lines.push('{ Implicit Modifier }')
+      }
+      item.implicit_mods.forEach(mod => {
+        const modText = renderModifierAsText(mod, format === 'detailed')
+        lines.push(`${modText} (implicit)`)
+      })
+      lines.push('--------')
+    }
+
+    // Explicit mods
+    const allMods: { mod: ItemModifier; type: 'prefix' | 'suffix' }[] = [
+      ...item.prefix_mods.map(m => ({ mod: m, type: 'prefix' as const })),
+      ...item.suffix_mods.map(m => ({ mod: m, type: 'suffix' as const }))
+    ]
+
+    allMods.forEach(({ mod, type }) => {
+      if (format === 'detailed') {
+        const modType = type === 'prefix' ? 'Prefix' : 'Suffix'
+        const tags = mod.tags?.filter(t => t !== 'desecrated_only').join(', ') || ''
+        lines.push(`{ ${modType} Modifier "${mod.name}" (Tier: ${mod.tier})${tags ? ' — ' + tags.split(',').map(t => t.trim().charAt(0).toUpperCase() + t.trim().slice(1)).join(', ') : ''} }`)
+      }
+
+      const modText = renderModifierAsText(mod, format === 'detailed')
+      lines.push(modText)
+    })
+
+    return lines.join('\n')
+  }
+
+  // Render modifier as text (similar to renderModifier but for plain text)
+  const renderModifierAsText = (mod: ItemModifier, includeRange: boolean = false): string => {
+    let text = mod.stat_text
+
+    if (mod.current_values && mod.current_values.length > 0) {
+      // Hybrid mod with multiple values
+      mod.current_values.forEach((value, idx) => {
+        const valueStr = Math.floor(value).toString()
+        const rangeStr = includeRange && mod.stat_ranges && mod.stat_ranges[idx]
+          ? `(${mod.stat_ranges[idx].min}-${mod.stat_ranges[idx].max})`
+          : ''
+        text = text.replace('{}', valueStr + rangeStr)
+      })
+    } else if (mod.current_value !== undefined && mod.current_value !== null) {
+      // Single value mod
+      const valueStr = Math.floor(mod.current_value).toString()
+      const rangeStr = includeRange && mod.stat_ranges && mod.stat_ranges.length > 0
+        ? `(${mod.stat_ranges[0].min}-${mod.stat_ranges[0].max})`
+        : ''
+      text = text.replace('{}', valueStr + rangeStr)
+    } else {
+      // No value, use range
+      text = text.replace('{}', `(${mod.stat_min}-${mod.stat_max})`)
+    }
+
+    return text
+  }
+
+  // Add global paste listener
+  useEffect(() => {
+    const handlePaste = (e: ClipboardEvent) => {
+      // Don't intercept paste if user is typing in an input/textarea
+      const target = e.target as HTMLElement
+      if (target.tagName === 'INPUT' || target.tagName === 'TEXTAREA') {
+        return
+      }
+
+      const text = e.clipboardData?.getData('text')
+      if (text) {
+        handleGlobalPaste(text)
+      }
+    }
+
+    document.addEventListener('paste', handlePaste)
+    return () => document.removeEventListener('paste', handlePaste)
+  }, [])
 
   // Drag and drop handlers
   function handleDragStart(mod: ItemModifier, modType: 'prefix' | 'suffix') {
@@ -1533,22 +1775,36 @@ function GridCraftingSimulator() {
             ↺ Clear
           </button>
           <div className="global-tag-list">
-            {allAvailableTags.slice(0, 15).map(tag => (
-              <span
-                key={tag}
-                className={`global-tag-item ${activeTagFilters.has(tag) ? 'active-filter' : ''}`}
-                data-tag={tag}
-                onClick={() => toggleTagFilter(tag)}
-                title={`Toggle ${tag} filter`}
-              >
-                {tag}
-              </span>
-            ))}
-            {allAvailableTags.length > 15 && (
-              <span className="tag-count-indicator">
-                +{allAvailableTags.length - 15} more
-              </span>
-            )}
+            {allAvailableTags.map(tag => {
+              const tagColor = getTagColor(tag)
+              const isActive = activeTagFilters.has(tag)
+              return (
+                <span
+                  key={tag}
+                  className={`global-tag-item ${isActive ? 'active-filter' : ''}`}
+                  data-tag={tag}
+                  onClick={() => toggleTagFilter(tag)}
+                  title={`Toggle ${tag} filter`}
+                  style={isActive ? undefined : {
+                    background: tagColor.bg,
+                    borderColor: tagColor.border,
+                    color: tagColor.text
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.background = tagColor.hover
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isActive) {
+                      e.currentTarget.style.background = tagColor.bg
+                    }
+                  }}
+                >
+                  {tag}
+                </span>
+              )
+            })}
           </div>
           <div className="search-container">
             <input
@@ -1654,20 +1910,34 @@ function GridCraftingSimulator() {
                             <span className="group-max-ilvl">ilvl {maxIlvl}</span>
                             {bestTier.tags && bestTier.tags.length > 0 && (
                               <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
-                                {bestTier.tags.map((tag, i) => (
-                                  <span
-                                    key={i}
-                                    className="mod-tag-text"
-                                    data-tag={tag}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      toggleTagFilter(tag);
-                                    }}
-                                    title={`Click to filter by "${tag}" tag`}
-                                  >
-                                    {tag}
-                                  </span>
-                                ))}
+                                {bestTier.tags.map((tag, i) => {
+                                  const tagColor = getTagColor(tag)
+                                  return (
+                                    <span
+                                      key={i}
+                                      className="mod-tag-text"
+                                      data-tag={tag}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        toggleTagFilter(tag);
+                                      }}
+                                      title={`Click to filter by "${tag}" tag`}
+                                      style={{
+                                        background: tagColor.bg,
+                                        borderColor: tagColor.border,
+                                        color: tagColor.text
+                                      }}
+                                      onMouseEnter={(e) => {
+                                        e.currentTarget.style.background = tagColor.hover
+                                      }}
+                                      onMouseLeave={(e) => {
+                                        e.currentTarget.style.background = tagColor.bg
+                                      }}
+                                    >
+                                      {tag}
+                                    </span>
+                                  )
+                                })}
                               </div>
                             )}
                           </div>
@@ -1734,20 +2004,34 @@ function GridCraftingSimulator() {
                           <div className="compact-mod-info">
                             {mod.tags && mod.tags.length > 0 && (
                               <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
-                                {mod.tags.map((tag, i) => (
-                                  <span
-                                    key={i}
-                                    className="mod-tag-text"
-                                    data-tag={tag}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      toggleTagFilter(tag);
-                                    }}
-                                    title={`Click to filter by "${tag}" tag`}
-                                  >
-                                    {tag}
-                                  </span>
-                                ))}
+                                {mod.tags.map((tag, i) => {
+                                  const tagColor = getTagColor(tag)
+                                  return (
+                                    <span
+                                      key={i}
+                                      className="mod-tag-text"
+                                      data-tag={tag}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        toggleTagFilter(tag);
+                                      }}
+                                      title={`Click to filter by "${tag}" tag`}
+                                      style={{
+                                        background: tagColor.bg,
+                                        borderColor: tagColor.border,
+                                        color: tagColor.text
+                                      }}
+                                      onMouseEnter={(e) => {
+                                        e.currentTarget.style.background = tagColor.hover
+                                      }}
+                                      onMouseLeave={(e) => {
+                                        e.currentTarget.style.background = tagColor.bg
+                                      }}
+                                    >
+                                      {tag}
+                                    </span>
+                                  )
+                                })}
                               </div>
                             )}
                           </div>
@@ -1775,20 +2059,34 @@ function GridCraftingSimulator() {
                           <div className="compact-mod-info">
                             {mod.tags && mod.tags.length > 0 && (
                               <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
-                                {mod.tags.map((tag, i) => (
-                                  <span
-                                    key={i}
-                                    className="mod-tag-text"
-                                    data-tag={tag}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      toggleTagFilter(tag);
-                                    }}
-                                    title={`Click to filter by "${tag}" tag`}
-                                  >
-                                    {tag}
-                                  </span>
-                                ))}
+                                {mod.tags.map((tag, i) => {
+                                  const tagColor = getTagColor(tag)
+                                  return (
+                                    <span
+                                      key={i}
+                                      className="mod-tag-text"
+                                      data-tag={tag}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        toggleTagFilter(tag);
+                                      }}
+                                      title={`Click to filter by "${tag}" tag`}
+                                      style={{
+                                        background: tagColor.bg,
+                                        borderColor: tagColor.border,
+                                        color: tagColor.text
+                                      }}
+                                      onMouseEnter={(e) => {
+                                        e.currentTarget.style.background = tagColor.hover
+                                      }}
+                                      onMouseLeave={(e) => {
+                                        e.currentTarget.style.background = tagColor.bg
+                                      }}
+                                    >
+                                      {tag}
+                                    </span>
+                                  )
+                                })}
                               </div>
                             )}
                           </div>
@@ -1845,20 +2143,34 @@ function GridCraftingSimulator() {
                             <span className="group-max-ilvl">ilvl {maxIlvl}</span>
                             {bestTier.tags && bestTier.tags.length > 0 && (
                               <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
-                                {bestTier.tags.map((tag, i) => (
-                                  <span
-                                    key={i}
-                                    className="mod-tag-text"
-                                    data-tag={tag}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      toggleTagFilter(tag);
-                                    }}
-                                    title={`Click to filter by "${tag}" tag`}
-                                  >
-                                    {tag}
-                                  </span>
-                                ))}
+                                {bestTier.tags.map((tag, i) => {
+                                  const tagColor = getTagColor(tag)
+                                  return (
+                                    <span
+                                      key={i}
+                                      className="mod-tag-text"
+                                      data-tag={tag}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        toggleTagFilter(tag);
+                                      }}
+                                      title={`Click to filter by "${tag}" tag`}
+                                      style={{
+                                        background: tagColor.bg,
+                                        borderColor: tagColor.border,
+                                        color: tagColor.text
+                                      }}
+                                      onMouseEnter={(e) => {
+                                        e.currentTarget.style.background = tagColor.hover
+                                      }}
+                                      onMouseLeave={(e) => {
+                                        e.currentTarget.style.background = tagColor.bg
+                                      }}
+                                    >
+                                      {tag}
+                                    </span>
+                                  )
+                                })}
                               </div>
                             )}
                           </div>
@@ -1925,20 +2237,34 @@ function GridCraftingSimulator() {
                           <div className="compact-mod-info">
                             {mod.tags && mod.tags.length > 0 && (
                               <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
-                                {mod.tags.map((tag, i) => (
-                                  <span
-                                    key={i}
-                                    className="mod-tag-text"
-                                    data-tag={tag}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      toggleTagFilter(tag);
-                                    }}
-                                    title={`Click to filter by "${tag}" tag`}
-                                  >
-                                    {tag}
-                                  </span>
-                                ))}
+                                {mod.tags.map((tag, i) => {
+                                  const tagColor = getTagColor(tag)
+                                  return (
+                                    <span
+                                      key={i}
+                                      className="mod-tag-text"
+                                      data-tag={tag}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        toggleTagFilter(tag);
+                                      }}
+                                      title={`Click to filter by "${tag}" tag`}
+                                      style={{
+                                        background: tagColor.bg,
+                                        borderColor: tagColor.border,
+                                        color: tagColor.text
+                                      }}
+                                      onMouseEnter={(e) => {
+                                        e.currentTarget.style.background = tagColor.hover
+                                      }}
+                                      onMouseLeave={(e) => {
+                                        e.currentTarget.style.background = tagColor.bg
+                                      }}
+                                    >
+                                      {tag}
+                                    </span>
+                                  )
+                                })}
                               </div>
                             )}
                           </div>
@@ -1966,20 +2292,34 @@ function GridCraftingSimulator() {
                           <div className="compact-mod-info">
                             {mod.tags && mod.tags.length > 0 && (
                               <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
-                                {mod.tags.map((tag, i) => (
-                                  <span
-                                    key={i}
-                                    className="mod-tag-text"
-                                    data-tag={tag}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      toggleTagFilter(tag);
-                                    }}
-                                    title={`Click to filter by "${tag}" tag`}
-                                  >
-                                    {tag}
-                                  </span>
-                                ))}
+                                {mod.tags.map((tag, i) => {
+                                  const tagColor = getTagColor(tag)
+                                  return (
+                                    <span
+                                      key={i}
+                                      className="mod-tag-text"
+                                      data-tag={tag}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        toggleTagFilter(tag);
+                                      }}
+                                      title={`Click to filter by "${tag}" tag`}
+                                      style={{
+                                        background: tagColor.bg,
+                                        borderColor: tagColor.border,
+                                        color: tagColor.text
+                                      }}
+                                      onMouseEnter={(e) => {
+                                        e.currentTarget.style.background = tagColor.hover
+                                      }}
+                                      onMouseLeave={(e) => {
+                                        e.currentTarget.style.background = tagColor.bg
+                                      }}
+                                    >
+                                      {tag}
+                                    </span>
+                                  )
+                                })}
                               </div>
                             )}
                           </div>
@@ -2016,20 +2356,34 @@ function GridCraftingSimulator() {
                             <span className="pool-mod-stat-main">{mod.stat_text}</span>
                             {mod.tags && mod.tags.length > 0 && (
                               <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
-                                {mod.tags.map((tag, i) => (
-                                  <span
-                                    key={i}
-                                    className="mod-tag-text"
-                                    data-tag={tag}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      toggleTagFilter(tag);
-                                    }}
-                                    title={`Click to filter by "${tag}" tag`}
-                                  >
-                                    {tag}
-                                  </span>
-                                ))}
+                                {mod.tags.map((tag, i) => {
+                                  const tagColor = getTagColor(tag)
+                                  return (
+                                    <span
+                                      key={i}
+                                      className="mod-tag-text"
+                                      data-tag={tag}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        toggleTagFilter(tag);
+                                      }}
+                                      title={`Click to filter by "${tag}" tag`}
+                                      style={{
+                                        background: tagColor.bg,
+                                        borderColor: tagColor.border,
+                                        color: tagColor.text
+                                      }}
+                                      onMouseEnter={(e) => {
+                                        e.currentTarget.style.background = tagColor.hover
+                                      }}
+                                      onMouseLeave={(e) => {
+                                        e.currentTarget.style.background = tagColor.bg
+                                      }}
+                                    >
+                                      {tag}
+                                    </span>
+                                  )
+                                })}
                               </div>
                             )}
                           </div>
@@ -2057,20 +2411,34 @@ function GridCraftingSimulator() {
                             <span className="pool-mod-stat-main">{mod.stat_text}</span>
                             {mod.tags && mod.tags.length > 0 && (
                               <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
-                                {mod.tags.map((tag, i) => (
-                                  <span
-                                    key={i}
-                                    className="mod-tag-text"
-                                    data-tag={tag}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      toggleTagFilter(tag);
-                                    }}
-                                    title={`Click to filter by "${tag}" tag`}
-                                  >
-                                    {tag}
-                                  </span>
-                                ))}
+                                {mod.tags.map((tag, i) => {
+                                  const tagColor = getTagColor(tag)
+                                  return (
+                                    <span
+                                      key={i}
+                                      className="mod-tag-text"
+                                      data-tag={tag}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        toggleTagFilter(tag);
+                                      }}
+                                      title={`Click to filter by "${tag}" tag`}
+                                      style={{
+                                        background: tagColor.bg,
+                                        borderColor: tagColor.border,
+                                        color: tagColor.text
+                                      }}
+                                      onMouseEnter={(e) => {
+                                        e.currentTarget.style.background = tagColor.hover
+                                      }}
+                                      onMouseLeave={(e) => {
+                                        e.currentTarget.style.background = tagColor.bg
+                                      }}
+                                    >
+                                      {tag}
+                                    </span>
+                                  )
+                                })}
                               </div>
                             )}
                           </div>
@@ -2108,20 +2476,34 @@ function GridCraftingSimulator() {
                             <span className="pool-mod-stat-main">{mod.stat_text}</span>
                             {mod.tags && mod.tags.length > 0 && (
                               <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
-                                {mod.tags.map((tag, i) => (
-                                  <span
-                                    key={i}
-                                    className="mod-tag-text"
-                                    data-tag={tag}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      toggleTagFilter(tag);
-                                    }}
-                                    title={`Click to filter by "${tag}" tag`}
-                                  >
-                                    {tag}
-                                  </span>
-                                ))}
+                                {mod.tags.map((tag, i) => {
+                                  const tagColor = getTagColor(tag)
+                                  return (
+                                    <span
+                                      key={i}
+                                      className="mod-tag-text"
+                                      data-tag={tag}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        toggleTagFilter(tag);
+                                      }}
+                                      title={`Click to filter by "${tag}" tag`}
+                                      style={{
+                                        background: tagColor.bg,
+                                        borderColor: tagColor.border,
+                                        color: tagColor.text
+                                      }}
+                                      onMouseEnter={(e) => {
+                                        e.currentTarget.style.background = tagColor.hover
+                                      }}
+                                      onMouseLeave={(e) => {
+                                        e.currentTarget.style.background = tagColor.bg
+                                      }}
+                                    >
+                                      {tag}
+                                    </span>
+                                  )
+                                })}
                               </div>
                             )}
                           </div>
@@ -2149,20 +2531,34 @@ function GridCraftingSimulator() {
                             <span className="pool-mod-stat-main">{mod.stat_text}</span>
                             {mod.tags && mod.tags.length > 0 && (
                               <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
-                                {mod.tags.map((tag, i) => (
-                                  <span
-                                    key={i}
-                                    className="mod-tag-text"
-                                    data-tag={tag}
-                                    onClick={(e) => {
-                                      e.stopPropagation();
-                                      toggleTagFilter(tag);
-                                    }}
-                                    title={`Click to filter by "${tag}" tag`}
-                                  >
-                                    {tag}
-                                  </span>
-                                ))}
+                                {mod.tags.map((tag, i) => {
+                                  const tagColor = getTagColor(tag)
+                                  return (
+                                    <span
+                                      key={i}
+                                      className="mod-tag-text"
+                                      data-tag={tag}
+                                      onClick={(e) => {
+                                        e.stopPropagation();
+                                        toggleTagFilter(tag);
+                                      }}
+                                      title={`Click to filter by "${tag}" tag`}
+                                      style={{
+                                        background: tagColor.bg,
+                                        borderColor: tagColor.border,
+                                        color: tagColor.text
+                                      }}
+                                      onMouseEnter={(e) => {
+                                        e.currentTarget.style.background = tagColor.hover
+                                      }}
+                                      onMouseLeave={(e) => {
+                                        e.currentTarget.style.background = tagColor.bg
+                                      }}
+                                    >
+                                      {tag}
+                                    </span>
+                                  )
+                                })}
                               </div>
                             )}
                           </div>
@@ -2219,6 +2615,13 @@ function GridCraftingSimulator() {
                       <div className="item-header">
                         <h2 className={`item-name rarity-${item.rarity.toLowerCase()}`}>{item.base_name}</h2>
                         <div className="item-rarity-badge">{item.rarity}</div>
+                        <button
+                          className="copy-item-btn"
+                          onClick={handleCopyItem}
+                          title={`Copy item to clipboard (${importFormat} format)`}
+                        >
+                          📋 Copy
+                        </button>
                       </div>
 
                       <div className="item-details">
@@ -2291,19 +2694,33 @@ function GridCraftingSimulator() {
                                         <span className="mod-name">{mod.name}</span>
                                         {mod.tags && mod.tags.filter(tag => tag !== 'desecrated_only').length > 0 && (
                                           <div className="mod-tags-inline">
-                                            {mod.tags.filter(tag => tag !== 'desecrated_only').map((tag, i) => (
-                                              <span
-                                                key={i}
-                                                className="mod-tag-badge"
-                                                onClick={(e) => {
-                                                  e.stopPropagation();
-                                                  toggleTagFilter(tag);
-                                                }}
-                                                title={`Click to filter by "${tag}" tag`}
-                                              >
-                                                {tag}
-                                              </span>
-                                            ))}
+                                            {mod.tags.filter(tag => tag !== 'desecrated_only').map((tag, i) => {
+                                              const tagColor = getTagColor(tag)
+                                              return (
+                                                <span
+                                                  key={i}
+                                                  className="mod-tag-badge"
+                                                  onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    toggleTagFilter(tag);
+                                                  }}
+                                                  title={`Click to filter by "${tag}" tag`}
+                                                  style={{
+                                                    background: tagColor.bg,
+                                                    borderColor: tagColor.border,
+                                                    color: tagColor.text
+                                                  }}
+                                                  onMouseEnter={(e) => {
+                                                    e.currentTarget.style.background = tagColor.hover
+                                                  }}
+                                                  onMouseLeave={(e) => {
+                                                    e.currentTarget.style.background = tagColor.bg
+                                                  }}
+                                                >
+                                                  {tag}
+                                                </span>
+                                              )
+                                            })}
                                           </div>
                                         )}
                                       </>
@@ -2368,19 +2785,33 @@ function GridCraftingSimulator() {
                                         <span className="mod-name">{mod.name}</span>
                                         {mod.tags && mod.tags.filter(tag => tag !== 'desecrated_only').length > 0 && (
                                           <div className="mod-tags-inline">
-                                            {mod.tags.filter(tag => tag !== 'desecrated_only').map((tag, i) => (
-                                              <span
-                                                key={i}
-                                                className="mod-tag-badge"
-                                                onClick={(e) => {
-                                                  e.stopPropagation();
-                                                  toggleTagFilter(tag);
-                                                }}
-                                                title={`Click to filter by "${tag}" tag`}
-                                              >
-                                                {tag}
-                                              </span>
-                                            ))}
+                                            {mod.tags.filter(tag => tag !== 'desecrated_only').map((tag, i) => {
+                                              const tagColor = getTagColor(tag)
+                                              return (
+                                                <span
+                                                  key={i}
+                                                  className="mod-tag-badge"
+                                                  onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    toggleTagFilter(tag);
+                                                  }}
+                                                  title={`Click to filter by "${tag}" tag`}
+                                                  style={{
+                                                    background: tagColor.bg,
+                                                    borderColor: tagColor.border,
+                                                    color: tagColor.text
+                                                  }}
+                                                  onMouseEnter={(e) => {
+                                                    e.currentTarget.style.background = tagColor.hover
+                                                  }}
+                                                  onMouseLeave={(e) => {
+                                                    e.currentTarget.style.background = tagColor.bg
+                                                  }}
+                                                >
+                                                  {tag}
+                                                </span>
+                                              )
+                                            })}
                                           </div>
                                         )}
                                       </>
@@ -2484,6 +2915,68 @@ function GridCraftingSimulator() {
         </div>
       </div>
 
+      {/* Paste Preview Modal */}
+      {pastePreviewOpen && (
+        <div className="modal-overlay" onClick={handleCancelPaste}>
+          <div className="reveal-modal" onClick={(e) => e.stopPropagation()}>
+            <h3>📋 Import Item from Clipboard</h3>
+            {pasteError ? (
+              <div className="paste-error">
+                <p style={{ color: '#ff6666' }}>❌ {pasteError}</p>
+                <div className="modal-buttons">
+                  <button className="close-modal-btn" onClick={handleCancelPaste}>
+                    Close
+                  </button>
+                </div>
+              </div>
+            ) : pastedItemPreview ? (
+              <>
+                <p>Parsed item successfully! Import to crafting simulator?</p>
+                <div className="item-preview">
+                  <div className="item-header">
+                    <span className={`item-rarity ${pastedItemPreview.rarity.toLowerCase()}`}>
+                      {pastedItemPreview.rarity}
+                    </span>
+                    <span className="item-name">{pastedItemPreview.base_name}</span>
+                    <span className="item-level">iLvl {pastedItemPreview.item_level}</span>
+                  </div>
+                  {pastedItemPreview.prefix_mods.length > 0 && (
+                    <div className="mods-section">
+                      <h4>Prefix Mods ({pastedItemPreview.prefix_mods.length}/3)</h4>
+                      {pastedItemPreview.prefix_mods.map((mod, idx) => (
+                        <div key={idx} className="mod-preview">
+                          {renderModifier(mod)}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                  {pastedItemPreview.suffix_mods.length > 0 && (
+                    <div className="mods-section">
+                      <h4>Suffix Mods ({pastedItemPreview.suffix_mods.length}/3)</h4>
+                      {pastedItemPreview.suffix_mods.map((mod, idx) => (
+                        <div key={idx} className="mod-preview">
+                          {renderModifier(mod)}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
+                <div className="modal-buttons">
+                  <button className="reroll-btn" onClick={handleImportPastedItem}>
+                    ✓ Import Item
+                  </button>
+                  <button className="close-modal-btn" onClick={handleCancelPaste}>
+                    Cancel
+                  </button>
+                </div>
+              </>
+            ) : (
+              <p>Parsing item...</p>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* Reveal Modifier Modal */}
       {revealModalOpen && (() => {
         const unrevealedMod = item.unrevealed_mods.find(mod => mod.id === revealingModId)
@@ -2518,9 +3011,22 @@ function GridCraftingSimulator() {
                       <span className="choice-name">{choice.name}</span>
                       {choice.tags && choice.tags.length > 0 && (
                         <div className="choice-tags">
-                          {choice.tags.map((tag, i) => (
-                            <span key={i} className="choice-tag-badge">{tag}</span>
-                          ))}
+                          {choice.tags.map((tag, i) => {
+                            const tagColor = getTagColor(tag)
+                            return (
+                              <span
+                                key={i}
+                                className="choice-tag-badge"
+                                style={{
+                                  background: tagColor.bg,
+                                  borderColor: tagColor.border,
+                                  color: tagColor.text
+                                }}
+                              >
+                                {tag}
+                              </span>
+                            )
+                          })}
                         </div>
                       )}
                     </div>

@@ -493,18 +493,16 @@
 .mod-tag-text {
   font-size: 0.65rem;
   padding: 0.15rem 0.35rem;
-  background: rgba(100, 150, 255, 0.15);
-  border: 1px solid rgba(100, 150, 255, 0.3);
+  /* Colors are now applied via inline styles using getTagColor() */
+  border: 1px solid;
   border-radius: 3px;
-  color: #88bbff;
   cursor: pointer;
   transition: all 0.2s;
   white-space: nowrap;
 }
 
 .mod-tag-text:hover {
-  background: rgba(100, 150, 255, 0.25);
-  border-color: rgba(100, 150, 255, 0.5);
+  /* Hover effect handled via inline styles to preserve tag-specific colors */
   transform: translateY(-1px);
 }
 
@@ -536,11 +534,11 @@
 
 .tab-header {
   flex: 1;
-  padding: 1rem;
+  padding: 0.5rem 1rem;
   background: transparent;
   border: none;
   color: #aaa;
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   font-weight: 500;
   cursor: pointer;
   transition: all 0.2s;
@@ -591,13 +589,14 @@
 }
 
 .mode-button {
-  padding: 0.75rem 1.5rem;
+  padding: 0.4rem 1rem;
   background: #444;
   color: white;
   border: none;
-  border-radius: 6px;
+  border-radius: 4px;
   cursor: pointer;
   font-weight: 500;
+  font-size: 0.85rem;
   transition: all 0.2s;
   flex: 1;
 }
@@ -646,8 +645,8 @@
 
 .item-header {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  gap: 0.75rem;
   padding-bottom: 1rem;
   margin-bottom: 1rem;
   border-bottom: 2px solid #444;
@@ -670,6 +669,24 @@
   border-radius: 4px;
   font-size: 0.9rem;
   color: #d4af37;
+}
+
+.copy-item-btn {
+  padding: 0.4rem 0.75rem;
+  background: rgba(68, 170, 255, 0.15);
+  border: 1px solid rgba(68, 170, 255, 0.3);
+  border-radius: 4px;
+  color: #44aaff;
+  font-size: 0.85rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.copy-item-btn:hover {
+  background: rgba(68, 170, 255, 0.25);
+  border-color: rgba(68, 170, 255, 0.5);
+  box-shadow: 0 0 8px rgba(68, 170, 255, 0.3);
 }
 
 .item-details {
@@ -805,18 +822,16 @@
 .mod-tag-badge {
   font-size: 0.65rem;
   padding: 0.1rem 0.35rem;
-  background: rgba(100, 150, 255, 0.15);
-  border: 1px solid rgba(100, 150, 255, 0.3);
+  /* Colors are now applied via inline styles using getTagColor() */
+  border: 1px solid;
   border-radius: 3px;
-  color: #88bbff;
   cursor: pointer;
   transition: all 0.2s;
   white-space: nowrap;
 }
 
 .mod-tag-badge:hover {
-  background: rgba(100, 150, 255, 0.25);
-  border-color: rgba(100, 150, 255, 0.5);
+  /* Hover effect handled via inline styles to preserve tag-specific colors */
   transform: translateY(-1px);
 }
 
@@ -2712,10 +2727,9 @@
 .choice-tag-badge {
   font-size: 0.7rem;
   padding: 0.15rem 0.4rem;
-  background: rgba(68, 255, 136, 0.2);
-  border: 1px solid rgba(68, 255, 136, 0.4);
+  /* Colors are now applied via inline styles using getTagColor() */
+  border: 1px solid;
   border-radius: 3px;
-  color: #44ff88;
 }
 
 .omen-hint {
@@ -2764,4 +2778,88 @@
 .close-modal-btn:hover {
   background: rgba(255, 68, 68, 0.3);
   border-color: rgba(255, 68, 68, 0.6);
+}
+
+/* Paste Preview Modal Styles */
+.item-preview {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid #444;
+  border-radius: 6px;
+  padding: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.item-header {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.75rem;
+  border-bottom: 1px solid #444;
+}
+
+.item-rarity {
+  padding: 0.25rem 0.75rem;
+  border-radius: 4px;
+  font-weight: bold;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+}
+
+.item-rarity.normal {
+  background: rgba(200, 200, 200, 0.2);
+  color: #ccc;
+  border: 1px solid rgba(200, 200, 200, 0.4);
+}
+
+.item-rarity.magic {
+  background: rgba(68, 136, 255, 0.2);
+  color: #4488ff;
+  border: 1px solid rgba(68, 136, 255, 0.4);
+}
+
+.item-rarity.rare {
+  background: rgba(255, 204, 68, 0.2);
+  color: #ffcc44;
+  border: 1px solid rgba(255, 204, 68, 0.4);
+}
+
+.item-name {
+  color: #e0e0e0;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.item-level {
+  color: #888;
+  font-size: 0.85rem;
+  margin-left: auto;
+}
+
+.mods-section {
+  margin-bottom: 1rem;
+}
+
+.mods-section:last-child {
+  margin-bottom: 0;
+}
+
+.mods-section h4 {
+  color: #aaa;
+  font-size: 0.9rem;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+.mod-preview {
+  background: rgba(68, 255, 136, 0.05);
+  border-left: 2px solid rgba(68, 255, 136, 0.3);
+  padding: 0.5rem 0.75rem;
+  margin-bottom: 0.25rem;
+  color: #44ff88;
+  font-size: 0.9rem;
+}
+
+.paste-error {
+  text-align: center;
 }

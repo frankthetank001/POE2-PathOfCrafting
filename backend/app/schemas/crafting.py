@@ -51,6 +51,7 @@ class ItemModifier(BaseModel):
     is_unrevealed: bool = False  # True if this is an unrevealed desecrated modifier
     unrevealed_id: Optional[str] = None  # ID linking to UnrevealedModifier metadata
     is_desecrated: bool = False  # True if this mod was added via desecration (for green tint)
+    exclusion_group: Optional[int] = None  # Mods in the same exclusion group cannot coexist
 
 
 class UnrevealedModifier(BaseModel):

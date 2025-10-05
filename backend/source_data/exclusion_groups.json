@@ -1,0 +1,53 @@
+{
+  "comment": "Exclusion groups prevent certain mods from coexisting on the same item. Mods with the same exclusion_group value cannot appear together.",
+  "groups": {
+    "1": {
+      "description": "Dexterity attribute mods",
+      "rules": [
+        {
+          "match_type": "mod_group",
+          "pattern": "dexterity"
+        }
+      ]
+    },
+    "2": {
+      "description": "Intelligence attribute mods and Dex+Int hybrid",
+      "rules": [
+        {
+          "match_type": "mod_group",
+          "pattern": "intelligence"
+        },
+        {
+          "match_type": "stat_text",
+          "pattern": "to Dexterity and Intelligence"
+        }
+      ]
+    },
+    "3": {
+      "description": "All skill gem level modifiers",
+      "rules": [
+        {
+          "match_type": "stat_text",
+          "pattern": "to Level of all"
+        }
+      ]
+    },
+    "4": {
+      "description": "Strength attribute mods and Str hybrid mods",
+      "rules": [
+        {
+          "match_type": "mod_group",
+          "pattern": "strength"
+        },
+        {
+          "match_type": "stat_text",
+          "pattern": "to Strength and Dexterity"
+        },
+        {
+          "match_type": "stat_text",
+          "pattern": "to Strength and Intelligence"
+        }
+      ]
+    }
+  }
+}

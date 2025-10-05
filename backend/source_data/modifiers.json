@@ -2,7 +2,7 @@
   {
     "name": "of the Brute",
     "mod_type": "suffix",
-    "tier": 9,
+    "tier": 8,
     "stat_text": "+{} to Strength",
     "stat_ranges": [
       {
@@ -36,7 +36,7 @@
   {
     "name": "of the Wrestler",
     "mod_type": "suffix",
-    "tier": 8,
+    "tier": 7,
     "stat_text": "+{} to Strength",
     "stat_ranges": [
       {
@@ -70,7 +70,7 @@
   {
     "name": "of the Bear",
     "mod_type": "suffix",
-    "tier": 7,
+    "tier": 6,
     "stat_text": "+{} to Strength",
     "stat_ranges": [
       {
@@ -104,7 +104,7 @@
   {
     "name": "of the Lion",
     "mod_type": "suffix",
-    "tier": 6,
+    "tier": 5,
     "stat_text": "+{} to Strength",
     "stat_ranges": [
       {
@@ -138,7 +138,7 @@
   {
     "name": "of the Gorilla",
     "mod_type": "suffix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "+{} to Strength",
     "stat_ranges": [
       {
@@ -172,7 +172,7 @@
   {
     "name": "of the Goliath",
     "mod_type": "suffix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "+{} to Strength",
     "stat_ranges": [
       {
@@ -206,7 +206,7 @@
   {
     "name": "of the Leviathan",
     "mod_type": "suffix",
-    "tier": 3,
+    "tier": 2,
     "stat_text": "+{} to Strength",
     "stat_ranges": [
       {
@@ -240,7 +240,7 @@
   {
     "name": "of the Titan",
     "mod_type": "suffix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "+{} to Strength",
     "stat_ranges": [
       {
@@ -301,7 +301,7 @@
   {
     "name": "of the Mongoose",
     "mod_type": "suffix",
-    "tier": 9,
+    "tier": 8,
     "stat_text": "+{} to Dexterity",
     "stat_ranges": [
       {
@@ -337,7 +337,7 @@
   {
     "name": "of the Lynx",
     "mod_type": "suffix",
-    "tier": 8,
+    "tier": 7,
     "stat_text": "+{} to Dexterity",
     "stat_ranges": [
       {
@@ -373,7 +373,7 @@
   {
     "name": "of the Fox",
     "mod_type": "suffix",
-    "tier": 7,
+    "tier": 6,
     "stat_text": "+{} to Dexterity",
     "stat_ranges": [
       {
@@ -409,7 +409,7 @@
   {
     "name": "of the Falcon",
     "mod_type": "suffix",
-    "tier": 6,
+    "tier": 5,
     "stat_text": "+{} to Dexterity",
     "stat_ranges": [
       {
@@ -445,7 +445,7 @@
   {
     "name": "of the Panther",
     "mod_type": "suffix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "+{} to Dexterity",
     "stat_ranges": [
       {
@@ -481,7 +481,7 @@
   {
     "name": "of the Leopard",
     "mod_type": "suffix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "+{} to Dexterity",
     "stat_ranges": [
       {
@@ -517,7 +517,7 @@
   {
     "name": "of the Jaguar",
     "mod_type": "suffix",
-    "tier": 3,
+    "tier": 2,
     "stat_text": "+{} to Dexterity",
     "stat_ranges": [
       {
@@ -553,7 +553,7 @@
   {
     "name": "of the Phantom",
     "mod_type": "suffix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "+{} to Dexterity",
     "stat_ranges": [
       {
@@ -616,7 +616,7 @@
   {
     "name": "of the Pupil",
     "mod_type": "suffix",
-    "tier": 9,
+    "tier": 8,
     "stat_text": "+{} to Intelligence",
     "stat_ranges": [
       {
@@ -651,7 +651,7 @@
   {
     "name": "of the Student",
     "mod_type": "suffix",
-    "tier": 8,
+    "tier": 7,
     "stat_text": "+{} to Intelligence",
     "stat_ranges": [
       {
@@ -686,7 +686,7 @@
   {
     "name": "of the Prodigy",
     "mod_type": "suffix",
-    "tier": 7,
+    "tier": 6,
     "stat_text": "+{} to Intelligence",
     "stat_ranges": [
       {
@@ -721,7 +721,7 @@
   {
     "name": "of the Augur",
     "mod_type": "suffix",
-    "tier": 6,
+    "tier": 5,
     "stat_text": "+{} to Intelligence",
     "stat_ranges": [
       {
@@ -756,7 +756,7 @@
   {
     "name": "of the Philosopher",
     "mod_type": "suffix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "+{} to Intelligence",
     "stat_ranges": [
       {
@@ -791,7 +791,7 @@
   {
     "name": "of the Sage",
     "mod_type": "suffix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "+{} to Intelligence",
     "stat_ranges": [
       {
@@ -826,7 +826,7 @@
   {
     "name": "of the Savant",
     "mod_type": "suffix",
-    "tier": 3,
+    "tier": 2,
     "stat_text": "+{} to Intelligence",
     "stat_ranges": [
       {
@@ -861,7 +861,7 @@
   {
     "name": "of the Virtuoso",
     "mod_type": "suffix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "+{} to Intelligence",
     "stat_ranges": [
       {
@@ -923,7 +923,7 @@
   {
     "name": "of the Clouds",
     "mod_type": "suffix",
-    "tier": 9,
+    "tier": 4,
     "stat_text": "+{} to all Attributes",
     "stat_ranges": [
       {
@@ -951,7 +951,7 @@
   {
     "name": "of the Sky",
     "mod_type": "suffix",
-    "tier": 8,
+    "tier": 3,
     "stat_text": "+{} to all Attributes",
     "stat_ranges": [
       {
@@ -979,7 +979,7 @@
   {
     "name": "of the Meteor",
     "mod_type": "suffix",
-    "tier": 7,
+    "tier": 2,
     "stat_text": "+{} to all Attributes",
     "stat_ranges": [
       {
@@ -1007,7 +1007,7 @@
   {
     "name": "of the Comet",
     "mod_type": "suffix",
-    "tier": 6,
+    "tier": 1,
     "stat_text": "+{} to all Attributes",
     "stat_ranges": [
       {
@@ -1938,7 +1938,7 @@
   {
     "name": "of the Crystal",
     "mod_type": "suffix",
-    "tier": 6,
+    "tier": 5,
     "stat_text": "+{}% to all Elemental Resistances",
     "stat_ranges": [
       {
@@ -1971,7 +1971,7 @@
   {
     "name": "of the Prism",
     "mod_type": "suffix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "+{}% to all Elemental Resistances",
     "stat_ranges": [
       {
@@ -2004,7 +2004,7 @@
   {
     "name": "of the Kaleidoscope",
     "mod_type": "suffix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "+{}% to all Elemental Resistances",
     "stat_ranges": [
       {
@@ -2037,7 +2037,7 @@
   {
     "name": "of Variegation",
     "mod_type": "suffix",
-    "tier": 3,
+    "tier": 2,
     "stat_text": "+{}% to all Elemental Resistances",
     "stat_ranges": [
       {
@@ -2070,7 +2070,7 @@
   {
     "name": "of the Rainbow",
     "mod_type": "suffix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "+{}% to all Elemental Resistances",
     "stat_ranges": [
       {
@@ -2489,7 +2489,7 @@
   {
     "name": "Hale",
     "mod_type": "prefix",
-    "tier": 13,
+    "tier": 8,
     "stat_text": "+{} to maximum Life",
     "stat_ranges": [
       {
@@ -2524,7 +2524,7 @@
   {
     "name": "Healthy",
     "mod_type": "prefix",
-    "tier": 12,
+    "tier": 7,
     "stat_text": "+{} to maximum Life",
     "stat_ranges": [
       {
@@ -2559,7 +2559,7 @@
   {
     "name": "Sanguine",
     "mod_type": "prefix",
-    "tier": 11,
+    "tier": 6,
     "stat_text": "+{} to maximum Life",
     "stat_ranges": [
       {
@@ -2594,7 +2594,7 @@
   {
     "name": "Stalwart",
     "mod_type": "prefix",
-    "tier": 10,
+    "tier": 5,
     "stat_text": "+{} to maximum Life",
     "stat_ranges": [
       {
@@ -2629,7 +2629,7 @@
   {
     "name": "Stout",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 4,
     "stat_text": "+{} to maximum Life",
     "stat_ranges": [
       {
@@ -2664,7 +2664,7 @@
   {
     "name": "Robust",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 3,
     "stat_text": "+{} to maximum Life",
     "stat_ranges": [
       {
@@ -2699,7 +2699,7 @@
   {
     "name": "Rotund",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 2,
     "stat_text": "+{} to maximum Life",
     "stat_ranges": [
       {
@@ -2734,7 +2734,7 @@
   {
     "name": "Virile",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 1,
     "stat_text": "+{} to maximum Life",
     "stat_ranges": [
       {
@@ -2769,7 +2769,7 @@
   {
     "name": "Athlete's",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 1,
     "stat_text": "+{} to maximum Life",
     "stat_ranges": [
       {
@@ -2803,7 +2803,7 @@
   {
     "name": "Fecund",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 1,
     "stat_text": "+{} to maximum Life",
     "stat_ranges": [
       {
@@ -2834,7 +2834,7 @@
   {
     "name": "Vigorous",
     "mod_type": "prefix",
-    "tier": 3,
+    "tier": 1,
     "stat_text": "+{} to maximum Life",
     "stat_ranges": [
       {
@@ -2919,7 +2919,7 @@
   {
     "name": "Hopeful",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "{}% increased maximum Life",
     "stat_ranges": [
       {
@@ -2947,7 +2947,7 @@
   {
     "name": "Optimistic",
     "mod_type": "prefix",
-    "tier": 3,
+    "tier": 2,
     "stat_text": "{}% increased maximum Life",
     "stat_ranges": [
       {
@@ -2975,7 +2975,7 @@
   {
     "name": "Confident",
     "mod_type": "prefix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "{}% increased maximum Life",
     "stat_ranges": [
       {
@@ -3003,7 +3003,7 @@
   {
     "name": "Beryl",
     "mod_type": "prefix",
-    "tier": 25,
+    "tier": 9,
     "stat_text": "+{} to maximum Mana",
     "stat_ranges": [
       {
@@ -3039,7 +3039,7 @@
   {
     "name": "Cobalt",
     "mod_type": "prefix",
-    "tier": 23,
+    "tier": 8,
     "stat_text": "+{} to maximum Mana",
     "stat_ranges": [
       {
@@ -3075,7 +3075,7 @@
   {
     "name": "Azure",
     "mod_type": "prefix",
-    "tier": 22,
+    "tier": 7,
     "stat_text": "+{} to maximum Mana",
     "stat_ranges": [
       {
@@ -3111,7 +3111,7 @@
   {
     "name": "Teal",
     "mod_type": "prefix",
-    "tier": 19,
+    "tier": 6,
     "stat_text": "+{} to maximum Mana",
     "stat_ranges": [
       {
@@ -3147,7 +3147,7 @@
   {
     "name": "Cerulean",
     "mod_type": "prefix",
-    "tier": 18,
+    "tier": 5,
     "stat_text": "+{} to maximum Mana",
     "stat_ranges": [
       {
@@ -3183,7 +3183,7 @@
   {
     "name": "Aqua",
     "mod_type": "prefix",
-    "tier": 16,
+    "tier": 4,
     "stat_text": "+{} to maximum Mana",
     "stat_ranges": [
       {
@@ -3219,7 +3219,7 @@
   {
     "name": "Opalescent",
     "mod_type": "prefix",
-    "tier": 15,
+    "tier": 3,
     "stat_text": "+{} to maximum Mana",
     "stat_ranges": [
       {
@@ -3255,7 +3255,7 @@
   {
     "name": "Gentian",
     "mod_type": "prefix",
-    "tier": 13,
+    "tier": 2,
     "stat_text": "+{} to maximum Mana",
     "stat_ranges": [
       {
@@ -3291,7 +3291,7 @@
   {
     "name": "Chalybeous",
     "mod_type": "prefix",
-    "tier": 11,
+    "tier": 1,
     "stat_text": "+{} to maximum Mana",
     "stat_ranges": [
       {
@@ -3327,7 +3327,7 @@
   {
     "name": "Mazarine",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 1,
     "stat_text": "+{} to maximum Mana",
     "stat_ranges": [
       {
@@ -3360,7 +3360,7 @@
   {
     "name": "Blue",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 1,
     "stat_text": "+{} to maximum Mana",
     "stat_ranges": [
       {
@@ -3392,7 +3392,7 @@
   {
     "name": "Zaffre",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 1,
     "stat_text": "+{} to maximum Mana",
     "stat_ranges": [
       {
@@ -3421,7 +3421,7 @@
   {
     "name": "Ultramarine",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 1,
     "stat_text": "+{} to maximum Mana",
     "stat_ranges": [
       {
@@ -3449,7 +3449,7 @@
   {
     "name": "Beryl",
     "mod_type": "prefix",
-    "tier": 24,
+    "tier": 11,
     "stat_text": "+{} to maximum Mana",
     "stat_ranges": [
       {
@@ -3477,7 +3477,7 @@
   {
     "name": "Cobalt",
     "mod_type": "prefix",
-    "tier": 21,
+    "tier": 10,
     "stat_text": "+{} to maximum Mana",
     "stat_ranges": [
       {
@@ -3505,7 +3505,7 @@
   {
     "name": "Azure",
     "mod_type": "prefix",
-    "tier": 20,
+    "tier": 9,
     "stat_text": "+{} to maximum Mana",
     "stat_ranges": [
       {
@@ -3533,7 +3533,7 @@
   {
     "name": "Sapphire",
     "mod_type": "prefix",
-    "tier": 17,
+    "tier": 8,
     "stat_text": "+{} to maximum Mana",
     "stat_ranges": [
       {
@@ -3561,7 +3561,7 @@
   {
     "name": "Cerulean",
     "mod_type": "prefix",
-    "tier": 14,
+    "tier": 7,
     "stat_text": "+{} to maximum Mana",
     "stat_ranges": [
       {
@@ -3589,7 +3589,7 @@
   {
     "name": "Aqua",
     "mod_type": "prefix",
-    "tier": 12,
+    "tier": 6,
     "stat_text": "+{} to maximum Mana",
     "stat_ranges": [
       {
@@ -3617,7 +3617,7 @@
   {
     "name": "Opalescent",
     "mod_type": "prefix",
-    "tier": 10,
+    "tier": 5,
     "stat_text": "+{} to maximum Mana",
     "stat_ranges": [
       {
@@ -3645,7 +3645,7 @@
   {
     "name": "Gentian",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 4,
     "stat_text": "+{} to maximum Mana",
     "stat_ranges": [
       {
@@ -3673,7 +3673,7 @@
   {
     "name": "Chalybeous",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 3,
     "stat_text": "+{} to maximum Mana",
     "stat_ranges": [
       {
@@ -3701,7 +3701,7 @@
   {
     "name": "Mazarine",
     "mod_type": "prefix",
-    "tier": 3,
+    "tier": 2,
     "stat_text": "+{} to maximum Mana",
     "stat_ranges": [
       {
@@ -3729,7 +3729,7 @@
   {
     "name": "Blue",
     "mod_type": "prefix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "+{} to maximum Mana",
     "stat_ranges": [
       {
@@ -3783,7 +3783,7 @@
   {
     "name": "Cognizant",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "{}% increased maximum Mana",
     "stat_ranges": [
       {
@@ -7064,7 +7064,7 @@
   {
     "name": "Reinforced",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 7,
     "stat_text": "{}% increased Armour",
     "stat_ranges": [
       {
@@ -7092,7 +7092,7 @@
   {
     "name": "Layered",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 6,
     "stat_text": "{}% increased Armour",
     "stat_ranges": [
       {
@@ -7120,7 +7120,7 @@
   {
     "name": "Lobstered",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 5,
     "stat_text": "{}% increased Armour",
     "stat_ranges": [
       {
@@ -7148,7 +7148,7 @@
   {
     "name": "Buttressed",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "{}% increased Armour",
     "stat_ranges": [
       {
@@ -7176,7 +7176,7 @@
   {
     "name": "Thickened",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "{}% increased Armour",
     "stat_ranges": [
       {
@@ -7204,7 +7204,7 @@
   {
     "name": "Girded",
     "mod_type": "prefix",
-    "tier": 3,
+    "tier": 2,
     "stat_text": "{}% increased Armour",
     "stat_ranges": [
       {
@@ -7232,7 +7232,7 @@
   {
     "name": "Impregnable",
     "mod_type": "prefix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "{}% increased Armour",
     "stat_ranges": [
       {
@@ -7289,7 +7289,7 @@
   {
     "name": "Shade's",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 7,
     "stat_text": "{}% increased Evasion Rating",
     "stat_ranges": [
       {
@@ -7317,7 +7317,7 @@
   {
     "name": "Ghost's",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 6,
     "stat_text": "{}% increased Evasion Rating",
     "stat_ranges": [
       {
@@ -7345,7 +7345,7 @@
   {
     "name": "Spectre's",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 5,
     "stat_text": "{}% increased Evasion Rating",
     "stat_ranges": [
       {
@@ -7373,7 +7373,7 @@
   {
     "name": "Wraith's",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "{}% increased Evasion Rating",
     "stat_ranges": [
       {
@@ -7401,7 +7401,7 @@
   {
     "name": "Phantasm's",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "{}% increased Evasion Rating",
     "stat_ranges": [
       {
@@ -7429,7 +7429,7 @@
   {
     "name": "Nightmare's",
     "mod_type": "prefix",
-    "tier": 3,
+    "tier": 2,
     "stat_text": "{}% increased Evasion Rating",
     "stat_ranges": [
       {
@@ -7457,7 +7457,7 @@
   {
     "name": "Mirage's",
     "mod_type": "prefix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "{}% increased Evasion Rating",
     "stat_ranges": [
       {
@@ -7514,7 +7514,7 @@
   {
     "name": "Protective",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 7,
     "stat_text": "{}% increased Energy Shield",
     "stat_ranges": [
       {
@@ -7542,7 +7542,7 @@
   {
     "name": "Strong-Willed",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 6,
     "stat_text": "{}% increased Energy Shield",
     "stat_ranges": [
       {
@@ -7570,7 +7570,7 @@
   {
     "name": "Resolute",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 5,
     "stat_text": "{}% increased Energy Shield",
     "stat_ranges": [
       {
@@ -7598,7 +7598,7 @@
   {
     "name": "Fearless",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "{}% increased Energy Shield",
     "stat_ranges": [
       {
@@ -7626,7 +7626,7 @@
   {
     "name": "Dauntless",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "{}% increased Energy Shield",
     "stat_ranges": [
       {
@@ -7654,7 +7654,7 @@
   {
     "name": "Indomitable",
     "mod_type": "prefix",
-    "tier": 3,
+    "tier": 2,
     "stat_text": "{}% increased Energy Shield",
     "stat_ranges": [
       {
@@ -7682,7 +7682,7 @@
   {
     "name": "Unassailable",
     "mod_type": "prefix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "{}% increased Energy Shield",
     "stat_ranges": [
       {
@@ -7739,7 +7739,7 @@
   {
     "name": "Scrapper's",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 7,
     "stat_text": "{}% increased Armour and Evasion",
     "stat_ranges": [
       {
@@ -7768,7 +7768,7 @@
   {
     "name": "Brawler's",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 6,
     "stat_text": "{}% increased Armour and Evasion",
     "stat_ranges": [
       {
@@ -7797,7 +7797,7 @@
   {
     "name": "Fencer's",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 5,
     "stat_text": "{}% increased Armour and Evasion",
     "stat_ranges": [
       {
@@ -7826,7 +7826,7 @@
   {
     "name": "Gladiator's",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "{}% increased Armour and Evasion",
     "stat_ranges": [
       {
@@ -7855,7 +7855,7 @@
   {
     "name": "Duelist's",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "{}% increased Armour and Evasion",
     "stat_ranges": [
       {
@@ -7884,7 +7884,7 @@
   {
     "name": "Hero's",
     "mod_type": "prefix",
-    "tier": 3,
+    "tier": 2,
     "stat_text": "{}% increased Armour and Evasion",
     "stat_ranges": [
       {
@@ -7913,7 +7913,7 @@
   {
     "name": "Legend's",
     "mod_type": "prefix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "{}% increased Armour and Evasion",
     "stat_ranges": [
       {
@@ -7972,7 +7972,7 @@
   {
     "name": "Infixed",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 7,
     "stat_text": "{}% increased Armour and Energy Shield",
     "stat_ranges": [
       {
@@ -8001,7 +8001,7 @@
   {
     "name": "Ingrained",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 6,
     "stat_text": "{}% increased Armour and Energy Shield",
     "stat_ranges": [
       {
@@ -8030,7 +8030,7 @@
   {
     "name": "Instilled",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 5,
     "stat_text": "{}% increased Armour and Energy Shield",
     "stat_ranges": [
       {
@@ -8059,7 +8059,7 @@
   {
     "name": "Infused",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "{}% increased Armour and Energy Shield",
     "stat_ranges": [
       {
@@ -8088,7 +8088,7 @@
   {
     "name": "Inculcated",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "{}% increased Armour and Energy Shield",
     "stat_ranges": [
       {
@@ -8117,7 +8117,7 @@
   {
     "name": "Interpolated",
     "mod_type": "prefix",
-    "tier": 3,
+    "tier": 2,
     "stat_text": "{}% increased Armour and Energy Shield",
     "stat_ranges": [
       {
@@ -8146,7 +8146,7 @@
   {
     "name": "Inspired",
     "mod_type": "prefix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "{}% increased Armour and Energy Shield",
     "stat_ranges": [
       {
@@ -8205,7 +8205,7 @@
   {
     "name": "Shadowy",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 7,
     "stat_text": "{}% increased Evasion and Energy Shield",
     "stat_ranges": [
       {
@@ -8234,7 +8234,7 @@
   {
     "name": "Ethereal",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 6,
     "stat_text": "{}% increased Evasion and Energy Shield",
     "stat_ranges": [
       {
@@ -8263,7 +8263,7 @@
   {
     "name": "Unworldly",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 5,
     "stat_text": "{}% increased Evasion and Energy Shield",
     "stat_ranges": [
       {
@@ -8292,7 +8292,7 @@
   {
     "name": "Ephemeral",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "{}% increased Evasion and Energy Shield",
     "stat_ranges": [
       {
@@ -8321,7 +8321,7 @@
   {
     "name": "Evanescent",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "{}% increased Evasion and Energy Shield",
     "stat_ranges": [
       {
@@ -8350,7 +8350,7 @@
   {
     "name": "Unreal",
     "mod_type": "prefix",
-    "tier": 3,
+    "tier": 2,
     "stat_text": "{}% increased Evasion and Energy Shield",
     "stat_ranges": [
       {
@@ -8379,7 +8379,7 @@
   {
     "name": "Illusory",
     "mod_type": "prefix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "{}% increased Evasion and Energy Shield",
     "stat_ranges": [
       {
@@ -13525,7 +13525,7 @@
   {
     "name": "of Thick Skin",
     "mod_type": "suffix",
-    "tier": 14,
+    "tier": 10,
     "stat_text": "+{} to Stun Threshold",
     "stat_ranges": [
       {
@@ -13553,7 +13553,7 @@
   {
     "name": "of Reinforced Skin",
     "mod_type": "suffix",
-    "tier": 13,
+    "tier": 9,
     "stat_text": "+{} to Stun Threshold",
     "stat_ranges": [
       {
@@ -13581,7 +13581,7 @@
   {
     "name": "of Stone Skin",
     "mod_type": "suffix",
-    "tier": 10,
+    "tier": 8,
     "stat_text": "+{} to Stun Threshold",
     "stat_ranges": [
       {
@@ -13609,7 +13609,7 @@
   {
     "name": "of Iron Skin",
     "mod_type": "suffix",
-    "tier": 8,
+    "tier": 7,
     "stat_text": "+{} to Stun Threshold",
     "stat_ranges": [
       {
@@ -13637,7 +13637,7 @@
   {
     "name": "of Steel Skin",
     "mod_type": "suffix",
-    "tier": 7,
+    "tier": 6,
     "stat_text": "+{} to Stun Threshold",
     "stat_ranges": [
       {
@@ -13665,7 +13665,7 @@
   {
     "name": "of Granite Skin",
     "mod_type": "suffix",
-    "tier": 6,
+    "tier": 5,
     "stat_text": "+{} to Stun Threshold",
     "stat_ranges": [
       {
@@ -13693,7 +13693,7 @@
   {
     "name": "of Platinum Skin",
     "mod_type": "suffix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "+{} to Stun Threshold",
     "stat_ranges": [
       {
@@ -13721,7 +13721,7 @@
   {
     "name": "of Adamantite Skin",
     "mod_type": "suffix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "+{} to Stun Threshold",
     "stat_ranges": [
       {
@@ -13749,7 +13749,7 @@
   {
     "name": "of Corundum Skin",
     "mod_type": "suffix",
-    "tier": 3,
+    "tier": 2,
     "stat_text": "+{} to Stun Threshold",
     "stat_ranges": [
       {
@@ -13777,7 +13777,7 @@
   {
     "name": "of Obsidian Skin",
     "mod_type": "suffix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "+{} to Stun Threshold",
     "stat_ranges": [
       {
@@ -14237,7 +14237,7 @@
   {
     "name": "Glinting",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 1,
     "stat_text": "Adds {} to 3 Physical Damage to Attacks",
     "stat_ranges": [
       {
@@ -14557,7 +14557,7 @@
   {
     "name": "Heated",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 1,
     "stat_text": "Adds {} to 3 Fire damage to Attacks",
     "stat_ranges": [
       {
@@ -14886,7 +14886,7 @@
   {
     "name": "Frosted",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 1,
     "stat_text": "Adds 1 to {} Cold damage to Attacks",
     "stat_ranges": [
       {
@@ -15380,7 +15380,7 @@
   {
     "name": "Arcing",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 3,
     "stat_text": "Adds {} to {} Lightning damage to Attacks",
     "stat_ranges": [
       {
@@ -15417,7 +15417,7 @@
   {
     "name": "Shocking",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 4,
     "stat_text": "Adds {} to {} Lightning damage to Attacks",
     "stat_ranges": [
       {
@@ -15454,7 +15454,7 @@
   {
     "name": "Discharging",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 2,
     "stat_text": "Adds {} to {} Lightning damage to Attacks",
     "stat_ranges": [
       {
@@ -15491,7 +15491,7 @@
   {
     "name": "Electrocuting",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 1,
     "stat_text": "Adds {} to {} Lightning damage to Attacks",
     "stat_ranges": [
       {
@@ -15528,7 +15528,7 @@
   {
     "name": "Glinting",
     "mod_type": "prefix",
-    "tier": 18,
+    "tier": 9,
     "stat_text": "Adds {} to {} Physical Damage",
     "stat_ranges": [
       {
@@ -15563,7 +15563,7 @@
   {
     "name": "Burnished",
     "mod_type": "prefix",
-    "tier": 16,
+    "tier": 8,
     "stat_text": "Adds {} to {} Physical Damage",
     "stat_ranges": [
       {
@@ -15598,7 +15598,7 @@
   {
     "name": "Polished",
     "mod_type": "prefix",
-    "tier": 14,
+    "tier": 7,
     "stat_text": "Adds {} to {} Physical Damage",
     "stat_ranges": [
       {
@@ -15633,7 +15633,7 @@
   {
     "name": "Honed",
     "mod_type": "prefix",
-    "tier": 13,
+    "tier": 6,
     "stat_text": "Adds {} to {} Physical Damage",
     "stat_ranges": [
       {
@@ -15668,7 +15668,7 @@
   {
     "name": "Gleaming",
     "mod_type": "prefix",
-    "tier": 11,
+    "tier": 5,
     "stat_text": "Adds {} to {} Physical Damage",
     "stat_ranges": [
       {
@@ -15703,7 +15703,7 @@
   {
     "name": "Annealed",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 4,
     "stat_text": "Adds {} to {} Physical Damage",
     "stat_ranges": [
       {
@@ -15738,7 +15738,7 @@
   {
     "name": "Razor-sharp",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 3,
     "stat_text": "Adds {} to {} Physical Damage",
     "stat_ranges": [
       {
@@ -15773,7 +15773,7 @@
   {
     "name": "Tempered",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 2,
     "stat_text": "Adds {} to {} Physical Damage",
     "stat_ranges": [
       {
@@ -15808,7 +15808,7 @@
   {
     "name": "Flaring",
     "mod_type": "prefix",
-    "tier": 3,
+    "tier": 1,
     "stat_text": "Adds {} to {} Physical Damage",
     "stat_ranges": [
       {
@@ -15843,7 +15843,7 @@
   {
     "name": "Glinting",
     "mod_type": "prefix",
-    "tier": 17,
+    "tier": 9,
     "stat_text": "Adds {} to {} Physical Damage",
     "stat_ranges": [
       {
@@ -15877,7 +15877,7 @@
   {
     "name": "Burnished",
     "mod_type": "prefix",
-    "tier": 15,
+    "tier": 8,
     "stat_text": "Adds {} to {} Physical Damage",
     "stat_ranges": [
       {
@@ -15911,7 +15911,7 @@
   {
     "name": "Polished",
     "mod_type": "prefix",
-    "tier": 12,
+    "tier": 7,
     "stat_text": "Adds {} to {} Physical Damage",
     "stat_ranges": [
       {
@@ -15945,7 +15945,7 @@
   {
     "name": "Honed",
     "mod_type": "prefix",
-    "tier": 10,
+    "tier": 6,
     "stat_text": "Adds {} to {} Physical Damage",
     "stat_ranges": [
       {
@@ -15979,7 +15979,7 @@
   {
     "name": "Gleaming",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 5,
     "stat_text": "Adds {} to {} Physical Damage",
     "stat_ranges": [
       {
@@ -16013,7 +16013,7 @@
   {
     "name": "Annealed",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 4,
     "stat_text": "Adds {} to {} Physical Damage",
     "stat_ranges": [
       {
@@ -16047,7 +16047,7 @@
   {
     "name": "Razor-sharp",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "Adds {} to {} Physical Damage",
     "stat_ranges": [
       {
@@ -17549,7 +17549,7 @@
   {
     "name": "Humming",
     "mod_type": "prefix",
-    "tier": 10,
+    "tier": 3,
     "stat_text": "Adds 1 to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -17611,7 +17611,7 @@
   {
     "name": "Snapping",
     "mod_type": "prefix",
-    "tier": 19,
+    "tier": 16,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -17646,7 +17646,7 @@
   {
     "name": "Crackling",
     "mod_type": "prefix",
-    "tier": 20,
+    "tier": 17,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -17681,7 +17681,7 @@
   {
     "name": "Sparking",
     "mod_type": "prefix",
-    "tier": 17,
+    "tier": 14,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -17716,7 +17716,7 @@
   {
     "name": "Arcing",
     "mod_type": "prefix",
-    "tier": 15,
+    "tier": 12,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -17751,7 +17751,7 @@
   {
     "name": "Shocking",
     "mod_type": "prefix",
-    "tier": 12,
+    "tier": 9,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -17786,7 +17786,7 @@
   {
     "name": "Discharging",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 7,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -17821,7 +17821,7 @@
   {
     "name": "Electrocuting",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 5,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -17856,7 +17856,7 @@
   {
     "name": "Vapourising",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -17891,7 +17891,7 @@
   {
     "name": "Humming",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 2,
     "stat_text": "Adds 1 to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -17922,7 +17922,7 @@
   {
     "name": "Buzzing",
     "mod_type": "prefix",
-    "tier": 18,
+    "tier": 15,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -17957,7 +17957,7 @@
   {
     "name": "Snapping",
     "mod_type": "prefix",
-    "tier": 16,
+    "tier": 13,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -17992,7 +17992,7 @@
   {
     "name": "Crackling",
     "mod_type": "prefix",
-    "tier": 13,
+    "tier": 10,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -18027,7 +18027,7 @@
   {
     "name": "Sparking",
     "mod_type": "prefix",
-    "tier": 14,
+    "tier": 11,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -18062,7 +18062,7 @@
   {
     "name": "Arcing",
     "mod_type": "prefix",
-    "tier": 11,
+    "tier": 8,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -18097,7 +18097,7 @@
   {
     "name": "Shocking",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 6,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -18132,7 +18132,7 @@
   {
     "name": "Discharging",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -18167,7 +18167,7 @@
   {
     "name": "Electrocuting",
     "mod_type": "prefix",
-    "tier": 3,
+    "tier": 2,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -18202,7 +18202,7 @@
   {
     "name": "Vapourising",
     "mod_type": "prefix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -19328,7 +19328,7 @@
   {
     "name": "Arcing",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 3,
     "stat_text": "Allies in your Presence deal {} to {} added Attack Lightning Damage",
     "stat_ranges": [
       {
@@ -19363,7 +19363,7 @@
   {
     "name": "Shocking",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 4,
     "stat_text": "Allies in your Presence deal {} to {} added Attack Lightning Damage",
     "stat_ranges": [
       {
@@ -19398,7 +19398,7 @@
   {
     "name": "Discharging",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 2,
     "stat_text": "Allies in your Presence deal {} to {} added Attack Lightning Damage",
     "stat_ranges": [
       {
@@ -19433,7 +19433,7 @@
   {
     "name": "Electrocuting",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 1,
     "stat_text": "Allies in your Presence deal {} to {} added Attack Lightning Damage",
     "stat_ranges": [
       {
@@ -20204,7 +20204,7 @@
   {
     "name": "Apprentice's",
     "mod_type": "prefix",
-    "tier": 16,
+    "tier": 8,
     "stat_text": "{}% increased Spell Damage",
     "stat_ranges": [
       {
@@ -20234,7 +20234,7 @@
   {
     "name": "Adept's",
     "mod_type": "prefix",
-    "tier": 15,
+    "tier": 7,
     "stat_text": "{}% increased Spell Damage",
     "stat_ranges": [
       {
@@ -20264,7 +20264,7 @@
   {
     "name": "Scholar's",
     "mod_type": "prefix",
-    "tier": 13,
+    "tier": 6,
     "stat_text": "{}% increased Spell Damage",
     "stat_ranges": [
       {
@@ -20294,7 +20294,7 @@
   {
     "name": "Professor's",
     "mod_type": "prefix",
-    "tier": 12,
+    "tier": 5,
     "stat_text": "{}% increased Spell Damage",
     "stat_ranges": [
       {
@@ -20324,7 +20324,7 @@
   {
     "name": "Occultist's",
     "mod_type": "prefix",
-    "tier": 10,
+    "tier": 4,
     "stat_text": "{}% increased Spell Damage",
     "stat_ranges": [
       {
@@ -20354,7 +20354,7 @@
   {
     "name": "Incanter's",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 3,
     "stat_text": "{}% increased Spell Damage",
     "stat_ranges": [
       {
@@ -20384,7 +20384,7 @@
   {
     "name": "Glyphic",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 2,
     "stat_text": "{}% increased Spell Damage",
     "stat_ranges": [
       {
@@ -20414,7 +20414,7 @@
   {
     "name": "Runic",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 1,
     "stat_text": "{}% increased Spell Damage",
     "stat_ranges": [
       {
@@ -20444,7 +20444,7 @@
   {
     "name": "Apprentice's",
     "mod_type": "prefix",
-    "tier": 14,
+    "tier": 8,
     "stat_text": "{}% increased Spell Damage",
     "stat_ranges": [
       {
@@ -20473,7 +20473,7 @@
   {
     "name": "Adept's",
     "mod_type": "prefix",
-    "tier": 11,
+    "tier": 7,
     "stat_text": "{}% increased Spell Damage",
     "stat_ranges": [
       {
@@ -20502,7 +20502,7 @@
   {
     "name": "Scholar's",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 6,
     "stat_text": "{}% increased Spell Damage",
     "stat_ranges": [
       {
@@ -20531,7 +20531,7 @@
   {
     "name": "Professor's",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 5,
     "stat_text": "{}% increased Spell Damage",
     "stat_ranges": [
       {
@@ -20560,7 +20560,7 @@
   {
     "name": "Occultist's",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "{}% increased Spell Damage",
     "stat_ranges": [
       {
@@ -21180,7 +21180,7 @@
   {
     "name": "Searing",
     "mod_type": "prefix",
-    "tier": 16,
+    "tier": 8,
     "stat_text": "{}% increased Fire Damage",
     "stat_ranges": [
       {
@@ -21212,7 +21212,7 @@
   {
     "name": "Sizzling",
     "mod_type": "prefix",
-    "tier": 15,
+    "tier": 7,
     "stat_text": "{}% increased Fire Damage",
     "stat_ranges": [
       {
@@ -21244,7 +21244,7 @@
   {
     "name": "Blistering",
     "mod_type": "prefix",
-    "tier": 13,
+    "tier": 6,
     "stat_text": "{}% increased Fire Damage",
     "stat_ranges": [
       {
@@ -21276,7 +21276,7 @@
   {
     "name": "Cauterising",
     "mod_type": "prefix",
-    "tier": 12,
+    "tier": 5,
     "stat_text": "{}% increased Fire Damage",
     "stat_ranges": [
       {
@@ -21308,7 +21308,7 @@
   {
     "name": "Smoldering",
     "mod_type": "prefix",
-    "tier": 10,
+    "tier": 4,
     "stat_text": "{}% increased Fire Damage",
     "stat_ranges": [
       {
@@ -21340,7 +21340,7 @@
   {
     "name": "Magmatic",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 3,
     "stat_text": "{}% increased Fire Damage",
     "stat_ranges": [
       {
@@ -21372,7 +21372,7 @@
   {
     "name": "Volcanic",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 2,
     "stat_text": "{}% increased Fire Damage",
     "stat_ranges": [
       {
@@ -21404,7 +21404,7 @@
   {
     "name": "Pyromancer's",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 1,
     "stat_text": "{}% increased Fire Damage",
     "stat_ranges": [
       {
@@ -21436,7 +21436,7 @@
   {
     "name": "Searing",
     "mod_type": "prefix",
-    "tier": 14,
+    "tier": 8,
     "stat_text": "{}% increased Fire Damage",
     "stat_ranges": [
       {
@@ -21466,7 +21466,7 @@
   {
     "name": "Sizzling",
     "mod_type": "prefix",
-    "tier": 11,
+    "tier": 7,
     "stat_text": "{}% increased Fire Damage",
     "stat_ranges": [
       {
@@ -21496,7 +21496,7 @@
   {
     "name": "Blistering",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 6,
     "stat_text": "{}% increased Fire Damage",
     "stat_ranges": [
       {
@@ -21526,7 +21526,7 @@
   {
     "name": "Cauterising",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 5,
     "stat_text": "{}% increased Fire Damage",
     "stat_ranges": [
       {
@@ -21556,7 +21556,7 @@
   {
     "name": "Smoldering",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "{}% increased Fire Damage",
     "stat_ranges": [
       {
@@ -21676,7 +21676,7 @@
   {
     "name": "Bitter",
     "mod_type": "prefix",
-    "tier": 16,
+    "tier": 8,
     "stat_text": "{}% increased Cold Damage",
     "stat_ranges": [
       {
@@ -21708,7 +21708,7 @@
   {
     "name": "Biting",
     "mod_type": "prefix",
-    "tier": 15,
+    "tier": 7,
     "stat_text": "{}% increased Cold Damage",
     "stat_ranges": [
       {
@@ -21740,7 +21740,7 @@
   {
     "name": "Alpine",
     "mod_type": "prefix",
-    "tier": 13,
+    "tier": 6,
     "stat_text": "{}% increased Cold Damage",
     "stat_ranges": [
       {
@@ -21772,7 +21772,7 @@
   {
     "name": "Snowy",
     "mod_type": "prefix",
-    "tier": 12,
+    "tier": 5,
     "stat_text": "{}% increased Cold Damage",
     "stat_ranges": [
       {
@@ -21804,7 +21804,7 @@
   {
     "name": "Hailing",
     "mod_type": "prefix",
-    "tier": 10,
+    "tier": 4,
     "stat_text": "{}% increased Cold Damage",
     "stat_ranges": [
       {
@@ -21836,7 +21836,7 @@
   {
     "name": "Arctic",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 3,
     "stat_text": "{}% increased Cold Damage",
     "stat_ranges": [
       {
@@ -21868,7 +21868,7 @@
   {
     "name": "Crystalline",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 2,
     "stat_text": "{}% increased Cold Damage",
     "stat_ranges": [
       {
@@ -21900,7 +21900,7 @@
   {
     "name": "Cryomancer's",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 1,
     "stat_text": "{}% increased Cold Damage",
     "stat_ranges": [
       {
@@ -21932,7 +21932,7 @@
   {
     "name": "Bitter",
     "mod_type": "prefix",
-    "tier": 14,
+    "tier": 8,
     "stat_text": "{}% increased Cold Damage",
     "stat_ranges": [
       {
@@ -21962,7 +21962,7 @@
   {
     "name": "Biting",
     "mod_type": "prefix",
-    "tier": 11,
+    "tier": 7,
     "stat_text": "{}% increased Cold Damage",
     "stat_ranges": [
       {
@@ -21992,7 +21992,7 @@
   {
     "name": "Alpine",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 6,
     "stat_text": "{}% increased Cold Damage",
     "stat_ranges": [
       {
@@ -22022,7 +22022,7 @@
   {
     "name": "Snowy",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 5,
     "stat_text": "{}% increased Cold Damage",
     "stat_ranges": [
       {
@@ -22052,7 +22052,7 @@
   {
     "name": "Hailing",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "{}% increased Cold Damage",
     "stat_ranges": [
       {
@@ -22172,7 +22172,7 @@
   {
     "name": "Charged",
     "mod_type": "prefix",
-    "tier": 16,
+    "tier": 8,
     "stat_text": "{}% increased Lightning Damage",
     "stat_ranges": [
       {
@@ -22204,7 +22204,7 @@
   {
     "name": "Hissing",
     "mod_type": "prefix",
-    "tier": 15,
+    "tier": 7,
     "stat_text": "{}% increased Lightning Damage",
     "stat_ranges": [
       {
@@ -22236,7 +22236,7 @@
   {
     "name": "Bolting",
     "mod_type": "prefix",
-    "tier": 13,
+    "tier": 6,
     "stat_text": "{}% increased Lightning Damage",
     "stat_ranges": [
       {
@@ -22268,7 +22268,7 @@
   {
     "name": "Coursing",
     "mod_type": "prefix",
-    "tier": 12,
+    "tier": 5,
     "stat_text": "{}% increased Lightning Damage",
     "stat_ranges": [
       {
@@ -22300,7 +22300,7 @@
   {
     "name": "Striking",
     "mod_type": "prefix",
-    "tier": 10,
+    "tier": 4,
     "stat_text": "{}% increased Lightning Damage",
     "stat_ranges": [
       {
@@ -22332,7 +22332,7 @@
   {
     "name": "Smiting",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 3,
     "stat_text": "{}% increased Lightning Damage",
     "stat_ranges": [
       {
@@ -22364,7 +22364,7 @@
   {
     "name": "Ionising",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 2,
     "stat_text": "{}% increased Lightning Damage",
     "stat_ranges": [
       {
@@ -22396,7 +22396,7 @@
   {
     "name": "Electromancer's",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 1,
     "stat_text": "{}% increased Lightning Damage",
     "stat_ranges": [
       {
@@ -22428,7 +22428,7 @@
   {
     "name": "Charged",
     "mod_type": "prefix",
-    "tier": 14,
+    "tier": 8,
     "stat_text": "{}% increased Lightning Damage",
     "stat_ranges": [
       {
@@ -22458,7 +22458,7 @@
   {
     "name": "Hissing",
     "mod_type": "prefix",
-    "tier": 11,
+    "tier": 7,
     "stat_text": "{}% increased Lightning Damage",
     "stat_ranges": [
       {
@@ -22488,7 +22488,7 @@
   {
     "name": "Bolting",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 6,
     "stat_text": "{}% increased Lightning Damage",
     "stat_ranges": [
       {
@@ -22518,7 +22518,7 @@
   {
     "name": "Coursing",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 5,
     "stat_text": "{}% increased Lightning Damage",
     "stat_ranges": [
       {
@@ -22548,7 +22548,7 @@
   {
     "name": "Striking",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "{}% increased Lightning Damage",
     "stat_ranges": [
       {
@@ -22668,7 +22668,7 @@
   {
     "name": "Impure",
     "mod_type": "prefix",
-    "tier": 16,
+    "tier": 8,
     "stat_text": "{}% increased Chaos Damage",
     "stat_ranges": [
       {
@@ -22699,7 +22699,7 @@
   {
     "name": "Tainted",
     "mod_type": "prefix",
-    "tier": 15,
+    "tier": 7,
     "stat_text": "{}% increased Chaos Damage",
     "stat_ranges": [
       {
@@ -22730,7 +22730,7 @@
   {
     "name": "Clouded",
     "mod_type": "prefix",
-    "tier": 13,
+    "tier": 6,
     "stat_text": "{}% increased Chaos Damage",
     "stat_ranges": [
       {
@@ -22761,7 +22761,7 @@
   {
     "name": "Darkened",
     "mod_type": "prefix",
-    "tier": 12,
+    "tier": 5,
     "stat_text": "{}% increased Chaos Damage",
     "stat_ranges": [
       {
@@ -22792,7 +22792,7 @@
   {
     "name": "Malignant",
     "mod_type": "prefix",
-    "tier": 10,
+    "tier": 4,
     "stat_text": "{}% increased Chaos Damage",
     "stat_ranges": [
       {
@@ -22823,7 +22823,7 @@
   {
     "name": "Vile",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 3,
     "stat_text": "{}% increased Chaos Damage",
     "stat_ranges": [
       {
@@ -22854,7 +22854,7 @@
   {
     "name": "Twisted",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 2,
     "stat_text": "{}% increased Chaos Damage",
     "stat_ranges": [
       {
@@ -22885,7 +22885,7 @@
   {
     "name": "Malevolent",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 1,
     "stat_text": "{}% increased Chaos Damage",
     "stat_ranges": [
       {
@@ -22916,7 +22916,7 @@
   {
     "name": "Impure",
     "mod_type": "prefix",
-    "tier": 14,
+    "tier": 8,
     "stat_text": "{}% increased Chaos Damage",
     "stat_ranges": [
       {
@@ -22945,7 +22945,7 @@
   {
     "name": "Tainted",
     "mod_type": "prefix",
-    "tier": 11,
+    "tier": 7,
     "stat_text": "{}% increased Chaos Damage",
     "stat_ranges": [
       {
@@ -22974,7 +22974,7 @@
   {
     "name": "Clouded",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 6,
     "stat_text": "{}% increased Chaos Damage",
     "stat_ranges": [
       {
@@ -23003,7 +23003,7 @@
   {
     "name": "Darkened",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 5,
     "stat_text": "{}% increased Chaos Damage",
     "stat_ranges": [
       {
@@ -23032,7 +23032,7 @@
   {
     "name": "Malignant",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "{}% increased Chaos Damage",
     "stat_ranges": [
       {
@@ -23148,7 +23148,7 @@
   {
     "name": "Punishing",
     "mod_type": "prefix",
-    "tier": 16,
+    "tier": 8,
     "stat_text": "{}% increased Spell Physical Damage",
     "stat_ranges": [
       {
@@ -23179,7 +23179,7 @@
   {
     "name": "Unforgiving",
     "mod_type": "prefix",
-    "tier": 15,
+    "tier": 7,
     "stat_text": "{}% increased Spell Physical Damage",
     "stat_ranges": [
       {
@@ -23210,7 +23210,7 @@
   {
     "name": "Vengeful",
     "mod_type": "prefix",
-    "tier": 13,
+    "tier": 6,
     "stat_text": "{}% increased Spell Physical Damage",
     "stat_ranges": [
       {
@@ -23241,7 +23241,7 @@
   {
     "name": "Sadistic",
     "mod_type": "prefix",
-    "tier": 12,
+    "tier": 5,
     "stat_text": "{}% increased Spell Physical Damage",
     "stat_ranges": [
       {
@@ -23272,7 +23272,7 @@
   {
     "name": "Pitiless",
     "mod_type": "prefix",
-    "tier": 10,
+    "tier": 4,
     "stat_text": "{}% increased Spell Physical Damage",
     "stat_ranges": [
       {
@@ -23303,7 +23303,7 @@
   {
     "name": "Agonising",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 3,
     "stat_text": "{}% increased Spell Physical Damage",
     "stat_ranges": [
       {
@@ -23334,7 +23334,7 @@
   {
     "name": "Oppressor's",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 2,
     "stat_text": "{}% increased Spell Physical Damage",
     "stat_ranges": [
       {
@@ -23365,7 +23365,7 @@
   {
     "name": "Torturer's",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 1,
     "stat_text": "{}% increased Spell Physical Damage",
     "stat_ranges": [
       {
@@ -23396,7 +23396,7 @@
   {
     "name": "Punishing",
     "mod_type": "prefix",
-    "tier": 14,
+    "tier": 8,
     "stat_text": "{}% increased Spell Physical Damage",
     "stat_ranges": [
       {
@@ -23425,7 +23425,7 @@
   {
     "name": "Unforgiving",
     "mod_type": "prefix",
-    "tier": 11,
+    "tier": 7,
     "stat_text": "{}% increased Spell Physical Damage",
     "stat_ranges": [
       {
@@ -23454,7 +23454,7 @@
   {
     "name": "Vengeful",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 6,
     "stat_text": "{}% increased Spell Physical Damage",
     "stat_ranges": [
       {
@@ -23483,7 +23483,7 @@
   {
     "name": "Sadistic",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 5,
     "stat_text": "{}% increased Spell Physical Damage",
     "stat_ranges": [
       {
@@ -23512,7 +23512,7 @@
   {
     "name": "Pitiless",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "{}% increased Spell Physical Damage",
     "stat_ranges": [
       {
@@ -24054,7 +24054,7 @@
   {
     "name": "of the Mage",
     "mod_type": "suffix",
-    "tier": 3,
+    "tier": 2,
     "stat_text": "+{} to Level of all Spell Skills",
     "stat_ranges": [
       {
@@ -24083,7 +24083,7 @@
   {
     "name": "of the Enchanter",
     "mod_type": "suffix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "+{} to Level of all Spell Skills",
     "stat_ranges": [
       {
@@ -26258,7 +26258,7 @@
   {
     "name": "of the Taskmaster",
     "mod_type": "suffix",
-    "tier": 3,
+    "tier": 2,
     "stat_text": "+{} to Level of all Minion Skills",
     "stat_ranges": [
       {
@@ -26287,7 +26287,7 @@
   {
     "name": "of the Despot",
     "mod_type": "suffix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "+{} to Level of all Minion Skills",
     "stat_ranges": [
       {
@@ -26344,7 +26344,7 @@
   {
     "name": "of the Taskmaster",
     "mod_type": "suffix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "+{} to Level of all Minion Skills",
     "stat_ranges": [
       {
@@ -26372,7 +26372,7 @@
   {
     "name": "of the Despot",
     "mod_type": "suffix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "+{} to Level of all Minion Skills",
     "stat_ranges": [
       {
@@ -26400,7 +26400,7 @@
   {
     "name": "of the Overseer",
     "mod_type": "suffix",
-    "tier": 3,
+    "tier": 2,
     "stat_text": "+{} to Level of all Minion Skills",
     "stat_ranges": [
       {
@@ -26428,7 +26428,7 @@
   {
     "name": "of the Slavedriver",
     "mod_type": "suffix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "+{} to Level of all Minion Skills",
     "stat_ranges": [
       {
@@ -26676,7 +26676,7 @@
   {
     "name": "of Combat",
     "mod_type": "suffix",
-    "tier": 8,
+    "tier": 2,
     "stat_text": "+{} to Level of all Melee Skills",
     "stat_ranges": [
       {
@@ -26704,7 +26704,7 @@
   {
     "name": "of Dueling",
     "mod_type": "suffix",
-    "tier": 6,
+    "tier": 1,
     "stat_text": "+{} to Level of all Melee Skills",
     "stat_ranges": [
       {
@@ -26732,7 +26732,7 @@
   {
     "name": "of Battle",
     "mod_type": "suffix",
-    "tier": 4,
+    "tier": 1,
     "stat_text": "+{} to Level of all Melee Skills",
     "stat_ranges": [
       {
@@ -26759,7 +26759,7 @@
   {
     "name": "of Combat",
     "mod_type": "suffix",
-    "tier": 7,
+    "tier": 5,
     "stat_text": "+{} to Level of all Melee Skills",
     "stat_ranges": [
       {
@@ -26787,7 +26787,7 @@
   {
     "name": "of Dueling",
     "mod_type": "suffix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "+{} to Level of all Melee Skills",
     "stat_ranges": [
       {
@@ -27034,7 +27034,7 @@
   {
     "name": "of the Archer",
     "mod_type": "suffix",
-    "tier": 3,
+    "tier": 2,
     "stat_text": "+{} to Level of all Projectile Skills",
     "stat_ranges": [
       {
@@ -27060,7 +27060,7 @@
   {
     "name": "of the Fletcher",
     "mod_type": "suffix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "+{} to Level of all Projectile Skills",
     "stat_ranges": [
       {
@@ -27361,7 +27361,7 @@
   {
     "name": "of the Newt",
     "mod_type": "suffix",
-    "tier": 11,
+    "tier": 7,
     "stat_text": "{} Life Regeneration per second",
     "stat_ranges": [
       {
@@ -27395,7 +27395,7 @@
   {
     "name": "of the Lizard",
     "mod_type": "suffix",
-    "tier": 10,
+    "tier": 6,
     "stat_text": "{} Life Regeneration per second",
     "stat_ranges": [
       {
@@ -27429,7 +27429,7 @@
   {
     "name": "of the Flatworm",
     "mod_type": "suffix",
-    "tier": 9,
+    "tier": 5,
     "stat_text": "{} Life Regeneration per second",
     "stat_ranges": [
       {
@@ -27463,7 +27463,7 @@
   {
     "name": "of the Starfish",
     "mod_type": "suffix",
-    "tier": 8,
+    "tier": 4,
     "stat_text": "{} Life Regeneration per second",
     "stat_ranges": [
       {
@@ -27497,7 +27497,7 @@
   {
     "name": "of the Hydra",
     "mod_type": "suffix",
-    "tier": 7,
+    "tier": 3,
     "stat_text": "{} Life Regeneration per second",
     "stat_ranges": [
       {
@@ -27531,7 +27531,7 @@
   {
     "name": "of the Troll",
     "mod_type": "suffix",
-    "tier": 6,
+    "tier": 2,
     "stat_text": "{} Life Regeneration per second",
     "stat_ranges": [
       {
@@ -27565,7 +27565,7 @@
   {
     "name": "of Convalescence",
     "mod_type": "suffix",
-    "tier": 5,
+    "tier": 1,
     "stat_text": "{} Life Regeneration per second",
     "stat_ranges": [
       {
@@ -27599,7 +27599,7 @@
   {
     "name": "of Recuperation",
     "mod_type": "suffix",
-    "tier": 4,
+    "tier": 1,
     "stat_text": "{} Life Regeneration per second",
     "stat_ranges": [
       {
@@ -27632,7 +27632,7 @@
   {
     "name": "of Resurgence",
     "mod_type": "suffix",
-    "tier": 3,
+    "tier": 1,
     "stat_text": "{} Life Regeneration per second",
     "stat_ranges": [
       {
@@ -27663,7 +27663,7 @@
   {
     "name": "of Immortality",
     "mod_type": "suffix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "{} Life Regeneration per second",
     "stat_ranges": [
       {
@@ -28002,7 +28002,7 @@
   {
     "name": "of Excitement",
     "mod_type": "suffix",
-    "tier": 12,
+    "tier": 6,
     "stat_text": "{}% increased Mana Regeneration Rate",
     "stat_ranges": [
       {
@@ -28034,7 +28034,7 @@
   {
     "name": "of Joy",
     "mod_type": "suffix",
-    "tier": 11,
+    "tier": 5,
     "stat_text": "{}% increased Mana Regeneration Rate",
     "stat_ranges": [
       {
@@ -28066,7 +28066,7 @@
   {
     "name": "of Elation",
     "mod_type": "suffix",
-    "tier": 9,
+    "tier": 4,
     "stat_text": "{}% increased Mana Regeneration Rate",
     "stat_ranges": [
       {
@@ -28098,7 +28098,7 @@
   {
     "name": "of Bliss",
     "mod_type": "suffix",
-    "tier": 7,
+    "tier": 3,
     "stat_text": "{}% increased Mana Regeneration Rate",
     "stat_ranges": [
       {
@@ -28130,7 +28130,7 @@
   {
     "name": "of Euphoria",
     "mod_type": "suffix",
-    "tier": 6,
+    "tier": 2,
     "stat_text": "{}% increased Mana Regeneration Rate",
     "stat_ranges": [
       {
@@ -28162,7 +28162,7 @@
   {
     "name": "of Nirvana",
     "mod_type": "suffix",
-    "tier": 4,
+    "tier": 1,
     "stat_text": "{}% increased Mana Regeneration Rate",
     "stat_ranges": [
       {
@@ -28194,7 +28194,7 @@
   {
     "name": "of Excitement",
     "mod_type": "suffix",
-    "tier": 10,
+    "tier": 6,
     "stat_text": "{}% increased Mana Regeneration Rate",
     "stat_ranges": [
       {
@@ -28222,7 +28222,7 @@
   {
     "name": "of Joy",
     "mod_type": "suffix",
-    "tier": 8,
+    "tier": 5,
     "stat_text": "{}% increased Mana Regeneration Rate",
     "stat_ranges": [
       {
@@ -28250,7 +28250,7 @@
   {
     "name": "of Elation",
     "mod_type": "suffix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "{}% increased Mana Regeneration Rate",
     "stat_ranges": [
       {
@@ -28362,7 +28362,7 @@
   {
     "name": "of the Parasite",
     "mod_type": "suffix",
-    "tier": 5,
+    "tier": 3,
     "stat_text": "Leech {}% of Physical Attack Damage as Life",
     "stat_ranges": [
       {
@@ -28393,7 +28393,7 @@
   {
     "name": "of the Locust",
     "mod_type": "suffix",
-    "tier": 4,
+    "tier": 2,
     "stat_text": "Leech {}% of Physical Attack Damage as Life",
     "stat_ranges": [
       {
@@ -28424,7 +28424,7 @@
   {
     "name": "of the Remora",
     "mod_type": "suffix",
-    "tier": 3,
+    "tier": 1,
     "stat_text": "Leech {}% of Physical Attack Damage as Life",
     "stat_ranges": [
       {
@@ -28665,7 +28665,7 @@
   {
     "name": "of the Thirsty",
     "mod_type": "suffix",
-    "tier": 5,
+    "tier": 3,
     "stat_text": "Leech {}% of Physical Attack Damage as Mana",
     "stat_ranges": [
       {
@@ -28696,7 +28696,7 @@
   {
     "name": "of the Parched",
     "mod_type": "suffix",
-    "tier": 4,
+    "tier": 2,
     "stat_text": "Leech {}% of Physical Attack Damage as Mana",
     "stat_ranges": [
       {
@@ -28727,7 +28727,7 @@
   {
     "name": "of the Arid",
     "mod_type": "suffix",
-    "tier": 3,
+    "tier": 1,
     "stat_text": "Leech {}% of Physical Attack Damage as Mana",
     "stat_ranges": [
       {
@@ -28968,7 +28968,7 @@
   {
     "name": "of Success",
     "mod_type": "suffix",
-    "tier": 8,
+    "tier": 6,
     "stat_text": "Gain {} Life per Enemy Killed",
     "stat_ranges": [
       {
@@ -29000,7 +29000,7 @@
   {
     "name": "of Victory",
     "mod_type": "suffix",
-    "tier": 7,
+    "tier": 5,
     "stat_text": "Gain {} Life per Enemy Killed",
     "stat_ranges": [
       {
@@ -29032,7 +29032,7 @@
   {
     "name": "of Triumph",
     "mod_type": "suffix",
-    "tier": 6,
+    "tier": 4,
     "stat_text": "Gain {} Life per Enemy Killed",
     "stat_ranges": [
       {
@@ -29064,7 +29064,7 @@
   {
     "name": "of Conquest",
     "mod_type": "suffix",
-    "tier": 5,
+    "tier": 3,
     "stat_text": "Gain {} Life per Enemy Killed",
     "stat_ranges": [
       {
@@ -29096,7 +29096,7 @@
   {
     "name": "of Vanquishing",
     "mod_type": "suffix",
-    "tier": 4,
+    "tier": 2,
     "stat_text": "Gain {} Life per Enemy Killed",
     "stat_ranges": [
       {
@@ -29128,7 +29128,7 @@
   {
     "name": "of Valour",
     "mod_type": "suffix",
-    "tier": 3,
+    "tier": 1,
     "stat_text": "Gain {} Life per Enemy Killed",
     "stat_ranges": [
       {
@@ -29220,7 +29220,7 @@
   {
     "name": "of Absorption",
     "mod_type": "suffix",
-    "tier": 8,
+    "tier": 6,
     "stat_text": "Gain {} Mana per Enemy Killed",
     "stat_ranges": [
       {
@@ -29252,7 +29252,7 @@
   {
     "name": "of Osmosis",
     "mod_type": "suffix",
-    "tier": 7,
+    "tier": 5,
     "stat_text": "Gain {} Mana per Enemy Killed",
     "stat_ranges": [
       {
@@ -29284,7 +29284,7 @@
   {
     "name": "of Infusion",
     "mod_type": "suffix",
-    "tier": 6,
+    "tier": 4,
     "stat_text": "Gain {} Mana per Enemy Killed",
     "stat_ranges": [
       {
@@ -29316,7 +29316,7 @@
   {
     "name": "of Enveloping",
     "mod_type": "suffix",
-    "tier": 5,
+    "tier": 3,
     "stat_text": "Gain {} Mana per Enemy Killed",
     "stat_ranges": [
       {
@@ -29348,7 +29348,7 @@
   {
     "name": "of Consumption",
     "mod_type": "suffix",
-    "tier": 4,
+    "tier": 2,
     "stat_text": "Gain {} Mana per Enemy Killed",
     "stat_ranges": [
       {
@@ -29380,7 +29380,7 @@
   {
     "name": "of Siphoning",
     "mod_type": "suffix",
-    "tier": 3,
+    "tier": 1,
     "stat_text": "Gain {} Mana per Enemy Killed",
     "stat_ranges": [
       {
@@ -29820,7 +29820,7 @@
   {
     "name": "of Skill",
     "mod_type": "suffix",
-    "tier": 8,
+    "tier": 6,
     "stat_text": "{}% increased Attack Speed",
     "stat_ranges": [
       {
@@ -29848,7 +29848,7 @@
   {
     "name": "of Ease",
     "mod_type": "suffix",
-    "tier": 7,
+    "tier": 5,
     "stat_text": "{}% increased Attack Speed",
     "stat_ranges": [
       {
@@ -29876,7 +29876,7 @@
   {
     "name": "of Mastery",
     "mod_type": "suffix",
-    "tier": 6,
+    "tier": 4,
     "stat_text": "{}% increased Attack Speed",
     "stat_ranges": [
       {
@@ -29904,7 +29904,7 @@
   {
     "name": "of Renown",
     "mod_type": "suffix",
-    "tier": 5,
+    "tier": 2,
     "stat_text": "{}% increased Attack Speed",
     "stat_ranges": [
       {
@@ -29933,7 +29933,7 @@
   {
     "name": "of Acclaim",
     "mod_type": "suffix",
-    "tier": 4,
+    "tier": 1,
     "stat_text": "{}% increased Attack Speed",
     "stat_ranges": [
       {
@@ -30158,7 +30158,7 @@
   {
     "name": "of Talent",
     "mod_type": "suffix",
-    "tier": 14,
+    "tier": 4,
     "stat_text": "{}% increased Cast Speed",
     "stat_ranges": [
       {
@@ -30189,7 +30189,7 @@
   {
     "name": "of Nimbleness",
     "mod_type": "suffix",
-    "tier": 13,
+    "tier": 3,
     "stat_text": "{}% increased Cast Speed",
     "stat_ranges": [
       {
@@ -30220,7 +30220,7 @@
   {
     "name": "of Expertise",
     "mod_type": "suffix",
-    "tier": 11,
+    "tier": 2,
     "stat_text": "{}% increased Cast Speed",
     "stat_ranges": [
       {
@@ -30251,7 +30251,7 @@
   {
     "name": "of Sortilege",
     "mod_type": "suffix",
-    "tier": 10,
+    "tier": 1,
     "stat_text": "{}% increased Cast Speed",
     "stat_ranges": [
       {
@@ -30282,7 +30282,7 @@
   {
     "name": "of Legerdemain",
     "mod_type": "suffix",
-    "tier": 8,
+    "tier": 1,
     "stat_text": "{}% increased Cast Speed",
     "stat_ranges": [
       {
@@ -30312,7 +30312,7 @@
   {
     "name": "of Prestidigitation",
     "mod_type": "suffix",
-    "tier": 6,
+    "tier": 1,
     "stat_text": "{}% increased Cast Speed",
     "stat_ranges": [
       {
@@ -30369,7 +30369,7 @@
   {
     "name": "of Talent",
     "mod_type": "suffix",
-    "tier": 12,
+    "tier": 8,
     "stat_text": "{}% increased Cast Speed",
     "stat_ranges": [
       {
@@ -30397,7 +30397,7 @@
   {
     "name": "of Nimbleness",
     "mod_type": "suffix",
-    "tier": 9,
+    "tier": 7,
     "stat_text": "{}% increased Cast Speed",
     "stat_ranges": [
       {
@@ -30425,7 +30425,7 @@
   {
     "name": "of Expertise",
     "mod_type": "suffix",
-    "tier": 7,
+    "tier": 6,
     "stat_text": "{}% increased Cast Speed",
     "stat_ranges": [
       {
@@ -30677,7 +30677,7 @@
   {
     "name": "Precise",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 8,
     "stat_text": "+{} to Accuracy Rating",
     "stat_ranges": [
       {
@@ -30708,7 +30708,7 @@
   {
     "name": "Reliable",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 7,
     "stat_text": "+{} to Accuracy Rating",
     "stat_ranges": [
       {
@@ -30739,7 +30739,7 @@
   {
     "name": "Focused",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 6,
     "stat_text": "+{} to Accuracy Rating",
     "stat_ranges": [
       {
@@ -30770,7 +30770,7 @@
   {
     "name": "Deliberate",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 5,
     "stat_text": "+{} to Accuracy Rating",
     "stat_ranges": [
       {
@@ -30801,7 +30801,7 @@
   {
     "name": "Consistent",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "+{} to Accuracy Rating",
     "stat_ranges": [
       {
@@ -30832,7 +30832,7 @@
   {
     "name": "Steady",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "+{} to Accuracy Rating",
     "stat_ranges": [
       {
@@ -30863,7 +30863,7 @@
   {
     "name": "Hunter's",
     "mod_type": "prefix",
-    "tier": 3,
+    "tier": 2,
     "stat_text": "+{} to Accuracy Rating",
     "stat_ranges": [
       {
@@ -30894,7 +30894,7 @@
   {
     "name": "Ranger's",
     "mod_type": "prefix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "+{} to Accuracy Rating",
     "stat_ranges": [
       {
@@ -30954,7 +30954,7 @@
   {
     "name": "Precise",
     "mod_type": "prefix",
-    "tier": 10,
+    "tier": 9,
     "stat_text": "+{} to Accuracy Rating",
     "stat_ranges": [
       {
@@ -30981,7 +30981,7 @@
   {
     "name": "Reliable",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 8,
     "stat_text": "+{} to Accuracy Rating",
     "stat_ranges": [
       {
@@ -31008,7 +31008,7 @@
   {
     "name": "Focused",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 7,
     "stat_text": "+{} to Accuracy Rating",
     "stat_ranges": [
       {
@@ -31035,7 +31035,7 @@
   {
     "name": "Deliberate",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 6,
     "stat_text": "+{} to Accuracy Rating",
     "stat_ranges": [
       {
@@ -31062,7 +31062,7 @@
   {
     "name": "Consistent",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 5,
     "stat_text": "+{} to Accuracy Rating",
     "stat_ranges": [
       {
@@ -31089,7 +31089,7 @@
   {
     "name": "Steady",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "+{} to Accuracy Rating",
     "stat_ranges": [
       {
@@ -31116,7 +31116,7 @@
   {
     "name": "Hunter's",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "+{} to Accuracy Rating",
     "stat_ranges": [
       {
@@ -31143,7 +31143,7 @@
   {
     "name": "Ranger's",
     "mod_type": "prefix",
-    "tier": 3,
+    "tier": 2,
     "stat_text": "+{} to Accuracy Rating",
     "stat_ranges": [
       {
@@ -31170,7 +31170,7 @@
   {
     "name": "Amazon's",
     "mod_type": "prefix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "+{} to Accuracy Rating",
     "stat_ranges": [
       {
@@ -31424,7 +31424,7 @@
   {
     "name": "of Menace",
     "mod_type": "suffix",
-    "tier": 6,
+    "tier": 5,
     "stat_text": "{}% increased Critical Hit Chance",
     "stat_ranges": [
       {
@@ -31452,7 +31452,7 @@
   {
     "name": "of Havoc",
     "mod_type": "suffix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "{}% increased Critical Hit Chance",
     "stat_ranges": [
       {
@@ -31480,7 +31480,7 @@
   {
     "name": "of Disaster",
     "mod_type": "suffix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "{}% increased Critical Hit Chance",
     "stat_ranges": [
       {
@@ -31508,7 +31508,7 @@
   {
     "name": "of Calamity",
     "mod_type": "suffix",
-    "tier": 3,
+    "tier": 2,
     "stat_text": "{}% increased Critical Hit Chance",
     "stat_ranges": [
       {
@@ -31536,7 +31536,7 @@
   {
     "name": "of Ruin",
     "mod_type": "suffix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "{}% increased Critical Hit Chance",
     "stat_ranges": [
       {
@@ -31759,7 +31759,7 @@
   {
     "name": "of Menace",
     "mod_type": "suffix",
-    "tier": 12,
+    "tier": 5,
     "stat_text": "{}% increased Critical Hit Chance for Spells",
     "stat_ranges": [
       {
@@ -31788,7 +31788,7 @@
   {
     "name": "of Havoc",
     "mod_type": "suffix",
-    "tier": 11,
+    "tier": 4,
     "stat_text": "{}% increased Critical Hit Chance for Spells",
     "stat_ranges": [
       {
@@ -31817,7 +31817,7 @@
   {
     "name": "of Disaster",
     "mod_type": "suffix",
-    "tier": 10,
+    "tier": 3,
     "stat_text": "{}% increased Critical Hit Chance for Spells",
     "stat_ranges": [
       {
@@ -31846,7 +31846,7 @@
   {
     "name": "of Calamity",
     "mod_type": "suffix",
-    "tier": 8,
+    "tier": 2,
     "stat_text": "{}% increased Critical Hit Chance for Spells",
     "stat_ranges": [
       {
@@ -31875,7 +31875,7 @@
   {
     "name": "of Ruin",
     "mod_type": "suffix",
-    "tier": 7,
+    "tier": 1,
     "stat_text": "{}% increased Critical Hit Chance for Spells",
     "stat_ranges": [
       {
@@ -31932,7 +31932,7 @@
   {
     "name": "of Menace",
     "mod_type": "suffix",
-    "tier": 9,
+    "tier": 7,
     "stat_text": "{}% increased Critical Hit Chance for Spells",
     "stat_ranges": [
       {
@@ -32580,7 +32580,7 @@
   {
     "name": "of Ire",
     "mod_type": "suffix",
-    "tier": 6,
+    "tier": 5,
     "stat_text": "{}% increased Critical Damage Bonus",
     "stat_ranges": [
       {
@@ -32609,7 +32609,7 @@
   {
     "name": "of Anger",
     "mod_type": "suffix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "{}% increased Critical Damage Bonus",
     "stat_ranges": [
       {
@@ -32638,7 +32638,7 @@
   {
     "name": "of Rage",
     "mod_type": "suffix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "{}% increased Critical Damage Bonus",
     "stat_ranges": [
       {
@@ -32667,7 +32667,7 @@
   {
     "name": "of Fury",
     "mod_type": "suffix",
-    "tier": 3,
+    "tier": 2,
     "stat_text": "{}% increased Critical Damage Bonus",
     "stat_ranges": [
       {
@@ -32696,7 +32696,7 @@
   {
     "name": "of Ferocity",
     "mod_type": "suffix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "{}% increased Critical Damage Bonus",
     "stat_ranges": [
       {
@@ -32927,7 +32927,7 @@
   {
     "name": "of Ire",
     "mod_type": "suffix",
-    "tier": 12,
+    "tier": 5,
     "stat_text": "{}% increased Critical Spell Damage Bonus",
     "stat_ranges": [
       {
@@ -32956,7 +32956,7 @@
   {
     "name": "of Anger",
     "mod_type": "suffix",
-    "tier": 11,
+    "tier": 4,
     "stat_text": "{}% increased Critical Spell Damage Bonus",
     "stat_ranges": [
       {
@@ -32985,7 +32985,7 @@
   {
     "name": "of Rage",
     "mod_type": "suffix",
-    "tier": 9,
+    "tier": 3,
     "stat_text": "{}% increased Critical Spell Damage Bonus",
     "stat_ranges": [
       {
@@ -33014,7 +33014,7 @@
   {
     "name": "of Fury",
     "mod_type": "suffix",
-    "tier": 8,
+    "tier": 2,
     "stat_text": "{}% increased Critical Spell Damage Bonus",
     "stat_ranges": [
       {
@@ -33043,7 +33043,7 @@
   {
     "name": "of Ferocity",
     "mod_type": "suffix",
-    "tier": 6,
+    "tier": 1,
     "stat_text": "{}% increased Critical Spell Damage Bonus",
     "stat_ranges": [
       {
@@ -33100,7 +33100,7 @@
   {
     "name": "of Ire",
     "mod_type": "suffix",
-    "tier": 10,
+    "tier": 7,
     "stat_text": "{}% increased Critical Spell Damage Bonus",
     "stat_ranges": [
       {
@@ -33128,7 +33128,7 @@
   {
     "name": "of Anger",
     "mod_type": "suffix",
-    "tier": 7,
+    "tier": 6,
     "stat_text": "{}% increased Critical Spell Damage Bonus",
     "stat_ranges": [
       {
@@ -34054,7 +34054,7 @@
   {
     "name": "of Shining",
     "mod_type": "suffix",
-    "tier": 3,
+    "tier": 1,
     "stat_text": "+{} to Accuracy Rating, 5% increased Light Radius",
     "stat_ranges": [
       {
@@ -34082,7 +34082,7 @@
   {
     "name": "of Light",
     "mod_type": "suffix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "+{} to Accuracy Rating, 10% increased Light Radius",
     "stat_ranges": [
       {
@@ -34138,7 +34138,7 @@
   {
     "name": "of Shining",
     "mod_type": "suffix",
-    "tier": 3,
+    "tier": 1,
     "stat_text": "+{} to Accuracy Rating, 5% increased Light Radius",
     "stat_ranges": [
       {
@@ -34166,7 +34166,7 @@
   {
     "name": "of Light",
     "mod_type": "suffix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "+{} to Accuracy Rating, 10% increased Light Radius",
     "stat_ranges": [
       {
@@ -34222,7 +34222,7 @@
   {
     "name": "of Warmth",
     "mod_type": "suffix",
-    "tier": 3,
+    "tier": 1,
     "stat_text": "{}% increased Mana Regeneration Rate, 5% increased Light Radius",
     "stat_ranges": [
       {
@@ -34252,7 +34252,7 @@
   {
     "name": "of Kindling",
     "mod_type": "suffix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "{}% increased Mana Regeneration Rate, 10% increased Light Radius",
     "stat_ranges": [
       {
@@ -34312,7 +34312,7 @@
   {
     "name": "Steadfast",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 3,
     "stat_text": "{}% increased Block chance",
     "stat_ranges": [
       {
@@ -34339,7 +34339,7 @@
   {
     "name": "Unrelenting",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 2,
     "stat_text": "{}% increased Block chance",
     "stat_ranges": [
       {
@@ -34366,7 +34366,7 @@
   {
     "name": "Adamant",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 1,
     "stat_text": "{}% increased Block chance",
     "stat_ranges": [
       {
@@ -34493,7 +34493,7 @@
   {
     "name": "Lady's",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 5,
     "stat_text": "+{} to Spirit",
     "stat_ranges": [
       {
@@ -34519,7 +34519,7 @@
   {
     "name": "Baronness'",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 4,
     "stat_text": "+{} to Spirit",
     "stat_ranges": [
       {
@@ -34545,7 +34545,7 @@
   {
     "name": "Viscountess'",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 3,
     "stat_text": "+{} to Spirit",
     "stat_ranges": [
       {
@@ -34571,7 +34571,7 @@
   {
     "name": "Marchioness'",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 2,
     "stat_text": "+{} to Spirit",
     "stat_ranges": [
       {
@@ -34597,7 +34597,7 @@
   {
     "name": "Countess'",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 1,
     "stat_text": "+{} to Spirit",
     "stat_ranges": [
       {
@@ -37535,7 +37535,7 @@
   {
     "name": "of Splintering",
     "mod_type": "suffix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "Bow Attacks fire an additional Arrow",
     "stat_ranges": [],
     "stat_min": null,
@@ -37584,7 +37584,7 @@
   {
     "name": "of Shelling",
     "mod_type": "suffix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "Loads an additional bolt",
     "stat_ranges": [],
     "stat_min": null,
@@ -37633,7 +37633,7 @@
   {
     "name": "Restoring",
     "mod_type": "prefix",
-    "tier": 13,
+    "tier": 6,
     "stat_text": "{}% increased Flask Life Recovery rate",
     "stat_ranges": [
       {
@@ -37662,7 +37662,7 @@
   {
     "name": "Recovering",
     "mod_type": "prefix",
-    "tier": 10,
+    "tier": 5,
     "stat_text": "{}% increased Flask Life Recovery rate",
     "stat_ranges": [
       {
@@ -37691,7 +37691,7 @@
   {
     "name": "Renewing",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 4,
     "stat_text": "{}% increased Flask Life Recovery rate",
     "stat_ranges": [
       {
@@ -37720,7 +37720,7 @@
   {
     "name": "Refreshing",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 3,
     "stat_text": "{}% increased Flask Life Recovery rate",
     "stat_ranges": [
       {
@@ -37749,7 +37749,7 @@
   {
     "name": "Rejuvenating",
     "mod_type": "prefix",
-    "tier": 3,
+    "tier": 2,
     "stat_text": "{}% increased Flask Life Recovery rate",
     "stat_ranges": [
       {
@@ -37807,7 +37807,7 @@
   {
     "name": "Affecting",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 6,
     "stat_text": "{}% increased Flask Mana Recovery rate",
     "stat_ranges": [
       {
@@ -37836,7 +37836,7 @@
   {
     "name": "Stirring",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 5,
     "stat_text": "{}% increased Flask Mana Recovery rate",
     "stat_ranges": [
       {
@@ -37865,7 +37865,7 @@
   {
     "name": "Heartening",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "{}% increased Flask Mana Recovery rate",
     "stat_ranges": [
       {
@@ -38730,7 +38730,7 @@
   {
     "name": "of Symbolism",
     "mod_type": "suffix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "+{} Charm Slot",
     "stat_ranges": [
       {
@@ -40600,7 +40600,7 @@
   {
     "name": "Impure",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 6,
     "stat_text": "{}% increased Chaos Damage",
     "stat_ranges": [
       {
@@ -40629,7 +40629,7 @@
   {
     "name": "Tainted",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 5,
     "stat_text": "{}% increased Chaos Damage",
     "stat_ranges": [
       {
@@ -40658,7 +40658,7 @@
   {
     "name": "Clouded",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 4,
     "stat_text": "{}% increased Chaos Damage",
     "stat_ranges": [
       {
@@ -40687,7 +40687,7 @@
   {
     "name": "Darkened",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "{}% increased Chaos Damage",
     "stat_ranges": [
       {
@@ -40716,7 +40716,7 @@
   {
     "name": "Malignant",
     "mod_type": "prefix",
-    "tier": 3,
+    "tier": 2,
     "stat_text": "{}% increased Chaos Damage",
     "stat_ranges": [
       {
@@ -40745,7 +40745,7 @@
   {
     "name": "Vile",
     "mod_type": "prefix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "{}% increased Chaos Damage",
     "stat_ranges": [
       {
@@ -40774,7 +40774,7 @@
   {
     "name": "Catalysing",
     "mod_type": "prefix",
-    "tier": 12,
+    "tier": 6,
     "stat_text": "{}% increased Elemental Damage with Attacks",
     "stat_ranges": [
       {
@@ -40805,7 +40805,7 @@
   {
     "name": "Infusing",
     "mod_type": "prefix",
-    "tier": 10,
+    "tier": 5,
     "stat_text": "{}% increased Elemental Damage with Attacks",
     "stat_ranges": [
       {
@@ -40836,7 +40836,7 @@
   {
     "name": "Empowering",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 4,
     "stat_text": "{}% increased Elemental Damage with Attacks",
     "stat_ranges": [
       {
@@ -40867,7 +40867,7 @@
   {
     "name": "Unleashed",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 3,
     "stat_text": "{}% increased Elemental Damage with Attacks",
     "stat_ranges": [
       {
@@ -40898,7 +40898,7 @@
   {
     "name": "Overpowering",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 2,
     "stat_text": "{}% increased Elemental Damage with Attacks",
     "stat_ranges": [
       {
@@ -40929,7 +40929,7 @@
   {
     "name": "Devastating",
     "mod_type": "prefix",
-    "tier": 3,
+    "tier": 1,
     "stat_text": "{}% increased Elemental Damage with Attacks",
     "stat_ranges": [
       {
@@ -40960,7 +40960,7 @@
   {
     "name": "Catalysing",
     "mod_type": "prefix",
-    "tier": 11,
+    "tier": 6,
     "stat_text": "{}% increased Elemental Damage with Attacks",
     "stat_ranges": [
       {
@@ -40990,7 +40990,7 @@
   {
     "name": "Infusing",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 5,
     "stat_text": "{}% increased Elemental Damage with Attacks",
     "stat_ranges": [
       {
@@ -41020,7 +41020,7 @@
   {
     "name": "Empowering",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 4,
     "stat_text": "{}% increased Elemental Damage with Attacks",
     "stat_ranges": [
       {
@@ -41050,7 +41050,7 @@
   {
     "name": "Unleashed",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "{}% increased Elemental Damage with Attacks",
     "stat_ranges": [
       {
@@ -42733,7 +42733,7 @@
   {
     "name": "Essences",
     "mod_type": "prefix",
-    "tier": 12,
+    "tier": 7,
     "stat_text": "{}% increased Flask Life Recovery rate",
     "stat_ranges": [
       {
@@ -42760,7 +42760,7 @@
   {
     "name": "Essences",
     "mod_type": "prefix",
-    "tier": 11,
+    "tier": 6,
     "stat_text": "{}% increased Flask Life Recovery rate",
     "stat_ranges": [
       {
@@ -42787,7 +42787,7 @@
   {
     "name": "Essences",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 5,
     "stat_text": "{}% increased Flask Life Recovery rate",
     "stat_ranges": [
       {
@@ -42814,7 +42814,7 @@
   {
     "name": "Essences",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 4,
     "stat_text": "{}% increased Flask Life Recovery rate",
     "stat_ranges": [
       {
@@ -42841,7 +42841,7 @@
   {
     "name": "Essences",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 3,
     "stat_text": "{}% increased Flask Life Recovery rate",
     "stat_ranges": [
       {
@@ -42868,7 +42868,7 @@
   {
     "name": "Essences",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 2,
     "stat_text": "{}% increased Flask Life Recovery rate",
     "stat_ranges": [
       {
@@ -42895,7 +42895,7 @@
   {
     "name": "Essences",
     "mod_type": "prefix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "{}% increased Flask Life Recovery rate",
     "stat_ranges": [
       {
@@ -42922,7 +42922,7 @@
   {
     "name": "Essences",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 3,
     "stat_text": "{}% increased Flask Mana Recovery rate",
     "stat_ranges": [
       {
@@ -42949,7 +42949,7 @@
   {
     "name": "Essences",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 2,
     "stat_text": "{}% increased Flask Mana Recovery rate",
     "stat_ranges": [
       {
@@ -42976,7 +42976,7 @@
   {
     "name": "Essences",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 1,
     "stat_text": "{}% increased Flask Mana Recovery rate",
     "stat_ranges": [
       {
@@ -43766,7 +43766,7 @@
   {
     "name": "of the Essence",
     "mod_type": "suffix",
-    "tier": 4,
+    "tier": 7,
     "stat_text": "{}% increased Mana Reservation Efficiency of Skills",
     "stat_ranges": [
       {
@@ -43792,7 +43792,7 @@
   {
     "name": "of the Essence",
     "mod_type": "suffix",
-    "tier": 3,
+    "tier": 5,
     "stat_text": "{}% increased Mana Reservation Efficiency of Skills",
     "stat_ranges": [
       {
@@ -43818,7 +43818,7 @@
   {
     "name": "of the Essence",
     "mod_type": "suffix",
-    "tier": 2,
+    "tier": 3,
     "stat_text": "{}% increased Mana Reservation Efficiency of Skills",
     "stat_ranges": [
       {
@@ -43870,7 +43870,7 @@
   {
     "name": "of the Essence",
     "mod_type": "suffix",
-    "tier": 4,
+    "tier": 8,
     "stat_text": "{}% increased Mana Reservation Efficiency of Skills",
     "stat_ranges": [
       {
@@ -43896,7 +43896,7 @@
   {
     "name": "of the Essence",
     "mod_type": "suffix",
-    "tier": 3,
+    "tier": 6,
     "stat_text": "{}% increased Mana Reservation Efficiency of Skills",
     "stat_ranges": [
       {
@@ -43922,7 +43922,7 @@
   {
     "name": "of the Essence",
     "mod_type": "suffix",
-    "tier": 2,
+    "tier": 4,
     "stat_text": "{}% increased Mana Reservation Efficiency of Skills",
     "stat_ranges": [
       {
@@ -43948,7 +43948,7 @@
   {
     "name": "of the Essence",
     "mod_type": "suffix",
-    "tier": 1,
+    "tier": 2,
     "stat_text": "{}% increased Mana Reservation Efficiency of Skills",
     "stat_ranges": [
       {
@@ -46428,7 +46428,7 @@
   {
     "name": "of the Essence",
     "mod_type": "suffix",
-    "tier": 12,
+    "tier": 3,
     "stat_text": "{}% increased Stun Threshold",
     "stat_ranges": [
       {
@@ -46451,7 +46451,7 @@
   {
     "name": "of the Essence",
     "mod_type": "suffix",
-    "tier": 11,
+    "tier": 2,
     "stat_text": "{}% increased Stun Threshold",
     "stat_ranges": [
       {
@@ -46474,7 +46474,7 @@
   {
     "name": "of the Essence",
     "mod_type": "suffix",
-    "tier": 9,
+    "tier": 1,
     "stat_text": "{}% increased Stun Threshold",
     "stat_ranges": [
       {
@@ -46497,7 +46497,7 @@
   {
     "name": "Heated",
     "mod_type": "prefix",
-    "tier": 10,
+    "tier": 18,
     "stat_text": "Adds {} to {} Fire Damage to Spells",
     "stat_ranges": [
       {
@@ -46531,7 +46531,7 @@
   {
     "name": "Smouldering",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 17,
     "stat_text": "Adds {} to {} Fire Damage to Spells",
     "stat_ranges": [
       {
@@ -46565,7 +46565,7 @@
   {
     "name": "Smoking",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 15,
     "stat_text": "Adds {} to {} Fire Damage to Spells",
     "stat_ranges": [
       {
@@ -46599,7 +46599,7 @@
   {
     "name": "Burning",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 13,
     "stat_text": "Adds {} to {} Fire Damage to Spells",
     "stat_ranges": [
       {
@@ -46633,7 +46633,7 @@
   {
     "name": "Flaming",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 11,
     "stat_text": "Adds {} to {} Fire Damage to Spells",
     "stat_ranges": [
       {
@@ -46667,7 +46667,7 @@
   {
     "name": "Scorching",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 10,
     "stat_text": "Adds {} to {} Fire Damage to Spells",
     "stat_ranges": [
       {
@@ -46701,7 +46701,7 @@
   {
     "name": "Incinerating",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 8,
     "stat_text": "Adds {} to {} Fire Damage to Spells",
     "stat_ranges": [
       {
@@ -46735,7 +46735,7 @@
   {
     "name": "Blasting",
     "mod_type": "prefix",
-    "tier": 3,
+    "tier": 6,
     "stat_text": "Adds {} to {} Fire Damage to Spells",
     "stat_ranges": [
       {
@@ -46769,7 +46769,7 @@
   {
     "name": "Cremating",
     "mod_type": "prefix",
-    "tier": 2,
+    "tier": 4,
     "stat_text": "Adds {} to {} Fire Damage to Spells",
     "stat_ranges": [
       {
@@ -46833,7 +46833,7 @@
   {
     "name": "Frosted",
     "mod_type": "prefix",
-    "tier": 10,
+    "tier": 1,
     "stat_text": "Adds 1 to {} Cold Damage to Spells",
     "stat_ranges": [
       {
@@ -46863,7 +46863,7 @@
   {
     "name": "Chilled",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 18,
     "stat_text": "Adds {} to {} Cold Damage to Spells",
     "stat_ranges": [
       {
@@ -46897,7 +46897,7 @@
   {
     "name": "Icy",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 17,
     "stat_text": "Adds {} to {} Cold Damage to Spells",
     "stat_ranges": [
       {
@@ -46931,7 +46931,7 @@
   {
     "name": "Frigid",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 15,
     "stat_text": "Adds {} to {} Cold Damage to Spells",
     "stat_ranges": [
       {
@@ -46965,7 +46965,7 @@
   {
     "name": "Freezing",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 13,
     "stat_text": "Adds {} to {} Cold Damage to Spells",
     "stat_ranges": [
       {
@@ -46999,7 +46999,7 @@
   {
     "name": "Frozen",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 11,
     "stat_text": "Adds {} to {} Cold Damage to Spells",
     "stat_ranges": [
       {
@@ -47033,7 +47033,7 @@
   {
     "name": "Glaciated",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 9,
     "stat_text": "Adds {} to {} Cold Damage to Spells",
     "stat_ranges": [
       {
@@ -47067,7 +47067,7 @@
   {
     "name": "Polar",
     "mod_type": "prefix",
-    "tier": 3,
+    "tier": 7,
     "stat_text": "Adds {} to {} Cold Damage to Spells",
     "stat_ranges": [
       {
@@ -47101,7 +47101,7 @@
   {
     "name": "Entombing",
     "mod_type": "prefix",
-    "tier": 1,
+    "tier": 4,
     "stat_text": "Adds {} to {} Cold Damage to Spells",
     "stat_ranges": [
       {
@@ -47135,7 +47135,7 @@
   {
     "name": "Essences",
     "mod_type": "prefix",
-    "tier": 2,
+    "tier": 6,
     "stat_text": "Adds {} to {} Cold Damage to Spells",
     "stat_ranges": [
       {
@@ -47169,7 +47169,7 @@
   {
     "name": "Humming",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 2,
     "stat_text": "Adds 1 to {} Lightning Damage to Spells",
     "stat_ranges": [
       {
@@ -47199,7 +47199,7 @@
   {
     "name": "Buzzing",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 17,
     "stat_text": "Adds {} to {} Lightning Damage to Spells",
     "stat_ranges": [
       {
@@ -47233,7 +47233,7 @@
   {
     "name": "Snapping",
     "mod_type": "prefix",
-    "tier": 10,
+    "tier": 18,
     "stat_text": "Adds {} to {} Lightning Damage to Spells",
     "stat_ranges": [
       {
@@ -47267,7 +47267,7 @@
   {
     "name": "Crackling",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 15,
     "stat_text": "Adds {} to {} Lightning Damage to Spells",
     "stat_ranges": [
       {
@@ -47301,7 +47301,7 @@
   {
     "name": "Sparking",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 13,
     "stat_text": "Adds {} to {} Lightning Damage to Spells",
     "stat_ranges": [
       {
@@ -47335,7 +47335,7 @@
   {
     "name": "Arcing",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 11,
     "stat_text": "Adds {} to {} Lightning Damage to Spells",
     "stat_ranges": [
       {
@@ -47369,7 +47369,7 @@
   {
     "name": "Shocking",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 9,
     "stat_text": "Adds {} to {} Lightning Damage to Spells",
     "stat_ranges": [
       {
@@ -47403,7 +47403,7 @@
   {
     "name": "Discharging",
     "mod_type": "prefix",
-    "tier": 2,
+    "tier": 6,
     "stat_text": "Adds {} to {} Lightning Damage to Spells",
     "stat_ranges": [
       {
@@ -47437,7 +47437,7 @@
   {
     "name": "Electrocuting",
     "mod_type": "prefix",
-    "tier": 1,
+    "tier": 4,
     "stat_text": "Adds {} to {} Lightning Damage to Spells",
     "stat_ranges": [
       {
@@ -47471,7 +47471,7 @@
   {
     "name": "Essences",
     "mod_type": "prefix",
-    "tier": 3,
+    "tier": 7,
     "stat_text": "Adds {} to {} Lightning Damage to Spells",
     "stat_ranges": [
       {
@@ -47505,7 +47505,7 @@
   {
     "name": "Heated",
     "mod_type": "prefix",
-    "tier": 10,
+    "tier": 19,
     "stat_text": "Adds {} to {} Fire Damage to Spells",
     "stat_ranges": [
       {
@@ -47539,7 +47539,7 @@
   {
     "name": "Smouldering",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 16,
     "stat_text": "Adds {} to {} Fire Damage to Spells",
     "stat_ranges": [
       {
@@ -47573,7 +47573,7 @@
   {
     "name": "Smoking",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 14,
     "stat_text": "Adds {} to {} Fire Damage to Spells",
     "stat_ranges": [
       {
@@ -47607,7 +47607,7 @@
   {
     "name": "Burning",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 12,
     "stat_text": "Adds {} to {} Fire Damage to Spells",
     "stat_ranges": [
       {
@@ -47641,7 +47641,7 @@
   {
     "name": "Flaming",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 9,
     "stat_text": "Adds {} to {} Fire Damage to Spells",
     "stat_ranges": [
       {
@@ -47675,7 +47675,7 @@
   {
     "name": "Scorching",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 7,
     "stat_text": "Adds {} to {} Fire Damage to Spells",
     "stat_ranges": [
       {
@@ -47709,7 +47709,7 @@
   {
     "name": "Incinerating",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 5,
     "stat_text": "Adds {} to {} Fire Damage to Spells",
     "stat_ranges": [
       {
@@ -47845,7 +47845,7 @@
   {
     "name": "Frosted",
     "mod_type": "prefix",
-    "tier": 10,
+    "tier": 19,
     "stat_text": "Adds {} to {} Cold Damage to Spells",
     "stat_ranges": [
       {
@@ -47879,7 +47879,7 @@
   {
     "name": "Chilled",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 16,
     "stat_text": "Adds {} to {} Cold Damage to Spells",
     "stat_ranges": [
       {
@@ -47913,7 +47913,7 @@
   {
     "name": "Icy",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 14,
     "stat_text": "Adds {} to {} Cold Damage to Spells",
     "stat_ranges": [
       {
@@ -47947,7 +47947,7 @@
   {
     "name": "Frigid",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 12,
     "stat_text": "Adds {} to {} Cold Damage to Spells",
     "stat_ranges": [
       {
@@ -47981,7 +47981,7 @@
   {
     "name": "Freezing",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 10,
     "stat_text": "Adds {} to {} Cold Damage to Spells",
     "stat_ranges": [
       {
@@ -48015,7 +48015,7 @@
   {
     "name": "Frozen",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 8,
     "stat_text": "Adds {} to {} Cold Damage to Spells",
     "stat_ranges": [
       {
@@ -48049,7 +48049,7 @@
   {
     "name": "Glaciated",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 5,
     "stat_text": "Adds {} to {} Cold Damage to Spells",
     "stat_ranges": [
       {
@@ -48185,7 +48185,7 @@
   {
     "name": "Humming",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 1,
     "stat_text": "Adds 1 to {} Lightning Damage to Spells",
     "stat_ranges": [
       {
@@ -48215,7 +48215,7 @@
   {
     "name": "Buzzing",
     "mod_type": "prefix",
-    "tier": 10,
+    "tier": 16,
     "stat_text": "Adds {} to {} Lightning Damage to Spells",
     "stat_ranges": [
       {
@@ -48249,7 +48249,7 @@
   {
     "name": "Snapping",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 14,
     "stat_text": "Adds {} to {} Lightning Damage to Spells",
     "stat_ranges": [
       {
@@ -48283,7 +48283,7 @@
   {
     "name": "Crackling",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 12,
     "stat_text": "Adds {} to {} Lightning Damage to Spells",
     "stat_ranges": [
       {
@@ -48317,7 +48317,7 @@
   {
     "name": "Sparking",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 10,
     "stat_text": "Adds {} to {} Lightning Damage to Spells",
     "stat_ranges": [
       {
@@ -48351,7 +48351,7 @@
   {
     "name": "Arcing",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 8,
     "stat_text": "Adds {} to {} Lightning Damage to Spells",
     "stat_ranges": [
       {
@@ -48385,7 +48385,7 @@
   {
     "name": "Shocking",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 5,
     "stat_text": "Adds {} to {} Lightning Damage to Spells",
     "stat_ranges": [
       {
@@ -48521,7 +48521,7 @@
   {
     "name": "Malicious",
     "mod_type": "prefix",
-    "tier": 1,
+    "tier": 5,
     "stat_text": "Adds {} to {} Chaos damage",
     "stat_ranges": [
       {
@@ -48553,7 +48553,7 @@
   {
     "name": "Essences",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 8,
     "stat_text": "Adds {} to {} Chaos damage",
     "stat_ranges": [
       {
@@ -48585,7 +48585,7 @@
   {
     "name": "Essences",
     "mod_type": "prefix",
-    "tier": 3,
+    "tier": 7,
     "stat_text": "Adds {} to {} Chaos damage",
     "stat_ranges": [
       {
@@ -48617,7 +48617,7 @@
   {
     "name": "Essences",
     "mod_type": "prefix",
-    "tier": 2,
+    "tier": 6,
     "stat_text": "Adds {} to {} Chaos damage",
     "stat_ranges": [
       {
@@ -48799,7 +48799,7 @@
   {
     "name": "Essences",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 3,
     "stat_text": "Adds {} to {} Chaos Damage to Attacks",
     "stat_ranges": [
       {
@@ -48831,7 +48831,7 @@
   {
     "name": "Essences",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 2,
     "stat_text": "Adds {} to {} Chaos Damage to Attacks",
     "stat_ranges": [
       {
@@ -49259,7 +49259,7 @@
   {
     "name": "Essences",
     "mod_type": "prefix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "{} to 7 Added Cold Damage per Frenzy Charge",
     "stat_ranges": [
       {
@@ -50328,7 +50328,7 @@
   {
     "name": "Essences",
     "mod_type": "prefix",
-    "tier": 3,
+    "tier": 2,
     "stat_text": "{}% increased maximum Mana",
     "stat_ranges": [
       {
@@ -52741,7 +52741,7 @@
   {
     "name": "Vivid",
     "mod_type": "prefix",
-    "tier": 1,
+    "tier": 2,
     "stat_text": "{}% increased maximum Life",
     "stat_ranges": [
       {
@@ -53341,7 +53341,7 @@
   {
     "name": "Defensive",
     "mod_type": "prefix",
-    "tier": 1,
+    "tier": 2,
     "stat_text": "{}% increased Global Defences",
     "stat_ranges": [
       {
@@ -54933,7 +54933,7 @@
   {
     "name": "Dousing FIX ME",
     "mod_type": "suffix",
-    "tier": 1,
+    "tier": 5,
     "stat_text": "{}% chance to Avoid being Ignited",
     "stat_ranges": [
       {
@@ -54960,7 +54960,7 @@
   {
     "name": "Insulating FIX ME",
     "mod_type": "suffix",
-    "tier": 1,
+    "tier": 7,
     "stat_text": "{}% chance to Avoid being Shocked",
     "stat_ranges": [
       {
@@ -54987,7 +54987,7 @@
   {
     "name": "Thawing FIX ME",
     "mod_type": "suffix",
-    "tier": 1,
+    "tier": 6,
     "stat_text": "{}% chance to Avoid being Frozen",
     "stat_ranges": [
       {
@@ -55041,7 +55041,7 @@
   {
     "name": "FIX ME",
     "mod_type": "suffix",
-    "tier": 1,
+    "tier": 8,
     "stat_text": "{}% chance to Avoid being Stunned",
     "stat_ranges": [
       {
@@ -55345,7 +55345,7 @@
   {
     "name": "of Immolation",
     "mod_type": "prefix",
-    "tier": 1,
+    "tier": 2,
     "stat_text": "{}% increased Ignite Duration on Enemies",
     "stat_ranges": [
       {
@@ -55506,7 +55506,7 @@
   {
     "name": "of Neutralisation",
     "mod_type": "suffix",
-    "tier": 6,
+    "tier": 1,
     "stat_text": "{}% reduced Poison Duration on you",
     "stat_ranges": [
       {
@@ -55533,7 +55533,7 @@
   {
     "name": "of Stemming",
     "mod_type": "suffix",
-    "tier": 6,
+    "tier": 1,
     "stat_text": "{}% reduced Duration of Bleeding on You",
     "stat_ranges": [
       {

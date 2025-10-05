@@ -9,6 +9,8 @@ from app.schemas.crafting import ItemModifier, ModType
 class ModifierPool:
     def __init__(self, modifiers: List[ItemModifier]) -> None:
         self.modifiers = modifiers
+        self._exclusion_groups_config = self._load_exclusion_groups()
+        self._apply_exclusion_groups()  # Apply exclusion groups to all modifiers
         self._prefix_pool = [m for m in modifiers if m.mod_type == ModType.PREFIX]
         self._suffix_pool = [m for m in modifiers if m.mod_type == ModType.SUFFIX]
         self._exclusions = self._load_exclusions()
@@ -28,6 +30,51 @@ class ModifierPool:
         except Exception as e:
             print(f"Warning: Could not load modifier exclusions: {e}")
         return []
+
+    def _load_exclusion_groups(self) -> dict:
+        """Load exclusion groups configuration from JSON file."""
+        try:
+            # Go up from app/services/crafting to backend, then to source_data
+            groups_path = os.path.join(
+                os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),
+                "source_data",
+                "exclusion_groups.json"
+            )
+            if os.path.exists(groups_path):
+                with open(groups_path, 'r') as f:
+                    data = json.load(f)
+                    return data.get("groups", {})
+        except Exception as e:
+            print(f"Warning: Could not load exclusion groups: {e}")
+        return {}
+
+    def _apply_exclusion_groups(self) -> None:
+        """Apply exclusion group numbers to all modifiers based on matching rules."""
+        if not self._exclusion_groups_config:
+            return
+
+        # Iterate through each modifier and check if it matches any exclusion group
+        for mod in self.modifiers:
+            for group_id, group_data in self._exclusion_groups_config.items():
+                rules = group_data.get("rules", [])
+
+                # Check if modifier matches any rule in this group
+                for rule in rules:
+                    match_type = rule.get("match_type")
+                    pattern = rule.get("pattern")
+
+                    if match_type == "mod_group" and mod.mod_group:
+                        if mod.mod_group.lower() == pattern.lower():
+                            mod.exclusion_group = int(group_id)
+                            break  # Move to next modifier once matched
+                    elif match_type == "stat_text":
+                        if pattern in mod.stat_text:
+                            mod.exclusion_group = int(group_id)
+                            break  # Move to next modifier once matched
+
+                # If we assigned a group, no need to check other groups
+                if mod.exclusion_group is not None:
+                    break
 
     def _apply_exclusions(self, mods: List[ItemModifier], item_slot: Optional[str]) -> List[ItemModifier]:
         """Apply exclusions based on item slot and modifier stat text."""
@@ -93,6 +140,11 @@ class ModifierPool:
     ) -> List[ItemModifier]:
         eligible = []
 
+        # Get excluded exclusion groups from item if provided
+        excluded_exclusion_groups = []
+        if item is not None:
+            excluded_exclusion_groups = self._get_excluded_exclusion_groups_from_item(item)
+
         for mod in pool:
             if mod.required_ilvl and mod.required_ilvl > item_level:
                 continue
@@ -101,6 +153,10 @@ class ModifierPool:
                 continue
 
             if mod.mod_group and mod.mod_group in excluded_groups:
+                continue
+
+            # Check exclusion group conflicts
+            if mod.exclusion_group is not None and mod.exclusion_group in excluded_exclusion_groups:
                 continue
 
             # Check for tag-based exclusions
@@ -318,10 +374,12 @@ class ModifierPool:
 
         excluded_groups = []
         excluded_tags = []
+        excluded_exclusion_groups = []
         if item:
             all_mods = item.prefix_mods + item.suffix_mods
             excluded_groups = [mod.mod_group for mod in all_mods if mod.mod_group]
             excluded_tags = self._get_excluded_tags_from_item(item, mod_type)
+            excluded_exclusion_groups = self._get_excluded_exclusion_groups_from_item(item)
 
         # Get excluded patterns if item is provided
         excluded_patterns = []
@@ -331,6 +389,10 @@ class ModifierPool:
         eligible = []
         for mod in pool:
             if mod.mod_group and mod.mod_group in excluded_groups:
+                continue
+
+            # Check exclusion group conflicts
+            if mod.exclusion_group is not None and mod.exclusion_group in excluded_exclusion_groups:
                 continue
 
             # Check for tag-based exclusions
@@ -460,6 +522,14 @@ class ModifierPool:
         all_mods = item.prefix_mods + item.suffix_mods
         return [mod.mod_group for mod in all_mods if mod.mod_group]
 
+    def _get_excluded_exclusion_groups_from_item(self, item) -> List[int]:
+        """Build a list of excluded exclusion group IDs from item's existing mods."""
+        if not item:
+            return []
+
+        all_mods = item.prefix_mods + item.suffix_mods
+        return [mod.exclusion_group for mod in all_mods if mod.exclusion_group is not None]
+
     def _get_excluded_tags_from_item(self, item, mod_type: str) -> List[str]:
         """Build a list of excluded tags from item's existing mods of the same type."""
         if not item:
@@ -499,7 +569,7 @@ class ModifierPool:
 
         # Define mutually exclusive stat text patterns
         EXCLUSIVE_PATTERNS = [
-            "to Level of all",  # Skill level mods: "+X to Level of all [Type] Skills"
+            # Skill level mods are now handled by exclusion_group system (group 3)
             # Add other exclusive patterns here as discovered
         ]
 

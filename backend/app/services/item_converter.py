@@ -133,22 +133,30 @@ class ItemConverter:
     ) -> Optional[ItemModifier]:
         """Convert an ItemMod to an ItemModifier by matching with the database"""
 
+        # Helper function to check if a mod is applicable to this item
+        def is_mod_applicable(mod):
+            if base_category in mod.applicable_items:
+                return True
+            if 'jewellery' in mod.applicable_items and base_category in ['ring', 'amulet', 'belt']:
+                return True
+            return self.modifier_pool._is_mod_applicable_to_category(mod, base_category)
+
         # If detailed format was parsed, we have the mod info already
         if item_mod.mod_name and item_mod.tier is not None and item_mod.mod_type:
             mod = self.modifier_pool.find_mod_by_name_and_tier(item_mod.mod_name, item_mod.tier)
-            if mod:
+            if mod and is_mod_applicable(mod):
                 # Create a copy with current value from parsed item
                 result_mod = mod.model_copy()
                 result_mod.current_value = self._extract_value_from_text(item_mod.text)
                 return result_mod
             else:
-                # If exact tier not found, try to find by name only as fallback
-                logger.warning(f"Could not find mod '{item_mod.mod_name}' with tier {item_mod.tier}, trying name only")
-                mod = self.modifier_pool.find_mod_by_name(item_mod.mod_name)
-                if mod:
-                    result_mod = mod.model_copy()
-                    result_mod.current_value = self._extract_value_from_text(item_mod.text)
-                    return result_mod
+                # If exact tier not found or not applicable, fall through to stat text matching
+                # This will find all mods with this name, filter by applicability, and match by stat text
+                if not mod:
+                    logger.warning(f"Could not find mod '{item_mod.mod_name}' with tier {item_mod.tier}, trying stat text matching")
+                else:
+                    logger.warning(f"Mod '{item_mod.mod_name}' tier {item_mod.tier} not applicable to {base_category}, trying stat text matching")
+                # Don't return here - fall through to stat text matching below
 
         # Otherwise, try to match by stat text
         mod_type = force_type or item_mod.mod_type
@@ -170,46 +178,50 @@ class ItemConverter:
                 if m.mod_type in [ModType.PREFIX, ModType.SUFFIX]
             ]
 
-        # Filter by applicable item category
-        def is_applicable(mod):
-            # Direct category match
-            if base_category in mod.applicable_items:
-                return True
-            # Handle jewellery category mapping to ring/amulet/belt
-            if 'jewellery' in mod.applicable_items and base_category in ['ring', 'amulet', 'belt']:
-                return True
-            # Use modifier pool's logic for other cases
-            return self.modifier_pool._is_mod_applicable_to_category(mod, base_category)
-
-        candidates = [m for m in candidates if is_applicable(m)]
+        # Filter by applicable item category (reuse helper function)
+        candidates = [m for m in candidates if is_mod_applicable(m)]
 
         # Match by stat text pattern
         # Strip special markers like (desecrated), (fractured), etc.
         parsed_text = item_mod.text.lower()
         parsed_text = re.sub(r'\s*\((desecrated|fractured|corrupted)\)\s*$', '', parsed_text).strip()
 
+        # Sort candidates by specificity (longer stat_text first) to match more specific mods first
+        # This prevents "+{} to Accuracy Rating" from matching before "Allies in your Presence have +{} to Accuracy Rating"
+        candidates = sorted(candidates, key=lambda m: len(m.stat_text), reverse=True)
+
         for candidate in candidates:
-            # Replace {} placeholder with \d+ regex pattern
-            pattern = candidate.stat_text.replace('{}', r'\d+')
-            pattern = pattern.lower()
+            # Build pattern by escaping the stat_text but preserving the {} placeholder
+            # Then replace {} with a pattern that matches: number + optional (min-max) range
+            stat_text_lower = candidate.stat_text.lower()
 
-            # Escape special regex characters except \d+
-            pattern = re.escape(pattern)
-            pattern = pattern.replace(r'\\d\+', r'\d+')
+            # Split by {} to escape the text parts separately
+            parts = stat_text_lower.split('{}')
+            escaped_parts = [re.escape(part) for part in parts]
 
-            # Also handle ranges like (13-17) in stat_text
-            # After escape, pattern contains: \(13\-17\) as literal chars
-            # Replace with: \d+\(13-17\) to match "16(13-17)" in parsed text
-            def replace_range(match):
-                min_val = match.group(1)
-                max_val = match.group(2)
-                return rf'\d+\({min_val}-{max_val}\)'
-            # Regex: \\\ matches \,  \( matches (,  etc.
-            pattern = re.sub(r'\\\(' + r'(\d+)' + r'\\\-' + r'(\d+)' + r'\\\)', replace_range, pattern)
+            # Join with pattern for number + optional range: \d+(?:\(\d+-\d+\))?
+            pattern = r'\d+(?:\(\d+-\d+\))?'.join(escaped_parts)
 
-            if re.search(pattern, parsed_text):
+            # Use full string matching with anchors to avoid partial matches
+            full_pattern = f'^{pattern}$'
+
+            if re.match(full_pattern, parsed_text):
+                # Check if the value falls within the mod's range
+                current_value = self._extract_value_from_text(item_mod.text)
+
+                # If we have a value and the candidate has ranges, verify it's in range
+                if current_value is not None and candidate.stat_ranges:
+                    # Check if value is within any of the stat ranges
+                    in_range = any(
+                        stat_range.min <= current_value <= stat_range.max
+                        for stat_range in candidate.stat_ranges
+                    )
+                    if not in_range:
+                        # Value doesn't match this tier's range, try next candidate
+                        continue
+
                 result_mod = candidate.model_copy()
-                result_mod.current_value = self._extract_value_from_text(item_mod.text)
+                result_mod.current_value = current_value
 
                 # If the original text had (desecrated), ensure the tag is present
                 if '(desecrated)' in item_mod.text.lower():
