@@ -78,6 +78,21 @@ function getTagColor(tag: string): { bg: string; border: string; text: string; h
   }
 }
 
+// Generate a consistent color for exclusion group IDs
+function getExclusionGroupColor(groupId: string): { bg: string; border: string; text: string } {
+  let hash = 0
+  for (let i = 0; i < groupId.length; i++) {
+    hash = groupId.charCodeAt(i) + ((hash << 5) - hash)
+  }
+
+  const hue = Math.abs(hash % 360)
+  return {
+    bg: `hsla(${hue}, 70%, 60%, 0.2)`,
+    border: `hsla(${hue}, 70%, 60%, 0.5)`,
+    text: `hsl(${hue}, 70%, 70%)`
+  }
+}
+
 interface TabContentProps {
   item: CraftableItem
   setItem: (item: CraftableItem) => void
@@ -465,6 +480,15 @@ function GridCraftingSimulator() {
   const [itemHistory, setItemHistory] = useState<CraftableItem[]>([])
   const [currencySpent, setCurrencySpent] = useState<Record<string, number>>({})
 
+  // Redo stacks for Ctrl+R and Ctrl+Y
+  const [redoItemStack, setRedoItemStack] = useState<CraftableItem[]>([])
+  const [redoHistoryStack, setRedoHistoryStack] = useState<string[]>([])
+  const [redoCurrencyStack, setRedoCurrencyStack] = useState<string[]>([])
+  const [redoOmensStack, setRedoOmensStack] = useState<string[][]>([])
+
+  // Track action details for each history step (for Ctrl+Y)
+  const [actionHistory, setActionHistory] = useState<Array<{currency: string, omens: string[]} | null>>([])
+
   const [availableMods, setAvailableMods] = useState<{
     prefixes: ItemModifier[]
     suffixes: ItemModifier[]
@@ -473,6 +497,14 @@ function GridCraftingSimulator() {
     desecrated_prefixes: ItemModifier[]
     desecrated_suffixes: ItemModifier[]
   }>({ prefixes: [], suffixes: [], essence_prefixes: [], essence_suffixes: [], desecrated_prefixes: [], desecrated_suffixes: [] })
+
+  const [exclusionGroups, setExclusionGroups] = useState<Array<{
+    id: string
+    description: string
+    patterns: string[]
+    applicable_items: string[]
+    tags?: string
+  }>>([])
 
   const [modPoolFilter, setModPoolFilter] = useState<{
     search: string
@@ -540,6 +572,12 @@ function GridCraftingSimulator() {
       setItem(itemHistory[stepIndex])
       setItemHistory(itemHistory.slice(0, stepIndex + 1))
       setHistory(history.slice(0, stepIndex + 1))
+      setActionHistory(actionHistory.slice(0, stepIndex + 1))
+      // Clear redo stacks when jumping to a specific step
+      setRedoItemStack([])
+      setRedoHistoryStack([])
+      setRedoCurrencyStack([])
+      setRedoOmensStack([])
       setMessage(`Reverted to step ${stepIndex + 1}`)
     }
   }
@@ -547,14 +585,24 @@ function GridCraftingSimulator() {
   function handleClearHistory() {
     setHistory([])
     setItemHistory([])
+    setActionHistory([])
     setCurrencySpent({})
+    setRedoItemStack([])
+    setRedoHistoryStack([])
+    setRedoCurrencyStack([])
+    setRedoOmensStack([])
     setMessage('History cleared')
   }
 
   function handleHistoryReset() {
     setHistory([])
     setItemHistory([])
+    setActionHistory([])
     setCurrencySpent({})
+    setRedoItemStack([])
+    setRedoHistoryStack([])
+    setRedoCurrencyStack([])
+    setRedoOmensStack([])
   }
 
   // Global paste handler
@@ -599,14 +647,45 @@ function GridCraftingSimulator() {
     setPasteError('')
   }
 
-  // Export item to clipboard in original format
-  const handleCopyItem = () => {
-    const itemText = exportItemToText(item, importFormat)
+  // Export item to clipboard with specified format
+  const handleCopyItem = (format: 'simple' | 'detailed') => {
+    const itemText = exportItemToText(item, format)
     navigator.clipboard.writeText(itemText).then(() => {
-      setMessage('Item copied to clipboard!')
+      setMessage(`Item copied to clipboard (${format} format)!`)
     }).catch(() => {
       setMessage('Failed to copy item to clipboard')
     })
+  }
+
+  // Filter out internal/system tags that shouldn't be displayed to users
+  const filterInternalTags = (tags: string[] | undefined): string[] => {
+    if (!tags || tags.length === 0) return []
+
+    // Hidden tag patterns (matching backend logic)
+    const hiddenTagPatterns = [
+      'essence_only',
+      'desecrated_only',
+      'abyssal_mark',
+      'placeholder',
+      'drop',
+      'resource',
+      'energy_shield',
+      'flat_life_regen',
+      'armour',
+      'caster_damage',
+      'attack_damage',
+    ]
+
+    const shouldHideTag = (tag: string): boolean => {
+      const tagLower = tag.toLowerCase()
+      // Check exact matches and wildcard patterns
+      if (hiddenTagPatterns.includes(tagLower)) return true
+      // Check essence* wildcard
+      if (tagLower.startsWith('essence')) return true
+      return false
+    }
+
+    return tags.filter(tag => !shouldHideTag(tag))
   }
 
   // Convert item to PoE2 text format
@@ -621,18 +700,9 @@ function GridCraftingSimulator() {
                 item.base_category.includes('weapon') ? 'Weapons' : 'Items'))
     lines.push(`Rarity: ${item.rarity}`)
 
-    // Item name (for rare items, generate a name)
-    if (item.rarity === 'Rare') {
-      const prefixName = item.prefix_mods[0]?.name || 'Crafted'
-      const suffixName = item.suffix_mods[0]?.name || 'Item'
-      lines.push(`${prefixName} ${item.base_name} ${suffixName}`)
-    } else if (item.rarity === 'Magic') {
-      const prefixName = item.prefix_mods[0]?.name || ''
-      const suffixName = item.suffix_mods[0]?.name ? `of the ${item.suffix_mods[0].name.replace(/^of the /, '')}` : ''
-      lines.push(`${prefixName} ${item.base_name} ${suffixName}`.trim())
-    } else {
-      lines.push(item.base_name)
-    }
+    // Item name - keep it simple for now (just base name)
+    // TODO: Generate proper rare/magic item names later
+    lines.push(item.base_name)
 
     lines.push('--------')
     lines.push(`Item Level: ${item.item_level}`)
@@ -659,7 +729,8 @@ function GridCraftingSimulator() {
     allMods.forEach(({ mod, type }) => {
       if (format === 'detailed') {
         const modType = type === 'prefix' ? 'Prefix' : 'Suffix'
-        const tags = mod.tags?.filter(t => t !== 'desecrated_only').join(', ') || ''
+        const filteredTags = filterInternalTags(mod.tags)
+        const tags = filteredTags.join(', ')
         lines.push(`{ ${modType} Modifier "${mod.name}" (Tier: ${mod.tier})${tags ? ' — ' + tags.split(',').map(t => t.trim().charAt(0).toUpperCase() + t.trim().slice(1)).join(', ') : ''} }`)
       }
 
@@ -717,6 +788,7 @@ function GridCraftingSimulator() {
     return () => document.removeEventListener('paste', handlePaste)
   }, [])
 
+
   // Drag and drop handlers
   function handleDragStart(mod: ItemModifier, modType: 'prefix' | 'suffix') {
     setDraggedMod({ ...mod, mod_type: modType })
@@ -757,9 +829,46 @@ function GridCraftingSimulator() {
       return
     }
 
+    // Check for exclusion group conflicts
+    // First, ensure existing mods have exclusion_group_id annotations
+    const existingMods = [...item.prefix_mods, ...item.suffix_mods].map(mod => {
+      if (mod.exclusion_group_id) return mod
+
+      // Find which group this mod belongs to
+      for (const group of exclusionGroups) {
+        if (!ruleApplesToItem(group, item.base_category)) continue
+        const matchesGroup = group.patterns.some(pattern =>
+          patternMatchesMod(pattern, mod.stat_text)
+        )
+        if (matchesGroup) {
+          return { ...mod, exclusion_group_id: group.id }
+        }
+      }
+      return mod
+    })
+
+    // Check if dragged mod conflicts with any existing mod
+    for (const existingMod of existingMods) {
+      if (draggedMod.exclusion_group_id &&
+          existingMod.exclusion_group_id &&
+          draggedMod.exclusion_group_id === existingMod.exclusion_group_id) {
+        const groupInfo = getModExclusionGroupInfo(draggedMod)
+        setMessage(`Cannot add: conflicts with "${existingMod.stat_text}" (${groupInfo?.description || 'same exclusion group'})`)
+        setDraggedMod(null)
+        return
+      }
+    }
+
     // Add to history before making changes
     setHistory([...history, `Manually added ${draggedMod.name}`])
     setItemHistory([...itemHistory, item])
+    setActionHistory([...actionHistory, null]) // Manual actions can't be retried
+
+    // Clear redo stacks on new action
+    setRedoItemStack([])
+    setRedoHistoryStack([])
+    setRedoCurrencyStack([])
+    setRedoOmensStack([])
 
     // Add the mod to the item - support hybrid mods
     const newItem = { ...item }
@@ -776,10 +885,13 @@ function GridCraftingSimulator() {
         current_values: rolledValues,
         current_value: rolledValues[0] // Legacy compatibility
       }
-    } else {
+    } else if (draggedMod.stat_min !== undefined && draggedMod.stat_max !== undefined) {
       // Legacy single value rolling
-      const randomValue = Math.floor(Math.random() * (draggedMod.stat_max! - draggedMod.stat_min! + 1)) + draggedMod.stat_min!
+      const randomValue = Math.floor(Math.random() * (draggedMod.stat_max - draggedMod.stat_min + 1)) + draggedMod.stat_min
       modWithValue = { ...draggedMod, current_value: randomValue }
+    } else {
+      // No ranges available, use mod as-is
+      modWithValue = { ...draggedMod }
     }
 
     if (modType === 'prefix') {
@@ -810,6 +922,13 @@ function GridCraftingSimulator() {
     const modName = modType === 'prefix' ? item.prefix_mods[modIndex].name : item.suffix_mods[modIndex].name
     setHistory([...history, `Manually removed ${modName}`])
     setItemHistory([...itemHistory, item])
+    setActionHistory([...actionHistory, null]) // Manual actions can't be retried
+
+    // Clear redo stacks on new action
+    setRedoItemStack([])
+    setRedoHistoryStack([])
+    setRedoCurrencyStack([])
+    setRedoOmensStack([])
 
     const newItem = { ...item }
     if (modType === 'prefix') {
@@ -868,6 +987,13 @@ function GridCraftingSimulator() {
     // Add to history
     setHistory([...history, `Revealed desecrated modifier: ${choice.name}`])
     setItemHistory([...itemHistory, item])
+    setActionHistory([...actionHistory, null]) // Manual actions can't be retried
+
+    // Clear redo stacks on new action
+    setRedoItemStack([])
+    setRedoHistoryStack([])
+    setRedoCurrencyStack([])
+    setRedoOmensStack([])
 
     // Remove unrevealed mod and replace the placeholder with chosen revealed mod
     const newItem = { ...item }
@@ -941,14 +1067,19 @@ function GridCraftingSimulator() {
     }
   }
 
-  // Load available mods and currencies when item changes
+  // Load exclusion groups once on mount
   useEffect(() => {
-    if (item.base_name && item.base_name !== "Int Armour Body Armour") {
+    loadExclusionGroups()
+  }, [])
+
+  // Load available mods and currencies when item changes or exclusion groups change
+  useEffect(() => {
+    if (item.base_name && item.base_name !== "Int Armour Body Armour" && exclusionGroups.length > 0) {
       loadAvailableMods()
       loadCategorizedCurrencies()
       loadAvailableCurrencies()
     }
-  }, [item])
+  }, [item, exclusionGroups])
 
   // Recalculate stats whenever mods change
   useEffect(() => {
@@ -1073,9 +1204,118 @@ function GridCraftingSimulator() {
   const loadAvailableMods = async () => {
     try {
       const mods = await craftingApi.getAvailableMods(item)
-      setAvailableMods(mods)
+      // Annotate mods with exclusion group IDs
+      const annotatedMods = annotateModsWithGroups(mods)
+      setAvailableMods(annotatedMods)
     } catch (err) {
       console.error('Failed to load available mods:', err)
+    }
+  }
+
+  const loadExclusionGroups = async () => {
+    try {
+      const groups = await craftingApi.getExclusionGroups()
+      setExclusionGroups(groups)
+    } catch (err) {
+      console.error('Failed to load exclusion groups:', err)
+    }
+  }
+
+  // Pattern matching function (mirrors backend logic)
+  const patternMatchesMod = (pattern: string, modStatText: string): boolean => {
+    // Handle exact match for mods with placeholders (e.g., "+{} to Level of all Melee Skills")
+    if (pattern === modStatText) {
+      return true
+    }
+
+    // Escape special regex characters except {}
+    let patternRegex = pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+
+    // Replace escaped {} placeholders with regex for numbers OR the literal {}
+    // This handles both "+2 to Level..." and "+{} to Level..."
+    patternRegex = patternRegex.replace(/\\{\\}/g, '(\\{\\}|[\\d\\-\\(\\)]+)')
+    patternRegex = patternRegex.replace(/\\(\\{?\\}\\-\\{?\\}\\)/g, '(\\(\\{\\}\\-\\{\\}\\)|\\(\\d+\\-\\d+\\))')
+
+    // Add anchors to match full string
+    patternRegex = `^${patternRegex}$`
+
+    try {
+      return new RegExp(patternRegex, 'i').test(modStatText)
+    } catch (e) {
+      console.warn(`Invalid regex pattern '${patternRegex}':`, e)
+      return false
+    }
+  }
+
+  // Check if rule applies to item category
+  const ruleApplesToItem = (rule: { applicable_items: string[] }, itemCategory: string): boolean => {
+    const applicableItems = rule.applicable_items || []
+
+    // If no specific items listed, rule applies to all
+    if (applicableItems.length === 0) return true
+
+    const categoryNormalized = itemCategory.toLowerCase()
+
+    for (const itemType of applicableItems) {
+      const itemTypeNormalized = itemType.toLowerCase()
+
+      // Direct match or partial match (e.g., "axe" matches "one_hand_axe")
+      if (categoryNormalized === itemTypeNormalized || categoryNormalized.includes(itemTypeNormalized)) {
+        return true
+      }
+    }
+
+    return false
+  }
+
+  // Get exclusion group info for a mod
+  const getModExclusionGroupInfo = (mod: ItemModifier) => {
+    if (!mod.exclusion_group_id) return null
+
+    const group = exclusionGroups.find(g => g.id === mod.exclusion_group_id)
+    return group || null
+  }
+
+  // Annotate mods with exclusion group IDs
+  const annotateModsWithGroups = (mods: typeof availableMods) => {
+    const annotate = (modList: ItemModifier[]) => {
+      return modList.map(mod => {
+        // Find which exclusion groups this mod belongs to
+        const groupIds: string[] = []
+
+        for (const group of exclusionGroups) {
+          // Check if group applies to this item type
+          if (!ruleApplesToItem(group, item.base_category)) continue
+
+          // Check if mod matches any pattern in this group
+          const matchesGroup = group.patterns.some(pattern =>
+            patternMatchesMod(pattern, mod.stat_text)
+          )
+
+          if (matchesGroup) {
+            groupIds.push(group.id)
+          }
+        }
+
+        // Return mod with exclusion_group_id if it belongs to any groups
+        if (groupIds.length > 0) {
+          return {
+            ...mod,
+            exclusion_group_id: groupIds[0] // Use first group for simplicity
+          }
+        }
+
+        return mod
+      })
+    }
+
+    return {
+      prefixes: annotate(mods.prefixes),
+      suffixes: annotate(mods.suffixes),
+      essence_prefixes: annotate(mods.essence_prefixes),
+      essence_suffixes: annotate(mods.essence_suffixes),
+      desecrated_prefixes: annotate(mods.desecrated_prefixes),
+      desecrated_suffixes: annotate(mods.desecrated_suffixes),
     }
   }
 
@@ -1140,15 +1380,12 @@ function GridCraftingSimulator() {
         }
       }
 
-      // Add to history before updating item
-      setHistory([...history, `Applied ${currencyType}${selectedOmens.length > 0 ? ` with ${selectedOmens.join(', ')}` : ''}`])
-      setItemHistory([...itemHistory, item])
-
-      // Update currency spent
-      setCurrencySpent(prev => ({
-        ...prev,
-        [currencyType]: (prev[currencyType] || 0) + 1
-      }))
+      // Check if crafting was successful
+      if (!result.success) {
+        setMessage(result.message || `${currencyType} failed to apply`)
+        setLoading(false)
+        return
+      }
 
       // Check if item state changed during the async operation (race condition protection)
       const currentItemState = JSON.stringify(item)
@@ -1158,9 +1395,28 @@ function GridCraftingSimulator() {
         return
       }
 
+      // Success! Update item, history, and currency counter
       if (result.result_item) {
         setItem(result.result_item)
       }
+
+      // Add to history
+      setHistory([...history, `Applied ${currencyType}${selectedOmens.length > 0 ? ` with ${selectedOmens.join(', ')}` : ''}`])
+      setItemHistory([...itemHistory, item])
+      setActionHistory([...actionHistory, { currency: currencyType, omens: [...selectedOmens] }])
+
+      // Clear redo stacks on new action
+      setRedoItemStack([])
+      setRedoHistoryStack([])
+      setRedoCurrencyStack([])
+      setRedoOmensStack([])
+
+      // Update currency spent
+      setCurrencySpent(prev => ({
+        ...prev,
+        [currencyType]: (prev[currencyType] || 0) + 1
+      }))
+
       setMessage(`${currencyType} applied successfully!`)
 
       // Clear selected omens after use
@@ -1178,26 +1434,153 @@ function GridCraftingSimulator() {
       const previousItem = itemHistory[itemHistory.length - 1]
       const previousHistory = history.slice(0, -1)
       const previousItemHistory = itemHistory.slice(0, -1)
+      const previousActionHistory = actionHistory.slice(0, -1)
+
+      // Save current state to redo stacks
+      setRedoItemStack([...redoItemStack, item])
+      setRedoHistoryStack([...redoHistoryStack, history[history.length - 1]])
+
+      // Save action details if available (for Ctrl+Y)
+      const lastAction = actionHistory[actionHistory.length - 1]
+      if (lastAction) {
+        setRedoCurrencyStack([...redoCurrencyStack, lastAction.currency])
+        setRedoOmensStack([...redoOmensStack, lastAction.omens])
+      } else {
+        setRedoCurrencyStack([...redoCurrencyStack, ''])
+        setRedoOmensStack([...redoOmensStack, []])
+      }
 
       setItem(previousItem)
       setHistory(previousHistory)
       setItemHistory(previousItemHistory)
+      setActionHistory(previousActionHistory)
       setMessage('Undone last action')
     }
   }
 
-  // Keyboard shortcut for undo
+  const handleRedo = () => {
+    if (redoItemStack.length > 0) {
+      const nextItem = redoItemStack[redoItemStack.length - 1]
+      const nextHistoryEntry = redoHistoryStack[redoHistoryStack.length - 1]
+      const nextCurrency = redoCurrencyStack[redoCurrencyStack.length - 1]
+      const nextOmens = redoOmensStack[redoOmensStack.length - 1]
+
+      // Add current item to history before redoing
+      setItemHistory([...itemHistory, item])
+      setHistory([...history, nextHistoryEntry])
+      if (nextCurrency) {
+        setActionHistory([...actionHistory, { currency: nextCurrency, omens: nextOmens }])
+      } else {
+        setActionHistory([...actionHistory, null])
+      }
+
+      // Pop from redo stacks
+      setRedoItemStack(redoItemStack.slice(0, -1))
+      setRedoHistoryStack(redoHistoryStack.slice(0, -1))
+      setRedoCurrencyStack(redoCurrencyStack.slice(0, -1))
+      setRedoOmensStack(redoOmensStack.slice(0, -1))
+
+      setItem(nextItem)
+      setMessage('Redone last action')
+    }
+  }
+
+  const handleRetryLastAction = async () => {
+    // Retry the last action from history (doesn't require undo first)
+    if (actionHistory.length > 0 && itemHistory.length > 0) {
+      const lastAction = actionHistory[actionHistory.length - 1]
+
+      if (lastAction && lastAction.currency) {
+        if (loading) return
+
+        setLoading(true)
+        setMessage('')
+
+        try {
+          // Get the item state BEFORE the last action
+          // IMPORTANT: Deep clone to ensure we get a fresh copy for each retry
+          // This prevents any reference issues and ensures true RNG on each retry
+          const previousItem = JSON.parse(JSON.stringify(itemHistory[itemHistory.length - 1]))
+
+          // Debug logging
+          console.log(`[DEBUG] Retrying ${lastAction.currency} on ${previousItem.rarity} item with ${previousItem.prefix_mods.length}P, ${previousItem.suffix_mods.length}S`)
+
+          let result
+
+          // Use appropriate API based on whether omens were used
+          if (lastAction.omens.length > 0) {
+            result = await craftingApi.simulateCraftingWithOmens(
+              previousItem,
+              lastAction.currency,
+              lastAction.omens
+            )
+          } else {
+            result = await craftingApi.simulateCrafting({
+              item: previousItem,
+              currency_name: lastAction.currency
+            })
+          }
+
+          // Check if crafting was successful
+          if (!result.success) {
+            setMessage(result.message || `${lastAction.currency} failed to apply`)
+            setLoading(false)
+            return
+          }
+
+          // Update state: remove last action from history and add the new result
+          if (result.result_item) {
+            setItem(result.result_item)
+          }
+
+          // Replace the last history entry with the retry
+          setHistory([...history.slice(0, -1), `Applied ${lastAction.currency}${lastAction.omens.length > 0 ? ` with ${lastAction.omens.join(', ')}` : ''} (retry)`])
+          setItemHistory([...itemHistory.slice(0, -1), previousItem])
+          setActionHistory([...actionHistory.slice(0, -1), { currency: lastAction.currency, omens: lastAction.omens }])
+
+          // Clear redo stacks
+          setRedoItemStack([])
+          setRedoHistoryStack([])
+          setRedoCurrencyStack([])
+          setRedoOmensStack([])
+
+          // Update currency spent
+          setCurrencySpent(prev => ({
+            ...prev,
+            [lastAction.currency]: (prev[lastAction.currency] || 0) + 1
+          }))
+
+          setMessage(`${lastAction.currency} retried successfully!`)
+
+        } catch (err: any) {
+          setMessage(`Error: ${err.message}`)
+        } finally {
+          setLoading(false)
+        }
+      } else {
+        setMessage('Cannot retry manual action')
+      }
+    }
+  }
+
+  // Keyboard shortcuts for undo/redo/retry
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.ctrlKey && event.key === 'z') {
         event.preventDefault()
         handleUndo()
+      } else if (event.ctrlKey && event.key === 'y') {
+        event.preventDefault()
+        handleRedo()
+      } else if (event.ctrlKey && event.key === 'r') {
+        event.preventDefault()
+        handleRetryLastAction()
       }
     }
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [itemHistory])
+  }, [itemHistory, redoItemStack, actionHistory, redoCurrencyStack, redoOmensStack])
 
   // Auto-dismiss message after 3 seconds
   useEffect(() => {
@@ -1291,7 +1674,10 @@ function GridCraftingSimulator() {
       mod.required_ilvl ? `Required ilvl: ${mod.required_ilvl}` : null,
       mod.mod_group ? `Group: ${mod.mod_group}` : null,
       rangeTooltip,
-      mod.tags && mod.tags.length > 0 ? `Tags: ${mod.tags.join(', ')}` : null,
+      (() => {
+        const visibleTags = filterInternalTags(mod.tags)
+        return visibleTags.length > 0 ? `Tags: ${visibleTags.join(', ')}` : null
+      })(),
     ].filter(Boolean).join('\n')
 
     return (
@@ -1352,6 +1738,35 @@ function GridCraftingSimulator() {
     // Check prefix/suffix highlighting - if omen targets specific type, grey out the other
     if (highlighting.highlightPrefixes && modType === 'suffix') return true
     if (highlighting.highlightSuffixes && modType === 'prefix') return true
+
+    // Check for exclusion group conflicts with existing mods
+    // When omens are active (allowing manual selection), grey out conflicting mods
+    if (mod.exclusion_group_id) {
+      const existingMods = [...item.prefix_mods, ...item.suffix_mods].map(existingMod => {
+        if (existingMod.exclusion_group_id) return existingMod
+
+        // Annotate existing mod if it doesn't have exclusion_group_id
+        for (const group of exclusionGroups) {
+          if (!ruleApplesToItem(group, item.base_category)) continue
+          const matchesGroup = group.patterns.some(pattern =>
+            patternMatchesMod(pattern, existingMod.stat_text)
+          )
+          if (matchesGroup) {
+            return { ...existingMod, exclusion_group_id: group.id }
+          }
+        }
+        return existingMod
+      })
+
+      // Check if this mod conflicts with any existing mod
+      const hasConflict = existingMods.some(existingMod =>
+        existingMod.exclusion_group_id === mod.exclusion_group_id
+      )
+
+      if (hasConflict) {
+        return true
+      }
+    }
 
     // For same type highlighting (homogenising omens), grey out mods that don't match existing tags
     if (highlighting.highlightSameTypes) {
@@ -1747,10 +2162,40 @@ function GridCraftingSimulator() {
     ]
     allMods.forEach(mod => {
       if (mod.tags) {
-        mod.tags.forEach((tag: string) => tagSet.add(tag))
+        // Filter out internal tags before adding to the set
+        const visibleTags = filterInternalTags(mod.tags)
+        visibleTags.forEach((tag: string) => tagSet.add(tag))
       }
     })
     return Array.from(tagSet).sort()
+  }, [availableMods])
+
+  // Create a mapping of exclusion group IDs to sequential display numbers (1, 2, 3...)
+  const exclusionGroupDisplayMap = useMemo(() => {
+    const allMods = [
+      ...availableMods.prefixes,
+      ...availableMods.suffixes,
+      ...availableMods.essence_prefixes,
+      ...availableMods.essence_suffixes,
+      ...availableMods.desecrated_prefixes,
+      ...availableMods.desecrated_suffixes
+    ]
+
+    const uniqueGroups = new Set<string>()
+    allMods.forEach(mod => {
+      if (mod.exclusion_group_id) {
+        uniqueGroups.add(mod.exclusion_group_id)
+      }
+    })
+
+    // Sort group IDs and create sequential mapping
+    const sortedGroups = Array.from(uniqueGroups).sort()
+    const mapping: Record<string, number> = {}
+    sortedGroups.forEach((groupId, index) => {
+      mapping[groupId] = index + 1
+    })
+
+    return mapping
   }, [availableMods])
 
   return (
@@ -1896,7 +2341,36 @@ function GridCraftingSimulator() {
                           onDragEnd={handleDragEnd}
                           title="Click to expand/collapse, double-click to filter by all tags, drag to add to item"
                         >
-                          <span className="pool-mod-stat-main">{bestTier.stat_text}</span>
+                          <span className="pool-mod-stat-main">
+                            {bestTier.stat_text}
+                            {bestTier.exclusion_group_id && (() => {
+                              const groupInfo = getModExclusionGroupInfo(bestTier)
+                              const groupColor = getExclusionGroupColor(bestTier.exclusion_group_id)
+                              const groupNum = exclusionGroupDisplayMap[bestTier.exclusion_group_id] || '?'
+                              return (
+                                <span
+                                  className="exclusion-group-badge"
+                                  style={{
+                                    background: groupColor.bg,
+                                    borderColor: groupColor.border,
+                                    color: groupColor.text,
+                                    marginLeft: '6px',
+                                    padding: '2px 6px',
+                                    borderRadius: '3px',
+                                    fontSize: '11px',
+                                    border: '1px solid',
+                                    fontWeight: 'bold',
+                                    display: 'inline-block',
+                                    minWidth: '18px',
+                                    textAlign: 'center'
+                                  }}
+                                  title={groupInfo?.description || 'Exclusion group'}
+                                >
+                                  {groupNum}
+                                </span>
+                              )
+                            })()}
+                          </span>
                           <div className="compact-mod-info">
                             {unavailableCount > 0 && (
                               <span
@@ -2000,7 +2474,36 @@ function GridCraftingSimulator() {
                           onDragEnd={handleDragEnd}
                           title="Essence-only mod - Double-click to filter by all tags, drag to add to item"
                         >
-                          <span className="pool-mod-stat-main">{mod.stat_text}</span>
+                          <span className="pool-mod-stat-main">
+                            {mod.stat_text}
+                            {mod.exclusion_group_id && (() => {
+                              const groupInfo = getModExclusionGroupInfo(mod)
+                              const groupColor = getExclusionGroupColor(mod.exclusion_group_id)
+                              const groupNum = exclusionGroupDisplayMap[mod.exclusion_group_id] || '?'
+                              return (
+                                <span
+                                  className="exclusion-group-badge"
+                                  style={{
+                                    background: groupColor.bg,
+                                    borderColor: groupColor.border,
+                                    color: groupColor.text,
+                                    marginLeft: '6px',
+                                    padding: '2px 6px',
+                                    borderRadius: '3px',
+                                    fontSize: '11px',
+                                    border: '1px solid',
+                                    fontWeight: 'bold',
+                                    display: 'inline-block',
+                                    minWidth: '18px',
+                                    textAlign: 'center'
+                                  }}
+                                  title={groupInfo?.description || 'Exclusion group'}
+                                >
+                                  {groupNum}
+                                </span>
+                              )
+                            })()}
+                          </span>
                           <div className="compact-mod-info">
                             {mod.tags && mod.tags.length > 0 && (
                               <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
@@ -2055,7 +2558,36 @@ function GridCraftingSimulator() {
                           onDragEnd={handleDragEnd}
                           title="Desecrated-only mod - Double-click to filter by all tags, drag to add to item"
                         >
-                          <span className="pool-mod-stat-main">{mod.stat_text}</span>
+                          <span className="pool-mod-stat-main">
+                            {mod.stat_text}
+                            {mod.exclusion_group_id && (() => {
+                              const groupInfo = getModExclusionGroupInfo(mod)
+                              const groupColor = getExclusionGroupColor(mod.exclusion_group_id)
+                              const groupNum = exclusionGroupDisplayMap[mod.exclusion_group_id] || '?'
+                              return (
+                                <span
+                                  className="exclusion-group-badge"
+                                  style={{
+                                    background: groupColor.bg,
+                                    borderColor: groupColor.border,
+                                    color: groupColor.text,
+                                    marginLeft: '6px',
+                                    padding: '2px 6px',
+                                    borderRadius: '3px',
+                                    fontSize: '11px',
+                                    border: '1px solid',
+                                    fontWeight: 'bold',
+                                    display: 'inline-block',
+                                    minWidth: '18px',
+                                    textAlign: 'center'
+                                  }}
+                                  title={groupInfo?.description || 'Exclusion group'}
+                                >
+                                  {groupNum}
+                                </span>
+                              )
+                            })()}
+                          </span>
                           <div className="compact-mod-info">
                             {mod.tags && mod.tags.length > 0 && (
                               <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
@@ -2129,7 +2661,36 @@ function GridCraftingSimulator() {
                           onDragEnd={handleDragEnd}
                           title="Click to expand/collapse, double-click to filter by all tags, drag to add to item"
                         >
-                          <span className="pool-mod-stat-main">{bestTier.stat_text}</span>
+                          <span className="pool-mod-stat-main">
+                            {bestTier.stat_text}
+                            {bestTier.exclusion_group_id && (() => {
+                              const groupInfo = getModExclusionGroupInfo(bestTier)
+                              const groupColor = getExclusionGroupColor(bestTier.exclusion_group_id)
+                              const groupNum = exclusionGroupDisplayMap[bestTier.exclusion_group_id] || '?'
+                              return (
+                                <span
+                                  className="exclusion-group-badge"
+                                  style={{
+                                    background: groupColor.bg,
+                                    borderColor: groupColor.border,
+                                    color: groupColor.text,
+                                    marginLeft: '6px',
+                                    padding: '2px 6px',
+                                    borderRadius: '3px',
+                                    fontSize: '11px',
+                                    border: '1px solid',
+                                    fontWeight: 'bold',
+                                    display: 'inline-block',
+                                    minWidth: '18px',
+                                    textAlign: 'center'
+                                  }}
+                                  title={groupInfo?.description || 'Exclusion group'}
+                                >
+                                  {groupNum}
+                                </span>
+                              )
+                            })()}
+                          </span>
                           <div className="compact-mod-info">
                             {unavailableCount > 0 && (
                               <span
@@ -2233,7 +2794,36 @@ function GridCraftingSimulator() {
                           onDragEnd={handleDragEnd}
                           title="Essence-only mod - Double-click to filter by all tags, drag to add to item"
                         >
-                          <span className="pool-mod-stat-main">{mod.stat_text}</span>
+                          <span className="pool-mod-stat-main">
+                            {mod.stat_text}
+                            {mod.exclusion_group_id && (() => {
+                              const groupInfo = getModExclusionGroupInfo(mod)
+                              const groupColor = getExclusionGroupColor(mod.exclusion_group_id)
+                              const groupNum = exclusionGroupDisplayMap[mod.exclusion_group_id] || '?'
+                              return (
+                                <span
+                                  className="exclusion-group-badge"
+                                  style={{
+                                    background: groupColor.bg,
+                                    borderColor: groupColor.border,
+                                    color: groupColor.text,
+                                    marginLeft: '6px',
+                                    padding: '2px 6px',
+                                    borderRadius: '3px',
+                                    fontSize: '11px',
+                                    border: '1px solid',
+                                    fontWeight: 'bold',
+                                    display: 'inline-block',
+                                    minWidth: '18px',
+                                    textAlign: 'center'
+                                  }}
+                                  title={groupInfo?.description || 'Exclusion group'}
+                                >
+                                  {groupNum}
+                                </span>
+                              )
+                            })()}
+                          </span>
                           <div className="compact-mod-info">
                             {mod.tags && mod.tags.length > 0 && (
                               <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
@@ -2288,7 +2878,36 @@ function GridCraftingSimulator() {
                           onDragEnd={handleDragEnd}
                           title="Desecrated-only mod - Double-click to filter by all tags, drag to add to item"
                         >
-                          <span className="pool-mod-stat-main">{mod.stat_text}</span>
+                          <span className="pool-mod-stat-main">
+                            {mod.stat_text}
+                            {mod.exclusion_group_id && (() => {
+                              const groupInfo = getModExclusionGroupInfo(mod)
+                              const groupColor = getExclusionGroupColor(mod.exclusion_group_id)
+                              const groupNum = exclusionGroupDisplayMap[mod.exclusion_group_id] || '?'
+                              return (
+                                <span
+                                  className="exclusion-group-badge"
+                                  style={{
+                                    background: groupColor.bg,
+                                    borderColor: groupColor.border,
+                                    color: groupColor.text,
+                                    marginLeft: '6px',
+                                    padding: '2px 6px',
+                                    borderRadius: '3px',
+                                    fontSize: '11px',
+                                    border: '1px solid',
+                                    fontWeight: 'bold',
+                                    display: 'inline-block',
+                                    minWidth: '18px',
+                                    textAlign: 'center'
+                                  }}
+                                  title={groupInfo?.description || 'Exclusion group'}
+                                >
+                                  {groupNum}
+                                </span>
+                              )
+                            })()}
+                          </span>
                           <div className="compact-mod-info">
                             {mod.tags && mod.tags.length > 0 && (
                               <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
@@ -2617,8 +3236,8 @@ function GridCraftingSimulator() {
                         <div className="item-rarity-badge">{item.rarity}</div>
                         <button
                           className="copy-item-btn"
-                          onClick={handleCopyItem}
-                          title={`Copy item to clipboard (${importFormat} format)`}
+                          onClick={(e) => handleCopyItem(e.ctrlKey ? 'detailed' : 'simple')}
+                          title="Copy item to clipboard&#10;Click = Simple format&#10;Ctrl+Click = Detailed format (with mod info)"
                         >
                           📋 Copy
                         </button>
@@ -2692,37 +3311,40 @@ function GridCraftingSimulator() {
                                       <>
                                         <span className="mod-tier">T{mod.tier}</span>
                                         <span className="mod-name">{mod.name}</span>
-                                        {mod.tags && mod.tags.filter(tag => tag !== 'desecrated_only').length > 0 && (
-                                          <div className="mod-tags-inline">
-                                            {mod.tags.filter(tag => tag !== 'desecrated_only').map((tag, i) => {
-                                              const tagColor = getTagColor(tag)
-                                              return (
-                                                <span
-                                                  key={i}
-                                                  className="mod-tag-badge"
-                                                  onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    toggleTagFilter(tag);
-                                                  }}
-                                                  title={`Click to filter by "${tag}" tag`}
-                                                  style={{
-                                                    background: tagColor.bg,
-                                                    borderColor: tagColor.border,
-                                                    color: tagColor.text
-                                                  }}
-                                                  onMouseEnter={(e) => {
-                                                    e.currentTarget.style.background = tagColor.hover
-                                                  }}
-                                                  onMouseLeave={(e) => {
-                                                    e.currentTarget.style.background = tagColor.bg
-                                                  }}
-                                                >
-                                                  {tag}
-                                                </span>
-                                              )
-                                            })}
-                                          </div>
-                                        )}
+                                        {(() => {
+                                          const visibleTags = filterInternalTags(mod.tags)
+                                          return visibleTags.length > 0 && (
+                                            <div className="mod-tags-inline">
+                                              {visibleTags.map((tag, i) => {
+                                                const tagColor = getTagColor(tag)
+                                                return (
+                                                  <span
+                                                    key={i}
+                                                    className="mod-tag-badge"
+                                                    onClick={(e) => {
+                                                      e.stopPropagation();
+                                                      toggleTagFilter(tag);
+                                                    }}
+                                                    title={`Click to filter by "${tag}" tag`}
+                                                    style={{
+                                                      background: tagColor.bg,
+                                                      borderColor: tagColor.border,
+                                                      color: tagColor.text
+                                                    }}
+                                                    onMouseEnter={(e) => {
+                                                      e.currentTarget.style.background = tagColor.hover
+                                                    }}
+                                                    onMouseLeave={(e) => {
+                                                      e.currentTarget.style.background = tagColor.bg
+                                                    }}
+                                                  >
+                                                    {tag}
+                                                  </span>
+                                                )
+                                              })}
+                                            </div>
+                                          )
+                                        })()}
                                       </>
                                     )}
                                   </div>
@@ -2783,37 +3405,40 @@ function GridCraftingSimulator() {
                                       <>
                                         <span className="mod-tier">T{mod.tier}</span>
                                         <span className="mod-name">{mod.name}</span>
-                                        {mod.tags && mod.tags.filter(tag => tag !== 'desecrated_only').length > 0 && (
-                                          <div className="mod-tags-inline">
-                                            {mod.tags.filter(tag => tag !== 'desecrated_only').map((tag, i) => {
-                                              const tagColor = getTagColor(tag)
-                                              return (
-                                                <span
-                                                  key={i}
-                                                  className="mod-tag-badge"
-                                                  onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    toggleTagFilter(tag);
-                                                  }}
-                                                  title={`Click to filter by "${tag}" tag`}
-                                                  style={{
-                                                    background: tagColor.bg,
-                                                    borderColor: tagColor.border,
-                                                    color: tagColor.text
-                                                  }}
-                                                  onMouseEnter={(e) => {
-                                                    e.currentTarget.style.background = tagColor.hover
-                                                  }}
-                                                  onMouseLeave={(e) => {
-                                                    e.currentTarget.style.background = tagColor.bg
-                                                  }}
-                                                >
-                                                  {tag}
-                                                </span>
-                                              )
-                                            })}
-                                          </div>
-                                        )}
+                                        {(() => {
+                                          const visibleTags = filterInternalTags(mod.tags)
+                                          return visibleTags.length > 0 && (
+                                            <div className="mod-tags-inline">
+                                              {visibleTags.map((tag, i) => {
+                                                const tagColor = getTagColor(tag)
+                                                return (
+                                                  <span
+                                                    key={i}
+                                                    className="mod-tag-badge"
+                                                    onClick={(e) => {
+                                                      e.stopPropagation();
+                                                      toggleTagFilter(tag);
+                                                    }}
+                                                    title={`Click to filter by "${tag}" tag`}
+                                                    style={{
+                                                      background: tagColor.bg,
+                                                      borderColor: tagColor.border,
+                                                      color: tagColor.text
+                                                    }}
+                                                    onMouseEnter={(e) => {
+                                                      e.currentTarget.style.background = tagColor.hover
+                                                    }}
+                                                    onMouseLeave={(e) => {
+                                                      e.currentTarget.style.background = tagColor.bg
+                                                    }}
+                                                  >
+                                                    {tag}
+                                                  </span>
+                                                )
+                                              })}
+                                            </div>
+                                          )
+                                        })()}
                                       </>
                                     )}
                                   </div>
@@ -2846,7 +3471,7 @@ function GridCraftingSimulator() {
                         onClick={handleResetToCreate}
                         title="Go back to item creation"
                       >
-                        🔄 Create New Item
+                        🔄 New
                       </button>
 
                       <button
@@ -2863,7 +3488,7 @@ function GridCraftingSimulator() {
                           setMessage('Item reset to Normal rarity')
                         }}
                       >
-                        🔄 Reset Item
+                        🔄 Reset
                       </button>
 
                       <button
@@ -2873,6 +3498,24 @@ function GridCraftingSimulator() {
                         title="Ctrl+Z"
                       >
                         ↶ Undo
+                      </button>
+
+                      <button
+                        className="redo-button"
+                        onClick={handleRedo}
+                        disabled={redoItemStack.length === 0}
+                        title="Ctrl+Y - Redo last undone action"
+                      >
+                        ↷ Redo
+                      </button>
+
+                      <button
+                        className="redo-rerun-button"
+                        onClick={handleRetryLastAction}
+                        disabled={actionHistory.length === 0 || !actionHistory[actionHistory.length - 1]}
+                        title="Ctrl+R - Retry the last currency with new RNG"
+                      >
+                        🎲 Retry
                       </button>
                     </div>
                       </div>

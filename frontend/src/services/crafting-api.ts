@@ -139,6 +139,34 @@ export const craftingApi = {
     const response = await api.get(`/currency-tooltip/${encodeURIComponent(currencyName)}`)
     return response.data
   },
+
+  checkModConflicts: async (
+    item: CraftableItem,
+    mod: ItemModifier,
+    modType: 'prefix' | 'suffix'
+  ): Promise<{
+    can_add: boolean
+    conflicts: ItemModifier[]
+    reason?: string
+  }> => {
+    const response = await api.post('/check-mod-conflicts', {
+      item,
+      mod,
+      mod_type: modType
+    })
+    return response.data
+  },
+
+  getExclusionGroups: async (): Promise<Array<{
+    id: string
+    description: string
+    patterns: string[]
+    applicable_items: string[]
+    tags?: string
+  }>> => {
+    const response = await api.get('/exclusion-groups')
+    return response.data
+  },
 }
 
 export default craftingApi

@@ -14,6 +14,7 @@ from app.schemas.item import ItemParseRequest
 from app.schemas.item_bases import ITEM_BASES, get_item_bases_by_slot, get_available_slots, get_slot_category_combinations, get_default_base_for_category
 from app.services.crafting.unified_factory import unified_crafting_factory
 from app.services.crafting.simulator import CraftingSimulator
+from app.services.crafting.exclusion_service import exclusion_service
 from app.services.item_parser import ItemParser
 from app.services.item_converter import ItemConverter
 from app.services.stat_calculator import StatCalculator
@@ -330,9 +331,11 @@ def filter_mod_tags(mod):
         hidden_tag_patterns = [
             'essence_only',     # Internal flag for essence-only mods
             'desecrated_only',  # Internal flag for desecrated mods
+            'abyssal_mark',     # Internal marker for Mark of the Abyssal Lord
+            'placeholder',      # Internal placeholder tags
             'drop', 'resource', 'energy_shield', 'flat_life_regen', 'armour',
             'caster_damage', 'attack_damage',
-            'essence*'
+            'essence*', 'perfect'          # Wildcard for all essence-related internal tags
         ]
 
         # Check if this is a desecrated mod before filtering (from tags OR existing flag)
@@ -430,6 +433,53 @@ async def get_available_mods(item: CraftableItem) -> dict:
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@router.post("/check-mod-conflicts")
+async def check_mod_conflicts(request: dict) -> dict:
+    """
+    Check if a specific mod would conflict with existing mods on an item.
+
+    Request body:
+    {
+        "item": CraftableItem,
+        "mod": ItemModifier,
+        "mod_type": "prefix" | "suffix"
+    }
+
+    Returns:
+    {
+        "can_add": bool,
+        "conflicts": [list of conflicting mods],
+        "reason": optional explanation
+    }
+    """
+    try:
+        from pydantic import TypeAdapter
+
+        item = TypeAdapter(CraftableItem).validate_python(request["item"])
+        mod = TypeAdapter(ItemModifier).validate_python(request["mod"])
+        mod_type = request["mod_type"]
+
+        existing_mods = item.prefix_mods + item.suffix_mods
+
+        conflicts = exclusion_service.get_conflicting_mods(
+            mod, existing_mods, item.base_category, mod_type
+        )
+
+        can_add, reason = exclusion_service.can_add_mod(
+            mod, existing_mods, item.base_category, mod_type
+        )
+
+        return {
+            "can_add": can_add,
+            "conflicts": [filter_mod_tags(c) for c in conflicts],
+            "reason": reason
+        }
+
+    except Exception as e:
+        logger.error(f"Error checking mod conflicts: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.post("/parse-item")
 async def parse_item(request: ItemParseRequest) -> dict:
     """Parse item text from clipboard and convert to CraftableItem"""
@@ -444,9 +494,12 @@ async def parse_item(request: ItemParseRequest) -> dict:
         if not craftable_item:
             raise HTTPException(status_code=400, detail="Could not convert item")
 
+        # Filter tags before returning
+        filtered_item_dict = filter_item_tags(craftable_item)
+
         return {
             "success": True,
-            "item": craftable_item.model_dump(),
+            "item": filtered_item_dict,
             "parsed_info": {
                 "base_type": parsed_item.base_type,
                 "rarity": parsed_item.rarity,
@@ -552,6 +605,11 @@ async def get_currency_tooltip(currency_name: str) -> dict:
                 description = "Removes a random modifier"
             elif currency_config.mechanic_class == "FracturingMechanic":
                 description = "Fractures an item, making one modifier permanent"
+
+            # Add min_mod_level info if present (for Greater/Perfect tiers)
+            if currency_config.config_data and 'min_mod_level' in currency_config.config_data:
+                min_mod_level = currency_config.config_data['min_mod_level']
+                mechanics = f"Only adds modifiers with item level requirement >={min_mod_level}"
 
             return {
                 "name": currency_name,
@@ -689,4 +747,24 @@ async def reveal_modifier(request: dict) -> dict:
         raise
     except Exception as e:
         logger.error(f"Error revealing modifier: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/exclusion-groups")
+async def get_exclusion_groups() -> List[dict]:
+    """Get all exclusion group rules for frontend display."""
+    try:
+        # Return exclusion rules with assigned IDs for each group
+        groups = []
+        for idx, rule in enumerate(exclusion_service.exclusion_rules):
+            groups.append({
+                "id": f"group_{idx}",
+                "description": rule.get("description", ""),
+                "patterns": rule.get("patterns", []),
+                "applicable_items": rule.get("applicable_items", []),
+                "tags": rule.get("tags")
+            })
+        return groups
+    except Exception as e:
+        logger.error(f"Error fetching exclusion groups: {e}")
         raise HTTPException(status_code=500, detail=str(e))

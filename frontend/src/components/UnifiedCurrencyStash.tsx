@@ -328,16 +328,21 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
                   const group = groupedEssences[baseType]
                   if (!group || (group.base.length === 0 && group.perfect.length === 0)) return null
 
+                  // Find the Greater essence (prefer Greater > base > Lesser)
+                  const baseEssence = group.base.find(e => e.includes('Greater')) ||
+                                     group.base.find(e => !e.includes('Lesser') && !e.includes('Greater')) ||
+                                     group.base[0]
+
                   return (
                     <div key={baseType} className="essence-pair">
                       {/* Base essence group */}
-                      {group.base.length > 0 && (
+                      {group.base.length > 0 && baseEssence && (
                         <Tooltip
                           content={
                             <CurrencyTooltipWrapper
-                              currencyName={group.base[group.base.length - 1]}
+                              currencyName={baseEssence}
                               additionalMechanics={
-                                !availableCurrencies.includes(group.base[group.base.length - 1])
+                                !availableCurrencies.includes(baseEssence)
                                   ? "Not available for this item"
                                   : "Double-click to apply"
                               }
@@ -347,15 +352,15 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
                           position="right"
                         >
                           <div
-                            className={`currency-slot essence-base ${!availableCurrencies.includes(group.base[group.base.length - 1]) ? 'currency-disabled' : ''}`}
-                            onClick={() => availableCurrencies.includes(group.base[group.base.length - 1]) && handleCraft(group.base[group.base.length - 1])}
-                            draggable={availableCurrencies.includes(group.base[group.base.length - 1])}
-                            onDragStart={() => availableCurrencies.includes(group.base[group.base.length - 1]) && onCurrencyDragStart?.(group.base[group.base.length - 1])}
+                            className={`currency-slot essence-base ${!availableCurrencies.includes(baseEssence) ? 'currency-disabled' : ''}`}
+                            onClick={() => availableCurrencies.includes(baseEssence) && handleCraft(baseEssence)}
+                            draggable={availableCurrencies.includes(baseEssence)}
+                            onDragStart={() => availableCurrencies.includes(baseEssence) && onCurrencyDragStart?.(baseEssence)}
                             onDragEnd={() => onCurrencyDragEnd?.()}
-                            style={{ cursor: availableCurrencies.includes(group.base[group.base.length - 1]) ? 'grab' : 'not-allowed' }}
+                            style={{ cursor: availableCurrencies.includes(baseEssence) ? 'grab' : 'not-allowed' }}
                           >
                             <img
-                              src={getCurrencyIconUrl(group.base[0])}
+                              src={getCurrencyIconUrl(baseEssence)}
                               alt={`Essence of ${baseType}`}
                               className="currency-icon"
                               onError={(e) => {

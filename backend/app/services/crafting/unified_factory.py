@@ -135,6 +135,12 @@ class UnifiedCraftingFactory:
                 bone_config = get_bone_config(currency_name)
                 is_match = bone_config is not None
 
+            # Special case: "Perfect Essence" omens also affect corrupted tier essences
+            if not is_match and affected == "Perfect Essence":
+                essence_config = get_essence_config(currency_name)
+                if essence_config and essence_config.essence_tier in ["perfect", "corrupted"]:
+                    is_match = True
+
             if not is_match:
                 logger.warning(f"Omen {omen_name} does not affect {currency_name}")
                 continue

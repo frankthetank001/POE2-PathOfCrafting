@@ -55,10 +55,13 @@ def filter_mod_tags_func():
             # Blacklist: tags to hide from users (internal/system tags)
             # Supports wildcards: * matches any sequence of characters
             hidden_tag_patterns = [
-                'essence*',         # Wildcard: matches essence_only, essence_specific, etc.
+                'essence_only',     # Internal flag for essence-only mods
                 'desecrated_only',  # Internal flag for desecrated mods
+                'abyssal_mark',     # Internal marker for Mark of the Abyssal Lord
+                'placeholder',      # Internal placeholder tags
                 'drop', 'resource', 'energy_shield', 'flat_life_regen', 'armour',
-                'caster_damage', 'attack_damage'
+                'caster_damage', 'attack_damage',
+                'essence*'          # Wildcard for all essence-related internal tags
             ]
 
             # Check if this is a desecrated mod before filtering (from tags OR existing flag)
@@ -303,5 +306,21 @@ class TestTagFilteringEdgeCases:
         result = filter_mod_tags_func(mod)
 
         assert 'essence_only' not in result['tags']
+        assert 'life' in result['tags']
+        assert 'fire' in result['tags']
+
+    def test_abyssal_mark_and_placeholder_filtered(self, create_mod_with_tags, filter_mod_tags_func):
+        """Test that abyssal_mark and placeholder tags are filtered."""
+        mod = create_mod_with_tags([
+            'life',
+            'abyssal_mark',
+            'placeholder',
+            'fire'
+        ])
+
+        result = filter_mod_tags_func(mod)
+
+        assert 'abyssal_mark' not in result['tags']
+        assert 'placeholder' not in result['tags']
         assert 'life' in result['tags']
         assert 'fire' in result['tags']

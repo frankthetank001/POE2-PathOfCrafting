@@ -4,13 +4,15 @@ import os
 from typing import List, Optional
 
 from app.schemas.crafting import ItemModifier, ModType
+from app.services.crafting.exclusion_service import exclusion_service
 
 
 class ModifierPool:
     def __init__(self, modifiers: List[ItemModifier]) -> None:
         self.modifiers = modifiers
-        self._exclusion_groups_config = self._load_exclusion_groups()
-        self._apply_exclusion_groups()  # Apply exclusion groups to all modifiers
+        # NOTE: Legacy exclusion groups code disabled - now using exclusion_service instead
+        # self._exclusion_groups_config = self._load_exclusion_groups()
+        # self._apply_exclusion_groups()  # Apply exclusion groups to all modifiers
         self._prefix_pool = [m for m in modifiers if m.mod_type == ModType.PREFIX]
         self._suffix_pool = [m for m in modifiers if m.mod_type == ModType.SUFFIX]
         self._exclusions = self._load_exclusions()
@@ -116,7 +118,7 @@ class ModifierPool:
             excluded_patterns = []
 
         eligible_mods = self._filter_eligible_mods(
-            pool, item_category, item_level, excluded_groups or [], min_mod_level, excluded_tags=excluded_tags, excluded_patterns=excluded_patterns, exclude_desecrated=True, item=item
+            pool, item_category, item_level, excluded_groups or [], min_mod_level, excluded_tags=excluded_tags, excluded_patterns=excluded_patterns, exclude_desecrated=True, item=item, mod_type=mod_type
         )
 
         if not eligible_mods:
@@ -137,6 +139,7 @@ class ModifierPool:
         exclude_desecrated: bool = True,
         exclude_essence: bool = False,
         item=None,
+        mod_type: str = "prefix",  # Added to support exclusion service
     ) -> List[ItemModifier]:
         eligible = []
 
@@ -194,6 +197,13 @@ class ModifierPool:
                 continue
 
             eligible.append(mod)
+
+        # Apply pattern-based exclusion rules from exclusion_groups.json
+        if item is not None:
+            existing_mods = item.prefix_mods + item.suffix_mods
+            eligible = exclusion_service.filter_available_mods(
+                eligible, existing_mods, item_category, mod_type
+            )
 
         return eligible
 
@@ -339,8 +349,15 @@ class ModifierPool:
             excluded_patterns = self._get_excluded_patterns_from_item(item, mod_type)
 
         eligible = self._filter_eligible_mods(
-            pool, item_category, item_level, excluded_groups, None, exclude_exclusive, excluded_tags, excluded_patterns, exclude_desecrated=exclude_desecrated, exclude_essence=exclude_essence, item=item
+            pool, item_category, item_level, excluded_groups, None, exclude_exclusive, excluded_tags, excluded_patterns, exclude_desecrated=exclude_desecrated, exclude_essence=exclude_essence, item=item, mod_type=mod_type
         )
+
+        # Filter out mods that would conflict with existing mods via exclusion groups
+        if item:
+            existing_mods = item.prefix_mods + item.suffix_mods
+            eligible = exclusion_service.filter_available_mods(
+                eligible, existing_mods, item_category, mod_type
+            )
 
         # Filter by min_mod_level if specified
         if min_mod_level is not None:
@@ -422,6 +439,13 @@ class ModifierPool:
                 continue
 
             eligible.append(mod)
+
+        # Apply pattern-based exclusion rules from exclusion_groups.json
+        if item is not None:
+            existing_mods = item.prefix_mods + item.suffix_mods
+            eligible = exclusion_service.filter_available_mods(
+                eligible, existing_mods, item_category, mod_type
+            )
 
         # Get item slot for exclusions
         item_slot = None

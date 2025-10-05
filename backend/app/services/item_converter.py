@@ -182,9 +182,9 @@ class ItemConverter:
         candidates = [m for m in candidates if is_mod_applicable(m)]
 
         # Match by stat text pattern
-        # Strip special markers like (desecrated), (fractured), etc.
+        # Strip special markers like (desecrated), (fractured), (Placeholder for Desecration), etc.
         parsed_text = item_mod.text.lower()
-        parsed_text = re.sub(r'\s*\((desecrated|fractured|corrupted)\)\s*$', '', parsed_text).strip()
+        parsed_text = re.sub(r'\s*\((desecrated|fractured|corrupted|placeholder[^)]*)\)\s*$', '', parsed_text, flags=re.IGNORECASE).strip()
 
         # Sort candidates by specificity (longer stat_text first) to match more specific mods first
         # This prevents "+{} to Accuracy Rating" from matching before "Allies in your Presence have +{} to Accuracy Rating"

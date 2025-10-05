@@ -1,4 +1,4 @@
-from typing import List, Optional, Dict
+from typing import List, Optional, Dict, Union
 from pydantic import BaseModel
 
 
@@ -9,7 +9,7 @@ class ItemBase(BaseModel):
     attribute_requirements: List[str] = []  # str, dex, int
     default_ilvl: int = 65
     description: Optional[str] = None
-    base_stats: Dict[str, int] = {}  # {'evasion': 266, 'armour': 100, 'energy_shield': 50}
+    base_stats: Dict[str, Union[int, float]] = {}  # {'evasion': 266, 'armour': 100, 'attack_rate': 1.1}
 
 
 # Database loader functions (moved here to avoid circular imports)

@@ -1826,7 +1826,7 @@
   {
     "essence_name": "Essence of the Abyss",
     "item_type": "Equipment",
-    "modifier_type": "prefix",
+    "modifier_type": "suffix",
     "effect_text": "Mark of the Abyssal Lord",
     "value_min": 1.0,
     "value_max": 1.0

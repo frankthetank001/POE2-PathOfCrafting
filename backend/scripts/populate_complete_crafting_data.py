@@ -126,8 +126,15 @@ def load_modifiers(db: Session):
     seen_keys = set()
 
     for mod_data in modifiers_data:
-        # Create unique key from name, mod_type, and tier (since same name can have different effects)
-        mod_key = (mod_data["name"], mod_data["mod_type"], mod_data["tier"])
+        # Create unique key from name, mod_type, tier, mod_group, and stat_text
+        # (since same name can have different effects for different mod groups)
+        mod_key = (
+            mod_data["name"],
+            mod_data["mod_type"],
+            mod_data["tier"],
+            mod_data.get("mod_group"),
+            mod_data["stat_text"]
+        )
 
         # Skip if we've already seen this combination in this batch
         if mod_key in seen_keys:
@@ -139,7 +146,9 @@ def load_modifiers(db: Session):
         existing = db.query(Modifier).filter(
             Modifier.name == mod_data["name"],
             Modifier.mod_type == mod_data["mod_type"],
-            Modifier.tier == mod_data["tier"]
+            Modifier.tier == mod_data["tier"],
+            Modifier.mod_group == mod_data.get("mod_group"),
+            Modifier.stat_text == mod_data["stat_text"]
         ).first()
         if existing:
             continue
@@ -164,6 +173,87 @@ def load_modifiers(db: Session):
 
     db.commit()
     print(f"Loaded {added_count} unique base modifiers (from {len(modifiers_data)} entries)")
+
+
+def load_essence_modifiers(db: Session):
+    """Load essence-specific modifiers from JSON file.
+
+    Updates existing modifiers if they already exist (from modifiers.json),
+    ensuring essence_modifiers.json takes precedence.
+    """
+    json_path = get_json_path("essence_modifiers.json")
+
+    if not os.path.exists(json_path):
+        print(f"Warning: {json_path} not found - skipping essence modifiers")
+        return
+
+    with open(json_path, 'r') as f:
+        essence_modifiers = json.load(f)
+
+    print(f"Loading {len(essence_modifiers)} essence modifiers...")
+
+    added_count = 0
+    updated_count = 0
+    seen_keys = set()
+
+    for mod_data in essence_modifiers:
+        # Create unique key from name, mod_type, tier, mod_group, and stat_text
+        mod_key = (
+            mod_data["name"],
+            mod_data["mod_type"],
+            mod_data["tier"],
+            mod_data.get("mod_group"),
+            mod_data["stat_text"]
+        )
+
+        # Skip if we've already seen this combination in this batch
+        if mod_key in seen_keys:
+            continue
+
+        seen_keys.add(mod_key)
+
+        # Check if modifier already exists in database
+        existing = db.query(Modifier).filter(
+            Modifier.name == mod_data["name"],
+            Modifier.mod_type == mod_data["mod_type"],
+            Modifier.tier == mod_data["tier"],
+            Modifier.mod_group == mod_data.get("mod_group"),
+            Modifier.stat_text == mod_data["stat_text"]
+        ).first()
+
+        if existing:
+            # Update existing modifier with essence data
+            existing.stat_ranges = mod_data.get("stat_ranges", [])
+            existing.stat_min = mod_data.get("stat_min")
+            existing.stat_max = mod_data.get("stat_max")
+            existing.required_ilvl = mod_data.get("required_ilvl", 0)
+            existing.weight = mod_data.get("weight", 1000)
+            existing.applicable_items = mod_data.get("applicable_items", [])
+            existing.tags = mod_data.get("tags", [])
+            existing.is_exclusive = mod_data.get("is_exclusive", True)
+            updated_count += 1
+        else:
+            # Add new modifier
+            modifier = Modifier(
+                name=mod_data["name"],
+                mod_type=mod_data["mod_type"],
+                tier=mod_data["tier"],
+                stat_text=mod_data["stat_text"],
+                stat_ranges=mod_data.get("stat_ranges", []),
+                stat_min=mod_data.get("stat_min"),
+                stat_max=mod_data.get("stat_max"),
+                required_ilvl=mod_data.get("required_ilvl", 0),
+                weight=mod_data.get("weight", 1000),
+                mod_group=mod_data.get("mod_group"),
+                applicable_items=mod_data.get("applicable_items", []),
+                tags=mod_data.get("tags", []),
+                is_exclusive=mod_data.get("is_exclusive", True)  # Default to True for essence mods
+            )
+            db.add(modifier)
+            added_count += 1
+
+    db.commit()
+    print(f"Loaded {added_count} new essence modifiers, updated {updated_count} existing modifiers (from {len(essence_modifiers)} entries)")
 
 
 def load_desecrated_modifiers(db: Session):
@@ -388,6 +478,7 @@ def main():
         # Load all data from JSON files
         load_base_items(db)
         load_modifiers(db)
+        load_essence_modifiers(db)
         load_desecrated_modifiers(db)
         load_currency_configs(db)
         load_essences(db)

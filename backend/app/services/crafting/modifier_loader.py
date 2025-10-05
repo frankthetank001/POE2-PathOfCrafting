@@ -146,11 +146,18 @@ class ModifierLoader:
                 mod_type = ModType.PREFIX if effect.modifier_type == "prefix" else ModType.SUFFIX
                 mod_group = cls._get_essence_mod_group(essence_type.lower())
 
+                # Create stat_ranges from value_min and value_max
+                from app.schemas.crafting import StatRange
+                stat_ranges = []
+                if effect.value_min is not None and effect.value_max is not None:
+                    stat_ranges = [StatRange(min=effect.value_min, max=effect.value_max)]
+
                 essence_mod = ItemModifier(
                     name=mod_name,
                     mod_type=mod_type,
                     tier=1,
                     stat_text=effect.effect_text,
+                    stat_ranges=stat_ranges,
                     stat_min=effect.value_min,
                     stat_max=effect.value_max,
                     current_value=None,
@@ -172,12 +179,15 @@ class ModifierLoader:
         import re
 
         # Normalize the effect text to match mod templates (replace specific values with {})
-        normalized_effect = re.sub(r'\d+(\.\d+)?', '{}', effect.effect_text)
+        # First replace (min-max) patterns with {}, then replace remaining individual numbers
+        normalized_effect = re.sub(r'\(\d+(\.\d+)?-\d+(\.\d+)?\)', '{}', effect.effect_text)
+        normalized_effect = re.sub(r'\d+(\.\d+)?', '{}', normalized_effect)
 
         # Look for stat_text match with matching values in already-loaded modifiers
         for mod in cls._modifiers:
             # Check if any of the applicable items overlap
-            if not any(item in mod.applicable_items for item in applicable_items):
+            # Empty applicable_items means it applies to all items (treat as match)
+            if mod.applicable_items and not any(item in mod.applicable_items for item in applicable_items):
                 continue
 
             # Check if stat_text matches (after normalization)
@@ -218,7 +228,7 @@ class ModifierLoader:
         group_mapping = {
             "body": "life",
             "mind": "mana",
-            "enhancement": "defences",
+            "enhancement": "alldefences",  # Global Defences
             "abrasion": "physicaldamage",
             "flames": "firedamage",
             "ice": "colddamage",

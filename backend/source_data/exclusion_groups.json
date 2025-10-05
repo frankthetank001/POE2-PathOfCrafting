@@ -310,5 +310,12 @@
       "Recover ({}-{})% of Maximum Life when you expend at least 10 Combo",
       "Recover ({}-{})% of Maximum Mana when you expend at least 10 Combo"
     ]
+  },
+  {
+    "description": "Global defences",
+    "patterns": [
+      "{}% increased Global Defences",
+      "{}% increased Global Defences"
+    ]
   }
 ]

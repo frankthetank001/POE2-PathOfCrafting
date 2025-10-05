@@ -354,69 +354,6 @@ class OmenOfDextralExaltation(BaseOmen):
             return False, "Failed to add suffix modifier", item
 
 
-class OmenOfHomogenisingExaltation(BaseOmen):
-    """Add a modifier of the same type as an existing modifier."""
-
-    def __init__(self):
-        super().__init__("Omen of Homogenising Exaltation", OmenCategory.YELLOW)
-
-    def can_apply_to_currency(self, currency_name: str) -> bool:
-        return "Exalted" in currency_name
-
-    def modify_currency_behavior(
-        self,
-        item: CraftableItem,
-        currency_apply_func: Callable,
-        modifier_pool: ModifierPool
-    ) -> Tuple[bool, str, CraftableItem]:
-        """Add a modifier of the same type as an existing one."""
-
-        existing_mods = item.prefix_mods + item.suffix_mods
-        if not existing_mods:
-            return False, "No existing modifiers to match type", item
-
-        # Get existing mod groups and tags
-        existing_groups = [mod.mod_group for mod in existing_mods if mod.mod_group]
-        existing_tags = [tag for mod in existing_mods for tag in (mod.tags or [])]
-
-        if not existing_groups and not existing_tags:
-            return False, "No compatible modifier types found", item
-
-        manager = ItemStateManager(item)
-
-        # Try to find a mod with same group or tags
-        available_types = []
-        if item.can_add_prefix:
-            available_types.append("prefix")
-        if item.can_add_suffix:
-            available_types.append("suffix")
-
-        if not available_types:
-            return False, "No space for additional modifiers", item
-
-        # Try each available mod type
-        for mod_type in available_types:
-            eligible_mods = modifier_pool.get_eligible_mods(
-                item.base_category, item.item_level, mod_type, item
-            )
-
-            # Filter for mods with matching groups or tags
-            homogenous_mods = []
-            for mod in eligible_mods:
-                if mod.mod_group in existing_groups:
-                    homogenous_mods.append(mod)
-                elif mod.tags and any(tag in existing_tags for tag in mod.tags):
-                    homogenous_mods.append(mod)
-
-            if homogenous_mods:
-                # Weighted random selection from homogenous mods
-                selected_mod = modifier_pool._weighted_random_choice(homogenous_mods)
-                if selected_mod and manager.add_modifier(selected_mod):
-                    return True, f"Added homogenous {mod_type}: {selected_mod.name}", item
-
-        return False, "No compatible modifiers available", item
-
-
 class OmenOfCatalysingExaltation(BaseOmen):
     """Exalted Orb consumes Catalyst Quality to increase modifier chance."""
 
@@ -550,64 +487,6 @@ class OmenOfDextralCoronation(BaseOmen):
             return True, f"Upgraded to Rare and added suffix: {new_mod.name}", item
         else:
             return False, "Failed to add suffix modifier", item
-
-
-class OmenOfHomogenisingCoronation(BaseOmen):
-    """Regal Orb adds a modifier of the same type as an existing modifier."""
-
-    def __init__(self):
-        super().__init__("Omen of Homogenising Coronation", OmenCategory.RED)
-
-    def can_apply_to_currency(self, currency_name: str) -> bool:
-        return "Regal" in currency_name
-
-    def modify_currency_behavior(
-        self,
-        item: CraftableItem,
-        currency_apply_func: Callable,
-        modifier_pool: ModifierPool
-    ) -> Tuple[bool, str, CraftableItem]:
-        """Upgrade to Rare and add homogenous modifier."""
-
-        if item.rarity != ItemRarity.MAGIC:
-            return False, "Omen of Coronation requires Magic item", item
-
-        existing_mods = item.prefix_mods + item.suffix_mods
-        if not existing_mods:
-            return False, "No existing modifiers to match type", item
-
-        # Get existing mod groups and visible tags only
-        existing_groups = [mod.mod_group for mod in existing_mods if mod.mod_group]
-        all_tags = [tag for mod in existing_mods for tag in (mod.tags or [])]
-        existing_tags = [tag for tag in all_tags if tag.lower() not in HIDDEN_TAGS_FOR_HOMOGENISING]
-
-        if not existing_groups and not existing_tags:
-            return False, "No compatible modifier types found", item
-
-        manager = ItemStateManager(item)
-        manager.upgrade_rarity(ItemRarity.RARE)
-
-        # Try prefix first, then suffix
-        for mod_type in ["prefix", "suffix"]:
-            eligible_mods = modifier_pool.get_eligible_mods(
-                item.base_category, item.item_level, mod_type, item
-            )
-
-            # Filter for mods with matching groups or visible tags only
-            homogenous_mods = []
-            for mod in eligible_mods:
-                if mod.mod_group in existing_groups:
-                    homogenous_mods.append(mod)
-                elif mod.tags and any(tag in existing_tags for tag in mod.tags):
-                    homogenous_mods.append(mod)
-
-            if homogenous_mods:
-                # Weighted random selection from homogenous mods
-                selected_mod = modifier_pool._weighted_random_choice(homogenous_mods)
-                if selected_mod and manager.add_modifier(selected_mod):
-                    return True, f"Upgraded to Rare and added homogenous {mod_type}: {selected_mod.name}", item
-
-        return False, "No compatible modifiers available", item
 
 
 # ===== ALCHEMY OMENS =====
@@ -1002,13 +881,11 @@ class OmenFactory:
         "Omen of Greater Exaltation": OmenOfGreaterExaltation,
         "Omen of Sinistral Exaltation": OmenOfSinistralExaltation,
         "Omen of Dextral Exaltation": OmenOfDextralExaltation,
-        "Omen of Homogenising Exaltation": OmenOfHomogenisingExaltation,
         "Omen of Catalysing Exaltation": OmenOfCatalysingExaltation,
 
         # Coronation Omens (Regal)
         "Omen of Sinistral Coronation": OmenOfSinistralCoronation,
         "Omen of Dextral Coronation": OmenOfDextralCoronation,
-        "Omen of Homogenising Coronation": OmenOfHomogenisingCoronation,
 
         # Alchemy Omens
         "Omen of Sinistral Alchemy": OmenOfSinistralAlchemy,

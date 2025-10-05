@@ -34,6 +34,12 @@ export interface ItemModifier {
   is_desecrated?: boolean  // Flag for desecrated mods (set by filter_mod_tags)
   is_unrevealed?: boolean  // True if this is an unrevealed desecrated modifier
   unrevealed_id?: string  // ID linking to UnrevealedModifier metadata
+
+  // Exclusion information (client-side only)
+  is_excluded?: boolean  // True if this mod conflicts with existing mods
+  exclusion_reason?: string  // Explanation of why it's excluded
+  conflicting_mods?: ItemModifier[]  // List of mods it conflicts with
+  exclusion_group_id?: string  // ID of the exclusion group this mod belongs to
 }
 
 export interface UnrevealedModifier {
