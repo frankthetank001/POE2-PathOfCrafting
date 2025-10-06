@@ -1,0 +1,60 @@
+# PoE2 PathOfCrafting - Pre-built Images from GitHub Container Registry
+#
+# This compose file pulls pre-built images instead of building from source.
+# Perfect for users who just want to run the application.
+#
+# Quick Start:
+#   docker-compose -f docker-compose.ghcr.yml up -d
+#
+# Or copy this to docker-compose.yml and run:
+#   docker-compose up -d
+
+version: '3.8'
+
+services:
+  # Backend API Service
+  backend:
+    image: ghcr.io/frankthetank001/poe2-pathofcrafting-backend:latest
+    container_name: poe2-pathofcrafting-backend
+    ports:
+      - "8000:8000"  # API accessible at http://localhost:8000
+    volumes:
+      - backend-data:/app/data  # Persistent SQLite database
+    environment:
+      - PYTHONUNBUFFERED=1
+      - ENVIRONMENT=production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Frontend Web Service
+  frontend:
+    image: ghcr.io/frankthetank001/poe2-pathofcrafting-frontend:latest
+    container_name: poe2-pathofcrafting-frontend
+    ports:
+      - "5173:80"  # Web UI accessible at http://localhost:5173
+    environment:
+      - VITE_API_URL=http://localhost:8000
+    depends_on:
+      backend:
+        condition: service_healthy  # Wait for backend to be ready
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+# Named volumes for data persistence
+volumes:
+  backend-data:
+    driver: local
+
+# Network configuration
+networks:
+  default:
+    name: poe2-pathofcrafting-network
