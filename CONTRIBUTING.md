@@ -82,6 +82,31 @@ Examples:
 - `fix(parser): handle items without quality`
 - `docs(readme): update installation instructions`
 
+### CI/CD Checks
+
+When you submit a PR, automated checks will run:
+
+**✅ CI Workflow**
+- Backend tests (pytest)
+- Code formatting (ruff)
+- Frontend linting (eslint)
+- Frontend build verification
+
+**🐳 Docker Build**
+- Verifies both backend and frontend images build successfully
+- Does NOT push images (only maintainers can push to registry)
+
+If any checks fail, review the logs in the GitHub Actions tab and fix the issues before requesting review.
+
+**Tip:** Run tests locally before pushing:
+```bash
+# Backend
+cd backend && pytest
+
+# Frontend
+cd frontend && npm run lint && npm run build
+```
+
 ## Areas for Contribution
 
 ### High Priority

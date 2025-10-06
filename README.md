@@ -4,6 +4,8 @@
 
 Plan your perfect items with accurate simulation of all crafting mechanics, essences, desecration, and omens.
 
+![CI](https://github.com/yourusername/Poe2-AI-TradeCraft/workflows/CI/badge.svg)
+![Docker Build](https://github.com/yourusername/Poe2-AI-TradeCraft/workflows/Docker%20Build/badge.svg)
 ![License](https://img.shields.io/badge/license-MIT-blue.svg)
 ![Python](https://img.shields.io/badge/python-3.11+-blue.svg)
 ![React](https://img.shields.io/badge/react-18+-blue.svg)
@@ -207,6 +209,31 @@ Production frontend will run on port `80`, backend on port `8000`.
 cd backend
 pytest
 ```
+
+### CI/CD Workflows
+
+The project uses GitHub Actions for continuous integration and deployment:
+
+**CI Workflow** (runs on every push/PR)
+- ✅ Runs backend tests with pytest
+- ✅ Checks code formatting with ruff
+- ✅ Runs frontend linter
+- ✅ Builds frontend to verify it compiles
+
+**Docker Build Workflow**
+- 🔨 **Pull Requests**: Builds images to verify they work (doesn't push)
+- 📦 **Main Branch**: Builds and pushes images to GitHub Container Registry
+- 🏷️ **Tags** (v*.*.* ): Builds and pushes versioned images for releases
+
+**Creating a Release:**
+```bash
+git tag v0.1.0
+git push origin v0.1.0
+```
+
+This will automatically build and push Docker images tagged as:
+- `ghcr.io/yourusername/poe2-ai-tradecraft-backend:0.1.0`
+- `ghcr.io/yourusername/poe2-ai-tradecraft-frontend:0.1.0`
 
 ### Tech Stack
 - **Backend**: Python, FastAPI, Pydantic
