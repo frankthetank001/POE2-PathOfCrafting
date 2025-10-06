@@ -1,0 +1,62 @@
+# PoE2 PathOfCrafting - Docker Compose Example
+#
+# Quick Start:
+#   1. Copy this file to docker-compose.yml (or use it directly)
+#   2. Run: docker-compose up
+#   3. Open http://localhost:5173 in your browser
+#
+# For production: docker-compose -f docker-compose.prod.yml up -d
+
+version: '3.8'
+
+services:
+  # Backend API Service
+  backend:
+    build:
+      context: ./backend
+      target: development  # Change to 'production' for production builds
+    container_name: poe2-pathofcrafting-backend
+    ports:
+      - "8000:8000"  # API accessible at http://localhost:8000
+    volumes:
+      - ./backend:/app  # Hot reload for development
+      - backend-data:/app/data  # Persistent SQLite database
+      - /app/venv  # Exclude virtual environment
+    environment:
+      - PYTHONUNBUFFERED=1  # Real-time Python output
+      - ENVIRONMENT=development  # development or production
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+  # Frontend Web Service
+  frontend:
+    build:
+      context: ./frontend
+      target: development  # Change to 'production' for production builds
+    container_name: poe2-pathofcrafting-frontend
+    ports:
+      - "5173:5173"  # Web UI accessible at http://localhost:5173
+    volumes:
+      - ./frontend:/app  # Hot reload for development
+      - /app/node_modules  # Exclude node_modules
+    environment:
+      - VITE_API_URL=http://localhost:8000  # Backend API URL
+    depends_on:
+      backend:
+        condition: service_healthy  # Wait for backend to start
+    restart: unless-stopped
+
+# Named volumes for data persistence
+volumes:
+  backend-data:
+    driver: local
+
+# Network configuration
+networks:
+  default:
+    name: poe2-pathofcrafting-network

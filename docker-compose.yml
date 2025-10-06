@@ -1,13 +1,16 @@
+version: '3.8'
+
 services:
   backend:
     build:
       context: ./backend
       target: development
-    container_name: poe2-tradecraft-backend-dev
+    container_name: poe2-pathofcrafting-backend
     ports:
-      - "8000:8000"
+      - "8000:8000"  # Backend API port
     volumes:
-      - ./backend:/app
+      - ./backend:/app  # Mount source code for hot reload
+      - backend-data:/app/data  # Persist database across restarts
       - /app/venv  # Prevent overwriting venv
     environment:
       - PYTHONUNBUFFERED=1
@@ -24,18 +27,22 @@ services:
     build:
       context: ./frontend
       target: development
-    container_name: poe2-tradecraft-frontend-dev
+    container_name: poe2-pathofcrafting-frontend
     ports:
-      - "5173:5173"
+      - "5173:5173"  # Vite dev server port
     volumes:
-      - ./frontend:/app
+      - ./frontend:/app  # Mount source code for hot reload
       - /app/node_modules  # Prevent overwriting node_modules
     environment:
       - VITE_API_URL=http://localhost:8000
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy  # Wait for backend to be healthy
     restart: unless-stopped
+
+volumes:
+  backend-data:  # Named volume for persistent database storage
 
 networks:
   default:
-    name: poe2-tradecraft-network
+    name: poe2-pathofcrafting-network

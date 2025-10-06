@@ -1,11 +1,15 @@
+version: '3.8'
+
 services:
   backend:
     build:
       context: ./backend
       target: production
-    container_name: poe2-tradecraft-backend-prod
+    container_name: poe2-pathofcrafting-backend-prod
     ports:
-      - "8000:8000"
+      - "8000:8000"  # Backend API port
+    volumes:
+      - backend-data:/app/data  # Persist database in production
     environment:
       - ENVIRONMENT=production
       - PYTHONUNBUFFERED=1
@@ -21,13 +25,14 @@ services:
     build:
       context: ./frontend
       target: production
-    container_name: poe2-tradecraft-frontend-prod
+    container_name: poe2-pathofcrafting-frontend-prod
     ports:
-      - "80:80"
+      - "80:80"  # Production HTTP port
     environment:
       - VITE_API_URL=http://localhost:8000
     depends_on:
-      - backend
+      backend:
+        condition: service_healthy  # Wait for backend to be healthy
     restart: always
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost/"]
@@ -35,6 +40,9 @@ services:
       timeout: 10s
       retries: 3
 
+volumes:
+  backend-data:  # Named volume for persistent database storage
+
 networks:
   default:
-    name: poe2-tradecraft-network-prod
+    name: poe2-pathofcrafting-network-prod

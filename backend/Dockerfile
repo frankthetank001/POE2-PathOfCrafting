@@ -23,10 +23,15 @@ COPY . .
 # Create directory for database
 RUN mkdir -p /app/data
 
+# Copy and set permissions for entrypoint script
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh
+
 # Expose port
 EXPOSE 8000
 
-# Development command with auto-reload
+# Set entrypoint and default command
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload"]
 
 
@@ -67,6 +72,10 @@ COPY . .
 # Create directory for database
 RUN mkdir -p /app/data
 
+# Copy and set permissions for entrypoint script
+COPY docker-entrypoint.sh /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh
+
 # Make sure scripts in .local are usable
 ENV PATH=/root/.local/bin:$PATH
 
@@ -78,5 +87,6 @@ USER appuser
 # Expose port
 EXPOSE 8000
 
-# Production command with optimizations
+# Set entrypoint and default command
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
 CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000", "--workers", "4"]
