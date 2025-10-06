@@ -186,6 +186,7 @@ class TestCurrencyCreation:
     def test_returns_none_for_unknown_currency(self, mock_config_service):
         """Should return None for unknown currency."""
         mock_config_service['currency'].return_value = None
+        mock_config_service['bone'].return_value = None  # Also mock bone config
 
         factory = UnifiedCraftingFactory()
         currency = factory.create_currency("Unknown Orb")

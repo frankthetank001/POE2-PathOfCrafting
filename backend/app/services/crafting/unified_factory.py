@@ -36,7 +36,7 @@ class UnifiedCraftingFactory:
                 # Create a synthetic currency config for bones
                 from app.schemas.crafting import CurrencyConfigInfo
                 currency_config = CurrencyConfigInfo(
-                    id=None,
+                    id=0,  # Synthetic ID for bone-based configs
                     name=currency_name,
                     currency_type="desecration",
                     tier=bone_config.bone_type,
@@ -182,7 +182,7 @@ class UnifiedCraftingFactory:
                 # Create a synthetic currency config for bones
                 from app.schemas.crafting import CurrencyConfigInfo
                 currency_config = CurrencyConfigInfo(
-                    id=None,
+                    id=0,  # Synthetic ID for bone-based configs
                     name=currency_name,
                     currency_type="desecration",
                     tier=bone_config.bone_type,

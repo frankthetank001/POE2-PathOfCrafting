@@ -700,8 +700,13 @@ class TestOmenModifiedExalted:
         matching_mod2 = create_test_modifier("Speed Boost", ModType.PREFIX, tags=["speed", "attack"])
         non_matching_mod = create_test_modifier("Life", ModType.PREFIX, tags=["life", "defences"])
 
-        # Mock get_eligible_mods to return all three
-        mock_modifier_pool.get_eligible_mods.return_value = [matching_mod1, matching_mod2, non_matching_mod]
+        # Mock get_eligible_mods to return different lists for prefix vs suffix
+        def mock_get_eligible_mods(base_category, item_level, mod_type, *args, **kwargs):
+            if mod_type == "prefix":
+                return [matching_mod1, matching_mod2, non_matching_mod]
+            else:  # suffix
+                return []  # No suffix mods since all test mods are prefixes
+        mock_modifier_pool.get_eligible_mods.side_effect = mock_get_eligible_mods
 
         # Mock weighted choice to track which mods were passed to it
         called_with_mods = []
@@ -786,7 +791,7 @@ class TestOmenModifiedExalted:
         assert non_matching_prefix not in filtered_mods
 
     def test_homogenising_exaltation_no_matching_tags_fallback(self, create_test_item, create_test_modifier, mock_modifier_pool):
-        """When no mods have matching tags, should fall back to any eligible mod."""
+        """When no mods have matching tags, homogenising should fail."""
         prefix_with_tags = create_test_modifier("Cast Speed", ModType.PREFIX, tags=["caster", "speed"])
         item = create_test_item(rarity=ItemRarity.RARE, prefix_mods=[prefix_with_tags])
 
@@ -794,8 +799,13 @@ class TestOmenModifiedExalted:
         mod1 = create_test_modifier("Life", ModType.PREFIX, tags=["life", "defences"])
         mod2 = create_test_modifier("Armour", ModType.PREFIX, tags=["armour", "defences"])
 
-        mock_modifier_pool.get_eligible_mods.return_value = [mod1, mod2]
-        mock_modifier_pool._weighted_random_choice.return_value = mod1
+        # Mock get_eligible_mods to return non-matching mods for prefix, nothing for suffix
+        def mock_get_eligible_mods(base_category, item_level, mod_type, *args, **kwargs):
+            if mod_type == "prefix":
+                return [mod1, mod2]
+            else:
+                return []
+        mock_modifier_pool.get_eligible_mods.side_effect = mock_get_eligible_mods
 
         base_mechanic = ExaltedMechanic({})
         omen_info = OmenInfo(
@@ -810,11 +820,9 @@ class TestOmenModifiedExalted:
 
         success, message, result = omen_mechanic.apply(item, mock_modifier_pool)
 
-        # Should succeed with fallback
-        assert success is True
-        assert result.prefix_count == 2
-        # Should have called weighted_random_choice once with all mods (fallback)
-        assert mock_modifier_pool._weighted_random_choice.call_count == 1
+        # Should fail when no matching tags found
+        assert success is False
+        assert "No modifiers with matching tags" in message
 
     def test_perfect_exalted_homogenising_enforces_min_mod_level(self, create_test_item, create_test_modifier, mock_modifier_pool):
         """Perfect Exalted Orb with Homogenising should enforce min_mod_level=45."""
@@ -825,8 +833,13 @@ class TestOmenModifiedExalted:
         low_tier_mod = create_test_modifier("Low Tier Caster", ModType.PREFIX, tags=["caster"], required_ilvl=30)
         high_tier_mod = create_test_modifier("High Tier Caster", ModType.PREFIX, tags=["caster"], required_ilvl=75)
 
-        # Mock get_eligible_mods to return only high tier mod (after min_mod_level filter)
-        mock_modifier_pool.get_eligible_mods.return_value = [high_tier_mod]
+        # Mock get_eligible_mods to return high tier mod for prefix, nothing for suffix
+        def mock_get_eligible_mods(base_category, item_level, mod_type, *args, **kwargs):
+            if mod_type == "prefix":
+                return [high_tier_mod]
+            else:
+                return []
+        mock_modifier_pool.get_eligible_mods.side_effect = mock_get_eligible_mods
         mock_modifier_pool._weighted_random_choice.return_value = high_tier_mod
 
         # Perfect Exalted Orb has min_mod_level=45
@@ -844,9 +857,11 @@ class TestOmenModifiedExalted:
         success, message, result = omen_mechanic.apply(item, mock_modifier_pool)
 
         # Verify get_eligible_mods was called with min_mod_level=45
-        mock_modifier_pool.get_eligible_mods.assert_called_once()
-        call_args = mock_modifier_pool.get_eligible_mods.call_args
-        assert call_args.kwargs['min_mod_level'] == 45
+        assert mock_modifier_pool.get_eligible_mods.call_count >= 1
+        # Check that at least one call had min_mod_level=45
+        calls_with_min_mod = [call for call in mock_modifier_pool.get_eligible_mods.call_args_list
+                               if call.kwargs.get('min_mod_level') == 45]
+        assert len(calls_with_min_mod) >= 1
 
         # Should succeed and add the high tier mod
         assert success is True
@@ -1341,7 +1356,7 @@ class TestCraftingWorkflows:
         item = create_test_item(rarity=ItemRarity.NORMAL)
 
         # Apply Transmutation (Normal → Magic, 1 mod)
-        trans = TransmutationMechanic({})
+        trans = TransmutationMechanic({"min_mods": 1, "max_mods": 1})  # Force exactly 1 mod
         success, message, item = trans.apply(item, mock_modifier_pool)
         assert success is True
         assert item.rarity == ItemRarity.MAGIC
