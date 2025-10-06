@@ -124,6 +124,12 @@ export const craftingApi = {
       rarity: string
       item_level: number
     }
+    warnings?: string[]
+    failed_mods?: Array<{
+      text: string
+      mod_type: string
+      reason: string
+    }>
   }> => {
     const response = await api.post('/parse-item', { item_text: itemText })
     return response.data

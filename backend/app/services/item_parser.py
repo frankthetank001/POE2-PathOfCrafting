@@ -55,24 +55,32 @@ class ItemParser:
             if "Corrupted" in section:
                 corrupted = True
 
-            if i > 1 and ItemParser._looks_like_mods(lines):
-                if not implicit_found:
-                    # Check if this section contains detailed mod format (explicit mods)
-                    # If so, treat as explicits. Otherwise, treat as implicits.
-                    has_detailed_format = any(
-                        re.search(r'\{\s*(?:Prefix|Suffix)\s+Modifier', line)
-                        for line in lines
-                    )
+            # Check for mods in any section after the first (i > 0)
+            # This allows mods to appear in section 1 (for items without properties)
+            if i > 0 and ItemParser._looks_like_mods(lines):
+                # Check if this section contains detailed mod format
+                has_detailed_format = any(
+                    re.search(r'\{\s*(?:Prefix|Suffix)\s+Modifier', line)
+                    for line in lines
+                )
 
-                    if has_detailed_format:
-                        # Detailed format = explicit mods
-                        explicits = ItemParser._parse_mods(section)
-                    else:
-                        # No detailed format = likely implicits
-                        implicits = ItemParser._parse_mods(section)
-                        implicit_found = True
+                # Check if section explicitly marks implicit mods
+                has_implicit_marker = any(
+                    re.search(r'\{\s*Implicit\s+Modifier', line)
+                    for line in lines
+                )
+
+                if has_implicit_marker or (not has_detailed_format and not implicit_found and "implicit" in section.lower()):
+                    # Section has implicit marker OR contains "(implicit)" text
+                    implicits = ItemParser._parse_mods(section)
+                    implicit_found = True
+                elif has_detailed_format or not implicit_found:
+                    # Detailed format OR first mod section without implicit markers = explicits
+                    # (Most items don't have implicits, so default to explicits)
+                    explicits = ItemParser._parse_mods(section)
+                    implicit_found = True  # Mark that we've seen the first mod section
                 else:
-                    # Already found implicits, this must be explicits
+                    # Second+ mod section = also explicits
                     explicits = ItemParser._parse_mods(section)
 
         return ParsedItem(
@@ -113,10 +121,38 @@ class ItemParser:
 
         if rarity in [ItemRarity.RARE, ItemRarity.UNIQUE] and len(remaining_lines) >= 2:
             return remaining_lines[0], remaining_lines[1]
+        elif rarity == ItemRarity.MAGIC and len(remaining_lines) >= 1:
+            # For Magic items, extract base from name like "Prefix Base of Suffix"
+            full_name = remaining_lines[0]
+            base_name = ItemParser._extract_base_from_magic_name(full_name)
+            return full_name, base_name
         elif len(remaining_lines) >= 1:
             return remaining_lines[0], remaining_lines[0]
         else:
             raise ValueError("Could not parse item name and base type")
+
+    @staticmethod
+    def _extract_base_from_magic_name(name: str) -> str:
+        """
+        Extract base item name from Magic item format.
+        Magic items: "Prefix Base of Suffix" or "Prefix Base" or "Base of Suffix"
+        Examples: "Virile Vile Robe of the Troll" -> "Vile Robe"
+        """
+        # Remove "of ..." suffix pattern (everything after " of ")
+        of_match = re.search(r'\s+of\s+', name)
+        if of_match:
+            name = name[:of_match.start()]
+
+        # The base is usually the last 2 words (e.g., "Vile Robe", "Gold Amulet")
+        words = name.split()
+
+        if len(words) >= 2:
+            # Take last 2 words as base
+            return ' '.join(words[-2:])
+        elif len(words) == 1:
+            return words[0]
+
+        return name
 
     @staticmethod
     def _parse_item_level(section: str) -> Optional[int]:
@@ -178,7 +214,7 @@ class ItemParser:
 
     @staticmethod
     def _looks_like_mods(lines: List[str]) -> bool:
-        mod_indicators = ["+", "increased", "reduced", "to", "%", "Adds"]
+        mod_indicators = ["+", "increased", "reduced", "to", "%", "Adds", "Bears", "Grants", "Mark of"]
 
         # Check for detailed format: { Prefix/Suffix Modifier "Name" (Tier: X) }
         detailed_format_pattern = r'\{\s*(?:Prefix|Suffix)\s+Modifier\s+"[^"]+"\s+\(Tier:\s*\d+\)'

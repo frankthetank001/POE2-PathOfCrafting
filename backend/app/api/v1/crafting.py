@@ -497,7 +497,8 @@ async def parse_item(request: ItemParseRequest) -> dict:
         # Filter tags before returning
         filtered_item_dict = filter_item_tags(craftable_item)
 
-        return {
+        # Build response
+        response = {
             "success": True,
             "item": filtered_item_dict,
             "parsed_info": {
@@ -506,6 +507,16 @@ async def parse_item(request: ItemParseRequest) -> dict:
                 "item_level": parsed_item.item_level,
             }
         }
+
+        # Include warnings about failed mods if any
+        if converter.failed_mods:
+            response["warnings"] = [
+                f"Could not match modifier: {mod['text']}"
+                for mod in converter.failed_mods
+            ]
+            response["failed_mods"] = converter.failed_mods
+
+        return response
 
     except ValueError as e:
         logger.error(f"Error parsing item: {e}")

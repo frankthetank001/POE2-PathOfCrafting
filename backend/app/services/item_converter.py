@@ -14,9 +14,11 @@ logger = get_logger(__name__)
 class ItemConverter:
     def __init__(self, modifier_pool: ModifierPool):
         self.modifier_pool = modifier_pool
+        self.failed_mods = []  # Track mods that failed to convert
 
     def convert_to_craftable(self, parsed_item: ParsedItem) -> Optional[CraftableItem]:
         """Convert a ParsedItem to a CraftableItem"""
+        self.failed_mods = []  # Reset failed mods list
         try:
             # Find base item from parsed base_type
             base = get_item_base_by_name(parsed_item.base_type)
@@ -78,6 +80,12 @@ class ItemConverter:
                 mod = self._convert_mod_to_modifier(implicit, base.category, parsed_item.item_level or 65, "implicit")
                 if mod:
                     implicit_mods.append(mod)
+                else:
+                    self.failed_mods.append({
+                        "text": implicit.text,
+                        "mod_type": "implicit",
+                        "reason": "Could not match modifier in database"
+                    })
 
             # Convert explicits - need to determine if prefix or suffix
             for explicit in parsed_item.explicits:
@@ -87,6 +95,12 @@ class ItemConverter:
                         prefix_mods.append(mod)
                     elif mod.mod_type == ModType.SUFFIX:
                         suffix_mods.append(mod)
+                else:
+                    self.failed_mods.append({
+                        "text": explicit.text,
+                        "mod_type": explicit.mod_type or "unknown",
+                        "reason": "Could not match modifier in database"
+                    })
 
             item = CraftableItem(
                 base_name=base.name,
@@ -139,26 +153,17 @@ class ItemConverter:
                 return True
             if 'jewellery' in mod.applicable_items and base_category in ['ring', 'amulet', 'belt']:
                 return True
+            # Map specific armour types to generic 'body_armour' category
+            if 'body_armour' in mod.applicable_items and base_category in [
+                'int_armour', 'str_armour', 'dex_armour',
+                'str_int_armour', 'str_dex_armour', 'dex_int_armour'
+            ]:
+                return True
             return self.modifier_pool._is_mod_applicable_to_category(mod, base_category)
 
-        # If detailed format was parsed, we have the mod info already
-        if item_mod.mod_name and item_mod.tier is not None and item_mod.mod_type:
-            mod = self.modifier_pool.find_mod_by_name_and_tier(item_mod.mod_name, item_mod.tier)
-            if mod and is_mod_applicable(mod):
-                # Create a copy with current value from parsed item
-                result_mod = mod.model_copy()
-                result_mod.current_value = self._extract_value_from_text(item_mod.text)
-                return result_mod
-            else:
-                # If exact tier not found or not applicable, fall through to stat text matching
-                # This will find all mods with this name, filter by applicability, and match by stat text
-                if not mod:
-                    logger.warning(f"Could not find mod '{item_mod.mod_name}' with tier {item_mod.tier}, trying stat text matching")
-                else:
-                    logger.warning(f"Mod '{item_mod.mod_name}' tier {item_mod.tier} not applicable to {base_category}, trying stat text matching")
-                # Don't return here - fall through to stat text matching below
-
-        # Otherwise, try to match by stat text
+        # Always match by stat text and value range
+        # Even if detailed format provides name/tier, the game's tier numbers don't match our database
+        # so we rely on stat text + value to find the correct mod and tier
         mod_type = force_type or item_mod.mod_type
 
         # Try to find matching modifier by stat text
@@ -199,8 +204,10 @@ class ItemConverter:
             parts = stat_text_lower.split('{}')
             escaped_parts = [re.escape(part) for part in parts]
 
-            # Join with pattern for number + optional range: \d+(?:\(\d+-\d+\))?
-            pattern = r'\d+(?:\(\d+-\d+\))?'.join(escaped_parts)
+            # Join with pattern for number + optional range, supporting decimals
+            # Pattern: \d+(?:\.\d+)?(?:\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\))?
+            # Matches: 111, 11.4, 111(100-119), 11.4(9.1-13)
+            pattern = r'\d+(?:\.\d+)?(?:\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\))?'.join(escaped_parts)
 
             # Use full string matching with anchors to avoid partial matches
             full_pattern = f'^{pattern}$'

@@ -539,6 +539,7 @@ function GridCraftingSimulator() {
   const [pastedItemText, setPastedItemText] = useState('')
   const [pastedItemPreview, setPastedItemPreview] = useState<CraftableItem | null>(null)
   const [pasteError, setPasteError] = useState('')
+  const [pasteWarnings, setPasteWarnings] = useState<string[]>([])
 
   // Track the original import format for copying
   const [importFormat, setImportFormat] = useState<'detailed' | 'simple'>('simple')
@@ -614,6 +615,7 @@ function GridCraftingSimulator() {
 
     setPastedItemText(text)
     setPasteError('')
+    setPasteWarnings([])
     setPastedItemPreview(null)
 
     // Detect format: detailed if it has "{ Prefix Modifier" or "{ Suffix Modifier"
@@ -623,6 +625,7 @@ function GridCraftingSimulator() {
     try {
       const result = await craftingApi.parseItem(text)
       setPastedItemPreview(result.item)
+      setPasteWarnings(result.warnings || [])
       setPastePreviewOpen(true)
     } catch (err: any) {
       setPasteError(err.message || 'Failed to parse item')
@@ -645,6 +648,7 @@ function GridCraftingSimulator() {
     setPastedItemText('')
     setPastedItemPreview(null)
     setPasteError('')
+    setPasteWarnings([])
   }
 
   // Export item to clipboard with specified format
@@ -3575,6 +3579,22 @@ function GridCraftingSimulator() {
             ) : pastedItemPreview ? (
               <>
                 <p>Parsed item successfully! Import to crafting simulator?</p>
+                {pasteWarnings.length > 0 && (
+                  <div className="paste-warnings" style={{
+                    backgroundColor: 'rgba(255, 200, 100, 0.1)',
+                    border: '1px solid rgba(255, 200, 100, 0.3)',
+                    padding: '10px',
+                    marginBottom: '10px',
+                    borderRadius: '4px'
+                  }}>
+                    <p style={{ color: '#ffcc66', fontWeight: 'bold', marginBottom: '5px' }}>⚠️ Warnings:</p>
+                    {pasteWarnings.map((warning, idx) => (
+                      <p key={idx} style={{ color: '#ffcc66', fontSize: '0.9em', margin: '3px 0' }}>
+                        • {warning}
+                      </p>
+                    ))}
+                  </div>
+                )}
                 <div className="item-preview">
                   <div className="item-header">
                     <span className={`item-rarity ${pastedItemPreview.rarity.toLowerCase()}`}>

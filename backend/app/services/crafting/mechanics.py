@@ -865,6 +865,22 @@ class EssenceMechanic(CraftingMechanic):
             logger.debug(f"{self.essence_info.name} incompatible with {item.base_category} - no matching item_effects")
             return False, f"{self.essence_info.name} cannot be applied to {item.base_category} items"
 
+        # Special check for Essence of the Abyss: cannot be used on items with desecrated mods or Mark of the Abyssal Lord
+        if self.essence_info.name == "Essence of the Abyss":
+            all_mods = item.prefix_mods + item.suffix_mods
+            has_desecrated = any(
+                mod.is_desecrated or (mod.tags and 'desecrated_only' in mod.tags)
+                for mod in all_mods
+            )
+            has_abyssal_mark = any(
+                mod.mod_group == "abyssal_mark" or mod.name == "Abyssal"
+                for mod in all_mods
+            )
+            if has_desecrated:
+                return False, f"{self.essence_info.name} cannot be used on items with Desecrated modifiers"
+            if has_abyssal_mark:
+                return False, f"{self.essence_info.name} cannot be used on items with Mark of the Abyssal Lord"
+
         # Check if the essence mod group already exists on the item
         target_mod_group = self._get_target_mod_group()
         if target_mod_group:

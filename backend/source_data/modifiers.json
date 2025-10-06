@@ -42705,7 +42705,19 @@
     "required_ilvl": 1,
     "weight": 1000,
     "mod_group": "abyssal_mark",
-    "applicable_items": [],
+    "applicable_items": [
+      "amulet",
+      "ring",
+      "belt",
+      "jewellery",
+      "armour",
+      "weapon",
+      "body_armour",
+      "boots",
+      "gloves",
+      "helmet",
+      "shield"
+    ],
     "tags": [],
     "is_exclusive": false,
     "stat_order": [
