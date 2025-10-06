@@ -40,10 +40,46 @@ Plan your perfect items with accurate simulation of all crafting mechanics, esse
 ## 🚀 Quick Start
 
 ### Prerequisites
+
+**Option 1: Docker (Recommended)**
+- Docker Desktop (includes Docker and Docker Compose)
+
+**Option 2: Manual Installation**
 - Python 3.11 or higher
 - Node.js 18 or higher
 
 ### Installation
+
+#### 🐳 Using Docker (Recommended)
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/Poe2-AI-TradeCraft.git
+   cd Poe2-AI-TradeCraft
+   ```
+
+2. **Start the application**
+   ```bash
+   # Development mode with hot reload
+   docker-compose up
+
+   # Or run in background
+   docker-compose up -d
+   ```
+
+   - Backend will run at `http://localhost:8000`
+   - Frontend will run at `http://localhost:5173`
+
+3. **Open your browser**
+
+   Navigate to `http://localhost:5173` and start crafting!
+
+4. **Stop the application**
+   ```bash
+   docker-compose down
+   ```
+
+#### 🔧 Manual Installation
 
 1. **Clone the repository**
    ```bash
@@ -80,6 +116,23 @@ Plan your perfect items with accurate simulation of all crafting mechanics, esse
 4. **Open your browser**
 
    Navigate to `http://localhost:5173` and start crafting!
+
+#### 🚀 Production Deployment
+
+For production deployment with optimizations:
+
+```bash
+# Build and run production images
+docker-compose -f docker-compose.prod.yml up -d
+
+# View logs
+docker-compose -f docker-compose.prod.yml logs -f
+
+# Stop production deployment
+docker-compose -f docker-compose.prod.yml down
+```
+
+Production frontend will run on port `80`, backend on port `8000`.
 
 ## 📖 Usage
 
