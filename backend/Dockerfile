@@ -49,8 +49,8 @@ RUN apt-get update && apt-get install -y \
 # Copy requirements
 COPY requirements.txt .
 
-# Install dependencies
-RUN pip install --no-cache-dir --user -r requirements.txt
+# Install dependencies globally (not --user) so they're accessible to all users
+RUN pip install --no-cache-dir -r requirements.txt
 
 
 # Production stage
@@ -63,8 +63,9 @@ RUN apt-get update && apt-get install -y \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
-# Copy Python dependencies from builder
-COPY --from=builder /root/.local /root/.local
+# Copy Python dependencies from builder (installed globally)
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/bin /usr/local/bin
 
 # Copy application code
 COPY . .
@@ -75,9 +76,6 @@ RUN mkdir -p /app/data
 # Copy and set permissions for entrypoint script
 COPY docker-entrypoint.sh /app/docker-entrypoint.sh
 RUN chmod +x /app/docker-entrypoint.sh
-
-# Make sure scripts in .local are usable
-ENV PATH=/root/.local/bin:$PATH
 
 # Create non-root user for security
 RUN useradd -m -u 1000 appuser && \
