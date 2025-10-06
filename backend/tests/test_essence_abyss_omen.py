@@ -36,7 +36,7 @@ def sinistral_crystallisation():
         name="Omen of Sinistral Crystallisation",
         effect_description="Perfect/Corrupted Essence removes only prefixes",
         affected_currency="Perfect Essence",
-        effect_type="sinistral_crystallisation",
+        effect_type="sinistral",
         stack_size=10,
         rules=[]
     )
@@ -165,7 +165,7 @@ def test_abyss_with_dextral_adds_mark_as_suffix_when_prefixes_full(
         name="Omen of Dextral Crystallisation",
         effect_description="Perfect/Corrupted Essence removes only suffixes",
         affected_currency="Perfect Essence",
-        effect_type="dextral_crystallisation",
+        effect_type="dextral",
         stack_size=10,
         rules=[]
     )

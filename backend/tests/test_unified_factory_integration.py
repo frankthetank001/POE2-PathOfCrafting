@@ -102,6 +102,7 @@ def mock_config_service():
             name="Lesser Essence of Flames",
             essence_type="flames",
             essence_tier="lesser",
+            mechanic="magic_to_rare",
             guaranteed_mod="Fire Damage",
             mod_type="prefix",
             applicable_to=["weapon"],
@@ -113,7 +114,9 @@ def mock_config_service():
             name="Omen of Dextral Exaltation",
             effect_description="Adds only suffix modifier",
             affected_currency="Exalted Orb",
+            effect_type="dextral",
             stack_size=10,
+            rules=[],
         )
 
         mock_bone.return_value = BoneInfo(
@@ -215,7 +218,9 @@ class TestOmenApplication:
             name="Omen of Dextral Exaltation",
             effect_description="Adds only suffix modifier",
             affected_currency="Exalted Orb",
+            effect_type="dextral",
             stack_size=10,
+            rules=[],
         )
 
         factory = UnifiedCraftingFactory()
@@ -244,7 +249,9 @@ class TestOmenApplication:
                     name="Omen of Dextral Exaltation",
                     effect_description="Adds only suffix",
                     affected_currency="Exalted Orb",
+                    effect_type="dextral",
                     stack_size=10,
+                    rules=[],
                 )
             elif "Homogenising" in name:
                 return OmenInfo(
@@ -252,7 +259,9 @@ class TestOmenApplication:
                     name="Omen of Homogenising Exaltation",
                     effect_description="Adds same type",
                     affected_currency="Exalted Orb",
+                    effect_type="homogenising",
                     stack_size=10,
+                    rules=[],
                 )
             return None
 
@@ -288,7 +297,9 @@ class TestOmenApplication:
                 name="Omen of Dextral Exaltation",
                 effect_description="Adds only suffix",
                 affected_currency="Exalted Orb",
+                effect_type="dextral",
                 stack_size=10,
+                rules=[],
             )
 
         mock_config_service['omen'].side_effect = mock_omen_side_effect
@@ -328,7 +339,9 @@ class TestCurrencyVariantMatching:
             name="Omen of Dextral Exaltation",
             effect_description="Adds only suffix",
             affected_currency="Exalted Orb",  # Note: not "Perfect Exalted Orb"
+            effect_type="dextral",
             stack_size=10,
+            rules=[],
         )
 
         factory = UnifiedCraftingFactory()
@@ -359,7 +372,9 @@ class TestCurrencyVariantMatching:
             name="Omen of Whittling",
             effect_description="Removes lowest level modifier",
             affected_currency="Chaos Orb",
+            effect_type="whittling",
             stack_size=10,
+            rules=[],
         )
 
         factory = UnifiedCraftingFactory()
@@ -389,7 +404,9 @@ class TestCurrencyVariantMatching:
             name="Omen of Dextral Exaltation",
             effect_description="Adds only suffix",
             affected_currency="Exalted Orb",
+            effect_type="dextral",
             stack_size=10,
+            rules=[],
         )
 
         factory = UnifiedCraftingFactory()
@@ -430,6 +447,7 @@ class TestEssenceCreation:
             name="Lesser Essence of Flames",
             essence_type="flames",
             essence_tier="lesser",
+            mechanic="magic_to_rare",
             guaranteed_mod="Fire Damage",
             mod_type="prefix",
             applicable_to=["weapon"],
@@ -558,7 +576,9 @@ class TestErrorHandling:
             name="Omen of Dextral Exaltation",
             effect_description="Adds only suffix",
             affected_currency="Exalted Orb",  # Wrong currency!
+            effect_type="dextral",
             stack_size=10,
+            rules=[],
         )
 
         factory = UnifiedCraftingFactory()
@@ -601,14 +621,18 @@ class TestFactoryQueries:
                     name="Omen of Greater Exaltation",
                     effect_description="Adds TWO modifiers",
                     affected_currency="Exalted Orb",
+                    effect_type="greater",
                     stack_size=10,
+                    rules=[],
                 ),
                 OmenInfo(
                     id=2,
                     name="Omen of Dextral Exaltation",
                     effect_description="Adds suffix only",
                     affected_currency="Exalted Orb",
+                    effect_type="dextral",
                     stack_size=10,
+                    rules=[],
                 ),
             ]
 

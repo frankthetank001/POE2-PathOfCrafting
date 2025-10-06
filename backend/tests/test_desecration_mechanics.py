@@ -182,28 +182,36 @@ class TestBoneTiers:
 
     def test_bone_tier_affects_modifier_quality(self, create_test_item, create_bone_info, mock_modifier_pool):
         """Higher tier bones should provide better modifiers."""
-        item = create_test_item(rarity=ItemRarity.NORMAL)
+        # Create separate Rare items for each bone tier test (use armor for rib bone)
+        item1 = create_test_item(rarity=ItemRarity.RARE)
+        item2 = create_test_item(rarity=ItemRarity.RARE)
+        item3 = create_test_item(rarity=ItemRarity.RARE)
+
+        # Mock get_eligible_mods to return some modifiers
+        mock_modifier_pool.get_eligible_mods.return_value = [
+            mock_modifier_pool.roll_random_modifier.return_value
+        ]
 
         gnawed = DesecrationMechanic({
             "bone_type": "gnawed",
-            "bone_part": "jawbone",
+            "bone_part": "rib",
             "min_modifier_level": 1,
         })
         preserved = DesecrationMechanic({
             "bone_type": "preserved",
-            "bone_part": "jawbone",
+            "bone_part": "rib",
             "min_modifier_level": 40,
         })
         ancient = DesecrationMechanic({
             "bone_type": "ancient",
-            "bone_part": "jawbone",
+            "bone_part": "rib",
             "min_modifier_level": 75,
         })
 
         # All should succeed
-        success1, _, _ = gnawed.apply(item, mock_modifier_pool)
-        success2, _, _ = preserved.apply(item, mock_modifier_pool)
-        success3, _, _ = ancient.apply(item, mock_modifier_pool)
+        success1, _, _ = gnawed.apply(item1, mock_modifier_pool)
+        success2, _, _ = preserved.apply(item2, mock_modifier_pool)
+        success3, _, _ = ancient.apply(item3, mock_modifier_pool)
 
         assert success1 is True
         assert success2 is True
@@ -261,7 +269,7 @@ class TestDesecrationApplication:
     """Test desecration mechanic application."""
 
     def test_bone_on_normal_item_creates_magic(self, create_test_item, mock_modifier_pool):
-        """Bone on Normal item should create Magic item with desecrated mod."""
+        """Bone on Normal item should FAIL (bones only work on Rare items)."""
         item = create_test_item(rarity=ItemRarity.NORMAL)
         mechanic = DesecrationMechanic({
             "bone_type": "gnawed",
@@ -271,12 +279,11 @@ class TestDesecrationApplication:
 
         success, message, result = mechanic.apply(item, mock_modifier_pool)
 
-        assert success is True
-        assert result.rarity == ItemRarity.MAGIC
-        assert result.total_explicit_mods >= 1
+        assert success is False
+        assert "Rare items" in message
 
     def test_bone_on_magic_item_adds_desecrated_mod(self, create_test_item, create_test_modifier, mock_modifier_pool):
-        """Bone on Magic item should add desecrated modifier."""
+        """Bone on Magic item should FAIL (bones only work on Rare items)."""
         regular_mod = create_test_modifier("Regular Mod", ModType.PREFIX)
         item = create_test_item(rarity=ItemRarity.MAGIC, prefix_mods=[regular_mod])
         mechanic = DesecrationMechanic({
@@ -285,11 +292,10 @@ class TestDesecrationApplication:
             "min_modifier_level": 1,
         })
 
-        initial_count = item.total_explicit_mods
         success, message, result = mechanic.apply(item, mock_modifier_pool)
 
-        assert success is True
-        assert result.total_explicit_mods == initial_count + 1
+        assert success is False
+        assert "Rare items" in message
 
     def test_bone_on_rare_item_adds_desecrated_mod(self, create_test_item, create_test_modifier, mock_modifier_pool):
         """Bone on Rare item should add desecrated modifier."""
@@ -327,18 +333,29 @@ class TestDesecratedModifierFiltering:
         assert desecrated_mod.is_exclusive is True
 
     def test_bone_requests_desecrated_modifiers(self, create_test_item, mock_modifier_pool):
-        """Bone mechanic should request desecrated modifiers from pool."""
-        item = create_test_item(rarity=ItemRarity.NORMAL)
+        """Bone mechanic should request modifiers from pool (bones allow ANY normal modifier + desecrated mods)."""
+        # Use amulet with collarbone (compatible item category)
+        item = create_test_item(
+            rarity=ItemRarity.RARE,
+            base_name="Gold Amulet",
+            base_category="amulet"
+        )
         mechanic = DesecrationMechanic({
             "bone_type": "gnawed",
-            "bone_part": "jawbone",
+            "bone_part": "collarbone",
             "min_modifier_level": 1,
         })
 
+        # Mock get_eligible_mods to return some modifiers
+        mock_modifier_pool.get_eligible_mods.return_value = [
+            mock_modifier_pool.roll_random_modifier.return_value
+        ]
+
         success, message, result = mechanic.apply(item, mock_modifier_pool)
 
-        # Should call roll_desecrated_modifier or similar
-        assert mock_modifier_pool.roll_random_modifier.called or mock_modifier_pool.roll_desecrated_modifier.called
+        # Should succeed and add unrevealed modifier (doesn't use roll_random_modifier directly)
+        assert success is True, f"Expected success but got: {message}"
+        assert "unrevealed" in message.lower()
 
 
 # ============================================================================
@@ -500,11 +517,17 @@ class TestDesecratedItemCategoryRestrictions:
 
     def test_bone_respects_item_category(self, create_test_item, mock_modifier_pool):
         """Bone should only add mods applicable to item category."""
-        # Amulet item
+        # Amulet item (Rare rarity required)
         amulet_item = create_test_item(
+            rarity=ItemRarity.RARE,
             base_category="amulet",
             base_name="Gold Amulet",
         )
+
+        # Mock get_eligible_mods to return some modifiers
+        mock_modifier_pool.get_eligible_mods.return_value = [
+            mock_modifier_pool.roll_random_modifier.return_value
+        ]
 
         mechanic = DesecrationMechanic({
             "bone_type": "ancient",
@@ -728,16 +751,21 @@ class TestDesecrationWorkflows:
 
     def test_progressive_bone_upgrade_workflow(self, create_test_item, mock_modifier_pool):
         """Test using progressively higher tier bones."""
-        item = create_test_item(rarity=ItemRarity.NORMAL)
+        item = create_test_item(rarity=ItemRarity.RARE)
 
-        # Apply gnawed bone
+        # Mock get_eligible_mods to return some modifiers
+        mock_modifier_pool.get_eligible_mods.return_value = [
+            mock_modifier_pool.roll_random_modifier.return_value
+        ]
+
+        # Apply gnawed bone (rib works on armor)
         gnawed = DesecrationMechanic({
             "bone_type": "gnawed",
-            "bone_part": "jawbone",
+            "bone_part": "rib",
             "min_modifier_level": 1,
         })
         success, message, item = gnawed.apply(item, mock_modifier_pool)
-        assert success is True
+        assert success is True, f"Gnawed bone should succeed: {message}"
 
         # Apply preserved bone
         preserved = DesecrationMechanic({
@@ -746,31 +774,36 @@ class TestDesecrationWorkflows:
             "min_modifier_level": 40,
         })
         success, message, item = preserved.apply(item, mock_modifier_pool)
-        assert success is True
+        assert success is True, f"Preserved bone should succeed: {message}"
 
         # Apply ancient bone
         ancient = DesecrationMechanic({
             "bone_type": "ancient",
-            "bone_part": "collarbone",
+            "bone_part": "rib",
             "min_modifier_level": 75,
         })
         success, message, item = ancient.apply(item, mock_modifier_pool)
-        assert success is True
+        assert success is True, f"Ancient bone should succeed: {message}"
 
-        # Should have multiple desecrated mods
+        # Should have multiple desecrated mods (3 unrevealed modifiers)
+        assert len(item.unrevealed_mods) == 3
 
     def test_combining_bones_with_regular_crafting(self, create_test_item, create_test_modifier, mock_modifier_pool):
         """Test using bones in combination with regular crafting."""
-        # Start with alchemy
-        item = create_test_item(rarity=ItemRarity.NORMAL)
-        item.rarity = ItemRarity.RARE
+        # Start with rare item (bones require rare)
+        item = create_test_item(rarity=ItemRarity.RARE)
         regular_mods = [create_test_modifier(f"Mod{i}", ModType.PREFIX) for i in range(2)]
         item.prefix_mods = regular_mods
 
-        # Add desecrated mod with bone
+        # Mock get_eligible_mods to return some modifiers
+        mock_modifier_pool.get_eligible_mods.return_value = [
+            mock_modifier_pool.roll_random_modifier.return_value
+        ]
+
+        # Add desecrated mod with bone (rib works on armor)
         bone = DesecrationMechanic({
             "bone_type": "ancient",
-            "bone_part": "jawbone",
+            "bone_part": "rib",
             "min_modifier_level": 75,
         })
         success, message, result = bone.apply(item, mock_modifier_pool)

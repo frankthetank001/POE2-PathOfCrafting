@@ -567,6 +567,7 @@ class TestOmenModifiedExalted:
             name="Omen of Dextral Exaltation",
             effect_description="Adds only suffix modifier",
             affected_currency="Exalted Orb",
+            effect_type="dextral",
             stack_size=10,
         )
         omen_mechanic = OmenModifiedMechanic(base_mechanic, omen_info)
@@ -588,6 +589,7 @@ class TestOmenModifiedExalted:
             name="Omen of Sinistral Exaltation",
             effect_description="Adds only prefix modifier",
             affected_currency="Exalted Orb",
+            effect_type="sinistral",
             stack_size=10,
         )
         omen_mechanic = OmenModifiedMechanic(base_mechanic, omen_info)
@@ -609,6 +611,7 @@ class TestOmenModifiedExalted:
             name="Omen of Greater Exaltation",
             effect_description="Adds TWO random modifiers",
             affected_currency="Exalted Orb",
+            effect_type="greater",
             stack_size=10,
         )
         omen_mechanic = OmenModifiedMechanic(base_mechanic, omen_info)
@@ -922,6 +925,7 @@ class TestOmenModifiedRegal:
             name="Omen of Dextral Coronation",
             effect_description="Adds only suffix modifier",
             affected_currency="Regal Orb",
+            effect_type="dextral",
             stack_size=10,
         )
         omen_mechanic = OmenModifiedMechanic(base_mechanic, omen_info)
@@ -943,6 +947,7 @@ class TestOmenModifiedRegal:
             name="Omen of Sinistral Coronation",
             effect_description="Adds only prefix modifier",
             affected_currency="Regal Orb",
+            effect_type="sinistral",
             stack_size=10,
         )
         omen_mechanic = OmenModifiedMechanic(base_mechanic, omen_info)
@@ -973,6 +978,7 @@ class TestOmenModifiedChaos:
             name="Omen of Dextral Erasure",
             effect_description="Chaos Orb removes only suffixes",
             affected_currency="Chaos Orb",
+            effect_type="dextral",
             stack_size=10,
         )
         omen_mechanic = OmenModifiedMechanic(base_mechanic, omen_info)
@@ -996,6 +1002,7 @@ class TestOmenModifiedChaos:
             name="Omen of Sinistral Erasure",
             effect_description="Chaos Orb removes only prefixes",
             affected_currency="Chaos Orb",
+            effect_type="sinistral",
             stack_size=10,
         )
         omen_mechanic = OmenModifiedMechanic(base_mechanic, omen_info)
@@ -1024,6 +1031,7 @@ class TestOmenModifiedAlchemy:
             name="Omen of Sinistral Alchemy",
             effect_description="Results in maximum prefix modifiers",
             affected_currency="Orb of Alchemy",
+            effect_type="sinistral",
             stack_size=10,
         )
         omen_mechanic = OmenModifiedMechanic(base_mechanic, omen_info)
@@ -1045,6 +1053,7 @@ class TestOmenModifiedAlchemy:
             name="Omen of Dextral Alchemy",
             effect_description="Results in maximum suffix modifiers",
             affected_currency="Orb of Alchemy",
+            effect_type="dextral",
             stack_size=10,
         )
         omen_mechanic = OmenModifiedMechanic(base_mechanic, omen_info)
@@ -1071,6 +1080,7 @@ class TestCurrencyVariantMatching:
             name="Omen of Dextral Exaltation",
             effect_description="Adds only suffix modifier",
             affected_currency="Exalted Orb",
+            effect_type="dextral",
             stack_size=10,
         )
 
@@ -1089,6 +1099,7 @@ class TestCurrencyVariantMatching:
             name="Omen of Dextral Exaltation",
             effect_description="Adds only suffix modifier",
             affected_currency="Exalted Orb",
+            effect_type="dextral",
             stack_size=10,
         )
 
@@ -1106,6 +1117,7 @@ class TestCurrencyVariantMatching:
             name="Omen of Dextral Exaltation",
             effect_description="Adds only suffix modifier",
             affected_currency="Exalted Orb",
+            effect_type="dextral",
             stack_size=10,
         )
 
@@ -1123,6 +1135,7 @@ class TestCurrencyVariantMatching:
             name="Omen of Dextral Exaltation",
             effect_description="Adds only suffix modifier",
             affected_currency="Exalted Orb",
+            effect_type="dextral",
             stack_size=10,
         )
 
@@ -1198,6 +1211,7 @@ class TestEdgeCases:
             name="Omen of Greater Exaltation",
             effect_description="Adds TWO random modifiers",
             affected_currency="Exalted Orb",
+            effect_type="greater",
             stack_size=10,
         )
         omen_mechanic = OmenModifiedMechanic(base_mechanic, omen_info)
