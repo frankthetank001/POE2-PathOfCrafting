@@ -2,7 +2,17 @@ import axios from 'axios'
 import type { ItemParseRequest, ItemParseResponse } from '@/types/item'
 import type { BuildsResponse, LeaguesResponse } from '@/types/build'
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
+// Get API URL from runtime config (loaded from config.js) or fall back to env/localhost
+const getApiBaseUrl = () => {
+  // @ts-ignore - window.APP_CONFIG is loaded from public/config.js
+  if (window.APP_CONFIG?.API_BASE_URL) {
+    // @ts-ignore
+    return window.APP_CONFIG.API_BASE_URL
+  }
+  return import.meta.env.VITE_API_BASE_URL || 'http://localhost:8000'
+}
+
+const API_BASE_URL = getApiBaseUrl()
 
 const api = axios.create({
   baseURL: `${API_BASE_URL}/api/v1`,

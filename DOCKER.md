@@ -180,6 +180,60 @@ services:
 
 ---
 
+## 🌐 Configuring API URL (TrueNAS / Remote Deployments)
+
+The frontend needs to know where the backend API is located. By default, it auto-detects based on the hostname.
+
+### Default Behavior
+
+The frontend uses `config.js` which auto-detects the API URL:
+- **Development** (localhost): `http://localhost:8000`
+- **Production**: `http://YOUR_SERVER_IP:8000`
+
+### Custom API URL
+
+If you need to override the API URL (e.g., backend on different server), create a custom `config.js`:
+
+**1. Create `custom-config.js` on your host:**
+```javascript
+window.APP_CONFIG = {
+  API_BASE_URL: 'http://192.168.1.100:8000'  // Your backend IP/hostname
+}
+```
+
+**2. Mount it in docker-compose:**
+```yaml
+services:
+  frontend:
+    image: ghcr.io/frankthetank001/poe2-pathofcrafting-frontend:latest
+    ports:
+      - "5173:80"
+    volumes:
+      - ./custom-config.js:/usr/share/nginx/html/config.js:ro  # Override config
+```
+
+**3. Restart:**
+```bash
+docker-compose down
+docker-compose up -d
+```
+
+### TrueNAS Example
+
+For TrueNAS deployments where frontend and backend are on the same host but accessed remotely:
+
+**custom-config.js:**
+```javascript
+window.APP_CONFIG = {
+  // Use TrueNAS server IP with backend port
+  API_BASE_URL: 'http://truenas.local:8000'
+}
+```
+
+Or use the server's hostname/IP that users will access.
+
+---
+
 ## 🐛 Troubleshooting
 
 ### Backend won't start

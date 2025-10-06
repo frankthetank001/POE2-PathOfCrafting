@@ -1,0 +1,11 @@
+// Example runtime configuration for PoE2 PathOfCrafting
+// Copy this file to config.js and customize for your deployment
+
+window.APP_CONFIG = {
+  // API URL - Point this to your backend server
+  // Examples:
+  // - Same host, different port: window.location.protocol + '//' + window.location.hostname + ':8000'
+  // - Different host: 'http://192.168.1.100:8000'
+  // - Behind proxy: '/api' (requires nginx proxy configuration)
+  API_BASE_URL: 'http://YOUR_BACKEND_HOST:8000'
+}
