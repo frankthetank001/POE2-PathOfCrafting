@@ -1,0 +1,26 @@
+# Fly.io configuration for PoE2 PathOfCrafting Frontend
+app = "poe2-pathofcrafting-frontend"
+primary_region = "syd"  # Sydney
+
+[build]
+  image = "ghcr.io/frankthetank001/poe2-pathofcrafting-frontend:latest"
+
+[http_service]
+  internal_port = 80
+  force_https = true
+  auto_stop_machines = false
+  auto_start_machines = true
+  min_machines_running = 1
+  processes = ["app"]
+
+  [[http_service.checks]]
+    interval = "30s"
+    timeout = "5s"
+    grace_period = "10s"
+    method = "GET"
+    path = "/"
+
+[[vm]]
+  memory = "256mb"
+  cpu_kind = "shared"
+  cpus = 1
