@@ -2214,7 +2214,6 @@ function GridCraftingSimulator() {
       {/* Global Tag Filters - Floating at Top */}
       <div className="global-tag-filters">
         <div className="global-tag-filters-content">
-          <span className="global-tag-filters-label">🏷️ Global Tag Filters:</span>
           <button
             className={`clear-filters-btn ${activeTagFilters.size === 0 ? 'disabled' : ''}`}
             onClick={clearTagFilters}
