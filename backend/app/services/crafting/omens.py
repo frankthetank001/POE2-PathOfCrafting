@@ -95,13 +95,23 @@ class OmenOfWhittling(BaseOmen):
         if item.total_explicit_mods == 0:
             return False, "No modifiers to remove", item
 
-        # Find lowest level modifier
+        # Find lowest level modifier (exclude fractured mods)
         all_mods = item.prefix_mods + item.suffix_mods
-        lowest_mod = min(all_mods, key=lambda m: m.required_ilvl or 0)
+        removable_mods = [mod for mod in all_mods if not mod.is_fractured]
+
+        if not removable_mods:
+            return False, "No modifiers available to remove (all are fractured)", item
+
+        lowest_mod = min(removable_mods, key=lambda m: m.required_ilvl or 0)
 
         # Remove it
         manager = ItemStateManager(item)
-        manager.remove_modifier(lowest_mod)
+        if lowest_mod in item.prefix_mods:
+            mod_index = item.prefix_mods.index(lowest_mod)
+            manager.remove_modifier(ModType.PREFIX, mod_index)
+        else:
+            mod_index = item.suffix_mods.index(lowest_mod)
+            manager.remove_modifier(ModType.SUFFIX, mod_index)
 
         # Now apply the original currency
         return currency_apply_func(item, modifier_pool)
@@ -128,10 +138,16 @@ class OmenOfSinistralErasure(BaseOmen):
         if not item.prefix_mods:
             return False, "No prefix modifiers to remove", item
 
-        # Remove a random prefix
+        # Remove a random prefix (exclude fractured)
+        removable_prefixes = [mod for mod in item.prefix_mods if not mod.is_fractured]
+
+        if not removable_prefixes:
+            return False, "No prefix modifiers available to remove (all are fractured)", item
+
         manager = ItemStateManager(item)
-        prefix_to_remove = random.choice(item.prefix_mods)
-        manager.remove_modifier(prefix_to_remove)
+        prefix_to_remove = random.choice(removable_prefixes)
+        mod_index = item.prefix_mods.index(prefix_to_remove)
+        manager.remove_modifier(ModType.PREFIX, mod_index)
 
         # Apply currency for addition
         return currency_apply_func(item, modifier_pool)
@@ -158,10 +174,16 @@ class OmenOfDextralErasure(BaseOmen):
         if not item.suffix_mods:
             return False, "No suffix modifiers to remove", item
 
-        # Remove a random suffix
+        # Remove a random suffix (exclude fractured)
+        removable_suffixes = [mod for mod in item.suffix_mods if not mod.is_fractured]
+
+        if not removable_suffixes:
+            return False, "No suffix modifiers available to remove (all are fractured)", item
+
         manager = ItemStateManager(item)
-        suffix_to_remove = random.choice(item.suffix_mods)
-        manager.remove_modifier(suffix_to_remove)
+        suffix_to_remove = random.choice(removable_suffixes)
+        mod_index = item.suffix_mods.index(suffix_to_remove)
+        manager.remove_modifier(ModType.SUFFIX, mod_index)
 
         # Apply currency for addition
         return currency_apply_func(item, modifier_pool)
@@ -190,11 +212,20 @@ class OmenOfGreaterAnnulment(BaseOmen):
 
         manager = ItemStateManager(item)
         all_mods = item.prefix_mods + item.suffix_mods
+        removable_mods = [mod for mod in all_mods if not mod.is_fractured]
+
+        if len(removable_mods) < 2:
+            return False, "Need at least 2 non-fractured modifiers to remove", item
 
         # Remove two random modifiers
-        mods_to_remove = random.sample(all_mods, min(2, len(all_mods)))
+        mods_to_remove = random.sample(removable_mods, 2)
         for mod in mods_to_remove:
-            manager.remove_modifier(mod)
+            if mod in item.prefix_mods:
+                mod_index = item.prefix_mods.index(mod)
+                manager.remove_modifier(ModType.PREFIX, mod_index)
+            else:
+                mod_index = item.suffix_mods.index(mod)
+                manager.remove_modifier(ModType.SUFFIX, mod_index)
 
         # Apply currency for addition
         return currency_apply_func(item, modifier_pool)

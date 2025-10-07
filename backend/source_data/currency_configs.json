@@ -200,6 +200,15 @@
     "config_data": {}
   },
   {
+    "name": "Orb of Fracturing",
+    "currency_type": "fracturing",
+    "tier": null,
+    "stack_size": 20,
+    "rarity": "very_rare",
+    "mechanic_class": "FracturingMechanic",
+    "config_data": {}
+  },
+  {
     "name": "Orb of Chance",
     "currency_type": "chance",
     "tier": null,

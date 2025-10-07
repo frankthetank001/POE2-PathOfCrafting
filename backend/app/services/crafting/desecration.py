@@ -173,28 +173,41 @@ class BaseAbyssalBone(CraftingCurrency, ABC):
     ) -> Optional[ItemModifier]:
         """Remove a random modifier while maintaining prefix/suffix balance."""
 
-        # Get all current modifiers
-        all_mods = item.prefix_mods + item.suffix_mods
-        if not all_mods:
+        # Get all current modifiers (exclude fractured mods)
+        removable_prefixes = [mod for mod in item.prefix_mods if not mod.is_fractured]
+        removable_suffixes = [mod for mod in item.suffix_mods if not mod.is_fractured]
+        all_removable_mods = removable_prefixes + removable_suffixes
+
+        if not all_removable_mods:
             return None
 
         # If we have equal prefixes/suffixes, remove randomly
         # If unbalanced, prefer to remove from the larger group to maintain balance
-        prefix_count = len(item.prefix_mods)
-        suffix_count = len(item.suffix_mods)
+        prefix_count = len(removable_prefixes)
+        suffix_count = len(removable_suffixes)
 
-        if prefix_count > suffix_count and item.prefix_mods:
+        if prefix_count > suffix_count and removable_prefixes:
             # Remove a prefix to balance
-            mod_to_remove = random.choice(item.prefix_mods)
-        elif suffix_count > prefix_count and item.suffix_mods:
+            mod_to_remove = random.choice(removable_prefixes)
+            mod_type = ModType.PREFIX
+            mod_index = item.prefix_mods.index(mod_to_remove)
+        elif suffix_count > prefix_count and removable_suffixes:
             # Remove a suffix to balance
-            mod_to_remove = random.choice(item.suffix_mods)
+            mod_to_remove = random.choice(removable_suffixes)
+            mod_type = ModType.SUFFIX
+            mod_index = item.suffix_mods.index(mod_to_remove)
         else:
             # Equal or can't balance, remove random
-            mod_to_remove = random.choice(all_mods)
+            mod_to_remove = random.choice(all_removable_mods)
+            if mod_to_remove in item.prefix_mods:
+                mod_type = ModType.PREFIX
+                mod_index = item.prefix_mods.index(mod_to_remove)
+            else:
+                mod_type = ModType.SUFFIX
+                mod_index = item.suffix_mods.index(mod_to_remove)
 
         # Remove the modifier
-        manager.remove_modifier(mod_to_remove)
+        manager.remove_modifier(mod_type, mod_index)
         return mod_to_remove
 
     def _generate_desecrated_choices(

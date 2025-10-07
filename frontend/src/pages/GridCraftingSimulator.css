@@ -821,6 +821,24 @@
   transform: translateY(-2px);
 }
 
+.mod-line.fractured {
+  color: #ff9933 !important;
+  background: rgba(255, 153, 51, 0.25) !important;
+  border: 3px solid #ff9933 !important;
+  box-shadow: 0 0 12px rgba(255, 153, 51, 0.6), inset 0 0 8px rgba(255, 153, 51, 0.2) !important;
+  font-weight: 600;
+  animation: fractured-pulse 2s ease-in-out infinite;
+}
+
+@keyframes fractured-pulse {
+  0%, 100% {
+    box-shadow: 0 0 12px rgba(255, 153, 51, 0.6), inset 0 0 8px rgba(255, 153, 51, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 20px rgba(255, 153, 51, 0.8), inset 0 0 12px rgba(255, 153, 51, 0.3);
+  }
+}
+
 .mod-content {
   flex: 1;
   min-width: 0;

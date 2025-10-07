@@ -300,9 +300,14 @@ class ChaosMechanic(CraftingMechanic):
         manager = ItemStateManager(item)
         min_mod_level = self.config.get("min_mod_level")
 
-        # Remove random modifier
+        # Remove random modifier (exclude fractured mods)
         all_mods = manager.item.prefix_mods + manager.item.suffix_mods
-        mod_to_replace = random.choice(all_mods)
+        removable_mods = [mod for mod in all_mods if not mod.is_fractured]
+
+        if not removable_mods:
+            return False, "No modifiers available to replace (all are fractured)", item
+
+        mod_to_replace = random.choice(removable_mods)
         mod_type_enum = mod_to_replace.mod_type
         mod_type = mod_to_replace.mod_type.value
 
@@ -385,19 +390,21 @@ class AnnulmentMechanic(CraftingMechanic):
 
         manager = ItemStateManager(item)
 
-        # Get all explicit modifiers that can be removed
+        # Get all explicit modifiers that can be removed (exclude fractured mods)
         removable_mods = []
 
-        # Add prefixes
+        # Add prefixes (exclude fractured)
         for i, mod in enumerate(item.prefix_mods):
-            removable_mods.append(('prefix', i, mod))
+            if not mod.is_fractured:
+                removable_mods.append(('prefix', i, mod))
 
-        # Add suffixes
+        # Add suffixes (exclude fractured)
         for i, mod in enumerate(item.suffix_mods):
-            removable_mods.append(('suffix', i, mod))
+            if not mod.is_fractured:
+                removable_mods.append(('suffix', i, mod))
 
         if not removable_mods:
-            return False, "No modifiers available to remove", item
+            return False, "No modifiers available to remove (all are fractured)", item
 
         # Select random modifier to remove
         import random
@@ -418,6 +425,56 @@ class AnnulmentMechanic(CraftingMechanic):
             success_message += " (item became Magic)"
 
         return True, success_message, manager.get_item()
+
+
+class FracturingMechanic(CraftingMechanic):
+    """Orb of Fracturing: Fractures a random modifier on a rare item with 4+ mods."""
+
+    def can_apply(self, item: CraftableItem) -> Tuple[bool, Optional[str]]:
+        if item.rarity != ItemRarity.RARE:
+            return False, "Orb of Fracturing can only be applied to Rare items"
+
+        if item.total_explicit_mods < 4:
+            return False, "Item must have at least 4 explicit modifiers"
+
+        # Check if item already has a fractured mod
+        all_mods = item.prefix_mods + item.suffix_mods
+        if any(mod.is_fractured for mod in all_mods):
+            return False, "Item already has a fractured modifier"
+
+        # Check if there are any fractureable mods (non-fractured, non-unrevealed)
+        fractureable_mods = [
+            mod for mod in all_mods
+            if not mod.is_fractured and not mod.is_unrevealed
+        ]
+
+        if not fractureable_mods:
+            return False, "No modifiers available to fracture"
+
+        return True, None
+
+    def apply(
+        self, item: CraftableItem, modifier_pool: ModifierPool
+    ) -> Tuple[bool, str, CraftableItem]:
+        can_apply, error = self.can_apply(item)
+        if not can_apply:
+            return False, error or "Cannot apply", item
+
+        # Get all fractureable mods (exclude unrevealed and already fractured)
+        all_mods = item.prefix_mods + item.suffix_mods
+        fractureable_mods = [
+            mod for mod in all_mods
+            if not mod.is_fractured and not mod.is_unrevealed
+        ]
+
+        if not fractureable_mods:
+            return False, "No modifiers available to fracture", item
+
+        # Randomly select a modifier to fracture
+        mod_to_fracture = random.choice(fractureable_mods)
+        mod_to_fracture.is_fractured = True
+
+        return True, f"Fractured {mod_to_fracture.name}", item
 
 
 class ScouringMechanic(CraftingMechanic):
@@ -451,81 +508,6 @@ class ScouringMechanic(CraftingMechanic):
         manager.set_rarity(ItemRarity.NORMAL)
 
         success_message = f"Removed all {total_removed} modifiers (item is now Normal)"
-
-        return True, success_message, manager.get_item()
-
-
-class FracturingMechanic(CraftingMechanic):
-    """Fracturing: Makes one modifier permanent and unchangeable."""
-
-    def can_apply(self, item: CraftableItem) -> Tuple[bool, Optional[str]]:
-        if item.rarity != ItemRarity.RARE:
-            return False, "Orb of Fracturing can only be applied to Rare items"
-
-        if item.total_explicit_mods == 0:
-            return False, "Item has no modifiers to fracture"
-
-        # Check if any modifier is already fractured
-        for mod in item.prefix_mods + item.suffix_mods:
-            if hasattr(mod, 'fractured') and mod.fractured:
-                return False, "Item already has a fractured modifier"
-
-        return True, None
-
-    def apply(
-        self, item: CraftableItem, modifier_pool: ModifierPool
-    ) -> Tuple[bool, str, CraftableItem]:
-        can_apply, error = self.can_apply(item)
-        if not can_apply:
-            return False, error or "Cannot apply", item
-
-        manager = ItemStateManager(item)
-
-        # Get all explicit modifiers that can be fractured
-        fracturable_mods = []
-
-        # Add prefixes
-        for i, mod in enumerate(item.prefix_mods):
-            if not (hasattr(mod, 'fractured') and mod.fractured):
-                fracturable_mods.append(('prefix', i, mod))
-
-        # Add suffixes
-        for i, mod in enumerate(item.suffix_mods):
-            if not (hasattr(mod, 'fractured') and mod.fractured):
-                fracturable_mods.append(('suffix', i, mod))
-
-        if not fracturable_mods:
-            return False, "No modifiers available to fracture", item
-
-        # Select random modifier to fracture
-        import random
-        mod_type, mod_index, fractured_mod = random.choice(fracturable_mods)
-
-        # Create fractured version of the modifier
-        fractured_modifier = ItemModifier(
-            name=fractured_mod.name,
-            mod_type=fractured_mod.mod_type,
-            tier=fractured_mod.tier,
-            stat_text=fractured_mod.stat_text,
-            stat_ranges=fractured_mod.stat_ranges,
-            stat_min=fractured_mod.stat_min,
-            stat_max=fractured_mod.stat_max,
-            current_value=fractured_mod.current_value,
-            current_values=fractured_mod.current_values,
-            required_ilvl=fractured_mod.required_ilvl,
-            mod_group=fractured_mod.mod_group,
-            applicable_items=fractured_mod.applicable_items,
-            tags=fractured_mod.tags + ['fractured'],
-            is_exclusive=fractured_mod.is_exclusive
-        )
-
-        # Replace the modifier with the fractured version
-        if mod_type == 'prefix':
-            manager.replace_prefix(mod_index, fractured_modifier)
-        else:
-            manager.replace_suffix(mod_index, fractured_modifier)
-
-        success_message = f"Fractured {fractured_mod.name} (now permanent)"
 
         return True, success_message, manager.get_item()
 

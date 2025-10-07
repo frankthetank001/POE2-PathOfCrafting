@@ -100,6 +100,12 @@ export const CURRENCY_DESCRIPTIONS: Record<string, CurrencyDescription> = {
     description: "Removes a random modifier from a Magic or Rare item"
   },
 
+  "Orb of Fracturing": {
+    name: "Orb of Fracturing",
+    description: "Fractures a random modifier on a Rare item with at least 4 modifiers",
+    mechanics: "Fractured modifiers cannot be removed by any means, but can still be rerolled by Divine Orbs. Unrevealed desecrated modifiers cannot be fractured."
+  },
+
   "Orb of Chance": {
     name: "Orb of Chance",
     description: "Unpredictably either upgrades a Normal item to Unique rarity or destroys it"

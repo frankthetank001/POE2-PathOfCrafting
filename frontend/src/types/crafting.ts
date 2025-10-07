@@ -34,6 +34,7 @@ export interface ItemModifier {
   is_desecrated?: boolean  // Flag for desecrated mods (set by filter_mod_tags)
   is_unrevealed?: boolean  // True if this is an unrevealed desecrated modifier
   unrevealed_id?: string  // ID linking to UnrevealedModifier metadata
+  is_fractured?: boolean  // True if this mod is fractured (cannot be removed, displayed in orange)
 
   // Exclusion information (client-side only)
   is_excluded?: boolean  // True if this mod conflicts with existing mods

@@ -1499,6 +1499,15 @@ function GridCraftingSimulator() {
 
       // Success! Update item, history, and currency counter
       if (result.result_item) {
+        // DEBUG: Check for fractured mods
+        const allMods = [...result.result_item.prefix_mods, ...result.result_item.suffix_mods]
+        const fracturedMods = allMods.filter(mod => mod.is_fractured)
+        if (fracturedMods.length > 0) {
+          console.log('[DEBUG] FRACTURED MODS IN RESULT:', fracturedMods.map(m => ({ name: m.name, is_fractured: m.is_fractured })))
+        } else {
+          console.log('[DEBUG] No fractured mods in result. All mods:', allMods.map(m => ({ name: m.name, is_fractured: m.is_fractured })))
+        }
+
         setItem(result.result_item)
       }
 
@@ -1785,6 +1794,7 @@ function GridCraftingSimulator() {
     return (
       <span className="mod-with-info" title={tooltipText}>
         {statText} {rangeText && <span className="mod-range">{rangeText}</span>}
+        {mod.is_fractured && <span className="fractured-indicator"> (Fractured)</span>}
       </span>
     )
   }
@@ -3379,7 +3389,8 @@ function GridCraftingSimulator() {
                             const isTagFiltered = activeTagFilters.size > 0 && !isModMatchingTagFilters(mod)
                             const isDesecrated = mod.is_desecrated === true
                             const isUnrevealed = mod.is_unrevealed === true
-                            const modClasses = `mod-line prefix ${isTagFiltered ? 'tag-filtered' : ''} ${isDesecrated ? 'desecrated' : ''} ${isUnrevealed ? 'unrevealed' : ''}`
+                            const isFractured = mod.is_fractured === true
+                            const modClasses = `mod-line prefix ${isTagFiltered ? 'tag-filtered' : ''} ${isDesecrated ? 'desecrated' : ''} ${isUnrevealed ? 'unrevealed' : ''} ${isFractured ? 'fractured' : ''}`
 
                             // Get unrevealed metadata if this is an unrevealed mod
                             const unrevealedMetadata = isUnrevealed && mod.unrevealed_id
@@ -3473,7 +3484,8 @@ function GridCraftingSimulator() {
                             const isTagFiltered = activeTagFilters.size > 0 && !isModMatchingTagFilters(mod)
                             const isDesecrated = mod.is_desecrated === true
                             const isUnrevealed = mod.is_unrevealed === true
-                            const modClasses = `mod-line suffix ${isTagFiltered ? 'tag-filtered' : ''} ${isDesecrated ? 'desecrated' : ''} ${isUnrevealed ? 'unrevealed' : ''}`
+                            const isFractured = mod.is_fractured === true
+                            const modClasses = `mod-line suffix ${isTagFiltered ? 'tag-filtered' : ''} ${isDesecrated ? 'desecrated' : ''} ${isUnrevealed ? 'unrevealed' : ''} ${isFractured ? 'fractured' : ''}`
 
                             // Get unrevealed metadata if this is an unrevealed mod
                             const unrevealedMetadata = isUnrevealed && mod.unrevealed_id

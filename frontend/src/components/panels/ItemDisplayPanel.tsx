@@ -1,3 +1,4 @@
+import React from 'react'
 import type { CraftableItem, ItemModifier } from '@/types/crafting'
 
 interface ItemDisplayPanelProps {
@@ -5,6 +6,15 @@ interface ItemDisplayPanelProps {
 }
 
 export function ItemDisplayPanel({ item }: ItemDisplayPanelProps) {
+  // Debug: Log fractured mods
+  React.useEffect(() => {
+    const allMods = [...(item.prefix_mods || []), ...(item.suffix_mods || [])]
+    const fracturedMods = allMods.filter(mod => mod.is_fractured)
+    if (fracturedMods.length > 0) {
+      console.log('FRACTURED MODS DETECTED:', fracturedMods)
+    }
+  }, [item])
+
   const formatStatName = (stat: string): string => {
     const statNames: Record<string, string> = {
       'armour': 'Armour',
@@ -19,10 +29,15 @@ export function ItemDisplayPanel({ item }: ItemDisplayPanelProps) {
   }
 
   const formatModText = (mod: ItemModifier): string => {
-    if (mod.current_value !== undefined && mod.stat_text.includes('{}')) {
-      return mod.stat_text.replace('{}', mod.current_value.toString())
+    let text = mod.stat_text
+    if (mod.current_value !== undefined && text.includes('{}')) {
+      text = text.replace('{}', mod.current_value.toString())
     }
-    return mod.stat_text
+    // Add (Fractured) indicator for fractured mods
+    if (mod.is_fractured) {
+      text = `${text} (Fractured)`
+    }
+    return text
   }
 
   const defenseStats = ['armour', 'evasion', 'energy_shield']
@@ -75,14 +90,14 @@ export function ItemDisplayPanel({ item }: ItemDisplayPanelProps) {
               <div className="item-stats explicit-mods">
                 {/* Prefix Mods */}
                 {item.prefix_mods?.map((mod, index) => (
-                  <div key={`prefix-${index}`} className="mod-line explicit prefix">
+                  <div key={`prefix-${index}`} className={`mod-line explicit prefix ${mod.is_fractured ? 'fractured' : ''}`}>
                     {formatModText(mod)}
                   </div>
                 ))}
 
                 {/* Suffix Mods */}
                 {item.suffix_mods?.map((mod, index) => (
-                  <div key={`suffix-${index}`} className="mod-line explicit suffix">
+                  <div key={`suffix-${index}`} className={`mod-line explicit suffix ${mod.is_fractured ? 'fractured' : ''}`}>
                     {formatModText(mod)}
                   </div>
                 ))}
