@@ -403,9 +403,14 @@
   flex-wrap: wrap;
 }
 
-/* Ensure mod info doesn't get too compressed */
+/* Force compact-mod-info to always appear on its own line below the mod text */
 .pool-mod-group-header .compact-mod-info {
-  min-width: 120px;
+  flex-basis: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 0.25rem;
 }
 
 /* When space is tight, prefer vertical layout */
