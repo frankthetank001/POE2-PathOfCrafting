@@ -1,12 +1,12 @@
 /* Grid Crafting Simulator - 3 Column Layout */
 .grid-crafting-simulator {
   width: 100%;
-  height: 100vh;
+  min-height: 100vh;
   background: #0a0a0a;
   color: #e0e0e0;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
   position: relative;
-  overflow: hidden;
+  overflow-y: auto;
 }
 
 /* Global Tag Filters - Floating at Top */
@@ -1590,18 +1590,27 @@
   }
 }
 
-@media (max-width: 1200px) {
+@media (max-width: 1600px) {
   .three-column-layout {
     flex-direction: column;
     gap: 1rem;
+    height: auto;
+    max-height: none;
+    overflow: visible;
   }
 
   .left-panel, .right-panel {
     flex: none;
     width: 100%;
-    max-height: calc(40vh - 100px);
+    height: auto;
+    max-height: 600px;
     min-height: 250px;
     min-width: auto;
+    max-width: none;
+  }
+
+  .center-panel {
+    height: auto;
     max-width: none;
   }
 
@@ -2335,10 +2344,7 @@
 }
 
 .essence-pair.corrupted {
-  border: 1px solid rgba(139, 0, 0, 0.3);
-  background: rgba(139, 0, 0, 0.05);
-  border-radius: 4px;
-  padding: 0.25rem;
+  /* Removed border to prevent double outline - individual slots have corruption styling */
 }
 
 .essence-corrupted {
@@ -2478,24 +2484,32 @@
 
 .essence-column {
   display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
+  gap: 4px;
 }
 
 .essence-left {
-  flex: 0 0 auto;
-  width: 80px; /* Fixed width for left column */
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-content: flex-start;
 }
 
 .essence-middle {
   flex: 0 0 auto;
-  width: 40px; /* Narrower middle column for corrupted */
+  min-width: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
   align-items: center;
 }
 
 .essence-right {
-  flex: 0 0 auto;
-  width: 80px; /* Fixed width for right column */
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  align-content: flex-start;
 }
 
 .essence-slot {
@@ -3050,18 +3064,41 @@
 
 .essences-section .essences-content {
   padding: 12px;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
-.essence-grid-clean {
+.essence-three-column {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+}
+
+.essence-normal-grid {
+  flex: 1;
   display: flex;
   flex-wrap: wrap;
   gap: 6px;
+  align-content: flex-start;
+}
+
+.essence-corrupted-column {
+  flex: 0 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 40px;
 }
 
 .essence-pair {
   display: flex;
   flex-direction: column;
   gap: 2px;
+}
+
+.essence-slot-empty {
+  width: 36px;
+  height: 36px;
 }
 
 /* Middle Row Layout - Use proper grid rows */
@@ -3101,27 +3138,7 @@
   display: contents;
 }
 
-/* Responsive Adjustments */
-@media (max-width: 1400px) {
-  .currency-middle-row {
-    grid-template-columns: 1fr;
-    gap: 8px;
-  }
-
-  .currency-left-column {
-    min-width: unset;
-  }
-
-  .special-section,
-  .orbs-section,
-  .omens-section {
-    min-width: unset;
-  }
-
-  .omens-section .omens-grid {
-    grid-template-columns: repeat(auto-fill, minmax(32px, 1fr));
-  }
-}
+/* Responsive Adjustments - Keep original layout when stacked vertically */
 
 @media (max-width: 900px) {
   .currency-new-grid {

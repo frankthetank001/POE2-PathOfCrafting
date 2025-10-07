@@ -217,13 +217,16 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
           </div>
           {essencesExpanded && (
             <div className="currency-section-content essences-content">
-              <div className="essence-grid-clean">
+              <div className="essence-three-column">
                 {(() => {
-                  // Group essences by type
-                  const groupedEssences: Record<string, { base: string[], perfect: string[] }> = {}
+                  // Group essences by type - only Greater and Perfect
+                  const groupedEssences: Record<string, { greater: string | null, perfect: string | null }> = {}
                   const allEssences = [...categorizedCurrencies.essences.implemented, ...categorizedCurrencies.essences.disabled]
 
                   allEssences.filter(searchFilter).forEach(essence => {
+                    // Skip Lesser and normal tier essences
+                    if (!essence.includes('Greater') && !essence.includes('Perfect')) return
+
                     let baseType = ''
                     if (essence.includes('the Body')) baseType = 'the Body'
                     else if (essence.includes('the Mind')) baseType = 'the Mind'
@@ -244,16 +247,16 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
                     else if (essence.includes('Battle')) baseType = 'Battle'
                     else if (essence.includes('the Infinite')) baseType = 'the Infinite'
                     else if (essence.includes('Opulence')) baseType = 'Opulence'
-                    else baseType = 'Other'
+                    else return
 
                     if (!groupedEssences[baseType]) {
-                      groupedEssences[baseType] = { base: [], perfect: [] }
+                      groupedEssences[baseType] = { greater: null, perfect: null }
                     }
 
                     if (essence.includes('Perfect')) {
-                      groupedEssences[baseType].perfect.push(essence)
-                    } else {
-                      groupedEssences[baseType].base.push(essence)
+                      groupedEssences[baseType].perfect = essence
+                    } else if (essence.includes('Greater')) {
+                      groupedEssences[baseType].greater = essence
                     }
                   })
 
@@ -264,100 +267,67 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
                     'the Infinite', 'Alacrity', 'Seeking', 'Opulence'
                   ]
 
-                  // Handle corrupted essences separately
-                  const corruptedEssences = [
-                    'Essence of Delirium', 'Essence of Horror', 'Essence of Hysteria', 'Essence of Insanity', 'Essence of the Abyss'
-                  ]
+                  const renderEssenceSlot = (essence: string | null, className: string) => {
+                    if (!essence) return <div className="essence-slot-empty" />
+
+                    const isAvailable = availableCurrencies.includes(essence)
+                    return (
+                      <Tooltip
+                        content={
+                          <CurrencyTooltipWrapper
+                            currencyName={essence}
+                            additionalMechanics={isAvailable ? "Double-click to apply" : "Not available for this item"}
+                          />
+                        }
+                        delay={0}
+                        position="right"
+                      >
+                        <div
+                          className={`currency-slot ${className} ${!isAvailable ? 'currency-disabled' : ''}`}
+                          onClick={() => isAvailable && handleCraft(essence)}
+                          draggable={isAvailable}
+                          onDragStart={() => isAvailable && onCurrencyDragStart?.(essence)}
+                          onDragEnd={() => onCurrencyDragEnd?.()}
+                          style={{ cursor: isAvailable ? 'grab' : 'not-allowed' }}
+                        >
+                          <img
+                            src={getCurrencyIconUrl(essence)}
+                            alt={essence}
+                            className="currency-icon"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
+                            }}
+                          />
+                        </div>
+                      </Tooltip>
+                    )
+                  }
 
                   const normalEssencePairs = allEssenceTypes.map((baseType) => {
                     const group = groupedEssences[baseType]
-                    if (!group || (group.base.length === 0 && group.perfect.length === 0)) return null
-
-                    // Find the Greater essence (prefer Greater > base > Lesser)
-                    const baseEssence = group.base.find(e => e.includes('Greater')) ||
-                                       group.base.find(e => !e.includes('Lesser') && !e.includes('Greater')) ||
-                                       group.base[0]
+                    if (!group || (!group.greater && !group.perfect)) return null
 
                     return (
                       <div key={baseType} className="essence-pair">
-                        {/* Base essence group */}
-                        {group.base.length > 0 && baseEssence && (
-                          <Tooltip
-                            content={
-                              <CurrencyTooltipWrapper
-                                currencyName={baseEssence}
-                                additionalMechanics={
-                                  !availableCurrencies.includes(baseEssence)
-                                    ? "Not available for this item"
-                                    : "Double-click to apply"
-                                }
-                              />
-                            }
-                            delay={0}
-                            position="right"
-                          >
-                            <div
-                              className={`currency-slot essence-base ${!availableCurrencies.includes(baseEssence) ? 'currency-disabled' : ''}`}
-                              onClick={() => availableCurrencies.includes(baseEssence) && handleCraft(baseEssence)}
-                              draggable={availableCurrencies.includes(baseEssence)}
-                              onDragStart={() => availableCurrencies.includes(baseEssence) && onCurrencyDragStart?.(baseEssence)}
-                              onDragEnd={() => onCurrencyDragEnd?.()}
-                              style={{ cursor: availableCurrencies.includes(baseEssence) ? 'grab' : 'not-allowed' }}
-                            >
-                              <img
-                                src={getCurrencyIconUrl(baseEssence)}
-                                alt={`Essence of ${baseType}`}
-                                className="currency-icon"
-                                onError={(e) => {
-                                  (e.target as HTMLImageElement).src = "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
-                                }}
-                              />
-                            </div>
-                          </Tooltip>
-                        )}
-                        {/* Perfect essence */}
-                        {group.perfect.length > 0 && (
-                          <Tooltip
-                            content={
-                              <CurrencyTooltipWrapper
-                                currencyName={group.perfect[0]}
-                                additionalMechanics={
-                                  !availableCurrencies.includes(group.perfect[0])
-                                    ? "Not available for this item"
-                                    : "Double-click to apply"
-                                }
-                              />
-                            }
-                            delay={0}
-                            position="right"
-                          >
-                            <div
-                              className={`currency-slot essence-perfect ${!availableCurrencies.includes(group.perfect[0]) ? 'currency-disabled' : ''}`}
-                              onClick={() => availableCurrencies.includes(group.perfect[0]) && handleCraft(group.perfect[0])}
-                              draggable={availableCurrencies.includes(group.perfect[0])}
-                              onDragStart={() => availableCurrencies.includes(group.perfect[0]) && onCurrencyDragStart?.(group.perfect[0])}
-                              onDragEnd={() => onCurrencyDragEnd?.()}
-                              style={{ cursor: availableCurrencies.includes(group.perfect[0]) ? 'grab' : 'not-allowed' }}
-                            >
-                              <img
-                                src={getCurrencyIconUrl(group.perfect[0])}
-                                alt={`Perfect Essence of ${baseType}`}
-                                className="currency-icon"
-                                onError={(e) => {
-                                  (e.target as HTMLImageElement).src = "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
-                                }}
-                              />
-                            </div>
-                          </Tooltip>
-                        )}
+                        {renderEssenceSlot(group.greater, 'essence-greater')}
+                        {renderEssenceSlot(group.perfect, 'essence-perfect perfect-essence')}
                       </div>
                     )
                   }).filter(Boolean)
 
-                  // Add corrupted essences
-                  const corruptedEssencePairs = corruptedEssences.filter(essence =>
+                  // Split into left and right columns
+                  const midpoint = Math.ceil(normalEssencePairs.length / 2)
+                  const leftEssences = normalEssencePairs.slice(0, midpoint)
+                  const rightEssences = normalEssencePairs.slice(midpoint)
+
+                  // Corrupted essences
+                  const corruptedEssences = [
+                    'Essence of Delirium', 'Essence of Horror', 'Essence of Hysteria', 'Essence of Insanity', 'Essence of the Abyss'
+                  ]
+
+                  const corruptedSlots = corruptedEssences.filter(essence =>
                     categorizedCurrencies.essences.implemented.includes(essence) || categorizedCurrencies.essences.disabled.includes(essence)
-                  ).map((essence) => {
+                  ).filter(searchFilter).map((essence) => {
                     const isImplemented = categorizedCurrencies.essences.implemented.includes(essence)
                     const isAvailable = availableCurrencies.includes(essence) && isImplemented
                     const additionalMechanics = !isImplemented
@@ -367,40 +337,48 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
                         : "Not available for this item"
 
                     return (
-                      <div key={essence} className="essence-pair corrupted">
-                        <Tooltip
-                          content={
-                            <CurrencyTooltipWrapper
-                              currencyName={essence}
-                              additionalMechanics={additionalMechanics}
-                            />
-                          }
-                          delay={0}
-                          position="right"
+                      <Tooltip
+                        key={essence}
+                        content={
+                          <CurrencyTooltipWrapper
+                            currencyName={essence}
+                            additionalMechanics={additionalMechanics}
+                          />
+                        }
+                        delay={0}
+                        position="right"
+                      >
+                        <div
+                          className={`currency-slot essence-corrupted ${!isAvailable ? 'currency-disabled' : ''}`}
+                          onClick={() => isAvailable && handleCraft(essence)}
+                          draggable={isAvailable}
+                          onDragStart={() => isAvailable && onCurrencyDragStart?.(essence)}
+                          onDragEnd={() => onCurrencyDragEnd?.()}
+                          style={{ cursor: isAvailable ? 'grab' : 'not-allowed' }}
                         >
-                          <div
-                            className={`currency-slot essence-corrupted ${!isAvailable ? 'currency-disabled' : ''}`}
-                            onClick={() => isAvailable && handleCraft(essence)}
-                            draggable={isAvailable}
-                            onDragStart={() => isAvailable && onCurrencyDragStart?.(essence)}
-                            onDragEnd={() => onCurrencyDragEnd?.()}
-                            style={{ cursor: isAvailable ? 'grab' : 'not-allowed' }}
-                          >
-                            <img
-                              src={getCurrencyIconUrl(essence)}
-                              alt={essence}
-                              className="currency-icon"
-                              onError={(e) => {
-                                (e.target as HTMLImageElement).src = "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
-                              }}
-                            />
-                          </div>
-                        </Tooltip>
-                      </div>
+                          <img
+                            src={getCurrencyIconUrl(essence)}
+                            alt={essence}
+                            className="currency-icon"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
+                            }}
+                          />
+                        </div>
+                      </Tooltip>
                     )
                   })
 
-                  return [...normalEssencePairs, ...corruptedEssencePairs]
+                  return (
+                    <>
+                      <div className="essence-normal-grid">
+                        {normalEssencePairs}
+                      </div>
+                      <div className="essence-corrupted-column">
+                        {corruptedSlots}
+                      </div>
+                    </>
+                  )
                 })()}
               </div>
             </div>
