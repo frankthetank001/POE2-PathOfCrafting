@@ -11,10 +11,50 @@ interface ItemCreationPanelProps {
 
 export function ItemCreationPanel({ item, onItemChange, onMessage, onHistoryReset }: ItemCreationPanelProps) {
   const [availableSlots, setAvailableSlots] = useState<ItemBasesBySlot>({})
-  const [selectedSlot, setSelectedSlot] = useState<string>('body_armour')
-  const [selectedCategory, setSelectedCategory] = useState<string>('int_armour')
+  const [selectedSlot, setSelectedSlot] = useState<string>('')
+  const [selectedCategory, setSelectedCategory] = useState<string>('')
   const [availableBases, setAvailableBases] = useState<ItemBase[]>([])
   const [selectedBase, setSelectedBase] = useState<string>('')
+
+  console.log('[ItemCreationPanel] RENDER - Current state:', {
+    selectedSlot,
+    selectedCategory,
+    availableSlotsKeys: Object.keys(availableSlots),
+    availableBasesCount: availableBases.length
+  })
+
+  // Format slot name for display
+  const formatSlotName = (slot: string): string => {
+    const slotNames: Record<string, string> = {
+      'helmet': 'Helmet',
+      'gloves': 'Gloves',
+      'boots': 'Boots',
+      'body': 'Body Armour',
+      'weapon': 'Weapon',
+      'jewellery': 'Jewellery',
+    }
+    return slotNames[slot] || slot.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())
+  }
+
+  // Format category name for display
+  const formatCategoryName = (category: string): string => {
+    const categoryNames: Record<string, string> = {
+      'str_armour': 'Strength (Armour)',
+      'dex_armour': 'Dexterity (Evasion)',
+      'int_armour': 'Intelligence (Energy Shield)',
+      'str_dex_armour': 'Str/Dex (Armour/Evasion)',
+      'str_int_armour': 'Str/Int (Armour/Energy Shield)',
+      'dex_int_armour': 'Dex/Int (Evasion/Energy Shield)',
+      'str_dex_int_armour': 'Str/Dex/Int (All Defenses)',
+      'one_hand': 'One-Handed',
+      'two_hand': 'Two-Handed',
+      'offhand': 'Offhand',
+      'amulet': 'Amulet',
+      'belt': 'Belt',
+      'ring': 'Ring',
+    }
+    return categoryNames[category] || category.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())
+  }
 
   // Helper function to calculate stats with quality
   const calculateItemStats = (baseStats: Record<string, number>, quality: number): Record<string, number> => {
@@ -51,15 +91,45 @@ export function ItemCreationPanel({ item, onItemChange, onMessage, onHistoryRese
 
   const loadAvailableSlots = async () => {
     try {
+      console.log('[ItemCreationPanel] Loading available slots...')
       const data = await craftingApi.getItemBases()
+      console.log('[ItemCreationPanel] API returned slots:', Object.keys(data))
+      console.log('[ItemCreationPanel] Full data:', data)
       setAvailableSlots(data)
 
-      // Set default selected category (int_armour for body_armour)
-      if (data.body_armour && data.body_armour.includes('int_armour')) {
-        setSelectedCategory('int_armour')
+      // Set default to body armour (prefer body slot first)
+      const preferredOrder = ['body', 'helmet', 'gloves', 'boots', 'weapon', 'jewellery']
+      let defaultSlot = ''
+      let defaultCategory = ''
+
+      console.log('[ItemCreationPanel] Checking preferred order:', preferredOrder)
+      for (const slot of preferredOrder) {
+        console.log(`[ItemCreationPanel] Checking slot "${slot}":`, data[slot])
+        if (data[slot] && data[slot].length > 0) {
+          defaultSlot = slot
+          defaultCategory = data[slot][0]
+          console.log(`[ItemCreationPanel] ✓ Found! Setting default to: ${defaultSlot} / ${defaultCategory}`)
+          break
+        }
+      }
+
+      // Fallback to first available slot if none of the preferred ones exist
+      if (!defaultSlot && Object.keys(data).length > 0) {
+        defaultSlot = Object.keys(data)[0]
+        defaultCategory = data[defaultSlot][0]
+        console.log(`[ItemCreationPanel] Using fallback: ${defaultSlot} / ${defaultCategory}`)
+      }
+
+      console.log(`[ItemCreationPanel] Final selection: slot="${defaultSlot}", category="${defaultCategory}"`)
+      if (defaultSlot && defaultCategory) {
+        setSelectedSlot(defaultSlot)
+        setSelectedCategory(defaultCategory)
+        console.log('[ItemCreationPanel] State updated!')
+      } else {
+        console.error('[ItemCreationPanel] ERROR: No valid slot/category found!')
       }
     } catch (err) {
-      console.error('Failed to load item bases:', err)
+      console.error('[ItemCreationPanel] Failed to load item bases:', err)
     }
   }
 
@@ -110,7 +180,7 @@ export function ItemCreationPanel({ item, onItemChange, onMessage, onHistoryRese
           >
             {Object.keys(availableSlots).map(slot => (
               <option key={slot} value={slot}>
-                {slot.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                {formatSlotName(slot)}
               </option>
             ))}
           </select>
@@ -126,7 +196,7 @@ export function ItemCreationPanel({ item, onItemChange, onMessage, onHistoryRese
           >
             {(availableSlots[selectedSlot] || []).map(category => (
               <option key={category} value={category}>
-                {category.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                {formatCategoryName(category)}
               </option>
             ))}
           </select>

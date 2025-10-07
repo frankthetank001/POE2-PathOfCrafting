@@ -86,18 +86,143 @@ def get_available_categories_by_slot(slot: str) -> List[str]:
 
 
 def get_slot_category_combinations() -> dict:
-    """Get all slot -> categories combinations"""
-    result = {}
-    slots = get_available_slots()
+    """
+    Get all slot -> categories combinations with UI-friendly grouping.
 
-    for slot in slots:
+    Returns structure like:
+    {
+        "helmet": ["str_armour", "dex_armour", "int_armour", ...],
+        "gloves": ["str_armour", "dex_armour", ...],
+        "boots": ["str_armour", "dex_armour", ...],
+        "body": ["str_armour", "dex_armour", ...],
+        "weapon": ["one_hand", "two_hand", "offhand"],
+        "jewellery": ["amulet", "belt", "ring"]
+    }
+    """
+
+    # Define weapon type mappings (database slot -> handedness category)
+    WEAPON_SLOT_TO_CATEGORY = {
+        'axe': 'weapon',
+        'bow': 'weapon',
+        'crossbow': 'weapon',
+        'claw': 'weapon',
+        'dagger': 'weapon',
+        'flail': 'weapon',
+        'mace': 'weapon',
+        'sceptre': 'weapon',
+        'spear': 'weapon',
+        'staff': 'weapon',
+        'sword': 'weapon',
+        'wand': 'weapon',
+    }
+
+    # Map database categories to handedness
+    def get_weapon_handedness(category: str) -> str:
+        if 'Two Handed' in category or category in ['Bow', 'Crossbow', 'Staff']:
+            return 'two_hand'
+        elif category in ['Flail']:  # Flail is offhand only
+            return 'offhand'
+        else:
+            return 'one_hand'
+
+    result = {}
+
+    # Armour slots - keep as-is but rename body_armour to body
+    for slot in ['helmet', 'gloves', 'boots', 'body_armour']:
         categories = get_available_categories_by_slot(slot)
-        result[slot] = categories
+        display_slot = 'body' if slot == 'body_armour' else slot
+        result[display_slot] = sorted(categories)
+
+    # Weapon slot - group all weapon types by handedness
+    weapon_handedness = set()
+    for db_slot, ui_slot in WEAPON_SLOT_TO_CATEGORY.items():
+        bases_for_slot = [base for base in ITEM_BASES if base.slot == db_slot]
+        for base in bases_for_slot:
+            handedness = get_weapon_handedness(base.category)
+            weapon_handedness.add(handedness)
+
+    if weapon_handedness:
+        result['weapon'] = sorted(weapon_handedness)
+
+    # Jewellery slot - amulet, belt, ring
+    jewellery_types = set()
+    for slot in ['amulet', 'belt', 'ring']:
+        if any(base.slot == slot for base in ITEM_BASES):
+            jewellery_types.add(slot)
+
+    if jewellery_types:
+        result['jewellery'] = sorted(jewellery_types)
 
     return result
 
 
+def get_bases_for_ui_slot_category(ui_slot: str, ui_category: str) -> List[ItemBase]:
+    """
+    Get bases for UI slot/category combination, handling the mapping from
+    UI-friendly names to database slot/category values.
+
+    Args:
+        ui_slot: UI slot name (helmet, gloves, boots, body, weapon, jewellery)
+        ui_category: UI category name (str_armour, one_hand, amulet, etc.)
+
+    Returns:
+        List of matching ItemBase objects
+    """
+
+    # Map UI slot to database slot(s)
+    if ui_slot == 'body':
+        db_slots = ['body_armour']
+    elif ui_slot in ['helmet', 'gloves', 'boots']:
+        db_slots = [ui_slot]
+    elif ui_slot == 'weapon':
+        db_slots = ['axe', 'bow', 'crossbow', 'claw', 'dagger', 'flail', 'mace', 'sceptre', 'spear', 'staff', 'sword', 'wand']
+    elif ui_slot == 'jewellery':
+        db_slots = ['amulet', 'belt', 'ring']
+    else:
+        return []
+
+    # Filter bases by slot and category
+    bases = []
+
+    for base in ITEM_BASES:
+        if base.slot not in db_slots:
+            continue
+
+        # For armour slots, category is direct match
+        if ui_slot in ['helmet', 'gloves', 'boots', 'body']:
+            if base.category == ui_category:
+                bases.append(base)
+
+        # For weapon slot, map by handedness
+        elif ui_slot == 'weapon':
+            if ui_category == 'one_hand':
+                # One-handed weapons
+                if 'One Handed' in base.category or base.category in ['Claw', 'Dagger', 'Sceptre', 'Wand']:
+                    bases.append(base)
+            elif ui_category == 'two_hand':
+                # Two-handed weapons
+                if 'Two Handed' in base.category or base.category in ['Bow', 'Crossbow', 'Staff', 'Spear']:
+                    bases.append(base)
+            elif ui_category == 'offhand':
+                # Offhand only (flail)
+                if base.category == 'Flail':
+                    bases.append(base)
+
+        # For jewellery, category IS the slot
+        elif ui_slot == 'jewellery':
+            if base.slot == ui_category:
+                bases.append(base)
+
+    return bases
+
+
 def get_default_base_for_category(slot: str, category: str) -> Optional[ItemBase]:
     """Get a default base item for a given slot and category"""
+    # Try UI mapping first
+    bases = get_bases_for_ui_slot_category(slot, category)
+    if bases:
+        return bases[0]
+
+    # Fallback to direct database slot/category match
     bases = [base for base in ITEM_BASES if base.slot == slot and base.category == category]
     return bases[0] if bases else None

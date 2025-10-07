@@ -108,10 +108,10 @@ interface TabContentProps {
 
 function ItemTab({ setItem, onHistoryReset, setMessage, onItemCreated }: TabContentProps) {
   const [itemBases, setItemBases] = useState<ItemBasesBySlot>({})
-  const [selectedSlot, setSelectedSlot] = useState<string>('body_armour')
-  const [selectedCategory, setSelectedCategory] = useState<string>('int_armour')
+  const [selectedSlot, setSelectedSlot] = useState<string>('')
+  const [selectedCategory, setSelectedCategory] = useState<string>('')
   const [availableBases, setAvailableBases] = useState<Array<{name: string, description: string, default_ilvl: number, base_stats: Record<string, number>}>>([])
-  const [selectedBase, setSelectedBase] = useState<string>('Vile Robe')
+  const [selectedBase, setSelectedBase] = useState<string>('')
   const [selectedItemLevel, setSelectedItemLevel] = useState<number>(82)
   const [itemPasteText, setItemPasteText] = useState('')
   const [pasteExpanded, setPasteExpanded] = useState(false)
@@ -139,35 +139,79 @@ function ItemTab({ setItem, onHistoryReset, setMessage, onItemCreated }: TabCont
 
   const loadAvailableBases = async () => {
     try {
+      console.log('[ItemTab] Loading available bases for:', selectedSlot, selectedCategory)
       const bases = await craftingApi.getBasesForSlotCategory(selectedSlot, selectedCategory)
+      console.log('[ItemTab] Loaded bases:', bases.length, 'bases')
       setAvailableBases(bases)
 
-      // Set Vile Robe as default if available
-      const vileRobe = bases.find(base => base.name === 'Vile Robe')
-      if (vileRobe && selectedBase !== 'Vile Robe') {
-        setSelectedBase('Vile Robe')
-      } else if (!selectedBase && bases.length > 0) {
+      // Set default base selection in dropdown (doesn't create the item yet)
+      // For body + int_armour, prefer Vile Robe
+      if (selectedSlot === 'body' && selectedCategory === 'int_armour') {
+        const vileRobe = bases.find(base => base.name === 'Vile Robe')
+        if (vileRobe) {
+          console.log('[ItemTab] Setting Vile Robe as default selection')
+          setSelectedBase('Vile Robe')
+          return
+        }
+      }
+
+      // Otherwise use first available base
+      if (bases.length > 0) {
+        console.log('[ItemTab] Setting first base as default:', bases[0].name)
         setSelectedBase(bases[0].name)
       }
     } catch (err) {
-      console.error('Failed to load available bases:', err)
+      console.error('[ItemTab] Failed to load available bases:', err)
     }
   }
 
   const loadItemBases = async () => {
     try {
+      console.log('[ItemTab] Loading item base slots...')
       const bases = await craftingApi.getItemBases()
+      console.log('[ItemTab] Loaded slots:', Object.keys(bases))
       setItemBases(bases)
+
+      // Set default slot and category on initial load
+      if (!selectedSlot && !selectedCategory) {
+        const preferredSlots = ['body', 'helmet', 'gloves', 'boots', 'weapon', 'jewellery']
+        let defaultSlot = ''
+        let defaultCategory = ''
+
+        // Find first available slot from preferred list
+        for (const slot of preferredSlots) {
+          if (bases[slot] && bases[slot].length > 0) {
+            defaultSlot = slot
+            // For body armor, prefer int_armour if available
+            if (slot === 'body' && bases[slot].includes('int_armour')) {
+              defaultCategory = 'int_armour'
+            } else {
+              defaultCategory = bases[slot][0]
+            }
+            console.log('[ItemTab] Setting initial slot/category:', defaultSlot, defaultCategory)
+            break
+          }
+        }
+
+        if (defaultSlot && defaultCategory) {
+          setSelectedSlot(defaultSlot)
+          setSelectedCategory(defaultCategory)
+        }
+      }
     } catch (err) {
-      console.error('Failed to load item bases:', err)
+      console.error('[ItemTab] Failed to load item bases:', err)
     }
   }
 
   const handleBaseSelection = async () => {
+    console.log('[ItemTab] handleBaseSelection called with:', selectedBase)
     if (!selectedBase) return
 
     const baseData = availableBases.find(base => base.name === selectedBase)
-    if (!baseData) return
+    if (!baseData) {
+      console.log('[ItemTab] Base data not found for:', selectedBase)
+      return
+    }
 
     try {
       // Calculate initial stats with quality (no mods yet)
@@ -193,6 +237,7 @@ function ItemTab({ setItem, onHistoryReset, setMessage, onItemCreated }: TabCont
         calculated_stats: initialStats,
       }
 
+      console.log('[ItemTab] ✓ Item created successfully:', newItem)
       setItem(newItem)
       onHistoryReset()
       setMessage(`Selected base: ${selectedBase} (ilvl ${selectedItemLevel})`)
@@ -516,6 +561,13 @@ function GridCraftingSimulator() {
   const [expandedModGroups, setExpandedModGroups] = useState<Set<string>>(new Set())
   const [activeTab, setActiveTab] = useState<'item' | 'history' | 'currency'>('item')
   const [searchQuery, setSearchQuery] = useState<string>('')
+
+  // Currency tooltip cache for search functionality
+  const [currencyTooltipCache, setCurrencyTooltipCache] = useState<Record<string, {
+    name: string
+    description: string
+    mechanics?: string
+  }>>({})
 
   // Panel collapse state
   const [leftPanelCollapsed, setLeftPanelCollapsed] = useState(false)
@@ -1084,6 +1136,52 @@ function GridCraftingSimulator() {
       loadAvailableCurrencies()
     }
   }, [item, exclusionGroups])
+
+  // Pre-fetch all currency tooltips for search functionality
+  useEffect(() => {
+    const fetchAllTooltips = async () => {
+      // Collect all unique currency names
+      const allCurrencyNames = new Set<string>()
+
+      // Add all orbs
+      categorizedCurrencies.orbs.implemented.forEach(name => allCurrencyNames.add(name))
+      categorizedCurrencies.orbs.disabled.forEach(name => allCurrencyNames.add(name))
+
+      // Add all essences
+      categorizedCurrencies.essences.implemented.forEach(name => allCurrencyNames.add(name))
+      categorizedCurrencies.essences.disabled.forEach(name => allCurrencyNames.add(name))
+
+      // Add all bones
+      categorizedCurrencies.bones.implemented.forEach(name => allCurrencyNames.add(name))
+      categorizedCurrencies.bones.disabled.forEach(name => allCurrencyNames.add(name))
+
+      // Add all omens
+      categorizedCurrencies.omens.forEach(name => allCurrencyNames.add(name))
+
+      // Fetch tooltips for all currencies
+      const tooltipPromises = Array.from(allCurrencyNames).map(async (currencyName) => {
+        try {
+          const tooltip = await craftingApi.getCurrencyTooltip(currencyName)
+          return { currencyName, tooltip }
+        } catch (err) {
+          console.warn(`Failed to fetch tooltip for ${currencyName}:`, err)
+          return { currencyName, tooltip: { name: currencyName, description: '', mechanics: '' } }
+        }
+      })
+
+      const results = await Promise.all(tooltipPromises)
+      const cache: Record<string, { name: string; description: string; mechanics?: string }> = {}
+      results.forEach(({ currencyName, tooltip }) => {
+        cache[currencyName] = tooltip
+      })
+      setCurrencyTooltipCache(cache)
+      console.log(`[GridCraftingSimulator] Loaded ${Object.keys(cache).length} currency tooltips for search`)
+    }
+
+    if (categorizedCurrencies.total > 0) {
+      fetchAllTooltips()
+    }
+  }, [categorizedCurrencies])
 
   // Recalculate stats whenever mods change
   useEffect(() => {
@@ -1852,14 +1950,15 @@ function GridCraftingSimulator() {
   const isCurrencyMatchingSearch = (currencyName: string) => {
     if (!searchQuery.trim()) return true
 
-    // Get currency description data
-    const currencyData = CURRENCY_DESCRIPTIONS[currencyName]
+    // Try to get tooltip data from cache first, fallback to static data
+    const cachedTooltip = currencyTooltipCache[currencyName]
+    const staticData = CURRENCY_DESCRIPTIONS[currencyName]
 
     // Build searchable text from name + description + mechanics
     const searchableText = [
       currencyName,
-      currencyData?.description || '',
-      currencyData?.mechanics || ''
+      cachedTooltip?.description || staticData?.description || '',
+      cachedTooltip?.mechanics || staticData?.mechanics || ''
     ].join(' ')
 
     // Check if query contains spaces (multiple keywords)

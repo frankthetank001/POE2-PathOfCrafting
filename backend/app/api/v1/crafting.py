@@ -283,7 +283,8 @@ async def get_item_bases():
 async def get_bases_for_slot_category(slot: str, category: str):
     """Get all available base names for a specific slot and category"""
     try:
-        bases = [base for base in ITEM_BASES if base.slot == slot and base.category == category]
+        from app.schemas.item_bases import get_bases_for_ui_slot_category
+        bases = get_bases_for_ui_slot_category(slot, category)
         return [{"name": base.name, "description": base.description, "default_ilvl": base.default_ilvl, "base_stats": base.base_stats} for base in bases]
     except Exception as e:
         logger.error(f"Error fetching bases for {slot}/{category}: {e}")

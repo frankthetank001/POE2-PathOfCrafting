@@ -1045,7 +1045,7 @@
   },
   {
     "name": "Chain Mail",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "body_armour",
     "attribute_requirements": [],
     "default_ilvl": 1,
@@ -1058,7 +1058,7 @@
   },
   {
     "name": "Rogue Armour",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1074,7 +1074,7 @@
   },
   {
     "name": "Vagabond Armour",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1090,7 +1090,7 @@
   },
   {
     "name": "Cloaked Mail",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1106,7 +1106,7 @@
   },
   {
     "name": "Explorer Armour",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1122,7 +1122,7 @@
   },
   {
     "name": "Scale Mail",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1138,7 +1138,7 @@
   },
   {
     "name": "Knight Armour",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1154,7 +1154,7 @@
   },
   {
     "name": "Ancestral Mail",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1170,7 +1170,7 @@
   },
   {
     "name": "Lamellar Mail",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1186,7 +1186,7 @@
   },
   {
     "name": "Gladiator Armour",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1202,7 +1202,7 @@
   },
   {
     "name": "Heroic Armour",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1218,7 +1218,7 @@
   },
   {
     "name": "Tournament Mail",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1234,7 +1234,7 @@
   },
   {
     "name": "Tournament Mail",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1250,7 +1250,7 @@
   },
   {
     "name": "Tournament Mail",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1266,7 +1266,7 @@
   },
   {
     "name": "Slayer Armour",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1282,7 +1282,7 @@
   },
   {
     "name": "Ring Mail",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1298,7 +1298,7 @@
   },
   {
     "name": "Scoundrel Armour",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1314,7 +1314,7 @@
   },
   {
     "name": "Wanderer Armour",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1330,7 +1330,7 @@
   },
   {
     "name": "Mantled Mail",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1346,7 +1346,7 @@
   },
   {
     "name": "Trailblazer Armour",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1362,7 +1362,7 @@
   },
   {
     "name": "Golden Mail",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1378,7 +1378,7 @@
   },
   {
     "name": "Dastard Armour",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1394,7 +1394,7 @@
   },
   {
     "name": "Shrouded Mail",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1410,7 +1410,7 @@
   },
   {
     "name": "Shrouded Mail",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1426,7 +1426,7 @@
   },
   {
     "name": "Shrouded Mail",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1442,7 +1442,7 @@
   },
   {
     "name": "Death Mail",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1458,7 +1458,7 @@
   },
   {
     "name": "Thane Mail",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1474,7 +1474,7 @@
   },
   {
     "name": "Pilgrim Vestments",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [],
     "default_ilvl": 1,
@@ -1487,7 +1487,7 @@
   },
   {
     "name": "Pelt Mantle",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1503,7 +1503,7 @@
   },
   {
     "name": "Mail Vestments",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1519,7 +1519,7 @@
   },
   {
     "name": "Shaman Mantle",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1535,7 +1535,7 @@
   },
   {
     "name": "Ironclad Vestments",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1551,7 +1551,7 @@
   },
   {
     "name": "Sacrificial Mantle",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1567,7 +1567,7 @@
   },
   {
     "name": "Cleric Vestments",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1583,7 +1583,7 @@
   },
   {
     "name": "Tideseer Mantle",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1599,7 +1599,7 @@
   },
   {
     "name": "Gilded Vestments",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1615,7 +1615,7 @@
   },
   {
     "name": "Venerated Mantle",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1631,7 +1631,7 @@
   },
   {
     "name": "Revered Vestments",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1647,7 +1647,7 @@
   },
   {
     "name": "Corvus Mantle",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1663,7 +1663,7 @@
   },
   {
     "name": "Zenith Vestments",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1679,7 +1679,7 @@
   },
   {
     "name": "Templar Vestments",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1695,7 +1695,7 @@
   },
   {
     "name": "Bearskin Mantle",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1711,7 +1711,7 @@
   },
   {
     "name": "Chain Vestments",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1727,7 +1727,7 @@
   },
   {
     "name": "Occultist Mantle",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1743,7 +1743,7 @@
   },
   {
     "name": "Plated Vestments",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1759,7 +1759,7 @@
   },
   {
     "name": "Heartcarver Mantle",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1775,7 +1775,7 @@
   },
   {
     "name": "Wolfskin Mantle",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1791,7 +1791,7 @@
   },
   {
     "name": "Conjurer Mantle",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1807,7 +1807,7 @@
   },
   {
     "name": "Death Mantle",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1823,7 +1823,7 @@
   },
   {
     "name": "Seastorm Mantle",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -1839,7 +1839,7 @@
   },
   {
     "name": "Hermit Garb",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [],
     "default_ilvl": 1,
@@ -1852,7 +1852,7 @@
   },
   {
     "name": "Waxed Jacket",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "dex",
@@ -1868,7 +1868,7 @@
   },
   {
     "name": "Marabout Garb",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "dex",
@@ -1884,7 +1884,7 @@
   },
   {
     "name": "Wayfarer Jacket",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "dex",
@@ -1900,7 +1900,7 @@
   },
   {
     "name": "Anchorite Garb",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "dex",
@@ -1916,7 +1916,7 @@
   },
   {
     "name": "Scalper's Jacket",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "dex",
@@ -1932,7 +1932,7 @@
   },
   {
     "name": "Scoundrel Jacket",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "dex",
@@ -1948,7 +1948,7 @@
   },
   {
     "name": "Ascetic Garb",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "dex",
@@ -1964,7 +1964,7 @@
   },
   {
     "name": "Clandestine Jacket",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "dex",
@@ -1980,7 +1980,7 @@
   },
   {
     "name": "Monastic Garb",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "dex",
@@ -1996,7 +1996,7 @@
   },
   {
     "name": "Torment Jacket",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "dex",
@@ -2012,7 +2012,7 @@
   },
   {
     "name": "Devout Garb",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "dex",
@@ -2028,7 +2028,7 @@
   },
   {
     "name": "Assassin Garb",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "dex",
@@ -2044,7 +2044,7 @@
   },
   {
     "name": "Ascetic Garb",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "dex",
@@ -2060,7 +2060,7 @@
   },
   {
     "name": "Oiled Jacket",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "dex",
@@ -2076,7 +2076,7 @@
   },
   {
     "name": "Evangelist Garb",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "dex",
@@ -2092,7 +2092,7 @@
   },
   {
     "name": "Itinerant Jacket",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "dex",
@@ -2108,7 +2108,7 @@
   },
   {
     "name": "Hatungo Garb",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "dex",
@@ -2124,7 +2124,7 @@
   },
   {
     "name": "Hawker's Jacket",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "dex",
@@ -2140,7 +2140,7 @@
   },
   {
     "name": "Sleek Jacket",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "dex",
@@ -2156,7 +2156,7 @@
   },
   {
     "name": "Rambler Jacket",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "dex",
@@ -2172,7 +2172,7 @@
   },
   {
     "name": "Falconer's Jacket",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "dex",
@@ -2188,7 +2188,7 @@
   },
   {
     "name": "Austere Garb",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "dex",
@@ -2204,7 +2204,7 @@
   },
   {
     "name": "Grand Regalia",
-    "category": "int_armour",
+    "category": "str_dex_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -2222,7 +2222,7 @@
   },
   {
     "name": "Garment",
-    "category": "int_armour",
+    "category": "str_dex_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [],
     "default_ilvl": 1,
@@ -2232,7 +2232,7 @@
   },
   {
     "name": "Golden Mantle",
-    "category": "int_armour",
+    "category": "str_dex_int_armour",
     "slot": "body_armour",
     "attribute_requirements": [
       "str",
@@ -3084,7 +3084,7 @@
   },
   {
     "name": "Brimmed Helm",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3100,7 +3100,7 @@
   },
   {
     "name": "Guarded Helm",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3116,7 +3116,7 @@
   },
   {
     "name": "Visored Helm",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3132,7 +3132,7 @@
   },
   {
     "name": "Cowled Helm",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3148,7 +3148,7 @@
   },
   {
     "name": "Shielded Helm",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3164,7 +3164,7 @@
   },
   {
     "name": "Closed Helm",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3180,7 +3180,7 @@
   },
   {
     "name": "Decorated Helm",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3196,7 +3196,7 @@
   },
   {
     "name": "Gallant Helm",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3212,7 +3212,7 @@
   },
   {
     "name": "Domed Helm",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3228,7 +3228,7 @@
   },
   {
     "name": "Engraved Helm",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3244,7 +3244,7 @@
   },
   {
     "name": "Soldier Helm",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3260,7 +3260,7 @@
   },
   {
     "name": "Cabalist Helm",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3276,7 +3276,7 @@
   },
   {
     "name": "Gladiatoral Helm",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3292,7 +3292,7 @@
   },
   {
     "name": "Warded Helm",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3308,7 +3308,7 @@
   },
   {
     "name": "Cryptic Helm",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3324,7 +3324,7 @@
   },
   {
     "name": "Champion Helm",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3340,7 +3340,7 @@
   },
   {
     "name": "Gladiatorial Helm",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3356,7 +3356,7 @@
   },
   {
     "name": "Iron Crown",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3372,7 +3372,7 @@
   },
   {
     "name": "Horned Crown",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3388,7 +3388,7 @@
   },
   {
     "name": "Cultist Crown",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3404,7 +3404,7 @@
   },
   {
     "name": "Martyr Crown",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3420,7 +3420,7 @@
   },
   {
     "name": "Heavy Crown",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3436,7 +3436,7 @@
   },
   {
     "name": "Spiritbone Crown",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3452,7 +3452,7 @@
   },
   {
     "name": "Lavish Crown",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3468,7 +3468,7 @@
   },
   {
     "name": "Archon Crown",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3484,7 +3484,7 @@
   },
   {
     "name": "Mailed Crown",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3500,7 +3500,7 @@
   },
   {
     "name": "Forest Crown",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3516,7 +3516,7 @@
   },
   {
     "name": "Zealot Crown",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3532,7 +3532,7 @@
   },
   {
     "name": "Hallowed Crown",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3548,7 +3548,7 @@
   },
   {
     "name": "Inquisitor Crown",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3564,7 +3564,7 @@
   },
   {
     "name": "Druidic Crown",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3580,7 +3580,7 @@
   },
   {
     "name": "Saintly Crown",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3596,7 +3596,7 @@
   },
   {
     "name": "Divine Crown",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3612,7 +3612,7 @@
   },
   {
     "name": "Cryptic Crown",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -3628,7 +3628,7 @@
   },
   {
     "name": "Hewn Mask",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "dex",
@@ -3644,7 +3644,7 @@
   },
   {
     "name": "Face Mask",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "dex",
@@ -3660,7 +3660,7 @@
   },
   {
     "name": "Hooded Mask",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "dex",
@@ -3676,7 +3676,7 @@
   },
   {
     "name": "Veiled Mask",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "dex",
@@ -3692,7 +3692,7 @@
   },
   {
     "name": "Tribal Mask",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "dex",
@@ -3708,7 +3708,7 @@
   },
   {
     "name": "Solid Mask",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "dex",
@@ -3724,7 +3724,7 @@
   },
   {
     "name": "Shaded Mask",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "dex",
@@ -3740,7 +3740,7 @@
   },
   {
     "name": "Death Mask",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "dex",
@@ -3756,7 +3756,7 @@
   },
   {
     "name": "Oak Mask",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "dex",
@@ -3772,7 +3772,7 @@
   },
   {
     "name": "Bandit Mask",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "dex",
@@ -3788,7 +3788,7 @@
   },
   {
     "name": "Skulking Mask",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "dex",
@@ -3804,7 +3804,7 @@
   },
   {
     "name": "Pariah Mask",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "dex",
@@ -3820,7 +3820,7 @@
   },
   {
     "name": "Avian Mask",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "dex",
@@ -3836,7 +3836,7 @@
   },
   {
     "name": "Brigand Mask",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "dex",
@@ -3852,7 +3852,7 @@
   },
   {
     "name": "Faridun Mask",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "dex",
@@ -3868,7 +3868,7 @@
   },
   {
     "name": "Soaring Mask",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "dex",
@@ -3884,7 +3884,7 @@
   },
   {
     "name": "Grinning Mask",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "dex",
@@ -3900,7 +3900,7 @@
   },
   {
     "name": "Grand Visage",
-    "category": "int_armour",
+    "category": "str_dex_int_armour",
     "slot": "helmet",
     "attribute_requirements": [
       "str",
@@ -4584,7 +4584,7 @@
   },
   {
     "name": "Ringmail Gauntlets",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "str",
@@ -4600,7 +4600,7 @@
   },
   {
     "name": "Layered Gauntlets",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "str",
@@ -4616,7 +4616,7 @@
   },
   {
     "name": "Doubled Gauntlets",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "str",
@@ -4632,7 +4632,7 @@
   },
   {
     "name": "Plate Gauntlets",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "str",
@@ -4648,7 +4648,7 @@
   },
   {
     "name": "Burnished Gauntlets",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "str",
@@ -4664,7 +4664,7 @@
   },
   {
     "name": "Ornate Gauntlets",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "str",
@@ -4680,7 +4680,7 @@
   },
   {
     "name": "Ironmail Gauntlets",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "str",
@@ -4696,7 +4696,7 @@
   },
   {
     "name": "Captain Gauntlets",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "str",
@@ -4712,7 +4712,7 @@
   },
   {
     "name": "Zealot Gauntlets",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "str",
@@ -4728,7 +4728,7 @@
   },
   {
     "name": "Steelmail Gauntlets",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "str",
@@ -4744,7 +4744,7 @@
   },
   {
     "name": "Commander Gauntlets",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "str",
@@ -4760,7 +4760,7 @@
   },
   {
     "name": "Cultist Gauntlets",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "str",
@@ -4776,7 +4776,7 @@
   },
   {
     "name": "Blacksteel Gauntlets",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "str",
@@ -4792,7 +4792,7 @@
   },
   {
     "name": "Rope Cuffs",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "str",
@@ -4808,7 +4808,7 @@
   },
   {
     "name": "Aged Cuffs",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "str",
@@ -4824,7 +4824,7 @@
   },
   {
     "name": "Goldcast Cuffs",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "str",
@@ -4840,7 +4840,7 @@
   },
   {
     "name": "Verisium Cuffs",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "str",
@@ -4856,7 +4856,7 @@
   },
   {
     "name": "Righteous Cuffs",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "str",
@@ -4872,7 +4872,7 @@
   },
   {
     "name": "Signet Cuffs",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "str",
@@ -4888,7 +4888,7 @@
   },
   {
     "name": "Braided Cuffs",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "str",
@@ -4904,7 +4904,7 @@
   },
   {
     "name": "Heirloom Cuffs",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "str",
@@ -4920,7 +4920,7 @@
   },
   {
     "name": "Ornate Cuffs",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "str",
@@ -4936,7 +4936,7 @@
   },
   {
     "name": "Bound Cuffs",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "str",
@@ -4952,7 +4952,7 @@
   },
   {
     "name": "Ancient Cuffs",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "str",
@@ -4968,7 +4968,7 @@
   },
   {
     "name": "Gleaming Cuffs",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "str",
@@ -4984,7 +4984,7 @@
   },
   {
     "name": "Adherent Cuffs",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "str",
@@ -5000,7 +5000,7 @@
   },
   {
     "name": "Gauze Wraps",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "dex",
@@ -5016,7 +5016,7 @@
   },
   {
     "name": "Linen Wraps",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "dex",
@@ -5032,7 +5032,7 @@
   },
   {
     "name": "Spiral Wraps",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "dex",
@@ -5048,7 +5048,7 @@
   },
   {
     "name": "Buckled Wraps",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "dex",
@@ -5064,7 +5064,7 @@
   },
   {
     "name": "Furtive Wraps",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "dex",
@@ -5080,7 +5080,7 @@
   },
   {
     "name": "Utility Wraps",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "dex",
@@ -5096,7 +5096,7 @@
   },
   {
     "name": "Bandage Wraps",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "dex",
@@ -5112,7 +5112,7 @@
   },
   {
     "name": "Cambric Wraps",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "dex",
@@ -5128,7 +5128,7 @@
   },
   {
     "name": "Adorned Wraps",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "dex",
@@ -5144,7 +5144,7 @@
   },
   {
     "name": "War Wraps",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "dex",
@@ -5160,7 +5160,7 @@
   },
   {
     "name": "Elegant Wraps",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "dex",
@@ -5176,7 +5176,7 @@
   },
   {
     "name": "Vaal Wraps",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "dex",
@@ -5192,7 +5192,7 @@
   },
   {
     "name": "Secured Wraps",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "dex",
@@ -5208,7 +5208,7 @@
   },
   {
     "name": "Grand Manchettes",
-    "category": "int_armour",
+    "category": "str_dex_int_armour",
     "slot": "gloves",
     "attribute_requirements": [
       "str",
@@ -5892,7 +5892,7 @@
   },
   {
     "name": "Mail Sabatons",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "boots",
     "attribute_requirements": [
       "str",
@@ -5908,7 +5908,7 @@
   },
   {
     "name": "Braced Sabatons",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "boots",
     "attribute_requirements": [
       "str",
@@ -5924,7 +5924,7 @@
   },
   {
     "name": "Stacked Sabatons",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "boots",
     "attribute_requirements": [
       "str",
@@ -5940,7 +5940,7 @@
   },
   {
     "name": "Covered Sabatons",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "boots",
     "attribute_requirements": [
       "str",
@@ -5956,7 +5956,7 @@
   },
   {
     "name": "Flexile Sabatons",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "boots",
     "attribute_requirements": [
       "str",
@@ -5972,7 +5972,7 @@
   },
   {
     "name": "Bold Sabatons",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "boots",
     "attribute_requirements": [
       "str",
@@ -5988,7 +5988,7 @@
   },
   {
     "name": "Soldiering Sabatons",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "boots",
     "attribute_requirements": [
       "str",
@@ -6004,7 +6004,7 @@
   },
   {
     "name": "Goldwork Sabatons",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "boots",
     "attribute_requirements": [
       "str",
@@ -6020,7 +6020,7 @@
   },
   {
     "name": "Bastion Sabatons",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "boots",
     "attribute_requirements": [
       "str",
@@ -6036,7 +6036,7 @@
   },
   {
     "name": "Veteran Sabatons",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "boots",
     "attribute_requirements": [
       "str",
@@ -6052,7 +6052,7 @@
   },
   {
     "name": "Noble Sabatons",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "boots",
     "attribute_requirements": [
       "str",
@@ -6068,7 +6068,7 @@
   },
   {
     "name": "Fortress Sabatons",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "boots",
     "attribute_requirements": [
       "str",
@@ -6084,7 +6084,7 @@
   },
   {
     "name": "Blacksteel Sabatons",
-    "category": "dex_armour",
+    "category": "str_dex_armour",
     "slot": "boots",
     "attribute_requirements": [
       "str",
@@ -6100,7 +6100,7 @@
   },
   {
     "name": "Padded Leggings",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "boots",
     "attribute_requirements": [
       "str",
@@ -6116,7 +6116,7 @@
   },
   {
     "name": "Secured Leggings",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "boots",
     "attribute_requirements": [
       "str",
@@ -6132,7 +6132,7 @@
   },
   {
     "name": "Pelt Leggings",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "boots",
     "attribute_requirements": [
       "str",
@@ -6148,7 +6148,7 @@
   },
   {
     "name": "Weaver Leggings",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "boots",
     "attribute_requirements": [
       "str",
@@ -6164,7 +6164,7 @@
   },
   {
     "name": "Gilt Leggings",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "boots",
     "attribute_requirements": [
       "str",
@@ -6180,7 +6180,7 @@
   },
   {
     "name": "Pious Leggings",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "boots",
     "attribute_requirements": [
       "str",
@@ -6196,7 +6196,7 @@
   },
   {
     "name": "Adherent Leggings",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "boots",
     "attribute_requirements": [
       "str",
@@ -6212,7 +6212,7 @@
   },
   {
     "name": "Bound Leggings",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "boots",
     "attribute_requirements": [
       "str",
@@ -6228,7 +6228,7 @@
   },
   {
     "name": "Shamanistic Leggings",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "boots",
     "attribute_requirements": [
       "str",
@@ -6244,7 +6244,7 @@
   },
   {
     "name": "Faithful Leggings",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "boots",
     "attribute_requirements": [
       "str",
@@ -6260,7 +6260,7 @@
   },
   {
     "name": "Apostle Leggings",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "boots",
     "attribute_requirements": [
       "str",
@@ -6276,7 +6276,7 @@
   },
   {
     "name": "Warlock Leggings",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "boots",
     "attribute_requirements": [
       "str",
@@ -6292,7 +6292,7 @@
   },
   {
     "name": "Cryptic Leggings",
-    "category": "int_armour",
+    "category": "str_int_armour",
     "slot": "boots",
     "attribute_requirements": [
       "str",
@@ -6308,7 +6308,7 @@
   },
   {
     "name": "Frayed Shoes",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "boots",
     "attribute_requirements": [
       "dex",
@@ -6324,7 +6324,7 @@
   },
   {
     "name": "Threaded Shoes",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "boots",
     "attribute_requirements": [
       "dex",
@@ -6340,7 +6340,7 @@
   },
   {
     "name": "Hunting Shoes",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "boots",
     "attribute_requirements": [
       "dex",
@@ -6356,7 +6356,7 @@
   },
   {
     "name": "Steelpoint Shoes",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "boots",
     "attribute_requirements": [
       "dex",
@@ -6372,7 +6372,7 @@
   },
   {
     "name": "Velour Shoes",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "boots",
     "attribute_requirements": [
       "dex",
@@ -6388,7 +6388,7 @@
   },
   {
     "name": "Bladed Shoes",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "boots",
     "attribute_requirements": [
       "dex",
@@ -6404,7 +6404,7 @@
   },
   {
     "name": "Wayfarer Shoes",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "boots",
     "attribute_requirements": [
       "dex",
@@ -6420,7 +6420,7 @@
   },
   {
     "name": "Silverbuckled Shoes",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "boots",
     "attribute_requirements": [
       "dex",
@@ -6436,7 +6436,7 @@
   },
   {
     "name": "Treerunner Shoes",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "boots",
     "attribute_requirements": [
       "dex",
@@ -6452,7 +6452,7 @@
   },
   {
     "name": "Wanderer Shoes",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "boots",
     "attribute_requirements": [
       "dex",
@@ -6468,7 +6468,7 @@
   },
   {
     "name": "Charmed Shoes",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "boots",
     "attribute_requirements": [
       "dex",
@@ -6484,7 +6484,7 @@
   },
   {
     "name": "Quickslip Shoes",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "boots",
     "attribute_requirements": [
       "dex",
@@ -6500,7 +6500,7 @@
   },
   {
     "name": "Daggerfoot Shoes",
-    "category": "int_armour",
+    "category": "dex_int_armour",
     "slot": "boots",
     "attribute_requirements": [
       "dex",
@@ -6516,7 +6516,7 @@
   },
   {
     "name": "Grand Cuisses",
-    "category": "int_armour",
+    "category": "str_dex_int_armour",
     "slot": "boots",
     "attribute_requirements": [
       "str",
