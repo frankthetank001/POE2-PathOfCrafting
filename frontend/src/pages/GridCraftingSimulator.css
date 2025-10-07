@@ -2936,3 +2936,199 @@
 .paste-error {
   text-align: center;
 }
+
+/* ============================================
+   New Currency Grid Layout
+   ============================================ */
+
+.currency-new-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+
+/* Currency Section - Generic */
+.currency-section {
+  background: rgba(30, 30, 35, 0.7);
+  border: 1px solid rgba(80, 80, 90, 0.5);
+  border-radius: 4px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+}
+
+.currency-section-header {
+  background: rgba(40, 40, 50, 0.8);
+  padding: 0 12px;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #d4af37;
+  border-bottom: 1px solid rgba(80, 80, 90, 0.5);
+  flex-shrink: 0;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  line-height: 1;
+}
+
+.currency-section-content {
+  padding: 8px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  flex: 1;
+}
+
+/* Bones Section - Full Width */
+.bones-section {
+  grid-column: 1 / -1;
+}
+
+.bones-section .currency-section-content {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+  gap: 4px;
+}
+
+/* Special Section - Small */
+.special-section {
+  min-width: 150px;
+}
+
+.special-section .currency-section-content {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+/* Orbs Section - Medium */
+.orbs-section {
+  flex: 1;
+}
+
+.orbs-section .orbs-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.currency-family {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Omens Section - Large */
+.omens-section {
+  flex: 2;
+}
+
+.omens-section .omens-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+  gap: 4px;
+}
+
+/* Essences Section - Full Width, Collapsible */
+.essences-section {
+  grid-column: 1 / -1;
+}
+
+.essences-section .essences-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: background 0.2s;
+}
+
+.essences-section .essences-header:hover {
+  background: rgba(50, 50, 60, 0.9);
+}
+
+.essences-section .essences-content {
+  padding: 12px;
+}
+
+.essence-grid-clean {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.essence-pair {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Middle Row Layout - Use proper grid rows */
+.currency-middle-row {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  grid-template-rows: auto 1fr;
+  gap: 8px;
+  align-items: start;
+}
+
+/* Special section takes row 1, col 1 */
+.currency-middle-row .special-section {
+  grid-column: 1;
+  grid-row: 1;
+  align-self: start;
+}
+
+/* Orbs section takes row 2, col 1 */
+.currency-middle-row .orbs-section {
+  grid-column: 1;
+  grid-row: 2;
+  align-self: start;
+}
+
+/* Omens section spans both rows in col 2 - MUST start at same position as Special */
+.currency-middle-row .omens-section {
+  grid-column: 2;
+  grid-row: 1 / span 2;
+  align-self: start;
+  padding: 0 !important;
+  border-top: none !important;
+}
+
+/* Remove the left column wrapper styling since we're not using it anymore */
+.currency-left-column {
+  display: contents;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 1400px) {
+  .currency-middle-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .currency-left-column {
+    min-width: unset;
+  }
+
+  .special-section,
+  .orbs-section,
+  .omens-section {
+    min-width: unset;
+  }
+
+  .omens-section .omens-grid {
+    grid-template-columns: repeat(auto-fill, minmax(32px, 1fr));
+  }
+}
+
+@media (max-width: 900px) {
+  .currency-new-grid {
+    gap: 6px;
+  }
+
+  .bones-section .currency-section-content {
+    grid-template-columns: repeat(auto-fill, minmax(32px, 1fr));
+  }
+}
