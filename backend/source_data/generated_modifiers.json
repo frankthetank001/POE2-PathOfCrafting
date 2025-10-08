@@ -23,7 +23,13 @@
       "str_dex_armour",
       "str_int_armour",
       "str_dex_int_armour",
-      "weapon"
+      "mace",
+      "axe",
+      "sword",
+      "spear",
+      "flail",
+      "crossbow",
+      "sceptre"
     ],
     "tags": [
       "attribute"
@@ -57,7 +63,13 @@
       "str_dex_armour",
       "str_int_armour",
       "str_dex_int_armour",
-      "weapon"
+      "mace",
+      "axe",
+      "sword",
+      "spear",
+      "flail",
+      "crossbow",
+      "sceptre"
     ],
     "tags": [
       "attribute"
@@ -91,7 +103,13 @@
       "str_dex_armour",
       "str_int_armour",
       "str_dex_int_armour",
-      "weapon"
+      "mace",
+      "axe",
+      "sword",
+      "spear",
+      "flail",
+      "crossbow",
+      "sceptre"
     ],
     "tags": [
       "attribute"
@@ -125,7 +143,13 @@
       "str_dex_armour",
       "str_int_armour",
       "str_dex_int_armour",
-      "weapon"
+      "mace",
+      "axe",
+      "sword",
+      "spear",
+      "flail",
+      "crossbow",
+      "sceptre"
     ],
     "tags": [
       "attribute"
@@ -159,7 +183,13 @@
       "str_dex_armour",
       "str_int_armour",
       "str_dex_int_armour",
-      "weapon"
+      "mace",
+      "axe",
+      "sword",
+      "spear",
+      "flail",
+      "crossbow",
+      "sceptre"
     ],
     "tags": [
       "attribute"
@@ -193,7 +223,13 @@
       "str_dex_armour",
       "str_int_armour",
       "str_dex_int_armour",
-      "weapon"
+      "mace",
+      "axe",
+      "sword",
+      "spear",
+      "flail",
+      "crossbow",
+      "sceptre"
     ],
     "tags": [
       "attribute"
@@ -227,7 +263,13 @@
       "str_dex_armour",
       "str_int_armour",
       "str_dex_int_armour",
-      "weapon"
+      "mace",
+      "axe",
+      "sword",
+      "spear",
+      "flail",
+      "crossbow",
+      "sceptre"
     ],
     "tags": [
       "attribute"
@@ -261,7 +303,13 @@
       "str_dex_armour",
       "str_int_armour",
       "str_dex_int_armour",
-      "weapon"
+      "mace",
+      "axe",
+      "sword",
+      "spear",
+      "flail",
+      "crossbow",
+      "sceptre"
     ],
     "tags": [
       "attribute"
@@ -323,7 +371,13 @@
       "dex_int_armour",
       "str_dex_armour",
       "str_dex_int_armour",
-      "weapon",
+      "sword",
+      "spear",
+      "claw",
+      "warstaff",
+      "dagger",
+      "bow",
+      "crossbow",
       "trap"
     ],
     "tags": [
@@ -359,7 +413,13 @@
       "dex_int_armour",
       "str_dex_armour",
       "str_dex_int_armour",
-      "weapon",
+      "sword",
+      "spear",
+      "claw",
+      "warstaff",
+      "dagger",
+      "bow",
+      "crossbow",
       "trap"
     ],
     "tags": [
@@ -395,7 +455,13 @@
       "dex_int_armour",
       "str_dex_armour",
       "str_dex_int_armour",
-      "weapon",
+      "sword",
+      "spear",
+      "claw",
+      "warstaff",
+      "dagger",
+      "bow",
+      "crossbow",
       "trap"
     ],
     "tags": [
@@ -431,7 +497,13 @@
       "dex_int_armour",
       "str_dex_armour",
       "str_dex_int_armour",
-      "weapon",
+      "sword",
+      "spear",
+      "claw",
+      "warstaff",
+      "dagger",
+      "bow",
+      "crossbow",
       "trap"
     ],
     "tags": [
@@ -467,7 +539,13 @@
       "dex_int_armour",
       "str_dex_armour",
       "str_dex_int_armour",
-      "weapon",
+      "sword",
+      "spear",
+      "claw",
+      "warstaff",
+      "dagger",
+      "bow",
+      "crossbow",
       "trap"
     ],
     "tags": [
@@ -503,7 +581,13 @@
       "dex_int_armour",
       "str_dex_armour",
       "str_dex_int_armour",
-      "weapon",
+      "sword",
+      "spear",
+      "claw",
+      "warstaff",
+      "dagger",
+      "bow",
+      "crossbow",
       "trap"
     ],
     "tags": [
@@ -539,7 +623,13 @@
       "dex_int_armour",
       "str_dex_armour",
       "str_dex_int_armour",
-      "weapon",
+      "sword",
+      "spear",
+      "claw",
+      "warstaff",
+      "dagger",
+      "bow",
+      "crossbow",
       "trap"
     ],
     "tags": [
@@ -575,7 +665,13 @@
       "dex_int_armour",
       "str_dex_armour",
       "str_dex_int_armour",
-      "weapon",
+      "sword",
+      "spear",
+      "claw",
+      "warstaff",
+      "dagger",
+      "bow",
+      "crossbow",
       "trap"
     ],
     "tags": [
@@ -637,7 +733,12 @@
       "str_int_armour",
       "dex_int_armour",
       "str_dex_int_armour",
-      "weapon",
+      "dagger",
+      "warstaff",
+      "flail",
+      "wand",
+      "staff",
+      "sceptre",
       "trap"
     ],
     "tags": [
@@ -672,7 +773,12 @@
       "str_int_armour",
       "dex_int_armour",
       "str_dex_int_armour",
-      "weapon",
+      "dagger",
+      "warstaff",
+      "flail",
+      "wand",
+      "staff",
+      "sceptre",
       "trap"
     ],
     "tags": [
@@ -707,7 +813,12 @@
       "str_int_armour",
       "dex_int_armour",
       "str_dex_int_armour",
-      "weapon",
+      "dagger",
+      "warstaff",
+      "flail",
+      "wand",
+      "staff",
+      "sceptre",
       "trap"
     ],
     "tags": [
@@ -742,7 +853,12 @@
       "str_int_armour",
       "dex_int_armour",
       "str_dex_int_armour",
-      "weapon",
+      "dagger",
+      "warstaff",
+      "flail",
+      "wand",
+      "staff",
+      "sceptre",
       "trap"
     ],
     "tags": [
@@ -777,7 +893,12 @@
       "str_int_armour",
       "dex_int_armour",
       "str_dex_int_armour",
-      "weapon",
+      "dagger",
+      "warstaff",
+      "flail",
+      "wand",
+      "staff",
+      "sceptre",
       "trap"
     ],
     "tags": [
@@ -812,7 +933,12 @@
       "str_int_armour",
       "dex_int_armour",
       "str_dex_int_armour",
-      "weapon",
+      "dagger",
+      "warstaff",
+      "flail",
+      "wand",
+      "staff",
+      "sceptre",
       "trap"
     ],
     "tags": [
@@ -847,7 +973,12 @@
       "str_int_armour",
       "dex_int_armour",
       "str_dex_int_armour",
-      "weapon",
+      "dagger",
+      "warstaff",
+      "flail",
+      "wand",
+      "staff",
+      "sceptre",
       "trap"
     ],
     "tags": [
@@ -882,7 +1013,12 @@
       "str_int_armour",
       "dex_int_armour",
       "str_dex_int_armour",
-      "weapon",
+      "dagger",
+      "warstaff",
+      "flail",
+      "wand",
+      "staff",
+      "sceptre",
       "trap"
     ],
     "tags": [
@@ -2149,7 +2285,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceallresistances",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental",
@@ -2177,7 +2313,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceallresistances",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental",
@@ -2205,7 +2341,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceallresistances",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental",
@@ -2233,7 +2369,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceallresistances",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental",
@@ -2261,7 +2397,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceallresistances",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental",
@@ -2289,7 +2425,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceallresistances",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental",
@@ -3024,7 +3160,8 @@
       "gloves",
       "boots",
       "focus",
-      "weapon",
+      "sceptre",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -3060,7 +3197,8 @@
       "gloves",
       "boots",
       "focus",
-      "weapon",
+      "sceptre",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -3096,7 +3234,8 @@
       "gloves",
       "boots",
       "focus",
-      "weapon",
+      "sceptre",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -3132,7 +3271,8 @@
       "gloves",
       "boots",
       "focus",
-      "weapon",
+      "sceptre",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -3168,7 +3308,8 @@
       "gloves",
       "boots",
       "focus",
-      "weapon",
+      "sceptre",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -3204,7 +3345,8 @@
       "gloves",
       "boots",
       "focus",
-      "weapon",
+      "sceptre",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -3240,7 +3382,8 @@
       "gloves",
       "boots",
       "focus",
-      "weapon",
+      "sceptre",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -3276,7 +3419,8 @@
       "gloves",
       "boots",
       "focus",
-      "weapon",
+      "sceptre",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -3312,7 +3456,8 @@
       "gloves",
       "boots",
       "focus",
-      "weapon",
+      "sceptre",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -3345,7 +3490,8 @@
       "amulet",
       "helmet",
       "focus",
-      "weapon",
+      "sceptre",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -3377,7 +3523,8 @@
       "ring",
       "amulet",
       "focus",
-      "weapon",
+      "sceptre",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -3463,7 +3610,7 @@
     "weight": 1000,
     "mod_group": "mana",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "resource",
@@ -3491,7 +3638,7 @@
     "weight": 1000,
     "mod_group": "mana",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "resource",
@@ -3519,7 +3666,7 @@
     "weight": 1000,
     "mod_group": "mana",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "resource",
@@ -3547,7 +3694,7 @@
     "weight": 1000,
     "mod_group": "mana",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "resource",
@@ -3575,7 +3722,7 @@
     "weight": 1000,
     "mod_group": "mana",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "resource",
@@ -3603,7 +3750,7 @@
     "weight": 1000,
     "mod_group": "mana",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "resource",
@@ -3631,7 +3778,7 @@
     "weight": 1000,
     "mod_group": "mana",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "resource",
@@ -3659,7 +3806,7 @@
     "weight": 1000,
     "mod_group": "mana",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "resource",
@@ -3687,7 +3834,7 @@
     "weight": 1000,
     "mod_group": "mana",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "resource",
@@ -3715,7 +3862,7 @@
     "weight": 1000,
     "mod_group": "mana",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "resource",
@@ -3743,7 +3890,7 @@
     "weight": 1000,
     "mod_group": "mana",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "resource",
@@ -13385,6 +13532,9 @@
     "mod_group": "localattributerequirements",
     "applicable_items": [
       "weapon",
+      "wand",
+      "staff",
+      "sceptre",
       "body_armour",
       "helmet",
       "shield",
@@ -13416,6 +13566,9 @@
     "mod_group": "localattributerequirements",
     "applicable_items": [
       "weapon",
+      "wand",
+      "staff",
+      "sceptre",
       "body_armour",
       "helmet",
       "shield",
@@ -13447,6 +13600,9 @@
     "mod_group": "localattributerequirements",
     "applicable_items": [
       "weapon",
+      "wand",
+      "staff",
+      "sceptre",
       "body_armour",
       "helmet",
       "shield",
@@ -13478,6 +13634,9 @@
     "mod_group": "localattributerequirements",
     "applicable_items": [
       "weapon",
+      "wand",
+      "staff",
+      "sceptre",
       "body_armour",
       "helmet",
       "shield",
@@ -13509,6 +13668,9 @@
     "mod_group": "localattributerequirements",
     "applicable_items": [
       "weapon",
+      "wand",
+      "staff",
+      "sceptre",
       "body_armour",
       "helmet",
       "shield",
@@ -15546,7 +15708,7 @@
     "weight": 1000,
     "mod_group": "localphysicaldamage",
     "applicable_items": [
-      "weapon",
+      "bow",
       "one_hand_weapon"
     ],
     "tags": [
@@ -15581,7 +15743,7 @@
     "weight": 1000,
     "mod_group": "localphysicaldamage",
     "applicable_items": [
-      "weapon",
+      "bow",
       "one_hand_weapon"
     ],
     "tags": [
@@ -15616,7 +15778,7 @@
     "weight": 1000,
     "mod_group": "localphysicaldamage",
     "applicable_items": [
-      "weapon",
+      "bow",
       "one_hand_weapon"
     ],
     "tags": [
@@ -15651,7 +15813,7 @@
     "weight": 1000,
     "mod_group": "localphysicaldamage",
     "applicable_items": [
-      "weapon",
+      "bow",
       "one_hand_weapon"
     ],
     "tags": [
@@ -15686,7 +15848,7 @@
     "weight": 1000,
     "mod_group": "localphysicaldamage",
     "applicable_items": [
-      "weapon",
+      "bow",
       "one_hand_weapon"
     ],
     "tags": [
@@ -15721,7 +15883,7 @@
     "weight": 1000,
     "mod_group": "localphysicaldamage",
     "applicable_items": [
-      "weapon",
+      "bow",
       "one_hand_weapon"
     ],
     "tags": [
@@ -15756,7 +15918,7 @@
     "weight": 1000,
     "mod_group": "localphysicaldamage",
     "applicable_items": [
-      "weapon",
+      "bow",
       "one_hand_weapon"
     ],
     "tags": [
@@ -15791,7 +15953,7 @@
     "weight": 1000,
     "mod_group": "localphysicaldamage",
     "applicable_items": [
-      "weapon",
+      "bow",
       "one_hand_weapon"
     ],
     "tags": [
@@ -15826,7 +15988,7 @@
     "weight": 1000,
     "mod_group": "localphysicaldamage",
     "applicable_items": [
-      "weapon",
+      "bow",
       "one_hand_weapon"
     ],
     "tags": [
@@ -16149,7 +16311,7 @@
   {
     "name": "Heated",
     "mod_type": "prefix",
-    "tier": 20,
+    "tier": 10,
     "stat_text": "Adds {} to {} Fire Damage",
     "stat_ranges": [
       {
@@ -16167,7 +16329,14 @@
     "weight": 1000,
     "mod_group": "localfiredamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -16184,7 +16353,7 @@
   {
     "name": "Smouldering",
     "mod_type": "prefix",
-    "tier": 18,
+    "tier": 9,
     "stat_text": "Adds {} to {} Fire Damage",
     "stat_ranges": [
       {
@@ -16202,7 +16371,14 @@
     "weight": 1000,
     "mod_group": "localfiredamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -16219,7 +16395,7 @@
   {
     "name": "Smoking",
     "mod_type": "prefix",
-    "tier": 16,
+    "tier": 8,
     "stat_text": "Adds {} to {} Fire Damage",
     "stat_ranges": [
       {
@@ -16237,7 +16413,14 @@
     "weight": 1000,
     "mod_group": "localfiredamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -16254,7 +16437,7 @@
   {
     "name": "Burning",
     "mod_type": "prefix",
-    "tier": 14,
+    "tier": 7,
     "stat_text": "Adds {} to {} Fire Damage",
     "stat_ranges": [
       {
@@ -16272,7 +16455,14 @@
     "weight": 1000,
     "mod_group": "localfiredamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -16289,7 +16479,7 @@
   {
     "name": "Flaming",
     "mod_type": "prefix",
-    "tier": 13,
+    "tier": 6,
     "stat_text": "Adds {} to {} Fire Damage",
     "stat_ranges": [
       {
@@ -16307,7 +16497,14 @@
     "weight": 1000,
     "mod_group": "localfiredamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -16324,7 +16521,7 @@
   {
     "name": "Scorching",
     "mod_type": "prefix",
-    "tier": 11,
+    "tier": 5,
     "stat_text": "Adds {} to {} Fire Damage",
     "stat_ranges": [
       {
@@ -16342,7 +16539,14 @@
     "weight": 1000,
     "mod_group": "localfiredamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -16359,7 +16563,7 @@
   {
     "name": "Incinerating",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 4,
     "stat_text": "Adds {} to {} Fire Damage",
     "stat_ranges": [
       {
@@ -16377,7 +16581,14 @@
     "weight": 1000,
     "mod_group": "localfiredamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -16394,7 +16605,7 @@
   {
     "name": "Blasting",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 3,
     "stat_text": "Adds {} to {} Fire Damage",
     "stat_ranges": [
       {
@@ -16412,7 +16623,14 @@
     "weight": 1000,
     "mod_group": "localfiredamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -16429,7 +16647,7 @@
   {
     "name": "Cremating",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 2,
     "stat_text": "Adds {} to {} Fire Damage",
     "stat_ranges": [
       {
@@ -16447,7 +16665,14 @@
     "weight": 1000,
     "mod_group": "localfiredamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -16464,7 +16689,7 @@
   {
     "name": "Carbonising",
     "mod_type": "prefix",
-    "tier": 3,
+    "tier": 1,
     "stat_text": "Adds {} to {} Fire Damage",
     "stat_ranges": [
       {
@@ -16482,7 +16707,14 @@
     "weight": 1000,
     "mod_group": "localfiredamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -16499,7 +16731,7 @@
   {
     "name": "Heated",
     "mod_type": "prefix",
-    "tier": 19,
+    "tier": 10,
     "stat_text": "Adds {} to {} Fire Damage",
     "stat_ranges": [
       {
@@ -16517,7 +16749,11 @@
     "weight": 1000,
     "mod_group": "localfiredamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -16534,7 +16770,7 @@
   {
     "name": "Smouldering",
     "mod_type": "prefix",
-    "tier": 17,
+    "tier": 9,
     "stat_text": "Adds {} to {} Fire Damage",
     "stat_ranges": [
       {
@@ -16552,7 +16788,11 @@
     "weight": 1000,
     "mod_group": "localfiredamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -16569,7 +16809,7 @@
   {
     "name": "Smoking",
     "mod_type": "prefix",
-    "tier": 15,
+    "tier": 8,
     "stat_text": "Adds {} to {} Fire Damage",
     "stat_ranges": [
       {
@@ -16587,7 +16827,11 @@
     "weight": 1000,
     "mod_group": "localfiredamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -16604,7 +16848,7 @@
   {
     "name": "Burning",
     "mod_type": "prefix",
-    "tier": 12,
+    "tier": 7,
     "stat_text": "Adds {} to {} Fire Damage",
     "stat_ranges": [
       {
@@ -16622,7 +16866,11 @@
     "weight": 1000,
     "mod_group": "localfiredamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -16639,7 +16887,7 @@
   {
     "name": "Flaming",
     "mod_type": "prefix",
-    "tier": 10,
+    "tier": 6,
     "stat_text": "Adds {} to {} Fire Damage",
     "stat_ranges": [
       {
@@ -16657,7 +16905,11 @@
     "weight": 1000,
     "mod_group": "localfiredamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -16674,7 +16926,7 @@
   {
     "name": "Scorching",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 5,
     "stat_text": "Adds {} to {} Fire Damage",
     "stat_ranges": [
       {
@@ -16692,7 +16944,11 @@
     "weight": 1000,
     "mod_group": "localfiredamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -16709,7 +16965,7 @@
   {
     "name": "Incinerating",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 4,
     "stat_text": "Adds {} to {} Fire Damage",
     "stat_ranges": [
       {
@@ -16727,7 +16983,11 @@
     "weight": 1000,
     "mod_group": "localfiredamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -16744,7 +17004,7 @@
   {
     "name": "Blasting",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "Adds {} to {} Fire Damage",
     "stat_ranges": [
       {
@@ -16762,7 +17022,11 @@
     "weight": 1000,
     "mod_group": "localfiredamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -16797,7 +17061,11 @@
     "weight": 1000,
     "mod_group": "localfiredamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -16832,7 +17100,11 @@
     "weight": 1000,
     "mod_group": "localfiredamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -16849,7 +17121,7 @@
   {
     "name": "Frosted",
     "mod_type": "prefix",
-    "tier": 20,
+    "tier": 10,
     "stat_text": "Adds {} to {} Cold Damage",
     "stat_ranges": [
       {
@@ -16867,7 +17139,14 @@
     "weight": 1000,
     "mod_group": "localcolddamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -16884,7 +17163,7 @@
   {
     "name": "Chilled",
     "mod_type": "prefix",
-    "tier": 18,
+    "tier": 9,
     "stat_text": "Adds {} to {} Cold Damage",
     "stat_ranges": [
       {
@@ -16902,7 +17181,14 @@
     "weight": 1000,
     "mod_group": "localcolddamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -16919,7 +17205,7 @@
   {
     "name": "Icy",
     "mod_type": "prefix",
-    "tier": 16,
+    "tier": 8,
     "stat_text": "Adds {} to {} Cold Damage",
     "stat_ranges": [
       {
@@ -16937,7 +17223,14 @@
     "weight": 1000,
     "mod_group": "localcolddamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -16954,7 +17247,7 @@
   {
     "name": "Frigid",
     "mod_type": "prefix",
-    "tier": 14,
+    "tier": 7,
     "stat_text": "Adds {} to {} Cold Damage",
     "stat_ranges": [
       {
@@ -16972,7 +17265,14 @@
     "weight": 1000,
     "mod_group": "localcolddamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -16989,7 +17289,7 @@
   {
     "name": "Freezing",
     "mod_type": "prefix",
-    "tier": 13,
+    "tier": 6,
     "stat_text": "Adds {} to {} Cold Damage",
     "stat_ranges": [
       {
@@ -17007,7 +17307,14 @@
     "weight": 1000,
     "mod_group": "localcolddamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -17024,7 +17331,7 @@
   {
     "name": "Frozen",
     "mod_type": "prefix",
-    "tier": 11,
+    "tier": 5,
     "stat_text": "Adds {} to {} Cold Damage",
     "stat_ranges": [
       {
@@ -17042,7 +17349,14 @@
     "weight": 1000,
     "mod_group": "localcolddamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -17059,7 +17373,7 @@
   {
     "name": "Glaciated",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 4,
     "stat_text": "Adds {} to {} Cold Damage",
     "stat_ranges": [
       {
@@ -17077,7 +17391,14 @@
     "weight": 1000,
     "mod_group": "localcolddamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -17094,7 +17415,7 @@
   {
     "name": "Polar",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 3,
     "stat_text": "Adds {} to {} Cold Damage",
     "stat_ranges": [
       {
@@ -17112,7 +17433,14 @@
     "weight": 1000,
     "mod_group": "localcolddamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -17129,7 +17457,7 @@
   {
     "name": "Entombing",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 2,
     "stat_text": "Adds {} to {} Cold Damage",
     "stat_ranges": [
       {
@@ -17147,7 +17475,14 @@
     "weight": 1000,
     "mod_group": "localcolddamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -17164,7 +17499,7 @@
   {
     "name": "Crystalising",
     "mod_type": "prefix",
-    "tier": 3,
+    "tier": 1,
     "stat_text": "Adds {} to {} Cold Damage",
     "stat_ranges": [
       {
@@ -17182,7 +17517,14 @@
     "weight": 1000,
     "mod_group": "localcolddamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -17199,7 +17541,7 @@
   {
     "name": "Frosted",
     "mod_type": "prefix",
-    "tier": 19,
+    "tier": 10,
     "stat_text": "Adds {} to {} Cold Damage",
     "stat_ranges": [
       {
@@ -17217,7 +17559,11 @@
     "weight": 1000,
     "mod_group": "localcolddamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -17234,7 +17580,7 @@
   {
     "name": "Chilled",
     "mod_type": "prefix",
-    "tier": 17,
+    "tier": 9,
     "stat_text": "Adds {} to {} Cold Damage",
     "stat_ranges": [
       {
@@ -17252,7 +17598,11 @@
     "weight": 1000,
     "mod_group": "localcolddamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -17269,7 +17619,7 @@
   {
     "name": "Icy",
     "mod_type": "prefix",
-    "tier": 15,
+    "tier": 8,
     "stat_text": "Adds {} to {} Cold Damage",
     "stat_ranges": [
       {
@@ -17287,7 +17637,11 @@
     "weight": 1000,
     "mod_group": "localcolddamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -17304,7 +17658,7 @@
   {
     "name": "Frigid",
     "mod_type": "prefix",
-    "tier": 12,
+    "tier": 7,
     "stat_text": "Adds {} to {} Cold Damage",
     "stat_ranges": [
       {
@@ -17322,7 +17676,11 @@
     "weight": 1000,
     "mod_group": "localcolddamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -17339,7 +17697,7 @@
   {
     "name": "Freezing",
     "mod_type": "prefix",
-    "tier": 10,
+    "tier": 6,
     "stat_text": "Adds {} to {} Cold Damage",
     "stat_ranges": [
       {
@@ -17357,7 +17715,11 @@
     "weight": 1000,
     "mod_group": "localcolddamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -17374,7 +17736,7 @@
   {
     "name": "Frozen",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 5,
     "stat_text": "Adds {} to {} Cold Damage",
     "stat_ranges": [
       {
@@ -17392,7 +17754,11 @@
     "weight": 1000,
     "mod_group": "localcolddamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -17409,7 +17775,7 @@
   {
     "name": "Glaciated",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 4,
     "stat_text": "Adds {} to {} Cold Damage",
     "stat_ranges": [
       {
@@ -17427,7 +17793,11 @@
     "weight": 1000,
     "mod_group": "localcolddamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -17444,7 +17814,7 @@
   {
     "name": "Polar",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "Adds {} to {} Cold Damage",
     "stat_ranges": [
       {
@@ -17462,7 +17832,11 @@
     "weight": 1000,
     "mod_group": "localcolddamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -17497,7 +17871,11 @@
     "weight": 1000,
     "mod_group": "localcolddamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -17532,7 +17910,11 @@
     "weight": 1000,
     "mod_group": "localcolddamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -17549,7 +17931,7 @@
   {
     "name": "Humming",
     "mod_type": "prefix",
-    "tier": 3,
+    "tier": 2,
     "stat_text": "Adds 1 to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -17563,7 +17945,14 @@
     "weight": 1000,
     "mod_group": "locallightningdamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -17594,7 +17983,14 @@
     "weight": 1000,
     "mod_group": "locallightningdamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -17611,7 +18007,7 @@
   {
     "name": "Snapping",
     "mod_type": "prefix",
-    "tier": 16,
+    "tier": 7,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -17629,7 +18025,14 @@
     "weight": 1000,
     "mod_group": "locallightningdamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -17646,7 +18049,7 @@
   {
     "name": "Crackling",
     "mod_type": "prefix",
-    "tier": 17,
+    "tier": 8,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -17664,7 +18067,14 @@
     "weight": 1000,
     "mod_group": "locallightningdamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -17681,7 +18091,7 @@
   {
     "name": "Sparking",
     "mod_type": "prefix",
-    "tier": 14,
+    "tier": 6,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -17699,7 +18109,14 @@
     "weight": 1000,
     "mod_group": "locallightningdamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -17716,7 +18133,7 @@
   {
     "name": "Arcing",
     "mod_type": "prefix",
-    "tier": 12,
+    "tier": 5,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -17734,7 +18151,14 @@
     "weight": 1000,
     "mod_group": "locallightningdamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -17751,7 +18175,7 @@
   {
     "name": "Shocking",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 4,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -17769,7 +18193,14 @@
     "weight": 1000,
     "mod_group": "locallightningdamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -17786,7 +18217,7 @@
   {
     "name": "Discharging",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 3,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -17804,7 +18235,14 @@
     "weight": 1000,
     "mod_group": "locallightningdamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -17821,7 +18259,7 @@
   {
     "name": "Electrocuting",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 2,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -17839,7 +18277,14 @@
     "weight": 1000,
     "mod_group": "locallightningdamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -17856,7 +18301,7 @@
   {
     "name": "Vapourising",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 1,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -17874,7 +18319,14 @@
     "weight": 1000,
     "mod_group": "locallightningdamage",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "sword",
+      "axe",
+      "mace",
+      "spear",
+      "claw",
+      "dagger",
+      "flail"
     ],
     "tags": [
       "elemental_damage",
@@ -17891,7 +18343,7 @@
   {
     "name": "Humming",
     "mod_type": "prefix",
-    "tier": 2,
+    "tier": 1,
     "stat_text": "Adds 1 to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -17905,7 +18357,11 @@
     "weight": 1000,
     "mod_group": "locallightningdamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -17922,7 +18378,7 @@
   {
     "name": "Buzzing",
     "mod_type": "prefix",
-    "tier": 15,
+    "tier": 9,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -17940,7 +18396,11 @@
     "weight": 1000,
     "mod_group": "locallightningdamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -17957,7 +18417,7 @@
   {
     "name": "Snapping",
     "mod_type": "prefix",
-    "tier": 13,
+    "tier": 8,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -17975,7 +18435,11 @@
     "weight": 1000,
     "mod_group": "locallightningdamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -17992,7 +18456,7 @@
   {
     "name": "Crackling",
     "mod_type": "prefix",
-    "tier": 10,
+    "tier": 6,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -18010,7 +18474,11 @@
     "weight": 1000,
     "mod_group": "locallightningdamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -18027,7 +18495,7 @@
   {
     "name": "Sparking",
     "mod_type": "prefix",
-    "tier": 11,
+    "tier": 7,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -18045,7 +18513,11 @@
     "weight": 1000,
     "mod_group": "locallightningdamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -18062,7 +18534,7 @@
   {
     "name": "Arcing",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 5,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -18080,7 +18552,11 @@
     "weight": 1000,
     "mod_group": "locallightningdamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -18097,7 +18573,7 @@
   {
     "name": "Shocking",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 4,
     "stat_text": "Adds {} to {} Lightning Damage",
     "stat_ranges": [
       {
@@ -18115,7 +18591,11 @@
     "weight": 1000,
     "mod_group": "locallightningdamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -18150,7 +18630,11 @@
     "weight": 1000,
     "mod_group": "locallightningdamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -18185,7 +18669,11 @@
     "weight": 1000,
     "mod_group": "locallightningdamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -18220,7 +18708,11 @@
     "weight": 1000,
     "mod_group": "locallightningdamage",
     "applicable_items": [
-      "weapon"
+      "crossbow",
+      "sword",
+      "axe",
+      "mace",
+      "warstaff"
     ],
     "tags": [
       "elemental_damage",
@@ -18255,7 +18747,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedphysicaldamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "physical_damage",
@@ -18289,7 +18781,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedphysicaldamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "physical_damage",
@@ -18323,7 +18815,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedphysicaldamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "physical_damage",
@@ -18357,7 +18849,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedphysicaldamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "physical_damage",
@@ -18391,7 +18883,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedphysicaldamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "physical_damage",
@@ -18425,7 +18917,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedphysicaldamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "physical_damage",
@@ -18459,7 +18951,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedphysicaldamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "physical_damage",
@@ -18493,7 +18985,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedphysicaldamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "physical_damage",
@@ -18527,7 +19019,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedphysicaldamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "physical_damage",
@@ -18561,7 +19053,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedfiredamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental_damage",
@@ -18596,7 +19088,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedfiredamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental_damage",
@@ -18631,7 +19123,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedfiredamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental_damage",
@@ -18666,7 +19158,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedfiredamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental_damage",
@@ -18701,7 +19193,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedfiredamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental_damage",
@@ -18736,7 +19228,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedfiredamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental_damage",
@@ -18771,7 +19263,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedfiredamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental_damage",
@@ -18806,7 +19298,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedfiredamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental_damage",
@@ -18841,7 +19333,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedfiredamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental_damage",
@@ -18876,7 +19368,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedcolddamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental_damage",
@@ -18911,7 +19403,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedcolddamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental_damage",
@@ -18946,7 +19438,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedcolddamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental_damage",
@@ -18981,7 +19473,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedcolddamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental_damage",
@@ -19016,7 +19508,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedcolddamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental_damage",
@@ -19051,7 +19543,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedcolddamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental_damage",
@@ -19086,7 +19578,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedcolddamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental_damage",
@@ -19121,7 +19613,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedcolddamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental_damage",
@@ -19156,7 +19648,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedcolddamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental_damage",
@@ -19187,7 +19679,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedlightningdamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental_damage",
@@ -19218,7 +19710,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedlightningdamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental_damage",
@@ -19249,7 +19741,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedlightningdamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental_damage",
@@ -19280,7 +19772,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedlightningdamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental_damage",
@@ -19311,7 +19803,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedlightningdamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental_damage",
@@ -19346,7 +19838,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedlightningdamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental_damage",
@@ -19381,7 +19873,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedlightningdamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental_damage",
@@ -19416,7 +19908,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedlightningdamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental_damage",
@@ -19451,7 +19943,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceaddedlightningdamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "elemental_damage",
@@ -20002,7 +20494,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresencealldamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "damage"
@@ -20029,7 +20521,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresencealldamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "damage"
@@ -20056,7 +20548,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresencealldamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "damage"
@@ -20083,7 +20575,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresencealldamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "damage"
@@ -20110,7 +20602,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresencealldamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "damage"
@@ -20137,7 +20629,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresencealldamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "damage"
@@ -20164,7 +20656,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresencealldamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "damage"
@@ -20191,7 +20683,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresencealldamage",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "damage"
@@ -20219,7 +20711,7 @@
     "mod_group": "weaponspelldamage",
     "applicable_items": [
       "focus",
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster_damage",
@@ -20249,7 +20741,7 @@
     "mod_group": "weaponspelldamage",
     "applicable_items": [
       "focus",
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster_damage",
@@ -20279,7 +20771,7 @@
     "mod_group": "weaponspelldamage",
     "applicable_items": [
       "focus",
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster_damage",
@@ -20309,7 +20801,7 @@
     "mod_group": "weaponspelldamage",
     "applicable_items": [
       "focus",
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster_damage",
@@ -20339,7 +20831,7 @@
     "mod_group": "weaponspelldamage",
     "applicable_items": [
       "focus",
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster_damage",
@@ -20369,7 +20861,7 @@
     "mod_group": "weaponspelldamage",
     "applicable_items": [
       "focus",
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster_damage",
@@ -20399,7 +20891,7 @@
     "mod_group": "weaponspelldamage",
     "applicable_items": [
       "focus",
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster_damage",
@@ -20429,7 +20921,7 @@
     "mod_group": "weaponspelldamage",
     "applicable_items": [
       "focus",
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster_damage",
@@ -20458,7 +20950,7 @@
     "weight": 1000,
     "mod_group": "weaponspelldamage",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster_damage",
@@ -20487,7 +20979,7 @@
     "weight": 1000,
     "mod_group": "weaponspelldamage",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster_damage",
@@ -20516,7 +21008,7 @@
     "weight": 1000,
     "mod_group": "weaponspelldamage",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster_damage",
@@ -20545,7 +21037,7 @@
     "weight": 1000,
     "mod_group": "weaponspelldamage",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster_damage",
@@ -20574,7 +21066,7 @@
     "weight": 1000,
     "mod_group": "weaponspelldamage",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster_damage",
@@ -20603,7 +21095,7 @@
     "weight": 1000,
     "mod_group": "weaponspelldamage",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster_damage",
@@ -20632,7 +21124,7 @@
     "weight": 1000,
     "mod_group": "weaponspelldamage",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster_damage",
@@ -20661,7 +21153,7 @@
     "weight": 1000,
     "mod_group": "weaponspelldamage",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster_damage",
@@ -20676,7 +21168,7 @@
   {
     "name": "Caster's",
     "mod_type": "prefix",
-    "tier": 14,
+    "tier": 7,
     "stat_text": "{}% increased Spell Damage, +{} to maximum Mana",
     "stat_ranges": [
       {
@@ -20694,7 +21186,7 @@
     "weight": 1000,
     "mod_group": "weaponspelldamageandmana",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster_damage",
@@ -20712,7 +21204,7 @@
   {
     "name": "Conjuror's",
     "mod_type": "prefix",
-    "tier": 13,
+    "tier": 6,
     "stat_text": "{}% increased Spell Damage, +{} to maximum Mana",
     "stat_ranges": [
       {
@@ -20730,7 +21222,7 @@
     "weight": 1000,
     "mod_group": "weaponspelldamageandmana",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster_damage",
@@ -20748,7 +21240,7 @@
   {
     "name": "Wizard's",
     "mod_type": "prefix",
-    "tier": 11,
+    "tier": 5,
     "stat_text": "{}% increased Spell Damage, +{} to maximum Mana",
     "stat_ranges": [
       {
@@ -20766,7 +21258,7 @@
     "weight": 1000,
     "mod_group": "weaponspelldamageandmana",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster_damage",
@@ -20784,7 +21276,7 @@
   {
     "name": "Warlock's",
     "mod_type": "prefix",
-    "tier": 10,
+    "tier": 4,
     "stat_text": "{}% increased Spell Damage, +{} to maximum Mana",
     "stat_ranges": [
       {
@@ -20802,7 +21294,7 @@
     "weight": 1000,
     "mod_group": "weaponspelldamageandmana",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster_damage",
@@ -20820,7 +21312,7 @@
   {
     "name": "Mage's",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 3,
     "stat_text": "{}% increased Spell Damage, +{} to maximum Mana",
     "stat_ranges": [
       {
@@ -20838,7 +21330,7 @@
     "weight": 1000,
     "mod_group": "weaponspelldamageandmana",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster_damage",
@@ -20856,7 +21348,7 @@
   {
     "name": "Archmage's",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 2,
     "stat_text": "{}% increased Spell Damage, +{} to maximum Mana",
     "stat_ranges": [
       {
@@ -20874,7 +21366,7 @@
     "weight": 1000,
     "mod_group": "weaponspelldamageandmana",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster_damage",
@@ -20892,7 +21384,7 @@
   {
     "name": "Lich's",
     "mod_type": "prefix",
-    "tier": 4,
+    "tier": 1,
     "stat_text": "{}% increased Spell Damage, +{} to maximum Mana",
     "stat_ranges": [
       {
@@ -20910,7 +21402,7 @@
     "weight": 1000,
     "mod_group": "weaponspelldamageandmana",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster_damage",
@@ -20928,7 +21420,7 @@
   {
     "name": "Caster's",
     "mod_type": "prefix",
-    "tier": 12,
+    "tier": 7,
     "stat_text": "{}% increased Spell Damage, +{} to maximum Mana",
     "stat_ranges": [
       {
@@ -20946,7 +21438,7 @@
     "weight": 1000,
     "mod_group": "weaponspelldamageandmana",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster_damage",
@@ -20964,7 +21456,7 @@
   {
     "name": "Conjuror's",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 6,
     "stat_text": "{}% increased Spell Damage, +{} to maximum Mana",
     "stat_ranges": [
       {
@@ -20982,7 +21474,7 @@
     "weight": 1000,
     "mod_group": "weaponspelldamageandmana",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster_damage",
@@ -21000,7 +21492,7 @@
   {
     "name": "Wizard's",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 5,
     "stat_text": "{}% increased Spell Damage, +{} to maximum Mana",
     "stat_ranges": [
       {
@@ -21018,7 +21510,7 @@
     "weight": 1000,
     "mod_group": "weaponspelldamageandmana",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster_damage",
@@ -21036,7 +21528,7 @@
   {
     "name": "Warlock's",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "{}% increased Spell Damage, +{} to maximum Mana",
     "stat_ranges": [
       {
@@ -21054,7 +21546,7 @@
     "weight": 1000,
     "mod_group": "weaponspelldamageandmana",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster_damage",
@@ -21090,7 +21582,7 @@
     "weight": 1000,
     "mod_group": "weaponspelldamageandmana",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster_damage",
@@ -21126,7 +21618,7 @@
     "weight": 1000,
     "mod_group": "weaponspelldamageandmana",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster_damage",
@@ -21162,7 +21654,7 @@
     "weight": 1000,
     "mod_group": "weaponspelldamageandmana",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster_damage",
@@ -21195,7 +21687,7 @@
     "mod_group": "firedamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -21227,7 +21719,7 @@
     "mod_group": "firedamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -21259,7 +21751,7 @@
     "mod_group": "firedamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -21291,7 +21783,7 @@
     "mod_group": "firedamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -21323,7 +21815,7 @@
     "mod_group": "firedamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -21355,7 +21847,7 @@
     "mod_group": "firedamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -21387,7 +21879,7 @@
     "mod_group": "firedamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -21419,7 +21911,7 @@
     "mod_group": "firedamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -21450,7 +21942,7 @@
     "weight": 1000,
     "mod_group": "firedamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -21480,7 +21972,7 @@
     "weight": 1000,
     "mod_group": "firedamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -21510,7 +22002,7 @@
     "weight": 1000,
     "mod_group": "firedamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -21540,7 +22032,7 @@
     "weight": 1000,
     "mod_group": "firedamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -21570,7 +22062,7 @@
     "weight": 1000,
     "mod_group": "firedamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -21600,7 +22092,7 @@
     "weight": 1000,
     "mod_group": "firedamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -21630,7 +22122,7 @@
     "weight": 1000,
     "mod_group": "firedamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -21660,7 +22152,7 @@
     "weight": 1000,
     "mod_group": "firedamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -21691,7 +22183,7 @@
     "mod_group": "colddamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -21723,7 +22215,7 @@
     "mod_group": "colddamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -21755,7 +22247,7 @@
     "mod_group": "colddamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -21787,7 +22279,7 @@
     "mod_group": "colddamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -21819,7 +22311,7 @@
     "mod_group": "colddamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -21851,7 +22343,7 @@
     "mod_group": "colddamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -21883,7 +22375,7 @@
     "mod_group": "colddamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -21915,7 +22407,7 @@
     "mod_group": "colddamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -21946,7 +22438,7 @@
     "weight": 1000,
     "mod_group": "colddamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -21976,7 +22468,7 @@
     "weight": 1000,
     "mod_group": "colddamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -22006,7 +22498,7 @@
     "weight": 1000,
     "mod_group": "colddamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -22036,7 +22528,7 @@
     "weight": 1000,
     "mod_group": "colddamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -22066,7 +22558,7 @@
     "weight": 1000,
     "mod_group": "colddamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -22096,7 +22588,7 @@
     "weight": 1000,
     "mod_group": "colddamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -22126,7 +22618,7 @@
     "weight": 1000,
     "mod_group": "colddamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -22156,7 +22648,7 @@
     "weight": 1000,
     "mod_group": "colddamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -22187,7 +22679,7 @@
     "mod_group": "lightningdamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -22219,7 +22711,7 @@
     "mod_group": "lightningdamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -22251,7 +22743,7 @@
     "mod_group": "lightningdamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -22283,7 +22775,7 @@
     "mod_group": "lightningdamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -22315,7 +22807,7 @@
     "mod_group": "lightningdamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -22347,7 +22839,7 @@
     "mod_group": "lightningdamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -22379,7 +22871,7 @@
     "mod_group": "lightningdamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -22411,7 +22903,7 @@
     "mod_group": "lightningdamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -22442,7 +22934,7 @@
     "weight": 1000,
     "mod_group": "lightningdamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -22472,7 +22964,7 @@
     "weight": 1000,
     "mod_group": "lightningdamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -22502,7 +22994,7 @@
     "weight": 1000,
     "mod_group": "lightningdamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -22532,7 +23024,7 @@
     "weight": 1000,
     "mod_group": "lightningdamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -22562,7 +23054,7 @@
     "weight": 1000,
     "mod_group": "lightningdamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -22592,7 +23084,7 @@
     "weight": 1000,
     "mod_group": "lightningdamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -22622,7 +23114,7 @@
     "weight": 1000,
     "mod_group": "lightningdamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -22652,7 +23144,7 @@
     "weight": 1000,
     "mod_group": "lightningdamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -22683,7 +23175,7 @@
     "mod_group": "chaosdamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -22714,7 +23206,7 @@
     "mod_group": "chaosdamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -22745,7 +23237,7 @@
     "mod_group": "chaosdamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -22776,7 +23268,7 @@
     "mod_group": "chaosdamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -22807,7 +23299,7 @@
     "mod_group": "chaosdamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -22838,7 +23330,7 @@
     "mod_group": "chaosdamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -22869,7 +23361,7 @@
     "mod_group": "chaosdamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -22900,7 +23392,7 @@
     "mod_group": "chaosdamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -22930,7 +23422,7 @@
     "weight": 1000,
     "mod_group": "chaosdamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "chaos_damage",
@@ -22959,7 +23451,7 @@
     "weight": 1000,
     "mod_group": "chaosdamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "chaos_damage",
@@ -22988,7 +23480,7 @@
     "weight": 1000,
     "mod_group": "chaosdamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "chaos_damage",
@@ -23017,7 +23509,7 @@
     "weight": 1000,
     "mod_group": "chaosdamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "chaos_damage",
@@ -23046,7 +23538,7 @@
     "weight": 1000,
     "mod_group": "chaosdamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "chaos_damage",
@@ -23075,7 +23567,7 @@
     "weight": 1000,
     "mod_group": "chaosdamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "chaos_damage",
@@ -23104,7 +23596,7 @@
     "weight": 1000,
     "mod_group": "chaosdamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "chaos_damage",
@@ -23133,7 +23625,7 @@
     "weight": 1000,
     "mod_group": "chaosdamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "chaos_damage",
@@ -23163,7 +23655,7 @@
     "mod_group": "physicalspelldamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -23194,7 +23686,7 @@
     "mod_group": "physicalspelldamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -23225,7 +23717,7 @@
     "mod_group": "physicalspelldamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -23256,7 +23748,7 @@
     "mod_group": "physicalspelldamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -23287,7 +23779,7 @@
     "mod_group": "physicalspelldamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -23318,7 +23810,7 @@
     "mod_group": "physicalspelldamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -23349,7 +23841,7 @@
     "mod_group": "physicalspelldamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -23380,7 +23872,7 @@
     "mod_group": "physicalspelldamageweaponprefix",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -23410,7 +23902,7 @@
     "weight": 1000,
     "mod_group": "physicalspelldamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "physical_damage",
@@ -23439,7 +23931,7 @@
     "weight": 1000,
     "mod_group": "physicalspelldamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "physical_damage",
@@ -23468,7 +23960,7 @@
     "weight": 1000,
     "mod_group": "physicalspelldamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "physical_damage",
@@ -23497,7 +23989,7 @@
     "weight": 1000,
     "mod_group": "physicalspelldamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "physical_damage",
@@ -23526,7 +24018,7 @@
     "weight": 1000,
     "mod_group": "physicalspelldamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "physical_damage",
@@ -23555,7 +24047,7 @@
     "weight": 1000,
     "mod_group": "physicalspelldamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "physical_damage",
@@ -23584,7 +24076,7 @@
     "weight": 1000,
     "mod_group": "physicalspelldamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "physical_damage",
@@ -23613,7 +24105,7 @@
     "weight": 1000,
     "mod_group": "physicalspelldamageweaponprefix",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "physical_damage",
@@ -24140,7 +24632,7 @@
   {
     "name": "of the Mage",
     "mod_type": "suffix",
-    "tier": 8,
+    "tier": 4,
     "stat_text": "+{} to Level of all Spell Skills",
     "stat_ranges": [
       {
@@ -24154,7 +24646,7 @@
     "weight": 1000,
     "mod_group": "globalincreasespellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster",
@@ -24168,7 +24660,7 @@
   {
     "name": "of the Enchanter",
     "mod_type": "suffix",
-    "tier": 7,
+    "tier": 3,
     "stat_text": "+{} to Level of all Spell Skills",
     "stat_ranges": [
       {
@@ -24182,7 +24674,7 @@
     "weight": 1000,
     "mod_group": "globalincreasespellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster",
@@ -24196,7 +24688,7 @@
   {
     "name": "of the Sorcerer",
     "mod_type": "suffix",
-    "tier": 5,
+    "tier": 2,
     "stat_text": "+{} to Level of all Spell Skills",
     "stat_ranges": [
       {
@@ -24210,7 +24702,7 @@
     "weight": 1000,
     "mod_group": "globalincreasespellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster",
@@ -24224,7 +24716,7 @@
   {
     "name": "of the Wizard",
     "mod_type": "suffix",
-    "tier": 3,
+    "tier": 1,
     "stat_text": "+{} to Level of all Spell Skills",
     "stat_ranges": [
       {
@@ -24238,7 +24730,7 @@
     "weight": 1000,
     "mod_group": "globalincreasespellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster",
@@ -24252,7 +24744,7 @@
   {
     "name": "of the Mage",
     "mod_type": "suffix",
-    "tier": 6,
+    "tier": 4,
     "stat_text": "+{} to Level of all Spell Skills",
     "stat_ranges": [
       {
@@ -24266,7 +24758,7 @@
     "weight": 1000,
     "mod_group": "globalincreasespellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster",
@@ -24280,7 +24772,7 @@
   {
     "name": "of the Enchanter",
     "mod_type": "suffix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "+{} to Level of all Spell Skills",
     "stat_ranges": [
       {
@@ -24294,7 +24786,7 @@
     "weight": 1000,
     "mod_group": "globalincreasespellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster",
@@ -24322,7 +24814,7 @@
     "weight": 1000,
     "mod_group": "globalincreasespellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster",
@@ -24350,7 +24842,7 @@
     "weight": 1000,
     "mod_group": "globalincreasespellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster",
@@ -24448,7 +24940,7 @@
   {
     "name": "of Coals",
     "mod_type": "suffix",
-    "tier": 10,
+    "tier": 5,
     "stat_text": "+{} to Level of all Fire Spell Skills",
     "stat_ranges": [
       {
@@ -24462,7 +24954,7 @@
     "weight": 1000,
     "mod_group": "globalincreasefirespellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental",
@@ -24478,7 +24970,7 @@
   {
     "name": "of Cinders",
     "mod_type": "suffix",
-    "tier": 9,
+    "tier": 4,
     "stat_text": "+{} to Level of all Fire Spell Skills",
     "stat_ranges": [
       {
@@ -24492,7 +24984,7 @@
     "weight": 1000,
     "mod_group": "globalincreasefirespellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental",
@@ -24508,7 +25000,7 @@
   {
     "name": "of Flames",
     "mod_type": "suffix",
-    "tier": 7,
+    "tier": 3,
     "stat_text": "+{} to Level of all Fire Spell Skills",
     "stat_ranges": [
       {
@@ -24522,7 +25014,7 @@
     "weight": 1000,
     "mod_group": "globalincreasefirespellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental",
@@ -24538,7 +25030,7 @@
   {
     "name": "of Immolation",
     "mod_type": "suffix",
-    "tier": 5,
+    "tier": 2,
     "stat_text": "+{} to Level of all Fire Spell Skills",
     "stat_ranges": [
       {
@@ -24552,7 +25044,7 @@
     "weight": 1000,
     "mod_group": "globalincreasefirespellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental",
@@ -24568,7 +25060,7 @@
   {
     "name": "of Inferno",
     "mod_type": "suffix",
-    "tier": 3,
+    "tier": 1,
     "stat_text": "+{} to Level of all Fire Spell Skills",
     "stat_ranges": [
       {
@@ -24582,7 +25074,7 @@
     "weight": 1000,
     "mod_group": "globalincreasefirespellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental",
@@ -24598,7 +25090,7 @@
   {
     "name": "of Coals",
     "mod_type": "suffix",
-    "tier": 8,
+    "tier": 5,
     "stat_text": "+{} to Level of all Fire Spell Skills",
     "stat_ranges": [
       {
@@ -24612,7 +25104,7 @@
     "weight": 1000,
     "mod_group": "globalincreasefirespellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental",
@@ -24628,7 +25120,7 @@
   {
     "name": "of Cinders",
     "mod_type": "suffix",
-    "tier": 6,
+    "tier": 4,
     "stat_text": "+{} to Level of all Fire Spell Skills",
     "stat_ranges": [
       {
@@ -24642,7 +25134,7 @@
     "weight": 1000,
     "mod_group": "globalincreasefirespellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental",
@@ -24658,7 +25150,7 @@
   {
     "name": "of Flames",
     "mod_type": "suffix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "+{} to Level of all Fire Spell Skills",
     "stat_ranges": [
       {
@@ -24672,7 +25164,7 @@
     "weight": 1000,
     "mod_group": "globalincreasefirespellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental",
@@ -24702,7 +25194,7 @@
     "weight": 1000,
     "mod_group": "globalincreasefirespellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental",
@@ -24732,7 +25224,7 @@
     "weight": 1000,
     "mod_group": "globalincreasefirespellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental",
@@ -24832,7 +25324,7 @@
   {
     "name": "of Snow",
     "mod_type": "suffix",
-    "tier": 10,
+    "tier": 5,
     "stat_text": "+{} to Level of all Cold Spell Skills",
     "stat_ranges": [
       {
@@ -24846,7 +25338,7 @@
     "weight": 1000,
     "mod_group": "globalincreasecoldspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental",
@@ -24862,7 +25354,7 @@
   {
     "name": "of Sleet",
     "mod_type": "suffix",
-    "tier": 9,
+    "tier": 4,
     "stat_text": "+{} to Level of all Cold Spell Skills",
     "stat_ranges": [
       {
@@ -24876,7 +25368,7 @@
     "weight": 1000,
     "mod_group": "globalincreasecoldspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental",
@@ -24892,7 +25384,7 @@
   {
     "name": "of Ice",
     "mod_type": "suffix",
-    "tier": 7,
+    "tier": 3,
     "stat_text": "+{} to Level of all Cold Spell Skills",
     "stat_ranges": [
       {
@@ -24906,7 +25398,7 @@
     "weight": 1000,
     "mod_group": "globalincreasecoldspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental",
@@ -24922,7 +25414,7 @@
   {
     "name": "of Rime",
     "mod_type": "suffix",
-    "tier": 5,
+    "tier": 2,
     "stat_text": "+{} to Level of all Cold Spell Skills",
     "stat_ranges": [
       {
@@ -24936,7 +25428,7 @@
     "weight": 1000,
     "mod_group": "globalincreasecoldspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental",
@@ -24952,7 +25444,7 @@
   {
     "name": "of Frostbite",
     "mod_type": "suffix",
-    "tier": 3,
+    "tier": 1,
     "stat_text": "+{} to Level of all Cold Spell Skills",
     "stat_ranges": [
       {
@@ -24966,7 +25458,7 @@
     "weight": 1000,
     "mod_group": "globalincreasecoldspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental",
@@ -24982,7 +25474,7 @@
   {
     "name": "of Snow",
     "mod_type": "suffix",
-    "tier": 8,
+    "tier": 5,
     "stat_text": "+{} to Level of all Cold Spell Skills",
     "stat_ranges": [
       {
@@ -24996,7 +25488,7 @@
     "weight": 1000,
     "mod_group": "globalincreasecoldspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental",
@@ -25012,7 +25504,7 @@
   {
     "name": "of Sleet",
     "mod_type": "suffix",
-    "tier": 6,
+    "tier": 4,
     "stat_text": "+{} to Level of all Cold Spell Skills",
     "stat_ranges": [
       {
@@ -25026,7 +25518,7 @@
     "weight": 1000,
     "mod_group": "globalincreasecoldspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental",
@@ -25042,7 +25534,7 @@
   {
     "name": "of Ice",
     "mod_type": "suffix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "+{} to Level of all Cold Spell Skills",
     "stat_ranges": [
       {
@@ -25056,7 +25548,7 @@
     "weight": 1000,
     "mod_group": "globalincreasecoldspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental",
@@ -25086,7 +25578,7 @@
     "weight": 1000,
     "mod_group": "globalincreasecoldspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental",
@@ -25116,7 +25608,7 @@
     "weight": 1000,
     "mod_group": "globalincreasecoldspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental",
@@ -25216,7 +25708,7 @@
   {
     "name": "of Sparks",
     "mod_type": "suffix",
-    "tier": 10,
+    "tier": 5,
     "stat_text": "+{} to Level of all Lightning Spell Skills",
     "stat_ranges": [
       {
@@ -25230,7 +25722,7 @@
     "weight": 1000,
     "mod_group": "globalincreaselightningspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental",
@@ -25246,7 +25738,7 @@
   {
     "name": "of Static",
     "mod_type": "suffix",
-    "tier": 9,
+    "tier": 4,
     "stat_text": "+{} to Level of all Lightning Spell Skills",
     "stat_ranges": [
       {
@@ -25260,7 +25752,7 @@
     "weight": 1000,
     "mod_group": "globalincreaselightningspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental",
@@ -25276,7 +25768,7 @@
   {
     "name": "of Electricity",
     "mod_type": "suffix",
-    "tier": 7,
+    "tier": 3,
     "stat_text": "+{} to Level of all Lightning Spell Skills",
     "stat_ranges": [
       {
@@ -25290,7 +25782,7 @@
     "weight": 1000,
     "mod_group": "globalincreaselightningspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental",
@@ -25306,7 +25798,7 @@
   {
     "name": "of Voltage",
     "mod_type": "suffix",
-    "tier": 5,
+    "tier": 2,
     "stat_text": "+{} to Level of all Lightning Spell Skills",
     "stat_ranges": [
       {
@@ -25320,7 +25812,7 @@
     "weight": 1000,
     "mod_group": "globalincreaselightningspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental",
@@ -25336,7 +25828,7 @@
   {
     "name": "of Thunder",
     "mod_type": "suffix",
-    "tier": 3,
+    "tier": 1,
     "stat_text": "+{} to Level of all Lightning Spell Skills",
     "stat_ranges": [
       {
@@ -25350,7 +25842,7 @@
     "weight": 1000,
     "mod_group": "globalincreaselightningspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental",
@@ -25366,7 +25858,7 @@
   {
     "name": "of Sparks",
     "mod_type": "suffix",
-    "tier": 8,
+    "tier": 5,
     "stat_text": "+{} to Level of all Lightning Spell Skills",
     "stat_ranges": [
       {
@@ -25380,7 +25872,7 @@
     "weight": 1000,
     "mod_group": "globalincreaselightningspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental",
@@ -25396,7 +25888,7 @@
   {
     "name": "of Static",
     "mod_type": "suffix",
-    "tier": 6,
+    "tier": 4,
     "stat_text": "+{} to Level of all Lightning Spell Skills",
     "stat_ranges": [
       {
@@ -25410,7 +25902,7 @@
     "weight": 1000,
     "mod_group": "globalincreaselightningspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental",
@@ -25426,7 +25918,7 @@
   {
     "name": "of Electricity",
     "mod_type": "suffix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "+{} to Level of all Lightning Spell Skills",
     "stat_ranges": [
       {
@@ -25440,7 +25932,7 @@
     "weight": 1000,
     "mod_group": "globalincreaselightningspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental",
@@ -25470,7 +25962,7 @@
     "weight": 1000,
     "mod_group": "globalincreaselightningspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental",
@@ -25500,7 +25992,7 @@
     "weight": 1000,
     "mod_group": "globalincreaselightningspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental",
@@ -25597,7 +26089,7 @@
   {
     "name": "of Anarchy",
     "mod_type": "suffix",
-    "tier": 10,
+    "tier": 5,
     "stat_text": "+{} to Level of all Chaos Spell Skills",
     "stat_ranges": [
       {
@@ -25611,7 +26103,7 @@
     "weight": 1000,
     "mod_group": "globalincreasechaosspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "chaos",
@@ -25626,7 +26118,7 @@
   {
     "name": "of Turmoil",
     "mod_type": "suffix",
-    "tier": 9,
+    "tier": 4,
     "stat_text": "+{} to Level of all Chaos Spell Skills",
     "stat_ranges": [
       {
@@ -25640,7 +26132,7 @@
     "weight": 1000,
     "mod_group": "globalincreasechaosspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "chaos",
@@ -25655,7 +26147,7 @@
   {
     "name": "of Ruin",
     "mod_type": "suffix",
-    "tier": 7,
+    "tier": 3,
     "stat_text": "+{} to Level of all Chaos Spell Skills",
     "stat_ranges": [
       {
@@ -25669,7 +26161,7 @@
     "weight": 1000,
     "mod_group": "globalincreasechaosspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "chaos",
@@ -25684,7 +26176,7 @@
   {
     "name": "of Havoc",
     "mod_type": "suffix",
-    "tier": 5,
+    "tier": 2,
     "stat_text": "+{} to Level of all Chaos Spell Skills",
     "stat_ranges": [
       {
@@ -25698,7 +26190,7 @@
     "weight": 1000,
     "mod_group": "globalincreasechaosspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "chaos",
@@ -25713,7 +26205,7 @@
   {
     "name": "of Armageddon",
     "mod_type": "suffix",
-    "tier": 3,
+    "tier": 1,
     "stat_text": "+{} to Level of all Chaos Spell Skills",
     "stat_ranges": [
       {
@@ -25727,7 +26219,7 @@
     "weight": 1000,
     "mod_group": "globalincreasechaosspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "chaos",
@@ -25742,7 +26234,7 @@
   {
     "name": "of Anarchy",
     "mod_type": "suffix",
-    "tier": 8,
+    "tier": 5,
     "stat_text": "+{} to Level of all Chaos Spell Skills",
     "stat_ranges": [
       {
@@ -25756,7 +26248,7 @@
     "weight": 1000,
     "mod_group": "globalincreasechaosspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "chaos",
@@ -25771,7 +26263,7 @@
   {
     "name": "of Turmoil",
     "mod_type": "suffix",
-    "tier": 6,
+    "tier": 4,
     "stat_text": "+{} to Level of all Chaos Spell Skills",
     "stat_ranges": [
       {
@@ -25785,7 +26277,7 @@
     "weight": 1000,
     "mod_group": "globalincreasechaosspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "chaos",
@@ -25800,7 +26292,7 @@
   {
     "name": "of Ruin",
     "mod_type": "suffix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "+{} to Level of all Chaos Spell Skills",
     "stat_ranges": [
       {
@@ -25814,7 +26306,7 @@
     "weight": 1000,
     "mod_group": "globalincreasechaosspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "chaos",
@@ -25843,7 +26335,7 @@
     "weight": 1000,
     "mod_group": "globalincreasechaosspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "chaos",
@@ -25872,7 +26364,7 @@
     "weight": 1000,
     "mod_group": "globalincreasechaosspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "chaos",
@@ -25968,7 +26460,7 @@
   {
     "name": "of Agony",
     "mod_type": "suffix",
-    "tier": 10,
+    "tier": 5,
     "stat_text": "+{} to Level of all Physical Spell Skills",
     "stat_ranges": [
       {
@@ -25982,7 +26474,7 @@
     "weight": 1000,
     "mod_group": "globalincreasephysicalspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "physical",
@@ -25997,7 +26489,7 @@
   {
     "name": "of Suffering",
     "mod_type": "suffix",
-    "tier": 9,
+    "tier": 4,
     "stat_text": "+{} to Level of all Physical Spell Skills",
     "stat_ranges": [
       {
@@ -26011,7 +26503,7 @@
     "weight": 1000,
     "mod_group": "globalincreasephysicalspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "physical",
@@ -26026,7 +26518,7 @@
   {
     "name": "of Torment",
     "mod_type": "suffix",
-    "tier": 7,
+    "tier": 3,
     "stat_text": "+{} to Level of all Physical Spell Skills",
     "stat_ranges": [
       {
@@ -26040,7 +26532,7 @@
     "weight": 1000,
     "mod_group": "globalincreasephysicalspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "physical",
@@ -26055,7 +26547,7 @@
   {
     "name": "of Desolation",
     "mod_type": "suffix",
-    "tier": 5,
+    "tier": 2,
     "stat_text": "+{} to Level of all Physical Spell Skills",
     "stat_ranges": [
       {
@@ -26069,7 +26561,7 @@
     "weight": 1000,
     "mod_group": "globalincreasephysicalspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "physical",
@@ -26084,7 +26576,7 @@
   {
     "name": "of Grief",
     "mod_type": "suffix",
-    "tier": 3,
+    "tier": 1,
     "stat_text": "+{} to Level of all Physical Spell Skills",
     "stat_ranges": [
       {
@@ -26098,7 +26590,7 @@
     "weight": 1000,
     "mod_group": "globalincreasephysicalspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "physical",
@@ -26113,7 +26605,7 @@
   {
     "name": "of Agony",
     "mod_type": "suffix",
-    "tier": 8,
+    "tier": 5,
     "stat_text": "+{} to Level of all Physical Spell Skills",
     "stat_ranges": [
       {
@@ -26127,7 +26619,7 @@
     "weight": 1000,
     "mod_group": "globalincreasephysicalspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "physical",
@@ -26142,7 +26634,7 @@
   {
     "name": "of Suffering",
     "mod_type": "suffix",
-    "tier": 6,
+    "tier": 4,
     "stat_text": "+{} to Level of all Physical Spell Skills",
     "stat_ranges": [
       {
@@ -26156,7 +26648,7 @@
     "weight": 1000,
     "mod_group": "globalincreasephysicalspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "physical",
@@ -26171,7 +26663,7 @@
   {
     "name": "of Torment",
     "mod_type": "suffix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "+{} to Level of all Physical Spell Skills",
     "stat_ranges": [
       {
@@ -26185,7 +26677,7 @@
     "weight": 1000,
     "mod_group": "globalincreasephysicalspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "physical",
@@ -26214,7 +26706,7 @@
     "weight": 1000,
     "mod_group": "globalincreasephysicalspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "physical",
@@ -26243,7 +26735,7 @@
     "weight": 1000,
     "mod_group": "globalincreasephysicalspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "physical",
@@ -26358,7 +26850,7 @@
     "weight": 1000,
     "mod_group": "globalincreaseminionspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "minion",
@@ -26386,7 +26878,7 @@
     "weight": 1000,
     "mod_group": "globalincreaseminionspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "minion",
@@ -26414,7 +26906,7 @@
     "weight": 1000,
     "mod_group": "globalincreaseminionspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "minion",
@@ -26442,7 +26934,7 @@
     "weight": 1000,
     "mod_group": "globalincreaseminionspellskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "minion",
@@ -26773,7 +27265,7 @@
     "weight": 1000,
     "mod_group": "globalincreasemeleeskillgemlevel",
     "applicable_items": [
-      "weapon",
+      "spear",
       "one_hand_weapon"
     ],
     "tags": [
@@ -26801,7 +27293,7 @@
     "weight": 1000,
     "mod_group": "globalincreasemeleeskillgemlevel",
     "applicable_items": [
-      "weapon",
+      "spear",
       "one_hand_weapon"
     ],
     "tags": [
@@ -26829,7 +27321,7 @@
     "weight": 1000,
     "mod_group": "globalincreasemeleeskillgemlevel",
     "applicable_items": [
-      "weapon",
+      "spear",
       "one_hand_weapon"
     ],
     "tags": [
@@ -26857,7 +27349,7 @@
     "weight": 1000,
     "mod_group": "globalincreasemeleeskillgemlevel",
     "applicable_items": [
-      "weapon",
+      "spear",
       "one_hand_weapon"
     ],
     "tags": [
@@ -26885,7 +27377,7 @@
     "weight": 1000,
     "mod_group": "globalincreasemeleeskillgemlevel",
     "applicable_items": [
-      "weapon",
+      "spear",
       "one_hand_weapon"
     ],
     "tags": [
@@ -27111,7 +27603,7 @@
   {
     "name": "of the Archer",
     "mod_type": "suffix",
-    "tier": 10,
+    "tier": 5,
     "stat_text": "+{} to Level of all Projectile Skills",
     "stat_ranges": [
       {
@@ -27125,7 +27617,8 @@
     "weight": 1000,
     "mod_group": "globalincreaseprojectileskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "spear"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -27136,7 +27629,7 @@
   {
     "name": "of the Fletcher",
     "mod_type": "suffix",
-    "tier": 9,
+    "tier": 4,
     "stat_text": "+{} to Level of all Projectile Skills",
     "stat_ranges": [
       {
@@ -27150,7 +27643,8 @@
     "weight": 1000,
     "mod_group": "globalincreaseprojectileskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "spear"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -27161,7 +27655,7 @@
   {
     "name": "of the Sharpshooter",
     "mod_type": "suffix",
-    "tier": 7,
+    "tier": 3,
     "stat_text": "+{} to Level of all Projectile Skills",
     "stat_ranges": [
       {
@@ -27175,7 +27669,8 @@
     "weight": 1000,
     "mod_group": "globalincreaseprojectileskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "spear"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -27186,7 +27681,7 @@
   {
     "name": "of the Marksman",
     "mod_type": "suffix",
-    "tier": 5,
+    "tier": 2,
     "stat_text": "+{} to Level of all Projectile Skills",
     "stat_ranges": [
       {
@@ -27200,7 +27695,8 @@
     "weight": 1000,
     "mod_group": "globalincreaseprojectileskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "spear"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -27211,7 +27707,7 @@
   {
     "name": "of the Sniper",
     "mod_type": "suffix",
-    "tier": 3,
+    "tier": 1,
     "stat_text": "+{} to Level of all Projectile Skills",
     "stat_ranges": [
       {
@@ -27225,7 +27721,8 @@
     "weight": 1000,
     "mod_group": "globalincreaseprojectileskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "bow",
+      "spear"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -27236,7 +27733,7 @@
   {
     "name": "of the Archer",
     "mod_type": "suffix",
-    "tier": 8,
+    "tier": 5,
     "stat_text": "+{} to Level of all Projectile Skills",
     "stat_ranges": [
       {
@@ -27250,7 +27747,7 @@
     "weight": 1000,
     "mod_group": "globalincreaseprojectileskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "crossbow"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -27261,7 +27758,7 @@
   {
     "name": "of the Fletcher",
     "mod_type": "suffix",
-    "tier": 6,
+    "tier": 4,
     "stat_text": "+{} to Level of all Projectile Skills",
     "stat_ranges": [
       {
@@ -27275,7 +27772,7 @@
     "weight": 1000,
     "mod_group": "globalincreaseprojectileskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "crossbow"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -27286,7 +27783,7 @@
   {
     "name": "of the Sharpshooter",
     "mod_type": "suffix",
-    "tier": 4,
+    "tier": 3,
     "stat_text": "+{} to Level of all Projectile Skills",
     "stat_ranges": [
       {
@@ -27300,7 +27797,7 @@
     "weight": 1000,
     "mod_group": "globalincreaseprojectileskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "crossbow"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -27325,7 +27822,7 @@
     "weight": 1000,
     "mod_group": "globalincreaseprojectileskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "crossbow"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -27350,7 +27847,7 @@
     "weight": 1000,
     "mod_group": "globalincreaseprojectileskillgemlevelweapon",
     "applicable_items": [
-      "weapon"
+      "crossbow"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -27736,7 +28233,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceliferegeneration",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "resource",
@@ -27764,7 +28261,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceliferegeneration",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "resource",
@@ -27792,7 +28289,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceliferegeneration",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "resource",
@@ -27820,7 +28317,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceliferegeneration",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "resource",
@@ -27848,7 +28345,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceliferegeneration",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "resource",
@@ -27876,7 +28373,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceliferegeneration",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "resource",
@@ -27904,7 +28401,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceliferegeneration",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "resource",
@@ -27932,7 +28429,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceliferegeneration",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "resource",
@@ -27960,7 +28457,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceliferegeneration",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "resource",
@@ -27988,7 +28485,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceliferegeneration",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "resource",
@@ -28019,7 +28516,8 @@
       "ring",
       "amulet",
       "focus",
-      "weapon",
+      "sceptre",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -28051,7 +28549,8 @@
       "ring",
       "amulet",
       "focus",
-      "weapon",
+      "sceptre",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -28083,7 +28582,8 @@
       "ring",
       "amulet",
       "focus",
-      "weapon",
+      "sceptre",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -28115,7 +28615,8 @@
       "ring",
       "amulet",
       "focus",
-      "weapon",
+      "sceptre",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -28147,7 +28648,8 @@
       "ring",
       "amulet",
       "focus",
-      "weapon",
+      "sceptre",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -28179,7 +28681,8 @@
       "ring",
       "amulet",
       "focus",
-      "weapon",
+      "sceptre",
+      "wand",
       "trap"
     ],
     "tags": [
@@ -28208,7 +28711,7 @@
     "weight": 1000,
     "mod_group": "manaregeneration",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "resource",
@@ -28236,7 +28739,7 @@
     "weight": 1000,
     "mod_group": "manaregeneration",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "resource",
@@ -28264,7 +28767,7 @@
     "weight": 1000,
     "mod_group": "manaregeneration",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "resource",
@@ -28292,7 +28795,7 @@
     "weight": 1000,
     "mod_group": "manaregeneration",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "resource",
@@ -28320,7 +28823,7 @@
     "weight": 1000,
     "mod_group": "manaregeneration",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "resource",
@@ -28348,7 +28851,7 @@
     "weight": 1000,
     "mod_group": "manaregeneration",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "resource",
@@ -28983,6 +29486,8 @@
     "mod_group": "lifegainedfromenemydeath",
     "applicable_items": [
       "weapon",
+      "wand",
+      "staff",
       "ring",
       "gloves",
       "quiver",
@@ -29015,6 +29520,8 @@
     "mod_group": "lifegainedfromenemydeath",
     "applicable_items": [
       "weapon",
+      "wand",
+      "staff",
       "ring",
       "gloves",
       "quiver",
@@ -29047,6 +29554,8 @@
     "mod_group": "lifegainedfromenemydeath",
     "applicable_items": [
       "weapon",
+      "wand",
+      "staff",
       "ring",
       "gloves",
       "quiver",
@@ -29079,6 +29588,8 @@
     "mod_group": "lifegainedfromenemydeath",
     "applicable_items": [
       "weapon",
+      "wand",
+      "staff",
       "ring",
       "gloves",
       "quiver",
@@ -29111,6 +29622,8 @@
     "mod_group": "lifegainedfromenemydeath",
     "applicable_items": [
       "weapon",
+      "wand",
+      "staff",
       "ring",
       "gloves",
       "quiver",
@@ -29143,6 +29656,8 @@
     "mod_group": "lifegainedfromenemydeath",
     "applicable_items": [
       "weapon",
+      "wand",
+      "staff",
       "ring",
       "gloves",
       "quiver",
@@ -29175,6 +29690,8 @@
     "mod_group": "lifegainedfromenemydeath",
     "applicable_items": [
       "weapon",
+      "wand",
+      "staff",
       "gloves",
       "trap"
     ],
@@ -29205,6 +29722,8 @@
     "mod_group": "lifegainedfromenemydeath",
     "applicable_items": [
       "weapon",
+      "wand",
+      "staff",
       "gloves",
       "trap"
     ],
@@ -29235,6 +29754,8 @@
     "mod_group": "managainedfromenemydeath",
     "applicable_items": [
       "weapon",
+      "wand",
+      "staff",
       "ring",
       "gloves",
       "quiver",
@@ -29267,6 +29788,8 @@
     "mod_group": "managainedfromenemydeath",
     "applicable_items": [
       "weapon",
+      "wand",
+      "staff",
       "ring",
       "gloves",
       "quiver",
@@ -29299,6 +29822,8 @@
     "mod_group": "managainedfromenemydeath",
     "applicable_items": [
       "weapon",
+      "wand",
+      "staff",
       "ring",
       "gloves",
       "quiver",
@@ -29331,6 +29856,8 @@
     "mod_group": "managainedfromenemydeath",
     "applicable_items": [
       "weapon",
+      "wand",
+      "staff",
       "ring",
       "gloves",
       "quiver",
@@ -29363,6 +29890,8 @@
     "mod_group": "managainedfromenemydeath",
     "applicable_items": [
       "weapon",
+      "wand",
+      "staff",
       "ring",
       "gloves",
       "quiver",
@@ -29395,6 +29924,8 @@
     "mod_group": "managainedfromenemydeath",
     "applicable_items": [
       "weapon",
+      "wand",
+      "staff",
       "ring",
       "gloves",
       "quiver",
@@ -29427,6 +29958,8 @@
     "mod_group": "managainedfromenemydeath",
     "applicable_items": [
       "weapon",
+      "wand",
+      "staff",
       "gloves",
       "trap"
     ],
@@ -29457,6 +29990,8 @@
     "mod_group": "managainedfromenemydeath",
     "applicable_items": [
       "weapon",
+      "wand",
+      "staff",
       "gloves",
       "trap"
     ],
@@ -30060,7 +30595,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceattackspeed",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "attack",
@@ -30088,7 +30623,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceattackspeed",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "attack",
@@ -30116,7 +30651,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceattackspeed",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "attack",
@@ -30144,7 +30679,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresenceattackspeed",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "attack",
@@ -30173,7 +30708,7 @@
     "mod_group": "castspeed",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "ring",
       "amulet"
     ],
@@ -30204,7 +30739,7 @@
     "mod_group": "castspeed",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "ring",
       "amulet"
     ],
@@ -30235,7 +30770,7 @@
     "mod_group": "castspeed",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "ring",
       "amulet"
     ],
@@ -30266,7 +30801,7 @@
     "mod_group": "castspeed",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "ring",
       "amulet"
     ],
@@ -30297,7 +30832,7 @@
     "mod_group": "castspeed",
     "applicable_items": [
       "focus",
-      "weapon",
+      "wand",
       "amulet"
     ],
     "tags": [
@@ -30327,7 +30862,7 @@
     "mod_group": "castspeed",
     "applicable_items": [
       "focus",
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster",
@@ -30341,7 +30876,7 @@
   {
     "name": "of Finesse",
     "mod_type": "suffix",
-    "tier": 5,
+    "tier": 1,
     "stat_text": "{}% increased Cast Speed",
     "stat_ranges": [
       {
@@ -30355,7 +30890,7 @@
     "weight": 1000,
     "mod_group": "castspeed",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster",
@@ -30369,7 +30904,7 @@
   {
     "name": "of Talent",
     "mod_type": "suffix",
-    "tier": 8,
+    "tier": 7,
     "stat_text": "{}% increased Cast Speed",
     "stat_ranges": [
       {
@@ -30383,7 +30918,7 @@
     "weight": 1000,
     "mod_group": "castspeed",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster",
@@ -30397,7 +30932,7 @@
   {
     "name": "of Nimbleness",
     "mod_type": "suffix",
-    "tier": 7,
+    "tier": 6,
     "stat_text": "{}% increased Cast Speed",
     "stat_ranges": [
       {
@@ -30411,7 +30946,7 @@
     "weight": 1000,
     "mod_group": "castspeed",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster",
@@ -30425,7 +30960,7 @@
   {
     "name": "of Expertise",
     "mod_type": "suffix",
-    "tier": 6,
+    "tier": 5,
     "stat_text": "{}% increased Cast Speed",
     "stat_ranges": [
       {
@@ -30439,7 +30974,7 @@
     "weight": 1000,
     "mod_group": "castspeed",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster",
@@ -30467,7 +31002,7 @@
     "weight": 1000,
     "mod_group": "castspeed",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster",
@@ -30495,7 +31030,7 @@
     "weight": 1000,
     "mod_group": "castspeed",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster",
@@ -30523,7 +31058,7 @@
     "weight": 1000,
     "mod_group": "castspeed",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster",
@@ -30551,7 +31086,7 @@
     "weight": 1000,
     "mod_group": "castspeed",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster",
@@ -30579,7 +31114,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresencecastspeed",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "caster",
@@ -30607,7 +31142,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresencecastspeed",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "caster",
@@ -30635,7 +31170,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresencecastspeed",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "caster",
@@ -30663,7 +31198,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresencecastspeed",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "caster",
@@ -31774,7 +32309,7 @@
     "mod_group": "spellcriticalstrikechance",
     "applicable_items": [
       "focus",
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster",
@@ -31803,7 +32338,7 @@
     "mod_group": "spellcriticalstrikechance",
     "applicable_items": [
       "focus",
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster",
@@ -31832,7 +32367,7 @@
     "mod_group": "spellcriticalstrikechance",
     "applicable_items": [
       "focus",
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster",
@@ -31861,7 +32396,7 @@
     "mod_group": "spellcriticalstrikechance",
     "applicable_items": [
       "focus",
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster",
@@ -31890,7 +32425,7 @@
     "mod_group": "spellcriticalstrikechance",
     "applicable_items": [
       "focus",
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster",
@@ -31904,7 +32439,7 @@
   {
     "name": "of Unmaking",
     "mod_type": "suffix",
-    "tier": 4,
+    "tier": 1,
     "stat_text": "{}% increased Critical Hit Chance for Spells",
     "stat_ranges": [
       {
@@ -31918,7 +32453,7 @@
     "weight": 1000,
     "mod_group": "spellcriticalstrikechance",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster",
@@ -31932,7 +32467,7 @@
   {
     "name": "of Menace",
     "mod_type": "suffix",
-    "tier": 7,
+    "tier": 6,
     "stat_text": "{}% increased Critical Hit Chance for Spells",
     "stat_ranges": [
       {
@@ -31946,7 +32481,7 @@
     "weight": 1000,
     "mod_group": "spellcriticalstrikechance",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster",
@@ -31960,7 +32495,7 @@
   {
     "name": "of Havoc",
     "mod_type": "suffix",
-    "tier": 6,
+    "tier": 5,
     "stat_text": "{}% increased Critical Hit Chance for Spells",
     "stat_ranges": [
       {
@@ -31974,7 +32509,7 @@
     "weight": 1000,
     "mod_group": "spellcriticalstrikechance",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster",
@@ -31988,7 +32523,7 @@
   {
     "name": "of Disaster",
     "mod_type": "suffix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "{}% increased Critical Hit Chance for Spells",
     "stat_ranges": [
       {
@@ -32002,7 +32537,7 @@
     "weight": 1000,
     "mod_group": "spellcriticalstrikechance",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster",
@@ -32030,7 +32565,7 @@
     "weight": 1000,
     "mod_group": "spellcriticalstrikechance",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster",
@@ -32058,7 +32593,7 @@
     "weight": 1000,
     "mod_group": "spellcriticalstrikechance",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster",
@@ -32086,7 +32621,7 @@
     "weight": 1000,
     "mod_group": "spellcriticalstrikechance",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster",
@@ -32432,7 +32967,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresencecriticalstrikechance",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "critical"
@@ -32459,7 +32994,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresencecriticalstrikechance",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "critical"
@@ -32486,7 +33021,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresencecriticalstrikechance",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "critical"
@@ -32513,7 +33048,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresencecriticalstrikechance",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "critical"
@@ -32540,7 +33075,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresencecriticalstrikechance",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "critical"
@@ -32567,7 +33102,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresencecriticalstrikechance",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "critical"
@@ -32942,7 +33477,7 @@
     "mod_group": "spellcriticalstrikemultiplier",
     "applicable_items": [
       "focus",
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster",
@@ -32971,7 +33506,7 @@
     "mod_group": "spellcriticalstrikemultiplier",
     "applicable_items": [
       "focus",
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster",
@@ -33000,7 +33535,7 @@
     "mod_group": "spellcriticalstrikemultiplier",
     "applicable_items": [
       "focus",
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster",
@@ -33029,7 +33564,7 @@
     "mod_group": "spellcriticalstrikemultiplier",
     "applicable_items": [
       "focus",
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster",
@@ -33058,7 +33593,7 @@
     "mod_group": "spellcriticalstrikemultiplier",
     "applicable_items": [
       "focus",
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster",
@@ -33072,7 +33607,7 @@
   {
     "name": "of Destruction",
     "mod_type": "suffix",
-    "tier": 4,
+    "tier": 1,
     "stat_text": "{}% increased Critical Spell Damage Bonus",
     "stat_ranges": [
       {
@@ -33086,7 +33621,7 @@
     "weight": 1000,
     "mod_group": "spellcriticalstrikemultiplier",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "caster",
@@ -33100,7 +33635,7 @@
   {
     "name": "of Ire",
     "mod_type": "suffix",
-    "tier": 7,
+    "tier": 6,
     "stat_text": "{}% increased Critical Spell Damage Bonus",
     "stat_ranges": [
       {
@@ -33114,7 +33649,7 @@
     "weight": 1000,
     "mod_group": "spellcriticalstrikemultiplier",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster",
@@ -33128,7 +33663,7 @@
   {
     "name": "of Anger",
     "mod_type": "suffix",
-    "tier": 6,
+    "tier": 5,
     "stat_text": "{}% increased Critical Spell Damage Bonus",
     "stat_ranges": [
       {
@@ -33142,7 +33677,7 @@
     "weight": 1000,
     "mod_group": "spellcriticalstrikemultiplier",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster",
@@ -33156,7 +33691,7 @@
   {
     "name": "of Rage",
     "mod_type": "suffix",
-    "tier": 5,
+    "tier": 4,
     "stat_text": "{}% increased Critical Spell Damage Bonus",
     "stat_ranges": [
       {
@@ -33170,7 +33705,7 @@
     "weight": 1000,
     "mod_group": "spellcriticalstrikemultiplier",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster",
@@ -33198,7 +33733,7 @@
     "weight": 1000,
     "mod_group": "spellcriticalstrikemultiplier",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster",
@@ -33226,7 +33761,7 @@
     "weight": 1000,
     "mod_group": "spellcriticalstrikemultiplier",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster",
@@ -33254,7 +33789,7 @@
     "weight": 1000,
     "mod_group": "spellcriticalstrikemultiplier",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "caster",
@@ -33600,7 +34135,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresencecriticalstrikemultiplier",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "damage",
@@ -33628,7 +34163,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresencecriticalstrikemultiplier",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "damage",
@@ -33656,7 +34191,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresencecriticalstrikemultiplier",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "damage",
@@ -33684,7 +34219,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresencecriticalstrikemultiplier",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "damage",
@@ -33712,7 +34247,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresencecriticalstrikemultiplier",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "damage",
@@ -33740,7 +34275,7 @@
     "weight": 1000,
     "mod_group": "alliesinpresencecriticalstrikemultiplier",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "damage",
@@ -34236,7 +34771,9 @@
     "weight": 1000,
     "mod_group": "lightradiusandmanaregeneration",
     "applicable_items": [
-      "weapon",
+      "wand",
+      "staff",
+      "sceptre",
       "ring"
     ],
     "tags": [
@@ -34266,7 +34803,9 @@
     "weight": 1000,
     "mod_group": "lightradiusandmanaregeneration",
     "applicable_items": [
-      "weapon",
+      "wand",
+      "staff",
+      "sceptre",
       "ring"
     ],
     "tags": [
@@ -34296,7 +34835,9 @@
     "weight": 1000,
     "mod_group": "lightradiusandmanaregeneration",
     "applicable_items": [
-      "weapon",
+      "wand",
+      "staff",
+      "sceptre",
       "ring"
     ],
     "tags": [
@@ -34712,7 +35253,7 @@
     "weight": 1000,
     "mod_group": "localspiritpercent",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -34737,7 +35278,7 @@
     "weight": 1000,
     "mod_group": "localspiritpercent",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -34762,7 +35303,7 @@
     "weight": 1000,
     "mod_group": "localspiritpercent",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -34787,7 +35328,7 @@
     "weight": 1000,
     "mod_group": "localspiritpercent",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -34812,7 +35353,7 @@
     "weight": 1000,
     "mod_group": "localspiritpercent",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -34837,7 +35378,7 @@
     "weight": 1000,
     "mod_group": "localspiritpercent",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -34862,7 +35403,7 @@
     "weight": 1000,
     "mod_group": "localspiritpercent",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -34887,7 +35428,7 @@
     "weight": 1000,
     "mod_group": "localspiritpercent",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -34916,7 +35457,7 @@
     "weight": 1000,
     "mod_group": "localspiritandmana",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -34946,7 +35487,7 @@
     "weight": 1000,
     "mod_group": "localspiritandmana",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -34976,7 +35517,7 @@
     "weight": 1000,
     "mod_group": "localspiritandmana",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -35006,7 +35547,7 @@
     "weight": 1000,
     "mod_group": "localspiritandmana",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -35036,7 +35577,7 @@
     "weight": 1000,
     "mod_group": "localspiritandmana",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -35066,7 +35607,7 @@
     "weight": 1000,
     "mod_group": "localspiritandmana",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -35096,7 +35637,7 @@
     "weight": 1000,
     "mod_group": "localspiritandmana",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -37544,7 +38085,7 @@
     "weight": 1000,
     "mod_group": "additionalarrows",
     "applicable_items": [
-      "weapon"
+      "bow"
     ],
     "tags": [
       "attack"
@@ -37571,7 +38112,7 @@
     "weight": 1000,
     "mod_group": "additionalarrows",
     "applicable_items": [
-      "weapon"
+      "bow"
     ],
     "tags": [
       "attack"
@@ -37593,7 +38134,7 @@
     "weight": 1000,
     "mod_group": "additionalammo",
     "applicable_items": [
-      "weapon"
+      "crossbow"
     ],
     "tags": [
       "attack"
@@ -37620,7 +38161,7 @@
     "weight": 1000,
     "mod_group": "additionalammo",
     "applicable_items": [
-      "weapon"
+      "crossbow"
     ],
     "tags": [
       "attack"
@@ -38790,7 +39331,8 @@
     "weight": 1000,
     "mod_group": "ignitechanceincrease",
     "applicable_items": [
-      "weapon",
+      "wand",
+      "staff",
       "trap"
     ],
     "tags": [],
@@ -38816,7 +39358,8 @@
     "weight": 1000,
     "mod_group": "ignitechanceincrease",
     "applicable_items": [
-      "weapon",
+      "wand",
+      "staff",
       "trap"
     ],
     "tags": [],
@@ -38842,7 +39385,8 @@
     "weight": 1000,
     "mod_group": "ignitechanceincrease",
     "applicable_items": [
-      "weapon",
+      "wand",
+      "staff",
       "trap"
     ],
     "tags": [],
@@ -38868,7 +39412,8 @@
     "weight": 1000,
     "mod_group": "ignitechanceincrease",
     "applicable_items": [
-      "weapon",
+      "wand",
+      "staff",
       "trap"
     ],
     "tags": [],
@@ -38894,7 +39439,8 @@
     "weight": 1000,
     "mod_group": "ignitechanceincrease",
     "applicable_items": [
-      "weapon",
+      "wand",
+      "staff",
       "trap"
     ],
     "tags": [],
@@ -38920,7 +39466,8 @@
     "weight": 1000,
     "mod_group": "freezedamageincrease",
     "applicable_items": [
-      "weapon",
+      "wand",
+      "staff",
       "trap"
     ],
     "tags": [],
@@ -38946,7 +39493,8 @@
     "weight": 1000,
     "mod_group": "freezedamageincrease",
     "applicable_items": [
-      "weapon",
+      "wand",
+      "staff",
       "trap"
     ],
     "tags": [],
@@ -38972,7 +39520,8 @@
     "weight": 1000,
     "mod_group": "freezedamageincrease",
     "applicable_items": [
-      "weapon",
+      "wand",
+      "staff",
       "trap"
     ],
     "tags": [],
@@ -38998,7 +39547,8 @@
     "weight": 1000,
     "mod_group": "freezedamageincrease",
     "applicable_items": [
-      "weapon",
+      "wand",
+      "staff",
       "trap"
     ],
     "tags": [],
@@ -39024,7 +39574,8 @@
     "weight": 1000,
     "mod_group": "freezedamageincrease",
     "applicable_items": [
-      "weapon",
+      "wand",
+      "staff",
       "trap"
     ],
     "tags": [],
@@ -39050,7 +39601,8 @@
     "weight": 1000,
     "mod_group": "shockchanceincrease",
     "applicable_items": [
-      "weapon",
+      "wand",
+      "staff",
       "trap"
     ],
     "tags": [],
@@ -39076,7 +39628,8 @@
     "weight": 1000,
     "mod_group": "shockchanceincrease",
     "applicable_items": [
-      "weapon",
+      "wand",
+      "staff",
       "trap"
     ],
     "tags": [],
@@ -39102,7 +39655,8 @@
     "weight": 1000,
     "mod_group": "shockchanceincrease",
     "applicable_items": [
-      "weapon",
+      "wand",
+      "staff",
       "trap"
     ],
     "tags": [],
@@ -39128,7 +39682,8 @@
     "weight": 1000,
     "mod_group": "shockchanceincrease",
     "applicable_items": [
-      "weapon",
+      "wand",
+      "staff",
       "trap"
     ],
     "tags": [],
@@ -39154,7 +39709,8 @@
     "weight": 1000,
     "mod_group": "shockchanceincrease",
     "applicable_items": [
-      "weapon",
+      "wand",
+      "staff",
       "trap"
     ],
     "tags": [],
@@ -40788,7 +41344,7 @@
     "weight": 1000,
     "mod_group": "weaponelementaldamagepercent",
     "applicable_items": [
-      "weapon",
+      "bow",
       "one_hand_weapon"
     ],
     "tags": [
@@ -40819,7 +41375,7 @@
     "weight": 1000,
     "mod_group": "weaponelementaldamagepercent",
     "applicable_items": [
-      "weapon",
+      "bow",
       "one_hand_weapon"
     ],
     "tags": [
@@ -40850,7 +41406,7 @@
     "weight": 1000,
     "mod_group": "weaponelementaldamagepercent",
     "applicable_items": [
-      "weapon",
+      "bow",
       "one_hand_weapon"
     ],
     "tags": [
@@ -40881,7 +41437,7 @@
     "weight": 1000,
     "mod_group": "weaponelementaldamagepercent",
     "applicable_items": [
-      "weapon",
+      "bow",
       "one_hand_weapon"
     ],
     "tags": [
@@ -40912,7 +41468,7 @@
     "weight": 1000,
     "mod_group": "weaponelementaldamagepercent",
     "applicable_items": [
-      "weapon",
+      "bow",
       "one_hand_weapon"
     ],
     "tags": [
@@ -40943,7 +41499,7 @@
     "weight": 1000,
     "mod_group": "weaponelementaldamagepercent",
     "applicable_items": [
-      "weapon",
+      "bow",
       "one_hand_weapon"
     ],
     "tags": [
@@ -41140,7 +41696,7 @@
   {
     "name": "Fervent",
     "mod_type": "prefix",
-    "tier": 12,
+    "tier": 6,
     "stat_text": "Gain {}% of Damage as Extra Fire Damage",
     "stat_ranges": [
       {
@@ -41154,7 +41710,7 @@
     "weight": 1000,
     "mod_group": "damagegainedasfire",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental_damage",
@@ -41170,7 +41726,7 @@
   {
     "name": "Ardent",
     "mod_type": "prefix",
-    "tier": 11,
+    "tier": 5,
     "stat_text": "Gain {}% of Damage as Extra Fire Damage",
     "stat_ranges": [
       {
@@ -41184,7 +41740,7 @@
     "weight": 1000,
     "mod_group": "damagegainedasfire",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental_damage",
@@ -41200,7 +41756,7 @@
   {
     "name": "Fanatic's",
     "mod_type": "prefix",
-    "tier": 10,
+    "tier": 4,
     "stat_text": "Gain {}% of Damage as Extra Fire Damage",
     "stat_ranges": [
       {
@@ -41214,7 +41770,7 @@
     "weight": 1000,
     "mod_group": "damagegainedasfire",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental_damage",
@@ -41230,7 +41786,7 @@
   {
     "name": "Zealot's",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 3,
     "stat_text": "Gain {}% of Damage as Extra Fire Damage",
     "stat_ranges": [
       {
@@ -41244,7 +41800,7 @@
     "weight": 1000,
     "mod_group": "damagegainedasfire",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental_damage",
@@ -41260,7 +41816,7 @@
   {
     "name": "Infernal",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 2,
     "stat_text": "Gain {}% of Damage as Extra Fire Damage",
     "stat_ranges": [
       {
@@ -41274,7 +41830,7 @@
     "weight": 1000,
     "mod_group": "damagegainedasfire",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental_damage",
@@ -41290,7 +41846,7 @@
   {
     "name": "Flamebound",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 1,
     "stat_text": "Gain {}% of Damage as Extra Fire Damage",
     "stat_ranges": [
       {
@@ -41304,7 +41860,7 @@
     "weight": 1000,
     "mod_group": "damagegainedasfire",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental_damage",
@@ -41320,7 +41876,7 @@
   {
     "name": "Fervent",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 6,
     "stat_text": "Gain {}% of Damage as Extra Fire Damage",
     "stat_ranges": [
       {
@@ -41334,7 +41890,7 @@
     "weight": 1000,
     "mod_group": "damagegainedasfire",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -41350,7 +41906,7 @@
   {
     "name": "Ardent",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 5,
     "stat_text": "Gain {}% of Damage as Extra Fire Damage",
     "stat_ranges": [
       {
@@ -41364,7 +41920,7 @@
     "weight": 1000,
     "mod_group": "damagegainedasfire",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -41394,7 +41950,7 @@
     "weight": 1000,
     "mod_group": "damagegainedasfire",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -41424,7 +41980,7 @@
     "weight": 1000,
     "mod_group": "damagegainedasfire",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -41454,7 +42010,7 @@
     "weight": 1000,
     "mod_group": "damagegainedasfire",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -41484,7 +42040,7 @@
     "weight": 1000,
     "mod_group": "damagegainedasfire",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -41500,7 +42056,7 @@
   {
     "name": "Malignant",
     "mod_type": "prefix",
-    "tier": 12,
+    "tier": 6,
     "stat_text": "Gain {}% of Damage as Extra Cold Damage",
     "stat_ranges": [
       {
@@ -41514,7 +42070,7 @@
     "weight": 1000,
     "mod_group": "damagegainedascold",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental_damage",
@@ -41530,7 +42086,7 @@
   {
     "name": "Pernicious",
     "mod_type": "prefix",
-    "tier": 11,
+    "tier": 5,
     "stat_text": "Gain {}% of Damage as Extra Cold Damage",
     "stat_ranges": [
       {
@@ -41544,7 +42100,7 @@
     "weight": 1000,
     "mod_group": "damagegainedascold",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental_damage",
@@ -41560,7 +42116,7 @@
   {
     "name": "Destructive",
     "mod_type": "prefix",
-    "tier": 10,
+    "tier": 4,
     "stat_text": "Gain {}% of Damage as Extra Cold Damage",
     "stat_ranges": [
       {
@@ -41574,7 +42130,7 @@
     "weight": 1000,
     "mod_group": "damagegainedascold",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental_damage",
@@ -41590,7 +42146,7 @@
   {
     "name": "Malicious",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 3,
     "stat_text": "Gain {}% of Damage as Extra Cold Damage",
     "stat_ranges": [
       {
@@ -41604,7 +42160,7 @@
     "weight": 1000,
     "mod_group": "damagegainedascold",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental_damage",
@@ -41620,7 +42176,7 @@
   {
     "name": "Ruthless",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 2,
     "stat_text": "Gain {}% of Damage as Extra Cold Damage",
     "stat_ranges": [
       {
@@ -41634,7 +42190,7 @@
     "weight": 1000,
     "mod_group": "damagegainedascold",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental_damage",
@@ -41650,7 +42206,7 @@
   {
     "name": "Frostbound",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 1,
     "stat_text": "Gain {}% of Damage as Extra Cold Damage",
     "stat_ranges": [
       {
@@ -41664,7 +42220,7 @@
     "weight": 1000,
     "mod_group": "damagegainedascold",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental_damage",
@@ -41680,7 +42236,7 @@
   {
     "name": "Malignant",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 6,
     "stat_text": "Gain {}% of Damage as Extra Cold Damage",
     "stat_ranges": [
       {
@@ -41694,7 +42250,7 @@
     "weight": 1000,
     "mod_group": "damagegainedascold",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -41710,7 +42266,7 @@
   {
     "name": "Pernicious",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 5,
     "stat_text": "Gain {}% of Damage as Extra Cold Damage",
     "stat_ranges": [
       {
@@ -41724,7 +42280,7 @@
     "weight": 1000,
     "mod_group": "damagegainedascold",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -41754,7 +42310,7 @@
     "weight": 1000,
     "mod_group": "damagegainedascold",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -41784,7 +42340,7 @@
     "weight": 1000,
     "mod_group": "damagegainedascold",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -41814,7 +42370,7 @@
     "weight": 1000,
     "mod_group": "damagegainedascold",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -41844,7 +42400,7 @@
     "weight": 1000,
     "mod_group": "damagegainedascold",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -41860,7 +42416,7 @@
   {
     "name": "Deadly",
     "mod_type": "prefix",
-    "tier": 12,
+    "tier": 6,
     "stat_text": "Gain {}% of Damage as Extra Lightning Damage",
     "stat_ranges": [
       {
@@ -41874,7 +42430,7 @@
     "weight": 1000,
     "mod_group": "damagegainedaslightning",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental_damage",
@@ -41890,7 +42446,7 @@
   {
     "name": "Lethal",
     "mod_type": "prefix",
-    "tier": 11,
+    "tier": 5,
     "stat_text": "Gain {}% of Damage as Extra Lightning Damage",
     "stat_ranges": [
       {
@@ -41904,7 +42460,7 @@
     "weight": 1000,
     "mod_group": "damagegainedaslightning",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental_damage",
@@ -41920,7 +42476,7 @@
   {
     "name": "Fatal",
     "mod_type": "prefix",
-    "tier": 10,
+    "tier": 4,
     "stat_text": "Gain {}% of Damage as Extra Lightning Damage",
     "stat_ranges": [
       {
@@ -41934,7 +42490,7 @@
     "weight": 1000,
     "mod_group": "damagegainedaslightning",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental_damage",
@@ -41950,7 +42506,7 @@
   {
     "name": "Vorpal",
     "mod_type": "prefix",
-    "tier": 8,
+    "tier": 3,
     "stat_text": "Gain {}% of Damage as Extra Lightning Damage",
     "stat_ranges": [
       {
@@ -41964,7 +42520,7 @@
     "weight": 1000,
     "mod_group": "damagegainedaslightning",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental_damage",
@@ -41980,7 +42536,7 @@
   {
     "name": "Electrifying",
     "mod_type": "prefix",
-    "tier": 7,
+    "tier": 2,
     "stat_text": "Gain {}% of Damage as Extra Lightning Damage",
     "stat_ranges": [
       {
@@ -41994,7 +42550,7 @@
     "weight": 1000,
     "mod_group": "damagegainedaslightning",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental_damage",
@@ -42010,7 +42566,7 @@
   {
     "name": "Stormbound",
     "mod_type": "prefix",
-    "tier": 5,
+    "tier": 1,
     "stat_text": "Gain {}% of Damage as Extra Lightning Damage",
     "stat_ranges": [
       {
@@ -42024,7 +42580,7 @@
     "weight": 1000,
     "mod_group": "damagegainedaslightning",
     "applicable_items": [
-      "weapon"
+      "wand"
     ],
     "tags": [
       "elemental_damage",
@@ -42040,7 +42596,7 @@
   {
     "name": "Deadly",
     "mod_type": "prefix",
-    "tier": 9,
+    "tier": 6,
     "stat_text": "Gain {}% of Damage as Extra Lightning Damage",
     "stat_ranges": [
       {
@@ -42054,7 +42610,7 @@
     "weight": 1000,
     "mod_group": "damagegainedaslightning",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -42070,7 +42626,7 @@
   {
     "name": "Lethal",
     "mod_type": "prefix",
-    "tier": 6,
+    "tier": 5,
     "stat_text": "Gain {}% of Damage as Extra Lightning Damage",
     "stat_ranges": [
       {
@@ -42084,7 +42640,7 @@
     "weight": 1000,
     "mod_group": "damagegainedaslightning",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -42114,7 +42670,7 @@
     "weight": 1000,
     "mod_group": "damagegainedaslightning",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -42144,7 +42700,7 @@
     "weight": 1000,
     "mod_group": "damagegainedaslightning",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -42174,7 +42730,7 @@
     "weight": 1000,
     "mod_group": "damagegainedaslightning",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -42204,7 +42760,7 @@
     "weight": 1000,
     "mod_group": "damagegainedaslightning",
     "applicable_items": [
-      "weapon"
+      "staff"
     ],
     "tags": [
       "elemental_damage",
@@ -42396,7 +42952,7 @@
     "weight": 1000,
     "mod_group": "presenceradius",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -42421,7 +42977,7 @@
     "weight": 1000,
     "mod_group": "presenceradius",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -42446,7 +43002,7 @@
     "weight": 1000,
     "mod_group": "presenceradius",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -42471,7 +43027,7 @@
     "weight": 1000,
     "mod_group": "presenceradius",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [],
     "is_exclusive": false,
@@ -42496,7 +43052,7 @@
     "weight": 1000,
     "mod_group": "minionlife",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "resource",
@@ -42525,7 +43081,7 @@
     "weight": 1000,
     "mod_group": "minionlife",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "resource",
@@ -42554,7 +43110,7 @@
     "weight": 1000,
     "mod_group": "minionlife",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "resource",
@@ -42583,7 +43139,7 @@
     "weight": 1000,
     "mod_group": "minionlife",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "resource",
@@ -42612,7 +43168,7 @@
     "weight": 1000,
     "mod_group": "minionlife",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "resource",
@@ -42641,7 +43197,7 @@
     "weight": 1000,
     "mod_group": "minionlife",
     "applicable_items": [
-      "weapon"
+      "sceptre"
     ],
     "tags": [
       "resource",
@@ -42704,20 +43260,8 @@
     "stat_max": null,
     "required_ilvl": 1,
     "weight": 1000,
-    "mod_group": "abyssal_mark",
-    "applicable_items": [
-      "amulet",
-      "ring",
-      "belt",
-      "jewellery",
-      "armour",
-      "weapon",
-      "body_armour",
-      "boots",
-      "gloves",
-      "helmet",
-      "shield"
-    ],
+    "mod_group": "abysstargetmod",
+    "applicable_items": [],
     "tags": [],
     "is_exclusive": false,
     "stat_order": [
@@ -42740,6 +43284,276 @@
     "is_exclusive": false,
     "stat_order": [
       5974
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 7,
+    "stat_text": "{}% increased Flask Life Recovery rate",
+    "stat_ranges": [
+      {
+        "min": 8.0,
+        "max": 11.0
+      }
+    ],
+    "stat_min": 8.0,
+    "stat_max": 11.0,
+    "required_ilvl": 1,
+    "weight": 1000,
+    "mod_group": "beltflaskliferecoveryrate",
+    "applicable_items": [],
+    "tags": [
+      "flask",
+      "resource",
+      "life"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      873
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 6,
+    "stat_text": "{}% increased Flask Life Recovery rate",
+    "stat_ranges": [
+      {
+        "min": 12.0,
+        "max": 15.0
+      }
+    ],
+    "stat_min": 12.0,
+    "stat_max": 15.0,
+    "required_ilvl": 10,
+    "weight": 1000,
+    "mod_group": "beltflaskliferecoveryrate",
+    "applicable_items": [],
+    "tags": [
+      "flask",
+      "resource",
+      "life"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      873
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 5,
+    "stat_text": "{}% increased Flask Life Recovery rate",
+    "stat_ranges": [
+      {
+        "min": 16.0,
+        "max": 19.0
+      }
+    ],
+    "stat_min": 16.0,
+    "stat_max": 19.0,
+    "required_ilvl": 26,
+    "weight": 1000,
+    "mod_group": "beltflaskliferecoveryrate",
+    "applicable_items": [],
+    "tags": [
+      "flask",
+      "resource",
+      "life"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      873
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 4,
+    "stat_text": "{}% increased Flask Life Recovery rate",
+    "stat_ranges": [
+      {
+        "min": 20.0,
+        "max": 23.0
+      }
+    ],
+    "stat_min": 20.0,
+    "stat_max": 23.0,
+    "required_ilvl": 42,
+    "weight": 1000,
+    "mod_group": "beltflaskliferecoveryrate",
+    "applicable_items": [],
+    "tags": [
+      "flask",
+      "resource",
+      "life"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      873
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 3,
+    "stat_text": "{}% increased Flask Life Recovery rate",
+    "stat_ranges": [
+      {
+        "min": 24.0,
+        "max": 27.0
+      }
+    ],
+    "stat_min": 24.0,
+    "stat_max": 27.0,
+    "required_ilvl": 58,
+    "weight": 1000,
+    "mod_group": "beltflaskliferecoveryrate",
+    "applicable_items": [],
+    "tags": [
+      "flask",
+      "resource",
+      "life"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      873
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 2,
+    "stat_text": "{}% increased Flask Life Recovery rate",
+    "stat_ranges": [
+      {
+        "min": 28.0,
+        "max": 31.0
+      }
+    ],
+    "stat_min": 28.0,
+    "stat_max": 31.0,
+    "required_ilvl": 74,
+    "weight": 1000,
+    "mod_group": "beltflaskliferecoveryrate",
+    "applicable_items": [],
+    "tags": [
+      "flask",
+      "resource",
+      "life"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      873
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Flask Life Recovery rate",
+    "stat_ranges": [
+      {
+        "min": 32.0,
+        "max": 35.0
+      }
+    ],
+    "stat_min": 32.0,
+    "stat_max": 35.0,
+    "required_ilvl": 82,
+    "weight": 1000,
+    "mod_group": "beltflaskliferecoveryrate",
+    "applicable_items": [],
+    "tags": [
+      "flask",
+      "resource",
+      "life"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      873
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 3,
+    "stat_text": "{}% increased Flask Mana Recovery rate",
+    "stat_ranges": [
+      {
+        "min": 11.0,
+        "max": 15.0
+      }
+    ],
+    "stat_min": 11.0,
+    "stat_max": 15.0,
+    "required_ilvl": 58,
+    "weight": 1000,
+    "mod_group": "beltflaskmanarecoveryrate",
+    "applicable_items": [],
+    "tags": [
+      "flask",
+      "resource",
+      "mana"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      874
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 2,
+    "stat_text": "{}% increased Flask Mana Recovery rate",
+    "stat_ranges": [
+      {
+        "min": 16.0,
+        "max": 20.0
+      }
+    ],
+    "stat_min": 16.0,
+    "stat_max": 20.0,
+    "required_ilvl": 74,
+    "weight": 1000,
+    "mod_group": "beltflaskmanarecoveryrate",
+    "applicable_items": [],
+    "tags": [
+      "flask",
+      "resource",
+      "mana"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      874
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Flask Mana Recovery rate",
+    "stat_ranges": [
+      {
+        "min": 21.0,
+        "max": 25.0
+      }
+    ],
+    "stat_min": 21.0,
+    "stat_max": 25.0,
+    "required_ilvl": 82,
+    "weight": 1000,
+    "mod_group": "beltflaskmanarecoveryrate",
+    "applicable_items": [],
+    "tags": [
+      "flask",
+      "resource",
+      "mana"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      874
     ]
   },
   {
@@ -42902,6 +43716,87 @@
     "is_exclusive": false,
     "stat_order": [
       1528
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 3,
+    "stat_text": "Reflects {} Physical Damage to Melee Attackers",
+    "stat_ranges": [
+      {
+        "min": 51.0,
+        "max": 100.0
+      }
+    ],
+    "stat_min": 51.0,
+    "stat_max": 100.0,
+    "required_ilvl": 58,
+    "weight": 1000,
+    "mod_group": "attackertakesdamagenorange",
+    "applicable_items": [],
+    "tags": [
+      "physical_damage",
+      "damage",
+      "physical"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      877
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 2,
+    "stat_text": "Reflects {} Physical Damage to Melee Attackers",
+    "stat_ranges": [
+      {
+        "min": 101.0,
+        "max": 150.0
+      }
+    ],
+    "stat_min": 101.0,
+    "stat_max": 150.0,
+    "required_ilvl": 74,
+    "weight": 1000,
+    "mod_group": "attackertakesdamagenorange",
+    "applicable_items": [],
+    "tags": [
+      "physical_damage",
+      "damage",
+      "physical"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      877
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Reflects {} Physical Damage to Melee Attackers",
+    "stat_ranges": [
+      {
+        "min": 151.0,
+        "max": 200.0
+      }
+    ],
+    "stat_min": 151.0,
+    "stat_max": 200.0,
+    "required_ilvl": 82,
+    "weight": 1000,
+    "mod_group": "attackertakesdamagenorange",
+    "applicable_items": [],
+    "tags": [
+      "physical_damage",
+      "damage",
+      "physical"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      877
     ]
   },
   {
@@ -44291,6 +45186,230 @@
     ]
   },
   {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 9,
+    "stat_text": "Damage Penetrates {}% Lightning Resistance",
+    "stat_ranges": [
+      {
+        "min": 5.0,
+        "max": 5.0
+      }
+    ],
+    "stat_min": 5.0,
+    "stat_max": 5.0,
+    "required_ilvl": 42,
+    "weight": 1000,
+    "mod_group": "lightningresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "lightning"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2606
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 8,
+    "stat_text": "Damage Penetrates {}% Lightning Resistance",
+    "stat_ranges": [
+      {
+        "min": 6.0,
+        "max": 6.0
+      }
+    ],
+    "stat_min": 6.0,
+    "stat_max": 6.0,
+    "required_ilvl": 58,
+    "weight": 1000,
+    "mod_group": "lightningresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "lightning"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2606
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 7,
+    "stat_text": "Damage Penetrates {}% Lightning Resistance",
+    "stat_ranges": [
+      {
+        "min": 7.0,
+        "max": 7.0
+      }
+    ],
+    "stat_min": 7.0,
+    "stat_max": 7.0,
+    "required_ilvl": 74,
+    "weight": 1000,
+    "mod_group": "lightningresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "lightning"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2606
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 6,
+    "stat_text": "Damage Penetrates {}% Lightning Resistance",
+    "stat_ranges": [
+      {
+        "min": 8.0,
+        "max": 8.0
+      }
+    ],
+    "stat_min": 8.0,
+    "stat_max": 8.0,
+    "required_ilvl": 82,
+    "weight": 1000,
+    "mod_group": "lightningresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "lightning"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2606
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 4,
+    "stat_text": "Damage Penetrates {}% Lightning Resistance",
+    "stat_ranges": [
+      {
+        "min": 9.0,
+        "max": 10.0
+      }
+    ],
+    "stat_min": 9.0,
+    "stat_max": 10.0,
+    "required_ilvl": 42,
+    "weight": 1000,
+    "mod_group": "lightningresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "lightning"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2606
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 3,
+    "stat_text": "Damage Penetrates {}% Lightning Resistance",
+    "stat_ranges": [
+      {
+        "min": 11.0,
+        "max": 12.0
+      }
+    ],
+    "stat_min": 11.0,
+    "stat_max": 12.0,
+    "required_ilvl": 58,
+    "weight": 1000,
+    "mod_group": "lightningresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "lightning"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2606
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 2,
+    "stat_text": "Damage Penetrates {}% Lightning Resistance",
+    "stat_ranges": [
+      {
+        "min": 13.0,
+        "max": 14.0
+      }
+    ],
+    "stat_min": 13.0,
+    "stat_max": 14.0,
+    "required_ilvl": 74,
+    "weight": 1000,
+    "mod_group": "lightningresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "lightning"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2606
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Damage Penetrates {}% Lightning Resistance",
+    "stat_ranges": [
+      {
+        "min": 15.0,
+        "max": 16.0
+      }
+    ],
+    "stat_min": 15.0,
+    "stat_max": 16.0,
+    "required_ilvl": 82,
+    "weight": 1000,
+    "mod_group": "lightningresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "lightning"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2606
+    ]
+  },
+  {
     "name": "Betrayer's",
     "mod_type": "prefix",
     "tier": 5,
@@ -44319,6 +45438,286 @@
     ]
   },
   {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 11,
+    "stat_text": "Damage Penetrates {}% Fire Resistance",
+    "stat_ranges": [
+      {
+        "min": 4.0,
+        "max": 4.0
+      }
+    ],
+    "stat_min": 4.0,
+    "stat_max": 4.0,
+    "required_ilvl": 26,
+    "weight": 1000,
+    "mod_group": "fireresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "fire"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2604
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 10,
+    "stat_text": "Damage Penetrates {}% Fire Resistance",
+    "stat_ranges": [
+      {
+        "min": 5.0,
+        "max": 5.0
+      }
+    ],
+    "stat_min": 5.0,
+    "stat_max": 5.0,
+    "required_ilvl": 42,
+    "weight": 1000,
+    "mod_group": "fireresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "fire"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2604
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 9,
+    "stat_text": "Damage Penetrates {}% Fire Resistance",
+    "stat_ranges": [
+      {
+        "min": 6.0,
+        "max": 6.0
+      }
+    ],
+    "stat_min": 6.0,
+    "stat_max": 6.0,
+    "required_ilvl": 58,
+    "weight": 1000,
+    "mod_group": "fireresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "fire"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2604
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 8,
+    "stat_text": "Damage Penetrates {}% Fire Resistance",
+    "stat_ranges": [
+      {
+        "min": 7.0,
+        "max": 7.0
+      }
+    ],
+    "stat_min": 7.0,
+    "stat_max": 7.0,
+    "required_ilvl": 74,
+    "weight": 1000,
+    "mod_group": "fireresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "fire"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2604
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 7,
+    "stat_text": "Damage Penetrates {}% Fire Resistance",
+    "stat_ranges": [
+      {
+        "min": 8.0,
+        "max": 8.0
+      }
+    ],
+    "stat_min": 8.0,
+    "stat_max": 8.0,
+    "required_ilvl": 82,
+    "weight": 1000,
+    "mod_group": "fireresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "fire"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2604
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 6,
+    "stat_text": "Damage Penetrates {}% Fire Resistance",
+    "stat_ranges": [
+      {
+        "min": 7.0,
+        "max": 8.0
+      }
+    ],
+    "stat_min": 7.0,
+    "stat_max": 8.0,
+    "required_ilvl": 26,
+    "weight": 1000,
+    "mod_group": "fireresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "fire"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2604
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 4,
+    "stat_text": "Damage Penetrates {}% Fire Resistance",
+    "stat_ranges": [
+      {
+        "min": 9.0,
+        "max": 10.0
+      }
+    ],
+    "stat_min": 9.0,
+    "stat_max": 10.0,
+    "required_ilvl": 42,
+    "weight": 1000,
+    "mod_group": "fireresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "fire"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2604
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 3,
+    "stat_text": "Damage Penetrates {}% Fire Resistance",
+    "stat_ranges": [
+      {
+        "min": 11.0,
+        "max": 12.0
+      }
+    ],
+    "stat_min": 11.0,
+    "stat_max": 12.0,
+    "required_ilvl": 58,
+    "weight": 1000,
+    "mod_group": "fireresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "fire"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2604
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 2,
+    "stat_text": "Damage Penetrates {}% Fire Resistance",
+    "stat_ranges": [
+      {
+        "min": 13.0,
+        "max": 14.0
+      }
+    ],
+    "stat_min": 13.0,
+    "stat_max": 14.0,
+    "required_ilvl": 74,
+    "weight": 1000,
+    "mod_group": "fireresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "fire"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2604
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Damage Penetrates {}% Fire Resistance",
+    "stat_ranges": [
+      {
+        "min": 15.0,
+        "max": 16.0
+      }
+    ],
+    "stat_min": 15.0,
+    "stat_max": 16.0,
+    "required_ilvl": 82,
+    "weight": 1000,
+    "mod_group": "fireresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "fire"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2604
+    ]
+  },
+  {
     "name": "Deceiver's",
     "mod_type": "prefix",
     "tier": 5,
@@ -44332,6 +45731,342 @@
     "stat_min": 6.0,
     "stat_max": 10.0,
     "required_ilvl": 60,
+    "weight": 1000,
+    "mod_group": "coldresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "cold"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2605
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 13,
+    "stat_text": "Damage Penetrates {}% Cold Resistance",
+    "stat_ranges": [
+      {
+        "min": 3.0,
+        "max": 3.0
+      }
+    ],
+    "stat_min": 3.0,
+    "stat_max": 3.0,
+    "required_ilvl": 10,
+    "weight": 1000,
+    "mod_group": "coldresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "cold"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2605
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 12,
+    "stat_text": "Damage Penetrates {}% Cold Resistance",
+    "stat_ranges": [
+      {
+        "min": 4.0,
+        "max": 4.0
+      }
+    ],
+    "stat_min": 4.0,
+    "stat_max": 4.0,
+    "required_ilvl": 26,
+    "weight": 1000,
+    "mod_group": "coldresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "cold"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2605
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 11,
+    "stat_text": "Damage Penetrates {}% Cold Resistance",
+    "stat_ranges": [
+      {
+        "min": 5.0,
+        "max": 5.0
+      }
+    ],
+    "stat_min": 5.0,
+    "stat_max": 5.0,
+    "required_ilvl": 42,
+    "weight": 1000,
+    "mod_group": "coldresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "cold"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2605
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 10,
+    "stat_text": "Damage Penetrates {}% Cold Resistance",
+    "stat_ranges": [
+      {
+        "min": 6.0,
+        "max": 6.0
+      }
+    ],
+    "stat_min": 6.0,
+    "stat_max": 6.0,
+    "required_ilvl": 58,
+    "weight": 1000,
+    "mod_group": "coldresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "cold"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2605
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 8,
+    "stat_text": "Damage Penetrates {}% Cold Resistance",
+    "stat_ranges": [
+      {
+        "min": 7.0,
+        "max": 7.0
+      }
+    ],
+    "stat_min": 7.0,
+    "stat_max": 7.0,
+    "required_ilvl": 74,
+    "weight": 1000,
+    "mod_group": "coldresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "cold"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2605
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 7,
+    "stat_text": "Damage Penetrates {}% Cold Resistance",
+    "stat_ranges": [
+      {
+        "min": 8.0,
+        "max": 8.0
+      }
+    ],
+    "stat_min": 8.0,
+    "stat_max": 8.0,
+    "required_ilvl": 82,
+    "weight": 1000,
+    "mod_group": "coldresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "cold"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2605
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 9,
+    "stat_text": "Damage Penetrates {}% Cold Resistance",
+    "stat_ranges": [
+      {
+        "min": 5.0,
+        "max": 6.0
+      }
+    ],
+    "stat_min": 5.0,
+    "stat_max": 6.0,
+    "required_ilvl": 10,
+    "weight": 1000,
+    "mod_group": "coldresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "cold"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2605
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 6,
+    "stat_text": "Damage Penetrates {}% Cold Resistance",
+    "stat_ranges": [
+      {
+        "min": 7.0,
+        "max": 8.0
+      }
+    ],
+    "stat_min": 7.0,
+    "stat_max": 8.0,
+    "required_ilvl": 26,
+    "weight": 1000,
+    "mod_group": "coldresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "cold"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2605
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 4,
+    "stat_text": "Damage Penetrates {}% Cold Resistance",
+    "stat_ranges": [
+      {
+        "min": 9.0,
+        "max": 10.0
+      }
+    ],
+    "stat_min": 9.0,
+    "stat_max": 10.0,
+    "required_ilvl": 42,
+    "weight": 1000,
+    "mod_group": "coldresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "cold"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2605
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 3,
+    "stat_text": "Damage Penetrates {}% Cold Resistance",
+    "stat_ranges": [
+      {
+        "min": 11.0,
+        "max": 12.0
+      }
+    ],
+    "stat_min": 11.0,
+    "stat_max": 12.0,
+    "required_ilvl": 58,
+    "weight": 1000,
+    "mod_group": "coldresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "cold"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2605
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 2,
+    "stat_text": "Damage Penetrates {}% Cold Resistance",
+    "stat_ranges": [
+      {
+        "min": 13.0,
+        "max": 14.0
+      }
+    ],
+    "stat_min": 13.0,
+    "stat_max": 14.0,
+    "required_ilvl": 74,
+    "weight": 1000,
+    "mod_group": "coldresistancepenetration",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "cold"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2605
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Damage Penetrates {}% Cold Resistance",
+    "stat_ranges": [
+      {
+        "min": 15.0,
+        "max": 16.0
+      }
+    ],
+    "stat_min": 15.0,
+    "stat_max": 16.0,
+    "required_ilvl": 82,
     "weight": 1000,
     "mod_group": "coldresistancepenetration",
     "applicable_items": [],
@@ -44657,6 +46392,202 @@
     "is_exclusive": false,
     "stat_order": [
       1702
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 7,
+    "stat_text": "Leeches {}% of Physical Damage as Life",
+    "stat_ranges": [
+      {
+        "min": 0.5,
+        "max": 0.7
+      }
+    ],
+    "stat_min": 0.5,
+    "stat_max": 0.7,
+    "required_ilvl": 1,
+    "weight": 1000,
+    "mod_group": "lifeleechlocalpermyriad",
+    "applicable_items": [],
+    "tags": [
+      "resource",
+      "life",
+      "physical",
+      "attack"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      968
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 6,
+    "stat_text": "Leeches {}% of Physical Damage as Life",
+    "stat_ranges": [
+      {
+        "min": 0.6,
+        "max": 0.8
+      }
+    ],
+    "stat_min": 0.6,
+    "stat_max": 0.8,
+    "required_ilvl": 10,
+    "weight": 1000,
+    "mod_group": "lifeleechlocalpermyriad",
+    "applicable_items": [],
+    "tags": [
+      "resource",
+      "life",
+      "physical",
+      "attack"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      968
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 5,
+    "stat_text": "Leeches {}% of Physical Damage as Life",
+    "stat_ranges": [
+      {
+        "min": 0.7,
+        "max": 0.9
+      }
+    ],
+    "stat_min": 0.7,
+    "stat_max": 0.9,
+    "required_ilvl": 26,
+    "weight": 1000,
+    "mod_group": "lifeleechlocalpermyriad",
+    "applicable_items": [],
+    "tags": [
+      "resource",
+      "life",
+      "physical",
+      "attack"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      968
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 4,
+    "stat_text": "Leeches {}% of Physical Damage as Life",
+    "stat_ranges": [
+      {
+        "min": 0.8,
+        "max": 1.0
+      }
+    ],
+    "stat_min": 0.8,
+    "stat_max": 1.0,
+    "required_ilvl": 42,
+    "weight": 1000,
+    "mod_group": "lifeleechlocalpermyriad",
+    "applicable_items": [],
+    "tags": [
+      "resource",
+      "life",
+      "physical",
+      "attack"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      968
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 3,
+    "stat_text": "Leeches {}% of Physical Damage as Life",
+    "stat_ranges": [
+      {
+        "min": 0.9,
+        "max": 1.1
+      }
+    ],
+    "stat_min": 0.9,
+    "stat_max": 1.1,
+    "required_ilvl": 58,
+    "weight": 1000,
+    "mod_group": "lifeleechlocalpermyriad",
+    "applicable_items": [],
+    "tags": [
+      "resource",
+      "life",
+      "physical",
+      "attack"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      968
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 2,
+    "stat_text": "Leeches {}% of Physical Damage as Life",
+    "stat_ranges": [
+      {
+        "min": 1.0,
+        "max": 1.2
+      }
+    ],
+    "stat_min": 1.0,
+    "stat_max": 1.2,
+    "required_ilvl": 74,
+    "weight": 1000,
+    "mod_group": "lifeleechlocalpermyriad",
+    "applicable_items": [],
+    "tags": [
+      "resource",
+      "life",
+      "physical",
+      "attack"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      968
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Leeches {}% of Physical Damage as Life",
+    "stat_ranges": [
+      {
+        "min": 1.1,
+        "max": 1.3
+      }
+    ],
+    "stat_min": 1.1,
+    "stat_max": 1.3,
+    "required_ilvl": 82,
+    "weight": 1000,
+    "mod_group": "lifeleechlocalpermyriad",
+    "applicable_items": [],
+    "tags": [
+      "resource",
+      "life",
+      "physical",
+      "attack"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      968
     ]
   },
   {
@@ -45426,6 +47357,36 @@
     ]
   },
   {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Adds 67 to {} Fire Damage to Spells",
+    "stat_ranges": [
+      {
+        "min": 80.0,
+        "max": 90.0
+      }
+    ],
+    "stat_min": 80.0,
+    "stat_max": 90.0,
+    "required_ilvl": 82,
+    "weight": 1000,
+    "mod_group": "spelladdedfiredamage",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "caster_damage",
+      "damage",
+      "elemental",
+      "fire",
+      "caster"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      1237
+    ]
+  },
+  {
     "name": "Frosted",
     "mod_type": "prefix",
     "tier": 1,
@@ -45728,6 +47689,40 @@
     ]
   },
   {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 6,
+    "stat_text": "Adds {} to {} Cold Damage to Spells",
+    "stat_ranges": [
+      {
+        "min": 35.0,
+        "max": 45.0
+      },
+      {
+        "min": 66.0,
+        "max": 74.0
+      }
+    ],
+    "stat_min": 35.0,
+    "stat_max": 45.0,
+    "required_ilvl": 82,
+    "weight": 1000,
+    "mod_group": "spelladdedcolddamage",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "caster_damage",
+      "damage",
+      "elemental",
+      "cold",
+      "caster"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      1238
+    ]
+  },
+  {
     "name": "Humming",
     "mod_type": "prefix",
     "tier": 2,
@@ -46013,6 +48008,40 @@
     "stat_min": 4.0,
     "stat_max": 14.0,
     "required_ilvl": 74,
+    "weight": 1000,
+    "mod_group": "spelladdedlightningdamage",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "caster_damage",
+      "damage",
+      "elemental",
+      "lightning",
+      "caster"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      1239
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 7,
+    "stat_text": "Adds {} to {} Lightning Damage to Spells",
+    "stat_ranges": [
+      {
+        "min": 4.0,
+        "max": 11.0
+      },
+      {
+        "min": 134.0,
+        "max": 144.0
+      }
+    ],
+    "stat_min": 4.0,
+    "stat_max": 11.0,
+    "required_ilvl": 82,
     "weight": 1000,
     "mod_group": "spelladdedlightningdamage",
     "applicable_items": [],
@@ -46336,6 +48365,40 @@
     ]
   },
   {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 2,
+    "stat_text": "Adds {} to {} Fire Damage to Spells",
+    "stat_ranges": [
+      {
+        "min": 67.0,
+        "max": 81.0
+      },
+      {
+        "min": 120.0,
+        "max": 135.0
+      }
+    ],
+    "stat_min": 67.0,
+    "stat_max": 81.0,
+    "required_ilvl": 82,
+    "weight": 1000,
+    "mod_group": "spelladdedfiredamagetwohand",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "caster_damage",
+      "damage",
+      "elemental",
+      "fire",
+      "caster"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      1237
+    ]
+  },
+  {
     "name": "Frosted",
     "mod_type": "prefix",
     "tier": 19,
@@ -46625,6 +48688,40 @@
     "stat_min": 66.0,
     "stat_max": 82.0,
     "required_ilvl": 74,
+    "weight": 1000,
+    "mod_group": "spelladdedcolddamagetwohand",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "caster_damage",
+      "damage",
+      "elemental",
+      "cold",
+      "caster"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      1238
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 2,
+    "stat_text": "Adds {} to {} Cold Damage to Spells",
+    "stat_ranges": [
+      {
+        "min": 57.0,
+        "max": 66.0
+      },
+      {
+        "min": 100.0,
+        "max": 111.0
+      }
+    ],
+    "stat_min": 57.0,
+    "stat_max": 66.0,
+    "required_ilvl": 82,
     "weight": 1000,
     "mod_group": "spelladdedcolddamagetwohand",
     "applicable_items": [],
@@ -46944,6 +49041,40 @@
     ]
   },
   {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 3,
+    "stat_text": "Adds {} to {} Lightning Damage to Spells",
+    "stat_ranges": [
+      {
+        "min": 6.0,
+        "max": 16.0
+      },
+      {
+        "min": 201.0,
+        "max": 216.0
+      }
+    ],
+    "stat_min": 6.0,
+    "stat_max": 16.0,
+    "required_ilvl": 82,
+    "weight": 1000,
+    "mod_group": "spelladdedlightningdamagetwohand",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "caster_damage",
+      "damage",
+      "elemental",
+      "lightning",
+      "caster"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      1239
+    ]
+  },
+  {
     "name": "Malicious",
     "mod_type": "prefix",
     "tier": 5,
@@ -46961,6 +49092,102 @@
     "stat_min": 56.0,
     "stat_max": 87.0,
     "required_ilvl": 83,
+    "weight": 1000,
+    "mod_group": "localchaosdamage",
+    "applicable_items": [],
+    "tags": [
+      "chaos_damage",
+      "damage",
+      "chaos",
+      "attack"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      1223
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 8,
+    "stat_text": "Adds {} to {} Chaos damage",
+    "stat_ranges": [
+      {
+        "min": 37.0,
+        "max": 59.0
+      },
+      {
+        "min": 79.0,
+        "max": 103.0
+      }
+    ],
+    "stat_min": 37.0,
+    "stat_max": 59.0,
+    "required_ilvl": 62,
+    "weight": 1000,
+    "mod_group": "localchaosdamage",
+    "applicable_items": [],
+    "tags": [
+      "chaos_damage",
+      "damage",
+      "chaos",
+      "attack"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      1223
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 7,
+    "stat_text": "Adds {} to {} Chaos damage",
+    "stat_ranges": [
+      {
+        "min": 43.0,
+        "max": 67.0
+      },
+      {
+        "min": 89.0,
+        "max": 113.0
+      }
+    ],
+    "stat_min": 43.0,
+    "stat_max": 67.0,
+    "required_ilvl": 74,
+    "weight": 1000,
+    "mod_group": "localchaosdamage",
+    "applicable_items": [],
+    "tags": [
+      "chaos_damage",
+      "damage",
+      "chaos",
+      "attack"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      1223
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 6,
+    "stat_text": "Adds {} to {} Chaos damage",
+    "stat_ranges": [
+      {
+        "min": 53.0,
+        "max": 79.0
+      },
+      {
+        "min": 101.0,
+        "max": 131.0
+      }
+    ],
+    "stat_min": 53.0,
+    "stat_max": 79.0,
+    "required_ilvl": 82,
     "weight": 1000,
     "mod_group": "localchaosdamage",
     "applicable_items": [],
@@ -47008,6 +49235,102 @@
     ]
   },
   {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 4,
+    "stat_text": "Adds {} to {} Chaos damage",
+    "stat_ranges": [
+      {
+        "min": 61.0,
+        "max": 103.0
+      },
+      {
+        "min": 149.0,
+        "max": 193.0
+      }
+    ],
+    "stat_min": 61.0,
+    "stat_max": 103.0,
+    "required_ilvl": 62,
+    "weight": 1000,
+    "mod_group": "localchaosdamagetwohand",
+    "applicable_items": [],
+    "tags": [
+      "chaos_damage",
+      "damage",
+      "chaos",
+      "attack"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      1223
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 3,
+    "stat_text": "Adds {} to {} Chaos damage",
+    "stat_ranges": [
+      {
+        "min": 73.0,
+        "max": 113.0
+      },
+      {
+        "min": 163.0,
+        "max": 205.0
+      }
+    ],
+    "stat_min": 73.0,
+    "stat_max": 113.0,
+    "required_ilvl": 74,
+    "weight": 1000,
+    "mod_group": "localchaosdamagetwohand",
+    "applicable_items": [],
+    "tags": [
+      "chaos_damage",
+      "damage",
+      "chaos",
+      "attack"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      1223
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 2,
+    "stat_text": "Adds {} to {} Chaos damage",
+    "stat_ranges": [
+      {
+        "min": 89.0,
+        "max": 131.0
+      },
+      {
+        "min": 181.0,
+        "max": 229.0
+      }
+    ],
+    "stat_min": 89.0,
+    "stat_max": 131.0,
+    "required_ilvl": 82,
+    "weight": 1000,
+    "mod_group": "localchaosdamagetwohand",
+    "applicable_items": [],
+    "tags": [
+      "chaos_damage",
+      "damage",
+      "chaos",
+      "attack"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      1223
+    ]
+  },
+  {
     "name": "of the Essence",
     "mod_type": "suffix",
     "tier": 1,
@@ -47027,6 +49350,102 @@
     "is_exclusive": false,
     "stat_order": [
       2958
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 3,
+    "stat_text": "Adds {} to {} Chaos Damage to Attacks",
+    "stat_ranges": [
+      {
+        "min": 11.0,
+        "max": 15.0
+      },
+      {
+        "min": 27.0,
+        "max": 33.0
+      }
+    ],
+    "stat_min": 11.0,
+    "stat_max": 15.0,
+    "required_ilvl": 62,
+    "weight": 1000,
+    "mod_group": "chaosdamage",
+    "applicable_items": [],
+    "tags": [
+      "chaos_damage",
+      "damage",
+      "chaos",
+      "attack"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      1221
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 2,
+    "stat_text": "Adds {} to {} Chaos Damage to Attacks",
+    "stat_ranges": [
+      {
+        "min": 17.0,
+        "max": 21.0
+      },
+      {
+        "min": 37.0,
+        "max": 43.0
+      }
+    ],
+    "stat_min": 17.0,
+    "stat_max": 21.0,
+    "required_ilvl": 74,
+    "weight": 1000,
+    "mod_group": "chaosdamage",
+    "applicable_items": [],
+    "tags": [
+      "chaos_damage",
+      "damage",
+      "chaos",
+      "attack"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      1221
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Adds {} to {} Chaos Damage to Attacks",
+    "stat_ranges": [
+      {
+        "min": 23.0,
+        "max": 37.0
+      },
+      {
+        "min": 49.0,
+        "max": 61.0
+      }
+    ],
+    "stat_min": 23.0,
+    "stat_max": 37.0,
+    "required_ilvl": 82,
+    "weight": 1000,
+    "mod_group": "chaosdamage",
+    "applicable_items": [],
+    "tags": [
+      "chaos_damage",
+      "damage",
+      "chaos",
+      "attack"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      1221
     ]
   },
   {
@@ -47231,6 +49650,93 @@
     ]
   },
   {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% of Physical Damage from Hits taken as Cold Damage",
+    "stat_ranges": [
+      {
+        "min": 15.0,
+        "max": 15.0
+      }
+    ],
+    "stat_min": 15.0,
+    "stat_max": 15.0,
+    "required_ilvl": 63,
+    "weight": 1000,
+    "mod_group": "physicaldamagetakenascold",
+    "applicable_items": [],
+    "tags": [
+      "physical",
+      "elemental",
+      "cold"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2116
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 2,
+    "stat_text": "Gain {}% of Physical Damage as Extra Fire Damage",
+    "stat_ranges": [
+      {
+        "min": 10.0,
+        "max": 10.0
+      }
+    ],
+    "stat_min": 10.0,
+    "stat_max": 10.0,
+    "required_ilvl": 63,
+    "weight": 1000,
+    "mod_group": "firedamageasportionofdamage",
+    "applicable_items": [],
+    "tags": [
+      "physical_damage",
+      "elemental_damage",
+      "damage",
+      "physical",
+      "elemental",
+      "fire"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      1601
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Physical Damage as Extra Fire Damage",
+    "stat_ranges": [
+      {
+        "min": 15.0,
+        "max": 15.0
+      }
+    ],
+    "stat_min": 15.0,
+    "stat_max": 15.0,
+    "required_ilvl": 63,
+    "weight": 1000,
+    "mod_group": "firedamageasportionofdamage",
+    "applicable_items": [],
+    "tags": [
+      "physical_damage",
+      "elemental_damage",
+      "damage",
+      "physical",
+      "elemental",
+      "fire"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      1601
+    ]
+  },
+  {
     "name": "of the Essence",
     "mod_type": "suffix",
     "tier": 1,
@@ -47304,6 +49810,62 @@
     "is_exclusive": false,
     "stat_order": [
       2791
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{} to 7 Added Cold Damage per Frenzy Charge",
+    "stat_ranges": [
+      {
+        "min": 4.0,
+        "max": 4.0
+      }
+    ],
+    "stat_min": 4.0,
+    "stat_max": 4.0,
+    "required_ilvl": 63,
+    "weight": 1000,
+    "mod_group": "addedcolddamageperfrenzycharge",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "cold"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      3810
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{} to 12 Added Cold Damage per Frenzy Charge",
+    "stat_ranges": [
+      {
+        "min": 8.0,
+        "max": 8.0
+      }
+    ],
+    "stat_min": 8.0,
+    "stat_max": 8.0,
+    "required_ilvl": 63,
+    "weight": 1000,
+    "mod_group": "addedcolddamageperfrenzycharge",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "cold"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      3810
     ]
   },
   {
@@ -48294,6 +50856,305 @@
     ]
   },
   {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased maximum Life",
+    "stat_ranges": [
+      {
+        "min": 8.0,
+        "max": 10.0
+      }
+    ],
+    "stat_min": 8.0,
+    "stat_max": 10.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "maximumlifeincreasepercent",
+    "applicable_items": [],
+    "tags": [
+      "resource",
+      "life"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      867
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 2,
+    "stat_text": "{}% increased maximum Mana",
+    "stat_ranges": [
+      {
+        "min": 4.0,
+        "max": 6.0
+      }
+    ],
+    "stat_min": 4.0,
+    "stat_max": 6.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "maximummanaincreasepercent",
+    "applicable_items": [],
+    "tags": [
+      "resource",
+      "mana"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      869
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Global Defences",
+    "stat_ranges": [
+      {
+        "min": 20.0,
+        "max": 30.0
+      }
+    ],
+    "stat_min": 20.0,
+    "stat_max": 30.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "alldefences",
+    "applicable_items": [],
+    "tags": [
+      "defences"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2477
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 2,
+    "stat_text": "Gain {}% of Damage as Extra Physical Damage",
+    "stat_ranges": [
+      {
+        "min": 15.0,
+        "max": 20.0
+      }
+    ],
+    "stat_min": 15.0,
+    "stat_max": 20.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "damageasextraphysical",
+    "applicable_items": [],
+    "tags": [
+      "physical_damage",
+      "damage",
+      "physical"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      1598
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Physical Damage",
+    "stat_ranges": [
+      {
+        "min": 25.0,
+        "max": 33.0
+      }
+    ],
+    "stat_min": 25.0,
+    "stat_max": 33.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "damageasextraphysical",
+    "applicable_items": [],
+    "tags": [
+      "physical_damage",
+      "damage",
+      "physical"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      1598
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 2,
+    "stat_text": "Gain {}% of Damage as Extra Fire Damage",
+    "stat_ranges": [
+      {
+        "min": 15.0,
+        "max": 20.0
+      }
+    ],
+    "stat_min": 15.0,
+    "stat_max": 20.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "damageasextrafire",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "fire"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      844
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Fire Damage",
+    "stat_ranges": [
+      {
+        "min": 25.0,
+        "max": 33.0
+      }
+    ],
+    "stat_min": 25.0,
+    "stat_max": 33.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "damageasextrafire",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "fire"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      844
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 2,
+    "stat_text": "Gain {}% of Damage as Extra Cold Damage",
+    "stat_ranges": [
+      {
+        "min": 15.0,
+        "max": 20.0
+      }
+    ],
+    "stat_min": 15.0,
+    "stat_max": 20.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "damageasextracold",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "cold"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      846
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Cold Damage",
+    "stat_ranges": [
+      {
+        "min": 25.0,
+        "max": 33.0
+      }
+    ],
+    "stat_min": 25.0,
+    "stat_max": 33.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "damageasextracold",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "cold"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      846
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 2,
+    "stat_text": "Gain {}% of Damage as Extra Lightning Damage",
+    "stat_ranges": [
+      {
+        "min": 15.0,
+        "max": 20.0
+      }
+    ],
+    "stat_min": 15.0,
+    "stat_max": 20.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "damageasextralightning",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "lightning"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      848
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Lightning Damage",
+    "stat_ranges": [
+      {
+        "min": 25.0,
+        "max": 33.0
+      }
+    ],
+    "stat_min": 25.0,
+    "stat_max": 33.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "damageasextralightning",
+    "applicable_items": [],
+    "tags": [
+      "elemental_damage",
+      "damage",
+      "elemental",
+      "lightning"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      848
+    ]
+  },
+  {
     "name": "of the Essence",
     "mod_type": "suffix",
     "tier": 1,
@@ -48375,6 +51236,32 @@
     "is_exclusive": false,
     "stat_order": [
       6976
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% of Physical Damage from Hits taken as Chaos Damage",
+    "stat_ranges": [
+      {
+        "min": 10.0,
+        "max": 15.0
+      }
+    ],
+    "stat_min": 10.0,
+    "stat_max": 15.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "physicaldamagetakenaschaos",
+    "applicable_items": [],
+    "tags": [
+      "physical",
+      "chaos"
+    ],
+    "is_exclusive": false,
+    "stat_order": [
+      2120
     ]
   },
   {

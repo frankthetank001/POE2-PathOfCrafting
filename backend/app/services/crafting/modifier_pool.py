@@ -484,6 +484,48 @@ class ModifierPool:
         if item_category in mod.applicable_items:
             return True
 
+        # Handle weapon type mapping based on slot
+        # Mods use multiple patterns:
+        # - "weapon" (generic, applies to ALL weapons)
+        # - "one_hand_weapon" / "two_hand_weapon" (applies to all 1h or 2h weapons)
+        # - specific types like "one_hand_sword", "two_hand_axe"
+        if item_slot == "weapons - 1 hand":
+            # Check generic weapon tag (applies to all weapons)
+            if "weapon" in mod.applicable_items:
+                return True
+
+            # Map specific weapon types to one_hand_weapon
+            weapon_types_1h = ["sword", "axe", "mace", "dagger", "claw", "wand", "sceptre", "flail"]
+            if item_category in weapon_types_1h:
+                # Check generic one_hand_weapon tag
+                if "one_hand_weapon" in mod.applicable_items:
+                    return True
+                # Check specific weapon type with underscore (e.g., "one_hand_sword")
+                specific_type = f"one_hand_{item_category}"
+                if specific_type in mod.applicable_items:
+                    return True
+            # Also check if the category is directly listed
+            if item_category in mod.applicable_items:
+                return True
+        elif item_slot == "weapons - 2 hand":
+            # Check generic weapon tag (applies to all weapons)
+            if "weapon" in mod.applicable_items:
+                return True
+
+            # Map specific weapon types to two_hand_weapon
+            weapon_types_2h = ["sword", "axe", "mace", "bow", "crossbow", "staff", "spear", "warstaff"]
+            if item_category in weapon_types_2h:
+                # Check generic two_hand_weapon tag
+                if "two_hand_weapon" in mod.applicable_items:
+                    return True
+                # Check specific weapon type with underscore (e.g., "two_hand_sword")
+                specific_type = f"two_hand_{item_category}"
+                if specific_type in mod.applicable_items:
+                    return True
+            # Also check if the category is directly listed
+            if item_category in mod.applicable_items:
+                return True
+
         # Handle "jewellery" category - expands to amulet, ring, belt
         if "jewellery" in mod.applicable_items:
             if item_slot in ["amulet", "ring", "belt"]:
@@ -530,6 +572,42 @@ class ModifierPool:
         if item_category in ["int_armour", "str_armour", "dex_armour", "str_dex_armour", "str_int_armour", "dex_int_armour", "str_dex_int_armour"]:
             # "armour" is for universal mods (resistances, life, etc)
             if "armour" in mod.applicable_items:
+                return True
+
+        # Handle weapon category mapping (our detailed categories to PoB weapon types)
+        # PoB uses generic weapon types (sword, axe, mace) without one/two-handed distinction
+        weapon_category_map = {
+            # One-handed weapons
+            "Wand": "wand",
+            "Dagger": "dagger",
+            "Spear": "spear",
+            "Sceptre": "sceptre",
+            "One Handed Axe": "axe",
+            "One Handed Mace": "mace",
+            "One Handed Sword": "sword",
+            "Flail": "flail",
+            "Claw": "claw",
+            # Two-handed weapons
+            "Bow": "bow",
+            "Crossbow": "crossbow",
+            "Staff": "staff",
+            "Two Handed Axe": "axe",
+            "Two Handed Mace": "mace",
+            "Two Handed Sword": "sword",
+            "Warstaff": "warstaff",
+            # Test category names (snake_case)
+            "one_hand_sword": "sword",
+            "one_hand_axe": "axe",
+            "one_hand_mace": "mace",
+            "claw": "claw",
+            "two_hand_sword": "sword",
+            "two_hand_axe": "axe",
+            "two_hand_mace": "mace",
+        }
+
+        if item_category in weapon_category_map:
+            pob_weapon_type = weapon_category_map[item_category]
+            if pob_weapon_type in mod.applicable_items:
                 return True
 
         return False

@@ -20,6 +20,7 @@ export function AvailableModsPanel({ item, collapsed = false }: AvailableModsPan
     total_suffixes: 0,
   })
   const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [ilvlFilter, setIlvlFilter] = useState<number | ''>('')
   const [searchFilter, setSearchFilter] = useState<string>('')
 
@@ -31,11 +32,18 @@ export function AvailableModsPanel({ item, collapsed = false }: AvailableModsPan
 
   const loadAvailableMods = async () => {
     setLoading(true)
+    setError(null)
     try {
       const mods = await craftingApi.getAvailableMods(item)
       setAvailableMods(mods)
-    } catch (err) {
+    } catch (err: any) {
       console.error('Failed to load available mods:', err)
+      const errorMessage = err.response?.data?.detail
+        ? (typeof err.response.data.detail === 'string'
+          ? err.response.data.detail
+          : JSON.stringify(err.response.data.detail))
+        : err.message || 'Failed to load available mods'
+      setError(`Error loading mods: ${errorMessage}`)
     } finally {
       setLoading(false)
     }
@@ -179,6 +187,10 @@ export function AvailableModsPanel({ item, collapsed = false }: AvailableModsPan
 
       {loading ? (
         <div className="loading">Loading available mods...</div>
+      ) : error ? (
+        <div className="error-message" style={{ color: 'red', padding: '10px', border: '1px solid red', borderRadius: '4px', margin: '10px 0' }}>
+          {error}
+        </div>
       ) : (
         <div className="mods-columns">
           {/* Prefixes Column */}

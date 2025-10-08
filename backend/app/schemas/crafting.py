@@ -79,8 +79,8 @@ class CraftableItem(BaseModel):
     unrevealed_mods: List[UnrevealedModifier] = Field(default_factory=list)  # Unrevealed desecrated mods
 
     corrupted: bool = False
-    base_stats: Dict[str, int] = Field(default_factory=dict)  # Base stats from item base
-    calculated_stats: Dict[str, int] = Field(default_factory=dict)  # Final calculated stats
+    base_stats: Dict[str, float] = Field(default_factory=dict)  # Base stats from item base (int or float)
+    calculated_stats: Dict[str, float] = Field(default_factory=dict)  # Final calculated stats (int or float)
 
     @property
     def prefix_count(self) -> int:

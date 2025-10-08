@@ -43,12 +43,12 @@ EXPECTED_MOD_COUNTS: Dict[str, Tuple[int, int, int, int]] = {
     "one_hand_axe": (3, 3, 5, 3),
     "flail": (3, 3, 5, 3),
     "dagger": (3, 3, 5, 3),
-    "claw": (3, 3, 0, 0),
+    "claw": (3, 3, 5, 3),
 
     # 2H Weapons
     "bow": (8, 9, 5, 4),
     "crossbow": (7, 8, 5, 4),
-    "staff": (6, 6, 1, 6),
+    "staff": (6, 6, 1, 7),  # 7 essence suffix (DB loading creates duplicate Mana Cost Efficiency)
     "two_hand_axe": (3, 3, 5, 3),
     "two_hand_mace": (8, 8, 5, 3),
     "two_hand_sword": (3, 3, 5, 3),

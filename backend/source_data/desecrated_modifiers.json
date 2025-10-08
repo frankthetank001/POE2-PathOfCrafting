@@ -1512,5 +1512,2644 @@
       "kurgal"
     ],
     "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Elemental Damage",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Elemental Damage",
+    "stat_min": 74,
+    "stat_max": 89,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "elemental_damage",
+    "applicable_items": [
+      "wand"
+    ],
+    "tags": [
+      "desecrated_only",
+      "elemental",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Magnitude of Bleeding you inflict",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Magnitude of Bleeding you inflict",
+    "stat_min": 27,
+    "stat_max": 38,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "bleed_magnitude",
+    "applicable_items": [
+      "wand"
+    ],
+    "tags": [
+      "desecrated_only",
+      "bleed",
+      "damage",
+      "physical",
+      "attack",
+      "ailment",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Spell Damage with Spells that cost Life",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Spell Damage with Spells that cost Life",
+    "stat_min": 91,
+    "stat_max": 116,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "life_cost_spell_damage",
+    "applicable_items": [
+      "wand"
+    ],
+    "tags": [
+      "desecrated_only",
+      "life",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Gain {}% of Damage as Extra Physical Damage",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Physical Damage",
+    "stat_min": 21,
+    "stat_max": 25,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "extra_physical_damage",
+    "applicable_items": [
+      "wand"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "physical",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Invocated Spells deal {}% increased Damage",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Invocated Spells deal {}% increased Damage",
+    "stat_min": 61,
+    "stat_max": 79,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "invocated_spell_damage",
+    "applicable_items": [
+      "wand"
+    ],
+    "tags": [
+      "desecrated_only",
+      "caster",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Minions deal {}% increased Damage, {}% increased Spell Damage",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Minions deal {}% increased Damage, {}% increased Spell Damage",
+    "stat_min": 55,
+    "stat_max": 64,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "minion_damage",
+    "applicable_items": [
+      "wand"
+    ],
+    "tags": [
+      "desecrated_only",
+      "caster",
+      "minion",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Cast Speed for each different Non-Instant Spell you've Cast Recently",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Cast Speed for each different Non-Instant Spell you've Cast Recently",
+    "stat_min": 3,
+    "stat_max": 5,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "cast_speed_recent_spells",
+    "applicable_items": [
+      "wand"
+    ],
+    "tags": [
+      "desecrated_only",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Cast Speed while on Full Mana",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Cast Speed while on Full Mana",
+    "stat_min": 26,
+    "stat_max": 36,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "cast_speed_full_mana",
+    "applicable_items": [
+      "wand"
+    ],
+    "tags": [
+      "desecrated_only",
+      "mana",
+      "caster",
+      "speed",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% of Spell Mana Cost Converted to Life Cost, {}% increased Cost Efficiency",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% of Spell Mana Cost Converted to Life Cost, {}% increased Cost Efficiency",
+    "stat_min": 15,
+    "stat_max": 25,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "mana_to_life_cost",
+    "applicable_items": [
+      "wand"
+    ],
+    "tags": [
+      "desecrated_only",
+      "life",
+      "caster",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Break {}% increased Armour",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Break {}% increased Armour",
+    "stat_min": 31,
+    "stat_max": 39,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "break_armour",
+    "applicable_items": [
+      "wand"
+    ],
+    "tags": [
+      "desecrated_only",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Break Armour on Critical Hit with Spells equal to {}% of Physical Damage dealt",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Break Armour on Critical Hit with Spells equal to {}% of Physical Damage dealt",
+    "stat_min": 11,
+    "stat_max": 18,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "break_armour_crit",
+    "applicable_items": [
+      "wand"
+    ],
+    "tags": [
+      "desecrated_only",
+      "caster",
+      "critical",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Enemies Hindered by you take {}% increased Chaos Damage",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Enemies Hindered by you take {}% increased Chaos Damage",
+    "stat_min": 4,
+    "stat_max": 7,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "hindered_chaos_damage",
+    "applicable_items": [
+      "wand"
+    ],
+    "tags": [
+      "desecrated_only",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Enemies Hindered by you take {}% increased Elemental Damage",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Enemies Hindered by you take {}% increased Elemental Damage",
+    "stat_min": 4,
+    "stat_max": 7,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "hindered_elemental_damage",
+    "applicable_items": [
+      "wand"
+    ],
+    "tags": [
+      "desecrated_only",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Enemies Hindered by you take {}% increased Physical Damage",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Enemies Hindered by you take {}% increased Physical Damage",
+    "stat_min": 4,
+    "stat_max": 7,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "hindered_physical_damage",
+    "applicable_items": [
+      "wand"
+    ],
+    "tags": [
+      "desecrated_only",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Spell Skills have {}% increased Area of Effect",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Spell Skills have {}% increased Area of Effect",
+    "stat_min": 8,
+    "stat_max": 16,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "spell_aoe",
+    "applicable_items": [
+      "wand"
+    ],
+    "tags": [
+      "desecrated_only",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Area of Effect for Attacks",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Area of Effect for Attacks",
+    "stat_min": 12,
+    "stat_max": 23,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "attack_aoe",
+    "applicable_items": [
+      "spear",
+      "bow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "attack",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased bonuses gained from Equipped Quiver",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased bonuses gained from Equipped Quiver",
+    "stat_min": 30,
+    "stat_max": 40,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "quiver_bonuses",
+    "applicable_items": [
+      "bow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Melee Damage if you've dealt a Projectile Attack Hit in the past eight seconds",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Melee Damage if you've dealt a Projectile Attack Hit in the past eight seconds",
+    "stat_min": 60,
+    "stat_max": 79,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "melee_after_projectile",
+    "applicable_items": [
+      "spear"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Attacks with this Weapon Penetrate {}% Cold Resistance",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Attacks with this Weapon Penetrate {}% Cold Resistance",
+    "stat_min": 15,
+    "stat_max": 25,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "cold_penetration",
+    "applicable_items": [
+      "spear",
+      "sword",
+      "axe",
+      "mace",
+      "flail",
+      "dagger",
+      "claw",
+      "crossbow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "elemental",
+      "cold",
+      "attack",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Attacks with this Weapon Penetrate {}% Fire Resistance",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Attacks with this Weapon Penetrate {}% Fire Resistance",
+    "stat_min": 15,
+    "stat_max": 25,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "fire_penetration",
+    "applicable_items": [
+      "spear",
+      "sword",
+      "axe",
+      "mace",
+      "flail",
+      "dagger",
+      "claw",
+      "crossbow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "elemental",
+      "fire",
+      "attack",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Attacks with this Weapon Penetrate {}% Lightning Resistance",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Attacks with this Weapon Penetrate {}% Lightning Resistance",
+    "stat_min": 15,
+    "stat_max": 25,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "lightning_penetration",
+    "applicable_items": [
+      "spear",
+      "sword",
+      "axe",
+      "mace",
+      "flail",
+      "dagger",
+      "claw",
+      "crossbow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "elemental",
+      "lightning",
+      "attack",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Companions deal {}% increased Damage, {}% increased Damage while your Companion is in your Presence",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Companions deal {}% increased Damage, {}% increased Damage while your Companion is in your Presence",
+    "stat_min": 40,
+    "stat_max": 59,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "companion_damage",
+    "applicable_items": [
+      "spear",
+      "bow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Projectiles deal {}% increased Damage with Hits against Enemies further than 6m",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Projectiles deal {}% increased Damage with Hits against Enemies further than 6m",
+    "stat_min": 60,
+    "stat_max": 79,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "projectile_far_damage",
+    "applicable_items": [
+      "spear",
+      "bow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Projectiles have {}% chance to Chain an additional time from terrain",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Projectiles have {}% chance to Chain an additional time from terrain",
+    "stat_min": 25,
+    "stat_max": 35,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "projectile_chain_terrain",
+    "applicable_items": [
+      "spear",
+      "bow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% chance to Pierce an Enemy",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% chance to Pierce an Enemy",
+    "stat_min": 40,
+    "stat_max": 60,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "pierce_chance",
+    "applicable_items": [
+      "spear",
+      "bow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Attack Speed, {}% increased Attack Speed while your Companion is in your Presence",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Attack Speed, {}% increased Attack Speed while your Companion is in your Presence",
+    "stat_min": 8,
+    "stat_max": 13,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "attack_speed_companion",
+    "applicable_items": [
+      "spear",
+      "bow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "attack",
+      "speed",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Attack Speed, Companions have {}% increased Attack Speed",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Attack Speed, Companions have {}% increased Attack Speed",
+    "stat_min": 12,
+    "stat_max": 18,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "attack_speed_companion_both",
+    "applicable_items": [
+      "spear",
+      "bow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "attack",
+      "speed",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Cost Efficiency of Attacks",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Cost Efficiency of Attacks",
+    "stat_min": 8,
+    "stat_max": 15,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "attack_cost_efficiency",
+    "applicable_items": [
+      "spear",
+      "sword",
+      "axe",
+      "mace",
+      "flail",
+      "dagger",
+      "claw",
+      "crossbow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "attack",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Immobilisation buildup",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Immobilisation buildup",
+    "stat_min": 10,
+    "stat_max": 20,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "immobilisation_buildup",
+    "applicable_items": [
+      "spear",
+      "bow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Spirit Reservation Efficiency of Skills",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Spirit Reservation Efficiency of Skills",
+    "stat_min": 5,
+    "stat_max": 10,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "spirit_efficiency",
+    "applicable_items": [
+      "spear",
+      "sword",
+      "axe",
+      "mace",
+      "flail",
+      "dagger",
+      "claw",
+      "sceptre",
+      "crossbow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% of Skill Mana Costs Converted to Life Costs",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% of Skill Mana Costs Converted to Life Costs",
+    "stat_min": 15,
+    "stat_max": 20,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "mana_to_life_cost_skills",
+    "applicable_items": [
+      "spear",
+      "sword",
+      "axe",
+      "mace",
+      "flail",
+      "dagger",
+      "claw",
+      "crossbow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "life",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Projectile Attacks have a {}% chance to fire two additional Projectiles while moving",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Projectile Attacks have a {}% chance to fire two additional Projectiles while moving",
+    "stat_min": 10,
+    "stat_max": 18,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "projectile_additional_moving",
+    "applicable_items": [
+      "spear",
+      "bow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Projectiles have {}% increased Critical Hit Chance against Enemies further than 6m",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Projectiles have {}% increased Critical Hit Chance against Enemies further than 6m",
+    "stat_min": 25,
+    "stat_max": 34,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "projectile_far_crit",
+    "applicable_items": [
+      "spear",
+      "bow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "critical",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Grenade Damage, {}% increased Grenade Duration",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Grenade Damage, {}% increased Grenade Duration",
+    "stat_min": 101,
+    "stat_max": 121,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "grenade_damage_duration",
+    "applicable_items": [
+      "crossbow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "+{} to maximum number of Summoned Ballista Totems",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "+{} to maximum number of Summoned Ballista Totems",
+    "stat_min": 1,
+    "stat_max": 1,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "max_ballista_totems",
+    "applicable_items": [
+      "crossbow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Grenade Skills have +{} Cooldown Use",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Grenade Skills have +{} Cooldown Use",
+    "stat_min": 1,
+    "stat_max": 1,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "grenade_cooldown_use",
+    "applicable_items": [
+      "crossbow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Projectiles deal {}% increased Damage with Hits against Enemies within 2m",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Projectiles deal {}% increased Damage with Hits against Enemies within 2m",
+    "stat_min": 85,
+    "stat_max": 109,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "projectile_close_damage",
+    "applicable_items": [
+      "crossbow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% chance when you Reload a Crossbow to be Immediate",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% chance when you Reload a Crossbow to be Immediate",
+    "stat_min": 15,
+    "stat_max": 20,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "instant_reload",
+    "applicable_items": [
+      "crossbow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Reload Speed",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Reload Speed",
+    "stat_min": 17,
+    "stat_max": 25,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "reload_speed",
+    "applicable_items": [
+      "crossbow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "speed",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Attacks Chain an additional time",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Attacks Chain an additional time",
+    "stat_min": 1,
+    "stat_max": 1,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "attack_chain",
+    "applicable_items": [
+      "crossbow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Grenades have {}% chance to activate a second time",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Grenades have {}% chance to activate a second time",
+    "stat_min": 15,
+    "stat_max": 25,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "grenade_second_activation",
+    "applicable_items": [
+      "crossbow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Projectiles have {}% increased Critical Damage Bonus against Enemies within 2m",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Projectiles have {}% increased Critical Damage Bonus against Enemies within 2m",
+    "stat_min": 27,
+    "stat_max": 38,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "projectile_close_crit",
+    "applicable_items": [
+      "crossbow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "critical",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Damage against Enemies with Fully Broken Armour",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Damage against Enemies with Fully Broken Armour",
+    "stat_min": 41,
+    "stat_max": 59,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "damage_broken_armour",
+    "applicable_items": [
+      "mace"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Damage while you have a Totem",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Damage while you have a Totem",
+    "stat_min": 41,
+    "stat_max": 59,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "damage_with_totem",
+    "applicable_items": [
+      "mace"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Physical Damage, {}% reduced Attack Speed",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Physical Damage, {}% reduced Attack Speed",
+    "stat_min": 110,
+    "stat_max": 154,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "physical_damage_slow",
+    "applicable_items": [
+      "mace"
+    ],
+    "tags": [
+      "desecrated_only",
+      "physical",
+      "attack",
+      "speed",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Empowered Attacks deal {}% increased Damage",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Empowered Attacks deal {}% increased Damage",
+    "stat_min": 41,
+    "stat_max": 59,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "empowered_damage",
+    "applicable_items": [
+      "mace"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "attack",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Melee Attack Skills have +{} to maximum number of Summoned Totems",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Melee Attack Skills have +{} to maximum number of Summoned Totems",
+    "stat_min": 1,
+    "stat_max": 1,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "max_totems",
+    "applicable_items": [
+      "mace"
+    ],
+    "tags": [
+      "desecrated_only",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% chance for Mace Slam Skills you yourself to cause Aftershocks",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% chance for Mace Slam Skills you yourself to cause Aftershocks",
+    "stat_min": 10,
+    "stat_max": 16,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "mace_slam_aftershock",
+    "applicable_items": [
+      "mace"
+    ],
+    "tags": [
+      "desecrated_only",
+      "attack",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Totem Placement speed",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Totem Placement speed",
+    "stat_min": 17,
+    "stat_max": 25,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "totem_placement_speed",
+    "applicable_items": [
+      "mace"
+    ],
+    "tags": [
+      "desecrated_only",
+      "speed",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Warcry Cooldown Recovery Rate",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Warcry Cooldown Recovery Rate",
+    "stat_min": 17,
+    "stat_max": 25,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "warcry_cooldown",
+    "applicable_items": [
+      "mace"
+    ],
+    "tags": [
+      "desecrated_only",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Break Armour equal to {}% of Physical Damage dealt",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Break Armour equal to {}% of Physical Damage dealt",
+    "stat_min": 2,
+    "stat_max": 4,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "break_armour_physical",
+    "applicable_items": [
+      "mace"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "physical",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Fissure Skills have a {}% chance to create an additional Fissure",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Fissure Skills have a {}% chance to create an additional Fissure",
+    "stat_min": 15,
+    "stat_max": 25,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "fissure_additional",
+    "applicable_items": [
+      "mace"
+    ],
+    "tags": [
+      "desecrated_only",
+      "attack",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Magnitude of Damaging Ailments you inflict",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Magnitude of Damaging Ailments you inflict",
+    "stat_min": 31,
+    "stat_max": 49,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "ailment_magnitude",
+    "applicable_items": [
+      "staff"
+    ],
+    "tags": [
+      "desecrated_only",
+      "ailment",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Spell Damage per 100 Maximum Life",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Spell Damage per 100 Maximum Life",
+    "stat_min": 4,
+    "stat_max": 5,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "spell_damage_per_life",
+    "applicable_items": [
+      "staff"
+    ],
+    "tags": [
+      "desecrated_only",
+      "life",
+      "damage",
+      "caster",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Spell Damage per 100 maximum Mana",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Spell Damage per 100 maximum Mana",
+    "stat_min": 4,
+    "stat_max": 5,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "spell_damage_per_mana",
+    "applicable_items": [
+      "staff"
+    ],
+    "tags": [
+      "desecrated_only",
+      "mana",
+      "damage",
+      "caster",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Spell Damage with Spells that cost Life",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Spell Damage with Spells that cost Life",
+    "stat_min": 91,
+    "stat_max": 116,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "spell_damage_life_cost",
+    "applicable_items": [
+      "staff"
+    ],
+    "tags": [
+      "desecrated_only",
+      "life",
+      "damage",
+      "caster",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "+{} to maximum number of Elemental Infusions",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "+{} to maximum number of Elemental Infusions",
+    "stat_min": 1,
+    "stat_max": 2,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "max_elemental_infusions",
+    "applicable_items": [
+      "staff"
+    ],
+    "tags": [
+      "desecrated_only",
+      "elemental",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "+{} to Spirit",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "+{} to Spirit",
+    "stat_min": 35,
+    "stat_max": 50,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "spirit_flat",
+    "applicable_items": [
+      "staff"
+    ],
+    "tags": [
+      "desecrated_only",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% chance for Spell Skills to fire 2 additional Projectiles",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% chance for Spell Skills to fire 2 additional Projectiles",
+    "stat_min": 10,
+    "stat_max": 16,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "spell_additional_projectiles",
+    "applicable_items": [
+      "staff"
+    ],
+    "tags": [
+      "desecrated_only",
+      "caster",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Archon Buff duration",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Archon Buff duration",
+    "stat_min": 25,
+    "stat_max": 35,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "archon_buff_duration",
+    "applicable_items": [
+      "staff"
+    ],
+    "tags": [
+      "desecrated_only",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Cast Speed when on Low Life",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Cast Speed when on Low Life",
+    "stat_min": 30,
+    "stat_max": 40,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "cast_speed_low_life",
+    "applicable_items": [
+      "staff"
+    ],
+    "tags": [
+      "desecrated_only",
+      "caster",
+      "speed",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% of Spell Mana Cost Converted to Life Cost",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% of Spell Mana Cost Converted to Life Cost",
+    "stat_min": 10,
+    "stat_max": 20,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "spell_mana_to_life_cost",
+    "applicable_items": [
+      "staff"
+    ],
+    "tags": [
+      "desecrated_only",
+      "life",
+      "caster",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "+{}% to Block chance",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+{}% to Block chance",
+    "stat_min": 12,
+    "stat_max": 16,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "block_chance",
+    "applicable_items": [
+      "staff"
+    ],
+    "tags": [
+      "desecrated_only",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Archon recovery period expires {}% faster",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Archon recovery period expires {}% faster",
+    "stat_min": 25,
+    "stat_max": 35,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "archon_recovery",
+    "applicable_items": [
+      "staff"
+    ],
+    "tags": [
+      "desecrated_only",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Damage with Combo Finishers",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Damage with Combo Finishers",
+    "stat_min": 61,
+    "stat_max": 80,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "combo_finisher_damage",
+    "applicable_items": [
+      "warstaff"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "combo",
+      "utzaal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Spell Damage per Combo Counter",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Spell Damage per Combo Counter",
+    "stat_min": 4,
+    "stat_max": 5,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "spell_damage_per_combo",
+    "applicable_items": [
+      "warstaff"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "caster",
+      "combo",
+      "utzaal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Attacks with this Weapon deal {}% increased Elemental Damage",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Attacks with this Weapon deal {}% increased Elemental Damage",
+    "stat_min": 81,
+    "stat_max": 100,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "attack_elemental_damage",
+    "applicable_items": [
+      "warstaff"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "elemental",
+      "attack",
+      "utzaal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Attack and Spell Damage",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Attack and Spell Damage",
+    "stat_min": 51,
+    "stat_max": 65,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "attack_spell_damage",
+    "applicable_items": [
+      "warstaff"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "attack",
+      "caster",
+      "utzaal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Combo Finishers grant {} Elemental Infusions",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Combo Finishers grant {} Elemental Infusions",
+    "stat_min": 4,
+    "stat_max": 6,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "finisher_infusions",
+    "applicable_items": [
+      "warstaff"
+    ],
+    "tags": [
+      "desecrated_only",
+      "elemental",
+      "combo",
+      "utzaal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Damage per Combo Counter",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Damage per Combo Counter",
+    "stat_min": 6,
+    "stat_max": 8,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "damage_per_combo",
+    "applicable_items": [
+      "warstaff"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "combo",
+      "utzaal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Attack and Cast Speed",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Attack and Cast Speed",
+    "stat_min": 21,
+    "stat_max": 25,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "attack_cast_speed",
+    "applicable_items": [
+      "warstaff"
+    ],
+    "tags": [
+      "desecrated_only",
+      "attack",
+      "caster",
+      "speed",
+      "utzaal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Critical Hit Chance",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Critical Hit Chance",
+    "stat_min": 81,
+    "stat_max": 100,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "critical_hit_chance",
+    "applicable_items": [
+      "warstaff"
+    ],
+    "tags": [
+      "desecrated_only",
+      "critical",
+      "utzaal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "+{} to Maximum Combo Count",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+{} to Maximum Combo Count",
+    "stat_min": 2,
+    "stat_max": 3,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "max_combo_count",
+    "applicable_items": [
+      "warstaff"
+    ],
+    "tags": [
+      "desecrated_only",
+      "combo",
+      "utzaal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Cost Efficiency of Skills",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Cost Efficiency of Skills",
+    "stat_min": 21,
+    "stat_max": 25,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "skill_cost_efficiency",
+    "applicable_items": [
+      "warstaff"
+    ],
+    "tags": [
+      "desecrated_only",
+      "mana",
+      "resource",
+      "utzaal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Combo Finishers inflict Exposure",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Combo Finishers inflict Exposure",
+    "stat_min": 1,
+    "stat_max": 1,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "finisher_exposure",
+    "applicable_items": [
+      "warstaff"
+    ],
+    "tags": [
+      "desecrated_only",
+      "elemental",
+      "combo",
+      "utzaal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Gain {}% of Damage as Extra Damage of a random Element on Combo Finishers",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Damage of a random Element on Combo Finishers",
+    "stat_min": 21,
+    "stat_max": 30,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "finisher_extra_elemental",
+    "applicable_items": [
+      "warstaff"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "elemental",
+      "combo",
+      "utzaal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Projectile Speed",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Projectile Speed",
+    "stat_min": 41,
+    "stat_max": 50,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "projectile_speed_bow",
+    "applicable_items": [
+      "bow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "projectile",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Projectiles have {}% increased Critical Hit Chance",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Projectiles have {}% increased Critical Hit Chance",
+    "stat_min": 81,
+    "stat_max": 100,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "projectile_crit_bow",
+    "applicable_items": [
+      "bow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "projectile",
+      "critical",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Damage with Poison",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Damage with Poison",
+    "stat_min": 61,
+    "stat_max": 80,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "poison_damage_bow",
+    "applicable_items": [
+      "bow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "chaos",
+      "ailment",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Flask Charges gained",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Flask Charges gained",
+    "stat_min": 21,
+    "stat_max": 30,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "flask_charges_bow",
+    "applicable_items": [
+      "bow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "flask",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% chance to gain a Frenzy Charge on Kill",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% chance to gain a Frenzy Charge on Kill",
+    "stat_min": 11,
+    "stat_max": 15,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "frenzy_charge_bow",
+    "applicable_items": [
+      "bow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "charge",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "+{}% to Chaos Resistance",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+{}% to Chaos Resistance",
+    "stat_min": 21,
+    "stat_max": 25,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "chaos_res_bow",
+    "applicable_items": [
+      "bow"
+    ],
+    "tags": [
+      "desecrated_only",
+      "resistance",
+      "chaos",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Increases and Reductions to Projectile Speed also apply to Damage with Bows",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Increases and Reductions to Projectile Speed also apply to Damage with Bows",
+    "stat_min": 1,
+    "stat_max": 1,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "projectile_speed_damage_quiver",
+    "applicable_items": [
+      "quiver"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "projectile",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Projectiles deal {}% increased Damage with Hits against Enemies further than 6m",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Projectiles deal {}% increased Damage with Hits against Enemies further than 6m",
+    "stat_min": 20,
+    "stat_max": 30,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "projectile_far_damage_quiver",
+    "applicable_items": [
+      "quiver"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "projectile",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Projectiles deal {}% increased Damage with Hits against Enemies within 2m",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Projectiles deal {}% increased Damage with Hits against Enemies within 2m",
+    "stat_min": 20,
+    "stat_max": 30,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "projectile_close_damage_quiver",
+    "applicable_items": [
+      "quiver"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "projectile",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Mana Cost Efficiency",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Mana Cost Efficiency",
+    "stat_min": 6,
+    "stat_max": 10,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "mana_cost_efficiency_quiver",
+    "applicable_items": [
+      "quiver"
+    ],
+    "tags": [
+      "desecrated_only",
+      "mana",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% of Skill Mana Costs Converted to Life Costs",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% of Skill Mana Costs Converted to Life Costs",
+    "stat_min": 15,
+    "stat_max": 20,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "mana_to_life_quiver",
+    "applicable_items": [
+      "quiver"
+    ],
+    "tags": [
+      "desecrated_only",
+      "mana",
+      "life",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Projectile Attacks have a {}% chance to fire two additional Projectiles while moving",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Projectile Attacks have a {}% chance to fire two additional Projectiles while moving",
+    "stat_min": 8,
+    "stat_max": 12,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "projectile_fire_moving_quiver",
+    "applicable_items": [
+      "quiver"
+    ],
+    "tags": [
+      "desecrated_only",
+      "projectile",
+      "attack",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Projectiles have {}% increased Critical Damage Bonus against Enemies within 2m",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Projectiles have {}% increased Critical Damage Bonus against Enemies within 2m",
+    "stat_min": 18,
+    "stat_max": 26,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "projectile_crit_damage_close_quiver",
+    "applicable_items": [
+      "quiver"
+    ],
+    "tags": [
+      "desecrated_only",
+      "critical",
+      "damage",
+      "projectile",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Projectiles have {}% increased Critical Hit Chance against Enemies further than 6m",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Projectiles have {}% increased Critical Hit Chance against Enemies further than 6m",
+    "stat_min": 18,
+    "stat_max": 26,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "projectile_crit_chance_far_quiver",
+    "applicable_items": [
+      "quiver"
+    ],
+    "tags": [
+      "desecrated_only",
+      "critical",
+      "projectile",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Curse Magnitudes",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Curse Magnitudes",
+    "stat_min": 8,
+    "stat_max": 16,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "curse_magnitude_focus",
+    "applicable_items": [
+      "focus"
+    ],
+    "tags": [
+      "desecrated_only",
+      "caster",
+      "curse",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Spell Damage while wielding a Melee Weapon",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Spell Damage while wielding a Melee Weapon",
+    "stat_min": 61,
+    "stat_max": 79,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "spell_damage_melee_focus",
+    "applicable_items": [
+      "focus"
+    ],
+    "tags": [
+      "desecrated_only",
+      "caster",
+      "damage",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Invocated Spells deal {}% increased Damage",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Invocated Spells deal {}% increased Damage",
+    "stat_min": 61,
+    "stat_max": 79,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "invocated_spell_damage_focus",
+    "applicable_items": [
+      "focus"
+    ],
+    "tags": [
+      "desecrated_only",
+      "caster",
+      "damage",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Offering Skills have {}% increased Buff Effect",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Offering Skills have {}% increased Buff Effect",
+    "stat_min": 12,
+    "stat_max": 20,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "offering_buff_focus",
+    "applicable_items": [
+      "focus"
+    ],
+    "tags": [
+      "desecrated_only",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Spell Skills have {}% increased Area of Effect",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Spell Skills have {}% increased Area of Effect",
+    "stat_min": 10,
+    "stat_max": 20,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "spell_aoe_focus",
+    "applicable_items": [
+      "focus"
+    ],
+    "tags": [
+      "desecrated_only",
+      "caster",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Spell Skills have +{} to maximum number of Summoned Totems",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Spell Skills have +{} to maximum number of Summoned Totems",
+    "stat_min": 1,
+    "stat_max": 1,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "totem_count_focus",
+    "applicable_items": [
+      "focus"
+    ],
+    "tags": [
+      "desecrated_only",
+      "caster",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% chance for Spell Skills to fire 2 additional Projectiles",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% chance for Spell Skills to fire 2 additional Projectiles",
+    "stat_min": 10,
+    "stat_max": 16,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "spell_projectiles_focus",
+    "applicable_items": [
+      "focus"
+    ],
+    "tags": [
+      "desecrated_only",
+      "caster",
+      "projectile",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% chance when collecting an Elemental Infusion to gain an additional Elemental Infusion of the same type",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% chance when collecting an Elemental Infusion to gain an additional Elemental Infusion of the same type",
+    "stat_min": 15,
+    "stat_max": 25,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "elemental_infusion_focus",
+    "applicable_items": [
+      "focus"
+    ],
+    "tags": [
+      "desecrated_only",
+      "elemental",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% faster Curse Activation",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% faster Curse Activation",
+    "stat_min": 10,
+    "stat_max": 20,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "curse_activation_focus",
+    "applicable_items": [
+      "focus"
+    ],
+    "tags": [
+      "desecrated_only",
+      "curse",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Mana Cost Efficiency",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Mana Cost Efficiency",
+    "stat_min": 6,
+    "stat_max": 10,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "mana_cost_efficiency_focus",
+    "applicable_items": [
+      "focus"
+    ],
+    "tags": [
+      "desecrated_only",
+      "mana",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% of Spell Mana Cost Converted to Life Cost",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% of Spell Mana Cost Converted to Life Cost",
+    "stat_min": 10,
+    "stat_max": 20,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "spell_mana_to_life_focus",
+    "applicable_items": [
+      "focus"
+    ],
+    "tags": [
+      "desecrated_only",
+      "life",
+      "caster",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "+{} to Dexterity and Intelligence",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+{} to Dexterity and Intelligence",
+    "stat_min": 9,
+    "stat_max": 15,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "dex_int_focus",
+    "applicable_items": [
+      "focus"
+    ],
+    "tags": [
+      "desecrated_only",
+      "attribute",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "+{} to Level of all Minion Skills",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+{} to Level of all Minion Skills",
+    "stat_min": 1,
+    "stat_max": 2,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "minion_skill_level_focus",
+    "applicable_items": [
+      "focus"
+    ],
+    "tags": [
+      "desecrated_only",
+      "minion",
+      "gem",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "+{} to Strength and Dexterity",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+{} to Strength and Dexterity",
+    "stat_min": 9,
+    "stat_max": 15,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "str_dex_focus",
+    "applicable_items": [
+      "focus"
+    ],
+    "tags": [
+      "desecrated_only",
+      "attribute",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "+{} to Strength and Intelligence",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+{} to Strength and Intelligence",
+    "stat_min": 9,
+    "stat_max": 15,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "str_int_focus",
+    "applicable_items": [
+      "focus"
+    ],
+    "tags": [
+      "desecrated_only",
+      "attribute",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "+{}% to Cold and Chaos Resistances",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+{}% to Cold and Chaos Resistances",
+    "stat_min": 13,
+    "stat_max": 17,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "cold_chaos_res_focus",
+    "applicable_items": [
+      "focus"
+    ],
+    "tags": [
+      "desecrated_only",
+      "elemental",
+      "cold",
+      "chaos",
+      "resistance",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "+{}% to Fire and Chaos Resistances",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+{}% to Fire and Chaos Resistances",
+    "stat_min": 13,
+    "stat_max": 17,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "fire_chaos_res_focus",
+    "applicable_items": [
+      "focus"
+    ],
+    "tags": [
+      "desecrated_only",
+      "elemental",
+      "fire",
+      "chaos",
+      "resistance",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "+{}% to Lightning and Chaos Resistances",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+{}% to Lightning and Chaos Resistances",
+    "stat_min": 13,
+    "stat_max": 17,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "lightning_chaos_res_focus",
+    "applicable_items": [
+      "focus"
+    ],
+    "tags": [
+      "desecrated_only",
+      "elemental",
+      "lightning",
+      "chaos",
+      "resistance",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{} Mana gained when you Block",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{} Mana gained when you Block",
+    "stat_min": 6,
+    "stat_max": 12,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "mana_on_block_shield",
+    "applicable_items": [
+      "shield"
+    ],
+    "tags": [
+      "desecrated_only",
+      "mana",
+      "block",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% of Damage taken Recouped as Life",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% of Damage taken Recouped as Life",
+    "stat_min": 10,
+    "stat_max": 20,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "recoup_life_shield",
+    "applicable_items": [
+      "shield"
+    ],
+    "tags": [
+      "desecrated_only",
+      "life",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% of Damage taken Recouped as Mana",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% of Damage taken Recouped as Mana",
+    "stat_min": 10,
+    "stat_max": 20,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "recoup_mana_shield",
+    "applicable_items": [
+      "shield"
+    ],
+    "tags": [
+      "desecrated_only",
+      "life",
+      "mana",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% of Physical Damage taken as Lightning while Active Blocking, You take {}% of damage from Blocked Hits while Active Blocking",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% of Physical Damage taken as Lightning while Active Blocking, You take {}% of damage from Blocked Hits while Active Blocking",
+    "stat_min": 30,
+    "stat_max": 40,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "phys_to_lightning_block_shield",
+    "applicable_items": [
+      "shield"
+    ],
+    "tags": [
+      "desecrated_only",
+      "physical",
+      "elemental",
+      "lightning",
+      "block",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% reduced effect of Curses on you",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% reduced effect of Curses on you",
+    "stat_min": 25,
+    "stat_max": 35,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "curse_effect_shield",
+    "applicable_items": [
+      "shield"
+    ],
+    "tags": [
+      "desecrated_only",
+      "curse",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "+{} to Dexterity and Intelligence",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+{} to Dexterity and Intelligence",
+    "stat_min": 9,
+    "stat_max": 15,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "dex_int_shield",
+    "applicable_items": [
+      "shield"
+    ],
+    "tags": [
+      "desecrated_only",
+      "attribute",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "+{} to Strength and Dexterity",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+{} to Strength and Dexterity",
+    "stat_min": 9,
+    "stat_max": 15,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "str_dex_shield",
+    "applicable_items": [
+      "shield"
+    ],
+    "tags": [
+      "desecrated_only",
+      "attribute",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "+{} to Strength and Intelligence",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+{} to Strength and Intelligence",
+    "stat_min": 9,
+    "stat_max": 15,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "str_int_shield",
+    "applicable_items": [
+      "shield"
+    ],
+    "tags": [
+      "desecrated_only",
+      "attribute",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "+{}% of Armour also applies to Chaos Damage",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+{}% of Armour also applies to Chaos Damage",
+    "stat_min": 23,
+    "stat_max": 31,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "armour_chaos_shield",
+    "applicable_items": [
+      "shield"
+    ],
+    "tags": [
+      "desecrated_only",
+      "defences",
+      "chaos",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "+{}% to all maximum Resistances",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+{}% to all maximum Resistances",
+    "stat_min": 1,
+    "stat_max": 1,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "max_res_shield",
+    "applicable_items": [
+      "shield"
+    ],
+    "tags": [
+      "desecrated_only",
+      "resistance",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "+{}% to Cold and Chaos Resistances",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+{}% to Cold and Chaos Resistances",
+    "stat_min": 13,
+    "stat_max": 17,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "cold_chaos_res_shield",
+    "applicable_items": [
+      "shield"
+    ],
+    "tags": [
+      "desecrated_only",
+      "elemental",
+      "cold",
+      "chaos",
+      "resistance",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "+{}% to Fire and Chaos Resistances",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+{}% to Fire and Chaos Resistances",
+    "stat_min": 13,
+    "stat_max": 17,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "fire_chaos_res_shield",
+    "applicable_items": [
+      "shield"
+    ],
+    "tags": [
+      "desecrated_only",
+      "elemental",
+      "fire",
+      "chaos",
+      "resistance",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "+{}% to Lightning and Chaos Resistances",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+{}% to Lightning and Chaos Resistances",
+    "stat_min": 13,
+    "stat_max": 17,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "lightning_chaos_res_shield",
+    "applicable_items": [
+      "shield"
+    ],
+    "tags": [
+      "desecrated_only",
+      "elemental",
+      "lightning",
+      "chaos",
+      "resistance",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "+{}% to maximum Block chance",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+{}% to maximum Block chance",
+    "stat_min": 1,
+    "stat_max": 2,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "max_block_shield",
+    "applicable_items": [
+      "shield"
+    ],
+    "tags": [
+      "desecrated_only",
+      "block",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Hits with Shield Skills which Heavy Stun enemies break fully Break Armour",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Hits with Shield Skills which Heavy Stun enemies break fully Break Armour",
+    "stat_min": 1,
+    "stat_max": 1,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "stun_break_armour_shield",
+    "applicable_items": [
+      "shield"
+    ],
+    "tags": [
+      "desecrated_only",
+      "ailment",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Your Heavy Stun buildup empties {}% faster",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Your Heavy Stun buildup empties {}% faster",
+    "stat_min": 30,
+    "stat_max": 40,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "stun_recovery_shield",
+    "applicable_items": [
+      "shield"
+    ],
+    "tags": [
+      "desecrated_only",
+      "ailment",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Stun Threshold",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Stun Threshold",
+    "stat_min": 21,
+    "stat_max": 30,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "stun_threshold_shield",
+    "applicable_items": [
+      "shield"
+    ],
+    "tags": [
+      "desecrated_only",
+      "ailment",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Block Recovery",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Block Recovery",
+    "stat_min": 21,
+    "stat_max": 30,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "block_recovery_shield",
+    "applicable_items": [
+      "shield"
+    ],
+    "tags": [
+      "desecrated_only",
+      "block",
+      "ulaman"
+    ],
+    "is_exclusive": true
   }
 ]

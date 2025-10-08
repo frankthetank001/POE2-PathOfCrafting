@@ -2693,5 +2693,1336 @@
     "stat_order": [
       869
     ]
+  },
+  {
+    "name": "Abyssal",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Bears the Mark of the Abyssal Lord",
+    "stat_ranges": [],
+    "stat_min": null,
+    "stat_max": null,
+    "required_ilvl": 1,
+    "weight": 1000,
+    "mod_group": "abysstargetmod",
+    "applicable_items": [
+      "wand",
+      "spear",
+      "one_hand_sword",
+      "one_hand_axe",
+      "one_hand_mace",
+      "flail",
+      "dagger",
+      "claw",
+      "sceptre",
+      "bow",
+      "crossbow",
+      "staff",
+      "two_hand_axe",
+      "two_hand_sword",
+      "two_hand_mace",
+      "warstaff",
+      "quiver",
+      "focus"
+    ],
+    "tags": [
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      5974
+    ]
+  },
+  {
+    "name": "of the Essence",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Mana Cost Efficiency",
+    "stat_ranges": [
+      {
+        "min": 18.0,
+        "max": 20.0
+      }
+    ],
+    "stat_min": 18.0,
+    "stat_max": 20.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "manacostefficiency",
+    "applicable_items": [
+      "wand"
+    ],
+    "tags": [
+      "mana",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      4549
+    ]
+  },
+  {
+    "name": "of the Sorcerer",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+{} to Level of all Spell Skills",
+    "stat_ranges": [
+      {
+        "min": 3.0,
+        "max": 3.0
+      }
+    ],
+    "stat_min": 3.0,
+    "stat_max": 3.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "globalincreasespellskillgemlevel",
+    "applicable_items": [
+      "wand"
+    ],
+    "tags": [
+      "caster",
+      "gem",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      919
+    ]
+  },
+  {
+    "name": "Abyssal",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Bears the Mark of the Abyssal Lord",
+    "stat_ranges": [],
+    "stat_min": null,
+    "stat_max": null,
+    "required_ilvl": 1,
+    "weight": 1000,
+    "mod_group": "abysstargetmod",
+    "applicable_items": [
+      "wand",
+      "spear",
+      "one_hand_sword",
+      "one_hand_axe",
+      "one_hand_mace",
+      "flail",
+      "dagger",
+      "claw",
+      "sceptre",
+      "bow",
+      "crossbow",
+      "staff",
+      "two_hand_axe",
+      "two_hand_sword",
+      "two_hand_mace",
+      "warstaff",
+      "quiver",
+      "focus"
+    ],
+    "tags": [
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      5974
+    ]
+  },
+  {
+    "name": "Malignant",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Cold Damage",
+    "stat_ranges": [
+      {
+        "min": 15.0,
+        "max": 20.0
+      }
+    ],
+    "stat_min": 15.0,
+    "stat_max": 20.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "extracold",
+    "applicable_items": [
+      "spear",
+      "one_hand_sword",
+      "one_hand_axe",
+      "one_hand_mace",
+      "flail",
+      "dagger",
+      "claw",
+      "bow"
+    ],
+    "tags": [
+      "damage",
+      "elemental",
+      "cold",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      846
+    ]
+  },
+  {
+    "name": "Malignant",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Fire Damage",
+    "stat_ranges": [
+      {
+        "min": 15.0,
+        "max": 20.0
+      }
+    ],
+    "stat_min": 15.0,
+    "stat_max": 20.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "extrafire",
+    "applicable_items": [
+      "spear",
+      "one_hand_sword",
+      "one_hand_axe",
+      "one_hand_mace",
+      "flail",
+      "dagger",
+      "claw",
+      "bow"
+    ],
+    "tags": [
+      "damage",
+      "elemental",
+      "fire",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      844
+    ]
+  },
+  {
+    "name": "Malignant",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Lightning Damage",
+    "stat_ranges": [
+      {
+        "min": 15.0,
+        "max": 20.0
+      }
+    ],
+    "stat_min": 15.0,
+    "stat_max": 20.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "extralightning",
+    "applicable_items": [
+      "spear",
+      "one_hand_sword",
+      "one_hand_axe",
+      "one_hand_mace",
+      "flail",
+      "dagger",
+      "claw",
+      "bow"
+    ],
+    "tags": [
+      "damage",
+      "elemental",
+      "lightning",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      848
+    ]
+  },
+  {
+    "name": "Malignant",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Physical Damage",
+    "stat_ranges": [
+      {
+        "min": 15.0,
+        "max": 20.0
+      }
+    ],
+    "stat_min": 15.0,
+    "stat_max": 20.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "extraphysical",
+    "applicable_items": [
+      "spear",
+      "one_hand_sword",
+      "one_hand_axe",
+      "one_hand_mace",
+      "flail",
+      "dagger",
+      "claw",
+      "bow"
+    ],
+    "tags": [
+      "damage",
+      "physical",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      1598
+    ]
+  },
+  {
+    "name": "of the Essence",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% chance to gain Onslaught on Killing Hits with this Weapon",
+    "stat_ranges": [
+      {
+        "min": 20.0,
+        "max": 25.0
+      }
+    ],
+    "stat_min": 20.0,
+    "stat_max": 25.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "essenceonslaughtonkill",
+    "applicable_items": [
+      "spear",
+      "one_hand_sword",
+      "one_hand_axe",
+      "one_hand_mace",
+      "flail",
+      "dagger",
+      "claw",
+      "bow",
+      "crossbow",
+      "two_hand_axe",
+      "two_hand_sword",
+      "two_hand_mace"
+    ],
+    "tags": [
+      "speed",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      7068
+    ]
+  },
+  {
+    "name": "Malignant",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Cold Damage",
+    "stat_ranges": [
+      {
+        "min": 25.0,
+        "max": 33.0
+      }
+    ],
+    "stat_min": 25.0,
+    "stat_max": 33.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "extracoldcrossbow",
+    "applicable_items": [
+      "crossbow"
+    ],
+    "tags": [
+      "damage",
+      "elemental",
+      "cold",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      846
+    ]
+  },
+  {
+    "name": "Malignant",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Fire Damage",
+    "stat_ranges": [
+      {
+        "min": 25.0,
+        "max": 33.0
+      }
+    ],
+    "stat_min": 25.0,
+    "stat_max": 33.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "extrafirecrossbow",
+    "applicable_items": [
+      "crossbow"
+    ],
+    "tags": [
+      "damage",
+      "elemental",
+      "fire",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      844
+    ]
+  },
+  {
+    "name": "Malignant",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Lightning Damage",
+    "stat_ranges": [
+      {
+        "min": 25.0,
+        "max": 33.0
+      }
+    ],
+    "stat_min": 25.0,
+    "stat_max": 33.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "extralightningcrossbow",
+    "applicable_items": [
+      "crossbow"
+    ],
+    "tags": [
+      "damage",
+      "elemental",
+      "lightning",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      848
+    ]
+  },
+  {
+    "name": "Malignant",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Physical Damage",
+    "stat_ranges": [
+      {
+        "min": 25.0,
+        "max": 33.0
+      }
+    ],
+    "stat_min": 25.0,
+    "stat_max": 33.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "extraphysicalcrossbow",
+    "applicable_items": [
+      "crossbow"
+    ],
+    "tags": [
+      "damage",
+      "physical",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      1598
+    ]
+  },
+  {
+    "name": "of the Essence",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Attack Speed",
+    "stat_ranges": [
+      {
+        "min": 23.0,
+        "max": 25.0
+      }
+    ],
+    "stat_min": 23.0,
+    "stat_max": 25.0,
+    "required_ilvl": 60,
+    "weight": 1000,
+    "mod_group": "essenceattackspeed",
+    "applicable_items": [
+      "bow",
+      "crossbow"
+    ],
+    "tags": [
+      "attack",
+      "speed",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      937
+    ]
+  },
+  {
+    "name": "of the Essence",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+{} to Level of all Attack Skills",
+    "stat_ranges": [
+      {
+        "min": 4.0,
+        "max": 4.0
+      }
+    ],
+    "stat_min": 4.0,
+    "stat_max": 4.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "essenceattackskilllevel",
+    "applicable_items": [
+      "spear",
+      "one_hand_sword",
+      "one_hand_axe",
+      "one_hand_mace",
+      "flail",
+      "dagger",
+      "claw",
+      "bow",
+      "two_hand_axe",
+      "two_hand_sword",
+      "two_hand_mace"
+    ],
+    "tags": [
+      "attack",
+      "gem",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      925
+    ]
+  },
+  {
+    "name": "of the Essence",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+{} to Level of all Attack Skills",
+    "stat_ranges": [
+      {
+        "min": 6.0,
+        "max": 6.0
+      }
+    ],
+    "stat_min": 6.0,
+    "stat_max": 6.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "essenceattackskilllevelcrossbow",
+    "applicable_items": [
+      "crossbow"
+    ],
+    "tags": [
+      "attack",
+      "gem",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      925
+    ]
+  },
+  {
+    "name": "of the Essence",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Aura Skills have {}% increased Magnitudes",
+    "stat_ranges": [
+      {
+        "min": 15.0,
+        "max": 20.0
+      }
+    ],
+    "stat_min": 15.0,
+    "stat_max": 20.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "essenceauraeffect",
+    "applicable_items": [
+      "sceptre"
+    ],
+    "tags": [
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      2464
+    ]
+  },
+  {
+    "name": "of the Essence",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Critical Hit Chance for Spells",
+    "stat_ranges": [
+      {
+        "min": 121.0,
+        "max": 140.0
+      }
+    ],
+    "stat_min": 121.0,
+    "stat_max": 140.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "essencespellcritstaff",
+    "applicable_items": [
+      "staff"
+    ],
+    "tags": [
+      "caster",
+      "critical",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      931
+    ]
+  },
+  {
+    "name": "of the Essence",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Mana Cost Efficiency",
+    "stat_ranges": [
+      {
+        "min": 41.0,
+        "max": 50.0
+      }
+    ],
+    "stat_min": 41.0,
+    "stat_max": 50.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "essencemanacoststaff",
+    "applicable_items": [
+      "staff"
+    ],
+    "tags": [
+      "caster",
+      "mana",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      4549
+    ]
+  },
+  {
+    "name": "of the Essence",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+{} to Level of all Spell Skills",
+    "stat_ranges": [
+      {
+        "min": 5.0,
+        "max": 5.0
+      }
+    ],
+    "stat_min": 5.0,
+    "stat_max": 5.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "essencespellskilllevelstaff",
+    "applicable_items": [
+      "staff"
+    ],
+    "tags": [
+      "caster",
+      "gem",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      919
+    ]
+  },
+  {
+    "name": "of the Essence",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Cast Speed",
+    "stat_ranges": [
+      {
+        "min": 31.0,
+        "max": 35.0
+      }
+    ],
+    "stat_min": 31.0,
+    "stat_max": 35.0,
+    "required_ilvl": 60,
+    "weight": 1000,
+    "mod_group": "essencecastspeedstaff",
+    "applicable_items": [
+      "staff"
+    ],
+    "tags": [
+      "caster",
+      "speed",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      938
+    ]
+  },
+  {
+    "name": "of the Essence",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Critical Spell Damage Bonus",
+    "stat_ranges": [
+      {
+        "min": 56.0,
+        "max": 65.0
+      }
+    ],
+    "stat_min": 56.0,
+    "stat_max": 65.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "essencecritspelldmgstaff",
+    "applicable_items": [
+      "staff"
+    ],
+    "tags": [
+      "caster",
+      "critical",
+      "damage",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      935
+    ]
+  },
+  {
+    "name": "Malignant",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Cold Damage",
+    "stat_ranges": [
+      {
+        "min": 25.0,
+        "max": 33.0
+      }
+    ],
+    "stat_min": 25.0,
+    "stat_max": 33.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "extracoldtwohandaxe",
+    "applicable_items": [
+      "two_hand_axe"
+    ],
+    "tags": [
+      "damage",
+      "elemental",
+      "cold",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      846
+    ]
+  },
+  {
+    "name": "Conflagrant",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Fire Damage",
+    "stat_ranges": [
+      {
+        "min": 25.0,
+        "max": 33.0
+      }
+    ],
+    "stat_min": 25.0,
+    "stat_max": 33.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "extrafiretwohandaxe",
+    "applicable_items": [
+      "two_hand_axe"
+    ],
+    "tags": [
+      "damage",
+      "elemental",
+      "fire",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      847
+    ]
+  },
+  {
+    "name": "Voltaic",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Lightning Damage",
+    "stat_ranges": [
+      {
+        "min": 25.0,
+        "max": 33.0
+      }
+    ],
+    "stat_min": 25.0,
+    "stat_max": 33.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "extralightningtwohandaxe",
+    "applicable_items": [
+      "two_hand_axe"
+    ],
+    "tags": [
+      "damage",
+      "elemental",
+      "lightning",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      848
+    ]
+  },
+  {
+    "name": "Devastating",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Physical Damage",
+    "stat_ranges": [
+      {
+        "min": 25.0,
+        "max": 33.0
+      }
+    ],
+    "stat_min": 25.0,
+    "stat_max": 33.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "extraphysicaltwohandaxe",
+    "applicable_items": [
+      "two_hand_axe"
+    ],
+    "tags": [
+      "damage",
+      "physical",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      849
+    ]
+  },
+  {
+    "name": "Malignant",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Cold Damage",
+    "stat_ranges": [
+      {
+        "min": 25.0,
+        "max": 33.0
+      }
+    ],
+    "stat_min": 25.0,
+    "stat_max": 33.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "extracoldtwohandsword",
+    "applicable_items": [
+      "two_hand_sword"
+    ],
+    "tags": [
+      "damage",
+      "elemental",
+      "cold",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      846
+    ]
+  },
+  {
+    "name": "Conflagrant",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Fire Damage",
+    "stat_ranges": [
+      {
+        "min": 25.0,
+        "max": 33.0
+      }
+    ],
+    "stat_min": 25.0,
+    "stat_max": 33.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "extrafiretwohandsword",
+    "applicable_items": [
+      "two_hand_sword"
+    ],
+    "tags": [
+      "damage",
+      "elemental",
+      "fire",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      847
+    ]
+  },
+  {
+    "name": "Voltaic",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Lightning Damage",
+    "stat_ranges": [
+      {
+        "min": 25.0,
+        "max": 33.0
+      }
+    ],
+    "stat_min": 25.0,
+    "stat_max": 33.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "extralightningtwohandsword",
+    "applicable_items": [
+      "two_hand_sword"
+    ],
+    "tags": [
+      "damage",
+      "elemental",
+      "lightning",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      848
+    ]
+  },
+  {
+    "name": "Devastating",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Physical Damage",
+    "stat_ranges": [
+      {
+        "min": 25.0,
+        "max": 33.0
+      }
+    ],
+    "stat_min": 25.0,
+    "stat_max": 33.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "extraphysicaltwohandsword",
+    "applicable_items": [
+      "two_hand_sword"
+    ],
+    "tags": [
+      "damage",
+      "physical",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      849
+    ]
+  },
+  {
+    "name": "Malignant",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Cold Damage",
+    "stat_ranges": [
+      {
+        "min": 25.0,
+        "max": 33.0
+      }
+    ],
+    "stat_min": 25.0,
+    "stat_max": 33.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "extracoldtwohandmace",
+    "applicable_items": [
+      "two_hand_mace"
+    ],
+    "tags": [
+      "damage",
+      "elemental",
+      "cold",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      846
+    ]
+  },
+  {
+    "name": "Conflagrant",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Fire Damage",
+    "stat_ranges": [
+      {
+        "min": 25.0,
+        "max": 33.0
+      }
+    ],
+    "stat_min": 25.0,
+    "stat_max": 33.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "extrafiretwohandmace",
+    "applicable_items": [
+      "two_hand_mace"
+    ],
+    "tags": [
+      "damage",
+      "elemental",
+      "fire",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      847
+    ]
+  },
+  {
+    "name": "Voltaic",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Lightning Damage",
+    "stat_ranges": [
+      {
+        "min": 25.0,
+        "max": 33.0
+      }
+    ],
+    "stat_min": 25.0,
+    "stat_max": 33.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "extralightningtwohandmace",
+    "applicable_items": [
+      "two_hand_mace"
+    ],
+    "tags": [
+      "damage",
+      "elemental",
+      "lightning",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      848
+    ]
+  },
+  {
+    "name": "Devastating",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Physical Damage",
+    "stat_ranges": [
+      {
+        "min": 25.0,
+        "max": 33.0
+      }
+    ],
+    "stat_min": 25.0,
+    "stat_max": 33.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "extraphysicaltwohandmace",
+    "applicable_items": [
+      "two_hand_mace"
+    ],
+    "tags": [
+      "damage",
+      "physical",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      849
+    ]
+  },
+  {
+    "name": "Malignant",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Cold Damage",
+    "stat_ranges": [
+      {
+        "min": 25.0,
+        "max": 33.0
+      }
+    ],
+    "stat_min": 25.0,
+    "stat_max": 33.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "extracoldwarstaff",
+    "applicable_items": [
+      "warstaff"
+    ],
+    "tags": [
+      "damage",
+      "elemental",
+      "cold",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      846
+    ]
+  },
+  {
+    "name": "Conflagrant",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Fire Damage",
+    "stat_ranges": [
+      {
+        "min": 25.0,
+        "max": 33.0
+      }
+    ],
+    "stat_min": 25.0,
+    "stat_max": 33.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "extrafirewarstaff",
+    "applicable_items": [
+      "warstaff"
+    ],
+    "tags": [
+      "damage",
+      "elemental",
+      "fire",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      847
+    ]
+  },
+  {
+    "name": "Voltaic",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Lightning Damage",
+    "stat_ranges": [
+      {
+        "min": 25.0,
+        "max": 33.0
+      }
+    ],
+    "stat_min": 25.0,
+    "stat_max": 33.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "extralightningwarstaff",
+    "applicable_items": [
+      "warstaff"
+    ],
+    "tags": [
+      "damage",
+      "elemental",
+      "lightning",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      848
+    ]
+  },
+  {
+    "name": "Devastating",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Physical Damage",
+    "stat_ranges": [
+      {
+        "min": 25.0,
+        "max": 33.0
+      }
+    ],
+    "stat_min": 25.0,
+    "stat_max": 33.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "extraphysicalwarstaff",
+    "applicable_items": [
+      "warstaff"
+    ],
+    "tags": [
+      "damage",
+      "physical",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      849
+    ]
+  },
+  {
+    "name": "of the Essence",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Attack and Cast Speed",
+    "stat_ranges": [
+      {
+        "min": 23.0,
+        "max": 25.0
+      }
+    ],
+    "stat_min": 23.0,
+    "stat_max": 25.0,
+    "required_ilvl": 60,
+    "weight": 1000,
+    "mod_group": "essenceattackcastspeedwarstaff",
+    "applicable_items": [
+      "warstaff"
+    ],
+    "tags": [
+      "attack",
+      "caster",
+      "speed",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      5001
+    ]
+  },
+  {
+    "name": "of the Essence",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+{} to Level of all Attack Skills",
+    "stat_ranges": [
+      {
+        "min": 4.0,
+        "max": 4.0
+      }
+    ],
+    "stat_min": 4.0,
+    "stat_max": 4.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "essenceattackskilllevelwarstaff",
+    "applicable_items": [
+      "warstaff"
+    ],
+    "tags": [
+      "attack",
+      "gem",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      925
+    ]
+  },
+  {
+    "name": "of the Essence",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "+{} to maximum Life",
+    "stat_ranges": [
+      {
+        "min": 30.0,
+        "max": 39.0
+      }
+    ],
+    "stat_min": 30.0,
+    "stat_max": 39.0,
+    "required_ilvl": 16,
+    "weight": 1000,
+    "mod_group": "essencelifefocus",
+    "applicable_items": [
+      "focus"
+    ],
+    "tags": [
+      "life",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      844
+    ]
+  },
+  {
+    "name": "of the Essence",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Mana Cost Efficiency",
+    "stat_ranges": [
+      {
+        "min": 18.0,
+        "max": 20.0
+      }
+    ],
+    "stat_min": 18.0,
+    "stat_max": 20.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "essencemanacostfocus",
+    "applicable_items": [
+      "focus"
+    ],
+    "tags": [
+      "mana",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      4549
+    ]
+  },
+  {
+    "name": "of the Essence",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+{} to Level of all Spell Skills",
+    "stat_ranges": [
+      {
+        "min": 3.0,
+        "max": 3.0
+      }
+    ],
+    "stat_min": 3.0,
+    "stat_max": 3.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "essencespellskilllevel focus",
+    "applicable_items": [
+      "focus"
+    ],
+    "tags": [
+      "caster",
+      "gem",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      919
+    ]
   }
 ]

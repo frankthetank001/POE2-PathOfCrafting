@@ -7004,8 +7004,8 @@
   },
   {
     "name": "Golden Blade",
-    "category": "One Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "One Handed Sword",
@@ -7020,8 +7020,8 @@
   },
   {
     "name": "Energy Blade One Handed",
-    "category": "One Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "One Handed Sword",
@@ -7036,8 +7036,8 @@
   },
   {
     "name": "Shortsword",
-    "category": "One Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "One Handed Sword",
@@ -7052,8 +7052,8 @@
   },
   {
     "name": "Broadsword",
-    "category": "One Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7071,8 +7071,8 @@
   },
   {
     "name": "Vampiric Blade",
-    "category": "One Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7090,8 +7090,8 @@
   },
   {
     "name": "Scimitar",
-    "category": "One Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7109,8 +7109,8 @@
   },
   {
     "name": "Charred Shortsword",
-    "category": "One Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7128,8 +7128,8 @@
   },
   {
     "name": "Sickle Sword",
-    "category": "One Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7147,8 +7147,8 @@
   },
   {
     "name": "Falchion",
-    "category": "One Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7166,8 +7166,8 @@
   },
   {
     "name": "Treasured Blade",
-    "category": "One Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7185,8 +7185,8 @@
   },
   {
     "name": "Cutlass",
-    "category": "One Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7204,8 +7204,8 @@
   },
   {
     "name": "Runic Shortsword",
-    "category": "One Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7223,8 +7223,8 @@
   },
   {
     "name": "Messer",
-    "category": "One Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7242,8 +7242,8 @@
   },
   {
     "name": "Commander Sword",
-    "category": "One Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7261,8 +7261,8 @@
   },
   {
     "name": "Dark Blade",
-    "category": "One Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7280,8 +7280,8 @@
   },
   {
     "name": "Golden Blade",
-    "category": "One Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "One Handed Sword",
@@ -7296,8 +7296,8 @@
   },
   {
     "name": "Energy Blade One Handed",
-    "category": "One Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "One Handed Sword",
@@ -7312,8 +7312,8 @@
   },
   {
     "name": "Keyblade",
-    "category": "Two Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Two Handed Sword",
@@ -7328,8 +7328,8 @@
   },
   {
     "name": "Energy Blade Two Handed",
-    "category": "Two Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Two Handed Sword",
@@ -7344,8 +7344,8 @@
   },
   {
     "name": "Corroded Longsword",
-    "category": "Two Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Two Handed Sword",
@@ -7360,8 +7360,8 @@
   },
   {
     "name": "Iron Greatsword",
-    "category": "Two Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7379,8 +7379,8 @@
   },
   {
     "name": "Blessed Claymore",
-    "category": "Two Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7398,8 +7398,8 @@
   },
   {
     "name": "Broad Greatsword",
-    "category": "Two Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7417,8 +7417,8 @@
   },
   {
     "name": "Rippled Greatsword",
-    "category": "Two Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7436,8 +7436,8 @@
   },
   {
     "name": "Arced Longsword",
-    "category": "Two Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7455,8 +7455,8 @@
   },
   {
     "name": "Stone Greatsword",
-    "category": "Two Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7474,8 +7474,8 @@
   },
   {
     "name": "Obsidian Greatsword",
-    "category": "Two Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7493,8 +7493,8 @@
   },
   {
     "name": "Keen Greatsword",
-    "category": "Two Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7512,8 +7512,8 @@
   },
   {
     "name": "Ancient Greatblade",
-    "category": "Two Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7531,8 +7531,8 @@
   },
   {
     "name": "Flanged Greatblade",
-    "category": "Two Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7550,8 +7550,8 @@
   },
   {
     "name": "Regalia Longsword",
-    "category": "Two Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7569,8 +7569,8 @@
   },
   {
     "name": "Ultra Greatsword",
-    "category": "Two Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7588,8 +7588,8 @@
   },
   {
     "name": "Energy Blade Two Handed",
-    "category": "Two Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Two Handed Sword",
@@ -7604,8 +7604,8 @@
   },
   {
     "name": "Keyblade",
-    "category": "Two Handed Sword",
-    "slot": "sword",
+    "category": "sword",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Two Handed Sword",
@@ -7620,8 +7620,8 @@
   },
   {
     "name": "Dull Hatchet",
-    "category": "One Handed Axe",
-    "slot": "axe",
+    "category": "axe",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "One Handed Axe",
@@ -7636,8 +7636,8 @@
   },
   {
     "name": "Hook Axe",
-    "category": "One Handed Axe",
-    "slot": "axe",
+    "category": "axe",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -7654,8 +7654,8 @@
   },
   {
     "name": "Bearded Axe",
-    "category": "One Handed Axe",
-    "slot": "axe",
+    "category": "axe",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7673,8 +7673,8 @@
   },
   {
     "name": "Extended Cleaver",
-    "category": "One Handed Axe",
-    "slot": "axe",
+    "category": "axe",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7692,8 +7692,8 @@
   },
   {
     "name": "Bandit Hatchet",
-    "category": "One Handed Axe",
-    "slot": "axe",
+    "category": "axe",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7711,8 +7711,8 @@
   },
   {
     "name": "Crescent Axe",
-    "category": "One Handed Axe",
-    "slot": "axe",
+    "category": "axe",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7730,8 +7730,8 @@
   },
   {
     "name": "Carving Hatchet",
-    "category": "One Handed Axe",
-    "slot": "axe",
+    "category": "axe",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7749,8 +7749,8 @@
   },
   {
     "name": "Sacrificial Axe",
-    "category": "One Handed Axe",
-    "slot": "axe",
+    "category": "axe",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7768,8 +7768,8 @@
   },
   {
     "name": "Boarding Hatchet",
-    "category": "One Handed Axe",
-    "slot": "axe",
+    "category": "axe",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7787,8 +7787,8 @@
   },
   {
     "name": "Fury Cleaver",
-    "category": "One Handed Axe",
-    "slot": "axe",
+    "category": "axe",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7806,8 +7806,8 @@
   },
   {
     "name": "Battle Axe",
-    "category": "One Handed Axe",
-    "slot": "axe",
+    "category": "axe",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7825,8 +7825,8 @@
   },
   {
     "name": "Profane Cleaver",
-    "category": "One Handed Axe",
-    "slot": "axe",
+    "category": "axe",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7844,8 +7844,8 @@
   },
   {
     "name": "Dread Hatchet",
-    "category": "One Handed Axe",
-    "slot": "axe",
+    "category": "axe",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7863,8 +7863,8 @@
   },
   {
     "name": "Splitting Greataxe",
-    "category": "Two Handed Axe",
-    "slot": "axe",
+    "category": "axe",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Two Handed Axe",
@@ -7879,8 +7879,8 @@
   },
   {
     "name": "Light Halberd",
-    "category": "Two Handed Axe",
-    "slot": "axe",
+    "category": "axe",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -7897,8 +7897,8 @@
   },
   {
     "name": "Executioner Greataxe",
-    "category": "Two Handed Axe",
-    "slot": "axe",
+    "category": "axe",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7916,8 +7916,8 @@
   },
   {
     "name": "Arched Greataxe",
-    "category": "Two Handed Axe",
-    "slot": "axe",
+    "category": "axe",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7935,8 +7935,8 @@
   },
   {
     "name": "Elegant Glaive",
-    "category": "Two Handed Axe",
-    "slot": "axe",
+    "category": "axe",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7954,8 +7954,8 @@
   },
   {
     "name": "Savage Greataxe",
-    "category": "Two Handed Axe",
-    "slot": "axe",
+    "category": "axe",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7973,8 +7973,8 @@
   },
   {
     "name": "Rending Halberd",
-    "category": "Two Handed Axe",
-    "slot": "axe",
+    "category": "axe",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -7992,8 +7992,8 @@
   },
   {
     "name": "Jagged Greataxe",
-    "category": "Two Handed Axe",
-    "slot": "axe",
+    "category": "axe",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -8011,8 +8011,8 @@
   },
   {
     "name": "Reaver Glaive",
-    "category": "Two Handed Axe",
-    "slot": "axe",
+    "category": "axe",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -8030,8 +8030,8 @@
   },
   {
     "name": "Ember Greataxe",
-    "category": "Two Handed Axe",
-    "slot": "axe",
+    "category": "axe",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -8047,8 +8047,8 @@
   },
   {
     "name": "Ceremonial Halberd",
-    "category": "Two Handed Axe",
-    "slot": "axe",
+    "category": "axe",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -8066,8 +8066,8 @@
   },
   {
     "name": "Monument Greataxe",
-    "category": "Two Handed Axe",
-    "slot": "axe",
+    "category": "axe",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -8085,8 +8085,8 @@
   },
   {
     "name": "Vile Greataxe",
-    "category": "Two Handed Axe",
-    "slot": "axe",
+    "category": "axe",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -8104,8 +8104,8 @@
   },
   {
     "name": "Wooden Club",
-    "category": "One Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "One Handed Mace",
@@ -8120,8 +8120,8 @@
   },
   {
     "name": "Smithing Hammer",
-    "category": "One Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8138,8 +8138,8 @@
   },
   {
     "name": "Slim Mace",
-    "category": "One Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8156,8 +8156,8 @@
   },
   {
     "name": "Spiked Club",
-    "category": "One Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8174,8 +8174,8 @@
   },
   {
     "name": "Warpick",
-    "category": "One Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8192,8 +8192,8 @@
   },
   {
     "name": "Plated Mace",
-    "category": "One Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8210,8 +8210,8 @@
   },
   {
     "name": "Brigand Mace",
-    "category": "One Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8228,8 +8228,8 @@
   },
   {
     "name": "Construct Hammer",
-    "category": "One Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8246,8 +8246,8 @@
   },
   {
     "name": "Morning Star",
-    "category": "One Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8264,8 +8264,8 @@
   },
   {
     "name": "Jade Club",
-    "category": "One Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8282,8 +8282,8 @@
   },
   {
     "name": "Lumen Mace",
-    "category": "One Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8300,8 +8300,8 @@
   },
   {
     "name": "Execratus Hammer",
-    "category": "One Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8318,8 +8318,8 @@
   },
   {
     "name": "Torment Club",
-    "category": "One Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8336,8 +8336,8 @@
   },
   {
     "name": "Kalguuran Forgehammer",
-    "category": "One Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 47,
     "description": "One Handed Mace",
@@ -8352,8 +8352,8 @@
   },
   {
     "name": "Calescent Hammer",
-    "category": "One Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8370,8 +8370,8 @@
   },
   {
     "name": "Flared Mace",
-    "category": "One Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8388,8 +8388,8 @@
   },
   {
     "name": "Battle Pick",
-    "category": "One Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8406,8 +8406,8 @@
   },
   {
     "name": "Marching Mace",
-    "category": "One Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8424,8 +8424,8 @@
   },
   {
     "name": "Bandit Mace",
-    "category": "One Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8442,8 +8442,8 @@
   },
   {
     "name": "Structured Hammer",
-    "category": "One Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8460,8 +8460,8 @@
   },
   {
     "name": "Flanged Mace",
-    "category": "One Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8478,8 +8478,8 @@
   },
   {
     "name": "Crown Mace",
-    "category": "One Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8496,8 +8496,8 @@
   },
   {
     "name": "Molten Hammer",
-    "category": "One Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8514,8 +8514,8 @@
   },
   {
     "name": "Strife Pick",
-    "category": "One Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8532,8 +8532,8 @@
   },
   {
     "name": "Fortified Hammer",
-    "category": "One Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8550,8 +8550,8 @@
   },
   {
     "name": "Marauding Mace",
-    "category": "One Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8568,8 +8568,8 @@
   },
   {
     "name": "Akoyan Club",
-    "category": "One Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8586,8 +8586,8 @@
   },
   {
     "name": "Felled Greatclub",
-    "category": "Two Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Two Handed Mace",
@@ -8602,8 +8602,8 @@
   },
   {
     "name": "Oak Greathammer",
-    "category": "Two Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8620,8 +8620,8 @@
   },
   {
     "name": "Forge Maul",
-    "category": "Two Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8638,8 +8638,8 @@
   },
   {
     "name": "Studded Greatclub",
-    "category": "Two Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8656,8 +8656,8 @@
   },
   {
     "name": "Cultist Greathammer",
-    "category": "Two Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8674,8 +8674,8 @@
   },
   {
     "name": "Temple Maul",
-    "category": "Two Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8692,8 +8692,8 @@
   },
   {
     "name": "Leaden Greathammer",
-    "category": "Two Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8710,8 +8710,8 @@
   },
   {
     "name": "Crumbling Maul",
-    "category": "Two Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8728,8 +8728,8 @@
   },
   {
     "name": "Pointed Maul",
-    "category": "Two Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8746,8 +8746,8 @@
   },
   {
     "name": "Totemic Greatclub",
-    "category": "Two Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8764,8 +8764,8 @@
   },
   {
     "name": "Greatmace",
-    "category": "Two Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8782,8 +8782,8 @@
   },
   {
     "name": "Precise Greathammer",
-    "category": "Two Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8800,8 +8800,8 @@
   },
   {
     "name": "Giant Maul",
-    "category": "Two Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8818,8 +8818,8 @@
   },
   {
     "name": "Snakewood Greathammer",
-    "category": "Two Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8836,8 +8836,8 @@
   },
   {
     "name": "Blacksmith Maul",
-    "category": "Two Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8854,8 +8854,8 @@
   },
   {
     "name": "Zealot Greathammer",
-    "category": "Two Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8872,8 +8872,8 @@
   },
   {
     "name": "Solemn Maul",
-    "category": "Two Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8890,8 +8890,8 @@
   },
   {
     "name": "Heavy Greathammer",
-    "category": "Two Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8908,8 +8908,8 @@
   },
   {
     "name": "Disintegrating Maul",
-    "category": "Two Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8926,8 +8926,8 @@
   },
   {
     "name": "Anvil Maul",
-    "category": "Two Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8944,8 +8944,8 @@
   },
   {
     "name": "Sacred Maul",
-    "category": "Two Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8962,8 +8962,8 @@
   },
   {
     "name": "Ironwood Greathammer",
-    "category": "Two Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8980,8 +8980,8 @@
   },
   {
     "name": "Fanatic Greathammer",
-    "category": "Two Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -8998,8 +8998,8 @@
   },
   {
     "name": "Ruination Maul",
-    "category": "Two Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -9016,8 +9016,8 @@
   },
   {
     "name": "Massive Greathammer",
-    "category": "Two Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -9034,8 +9034,8 @@
   },
   {
     "name": "Tawhoan Greatclub",
-    "category": "Two Handed Mace",
-    "slot": "mace",
+    "category": "mace",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -9052,8 +9052,8 @@
   },
   {
     "name": "Crude Bow",
-    "category": "Bow",
-    "slot": "bow",
+    "category": "bow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Bow",
@@ -9068,8 +9068,8 @@
   },
   {
     "name": "Shortbow",
-    "category": "Bow",
-    "slot": "bow",
+    "category": "bow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -9086,8 +9086,8 @@
   },
   {
     "name": "Warden Bow",
-    "category": "Bow",
-    "slot": "bow",
+    "category": "bow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -9104,8 +9104,8 @@
   },
   {
     "name": "Recurve Bow",
-    "category": "Bow",
-    "slot": "bow",
+    "category": "bow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -9122,8 +9122,8 @@
   },
   {
     "name": "Composite Bow",
-    "category": "Bow",
-    "slot": "bow",
+    "category": "bow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -9140,8 +9140,8 @@
   },
   {
     "name": "Dualstring Bow",
-    "category": "Bow",
-    "slot": "bow",
+    "category": "bow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -9158,8 +9158,8 @@
   },
   {
     "name": "Cultist Bow",
-    "category": "Bow",
-    "slot": "bow",
+    "category": "bow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -9176,8 +9176,8 @@
   },
   {
     "name": "Zealot Bow",
-    "category": "Bow",
-    "slot": "bow",
+    "category": "bow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -9194,8 +9194,8 @@
   },
   {
     "name": "Artillery Bow",
-    "category": "Bow",
-    "slot": "bow",
+    "category": "bow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -9212,8 +9212,8 @@
   },
   {
     "name": "Tribal Bow",
-    "category": "Bow",
-    "slot": "bow",
+    "category": "bow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -9230,8 +9230,8 @@
   },
   {
     "name": "Greatbow",
-    "category": "Bow",
-    "slot": "bow",
+    "category": "bow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -9249,8 +9249,8 @@
   },
   {
     "name": "Double Limb Bow",
-    "category": "Bow",
-    "slot": "bow",
+    "category": "bow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -9267,8 +9267,8 @@
   },
   {
     "name": "Heavy Bow",
-    "category": "Bow",
-    "slot": "bow",
+    "category": "bow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -9285,8 +9285,8 @@
   },
   {
     "name": "Snakewood Shortbow",
-    "category": "Bow",
-    "slot": "bow",
+    "category": "bow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -9303,8 +9303,8 @@
   },
   {
     "name": "Protector Bow",
-    "category": "Bow",
-    "slot": "bow",
+    "category": "bow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -9321,8 +9321,8 @@
   },
   {
     "name": "Rider Bow",
-    "category": "Bow",
-    "slot": "bow",
+    "category": "bow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -9339,8 +9339,8 @@
   },
   {
     "name": "Twin Bow",
-    "category": "Bow",
-    "slot": "bow",
+    "category": "bow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -9357,8 +9357,8 @@
   },
   {
     "name": "Adherent Bow",
-    "category": "Bow",
-    "slot": "bow",
+    "category": "bow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -9375,8 +9375,8 @@
   },
   {
     "name": "Militant Bow",
-    "category": "Bow",
-    "slot": "bow",
+    "category": "bow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -9393,8 +9393,8 @@
   },
   {
     "name": "Ironwood Shortbow",
-    "category": "Bow",
-    "slot": "bow",
+    "category": "bow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -9411,8 +9411,8 @@
   },
   {
     "name": "Cavalry Bow",
-    "category": "Bow",
-    "slot": "bow",
+    "category": "bow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -9429,8 +9429,8 @@
   },
   {
     "name": "Guardian Bow",
-    "category": "Bow",
-    "slot": "bow",
+    "category": "bow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -9447,8 +9447,8 @@
   },
   {
     "name": "Gemini Bow",
-    "category": "Bow",
-    "slot": "bow",
+    "category": "bow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -9465,8 +9465,8 @@
   },
   {
     "name": "Fanatic Bow",
-    "category": "Bow",
-    "slot": "bow",
+    "category": "bow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -9483,8 +9483,8 @@
   },
   {
     "name": "Warmonger Bow",
-    "category": "Bow",
-    "slot": "bow",
+    "category": "bow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -9501,8 +9501,8 @@
   },
   {
     "name": "Obliterator Bow",
-    "category": "Bow",
-    "slot": "bow",
+    "category": "bow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -9519,8 +9519,8 @@
   },
   {
     "name": "Makeshift Crossbow",
-    "category": "Crossbow",
-    "slot": "crossbow",
+    "category": "crossbow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Crossbow",
@@ -9535,8 +9535,8 @@
   },
   {
     "name": "Tense Crossbow",
-    "category": "Crossbow",
-    "slot": "crossbow",
+    "category": "crossbow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -9554,8 +9554,8 @@
   },
   {
     "name": "Sturdy Crossbow",
-    "category": "Crossbow",
-    "slot": "crossbow",
+    "category": "crossbow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -9573,8 +9573,8 @@
   },
   {
     "name": "Varnished Crossbow",
-    "category": "Crossbow",
-    "slot": "crossbow",
+    "category": "crossbow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -9592,8 +9592,8 @@
   },
   {
     "name": "Dyad Crossbow",
-    "category": "Crossbow",
-    "slot": "crossbow",
+    "category": "crossbow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -9611,8 +9611,8 @@
   },
   {
     "name": "Alloy Crossbow",
-    "category": "Crossbow",
-    "slot": "crossbow",
+    "category": "crossbow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -9630,8 +9630,8 @@
   },
   {
     "name": "Bombard Crossbow",
-    "category": "Crossbow",
-    "slot": "crossbow",
+    "category": "crossbow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -9649,8 +9649,8 @@
   },
   {
     "name": "Construct Crossbow",
-    "category": "Crossbow",
-    "slot": "crossbow",
+    "category": "crossbow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -9668,8 +9668,8 @@
   },
   {
     "name": "Blackfire Crossbow",
-    "category": "Crossbow",
-    "slot": "crossbow",
+    "category": "crossbow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -9687,8 +9687,8 @@
   },
   {
     "name": "Piercing Crossbow",
-    "category": "Crossbow",
-    "slot": "crossbow",
+    "category": "crossbow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -9706,8 +9706,8 @@
   },
   {
     "name": "Cumbrous Crossbow",
-    "category": "Crossbow",
-    "slot": "crossbow",
+    "category": "crossbow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -9725,8 +9725,8 @@
   },
   {
     "name": "Dedalian Crossbow",
-    "category": "Crossbow",
-    "slot": "crossbow",
+    "category": "crossbow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -9744,8 +9744,8 @@
   },
   {
     "name": "Esoteric Crossbow",
-    "category": "Crossbow",
-    "slot": "crossbow",
+    "category": "crossbow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -9763,8 +9763,8 @@
   },
   {
     "name": "Taut Crossbow",
-    "category": "Crossbow",
-    "slot": "crossbow",
+    "category": "crossbow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -9782,8 +9782,8 @@
   },
   {
     "name": "Robust Crossbow",
-    "category": "Crossbow",
-    "slot": "crossbow",
+    "category": "crossbow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -9801,8 +9801,8 @@
   },
   {
     "name": "Painted Crossbow",
-    "category": "Crossbow",
-    "slot": "crossbow",
+    "category": "crossbow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -9820,8 +9820,8 @@
   },
   {
     "name": "Twin Crossbow",
-    "category": "Crossbow",
-    "slot": "crossbow",
+    "category": "crossbow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -9839,8 +9839,8 @@
   },
   {
     "name": "Cannonade Crossbow",
-    "category": "Crossbow",
-    "slot": "crossbow",
+    "category": "crossbow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -9858,8 +9858,8 @@
   },
   {
     "name": "Bleak Crossbow",
-    "category": "Crossbow",
-    "slot": "crossbow",
+    "category": "crossbow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -9877,8 +9877,8 @@
   },
   {
     "name": "Stout Crossbow",
-    "category": "Crossbow",
-    "slot": "crossbow",
+    "category": "crossbow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -9896,8 +9896,8 @@
   },
   {
     "name": "Engraved Crossbow",
-    "category": "Crossbow",
-    "slot": "crossbow",
+    "category": "crossbow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -9915,8 +9915,8 @@
   },
   {
     "name": "Flexed Crossbow",
-    "category": "Crossbow",
-    "slot": "crossbow",
+    "category": "crossbow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -9934,8 +9934,8 @@
   },
   {
     "name": "Gemini Crossbow",
-    "category": "Crossbow",
-    "slot": "crossbow",
+    "category": "crossbow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -9953,8 +9953,8 @@
   },
   {
     "name": "Siege Crossbow",
-    "category": "Crossbow",
-    "slot": "crossbow",
+    "category": "crossbow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -9972,8 +9972,8 @@
   },
   {
     "name": "Desolate Crossbow",
-    "category": "Crossbow",
-    "slot": "crossbow",
+    "category": "crossbow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -9991,8 +9991,8 @@
   },
   {
     "name": "Elegant Crossbow",
-    "category": "Crossbow",
-    "slot": "crossbow",
+    "category": "crossbow",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -10010,8 +10010,8 @@
   },
   {
     "name": "Withered Wand",
-    "category": "Wand",
-    "slot": "wand",
+    "category": "wand",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Wand",
@@ -10020,8 +10020,8 @@
   },
   {
     "name": "Bone Wand",
-    "category": "Wand",
-    "slot": "wand",
+    "category": "wand",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Wand",
@@ -10030,8 +10030,8 @@
   },
   {
     "name": "Attuned Wand",
-    "category": "Wand",
-    "slot": "wand",
+    "category": "wand",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Wand",
@@ -10040,8 +10040,8 @@
   },
   {
     "name": "Siphoning Wand",
-    "category": "Wand",
-    "slot": "wand",
+    "category": "wand",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Wand",
@@ -10050,8 +10050,8 @@
   },
   {
     "name": "Volatile Wand",
-    "category": "Wand",
-    "slot": "wand",
+    "category": "wand",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Wand",
@@ -10060,8 +10060,8 @@
   },
   {
     "name": "Galvanic Wand",
-    "category": "Wand",
-    "slot": "wand",
+    "category": "wand",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Wand",
@@ -10070,8 +10070,8 @@
   },
   {
     "name": "Acrid Wand",
-    "category": "Wand",
-    "slot": "wand",
+    "category": "wand",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Wand",
@@ -10080,8 +10080,8 @@
   },
   {
     "name": "Offering Wand",
-    "category": "Wand",
-    "slot": "wand",
+    "category": "wand",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Wand",
@@ -10090,8 +10090,8 @@
   },
   {
     "name": "Frigid Wand",
-    "category": "Wand",
-    "slot": "wand",
+    "category": "wand",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Wand",
@@ -10100,8 +10100,8 @@
   },
   {
     "name": "Torture Wand",
-    "category": "Wand",
-    "slot": "wand",
+    "category": "wand",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Wand",
@@ -10110,8 +10110,8 @@
   },
   {
     "name": "Critical Wand",
-    "category": "Wand",
-    "slot": "wand",
+    "category": "wand",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Wand",
@@ -10120,8 +10120,8 @@
   },
   {
     "name": "Primordial Wand",
-    "category": "Wand",
-    "slot": "wand",
+    "category": "wand",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Wand",
@@ -10130,8 +10130,8 @@
   },
   {
     "name": "Dueling Wand",
-    "category": "Wand",
-    "slot": "wand",
+    "category": "wand",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Wand",
@@ -10140,8 +10140,8 @@
   },
   {
     "name": "Ashen Staff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Staff",
@@ -10150,8 +10150,8 @@
   },
   {
     "name": "Gelid Staff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Staff",
@@ -10160,8 +10160,8 @@
   },
   {
     "name": "Voltaic Staff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Staff",
@@ -10170,8 +10170,8 @@
   },
   {
     "name": "Spriggan Staff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Staff",
@@ -10180,8 +10180,8 @@
   },
   {
     "name": "Pyrophyte Staff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Staff",
@@ -10190,8 +10190,8 @@
   },
   {
     "name": "Chiming Staff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Staff",
@@ -10200,8 +10200,8 @@
   },
   {
     "name": "Rending Staff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Staff",
@@ -10210,8 +10210,8 @@
   },
   {
     "name": "Reaping Staff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Staff",
@@ -10220,8 +10220,8 @@
   },
   {
     "name": "Icicle Staff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Staff",
@@ -10230,8 +10230,8 @@
   },
   {
     "name": "Roaring Staff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Staff",
@@ -10240,8 +10240,8 @@
   },
   {
     "name": "Paralysing Staff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Staff",
@@ -10250,8 +10250,8 @@
   },
   {
     "name": "Sanctified Staff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Staff",
@@ -10260,8 +10260,8 @@
   },
   {
     "name": "Dark Staff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Staff",
@@ -10270,8 +10270,8 @@
   },
   {
     "name": "Ravenous Staff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Staff",
@@ -10280,8 +10280,8 @@
   },
   {
     "name": "Permafrost Staff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Staff",
@@ -10290,8 +10290,8 @@
   },
   {
     "name": "Wrapped Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Staff",
@@ -10306,8 +10306,8 @@
   },
   {
     "name": "Long Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -10324,8 +10324,8 @@
   },
   {
     "name": "Gothic Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10343,8 +10343,8 @@
   },
   {
     "name": "Crackling Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10362,8 +10362,8 @@
   },
   {
     "name": "Crescent Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10381,8 +10381,8 @@
   },
   {
     "name": "Steelpoint Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10400,8 +10400,8 @@
   },
   {
     "name": "Slicing Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10419,8 +10419,8 @@
   },
   {
     "name": "Barrier Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10438,8 +10438,8 @@
   },
   {
     "name": "Hefty Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10457,8 +10457,8 @@
   },
   {
     "name": "Smooth Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10476,8 +10476,8 @@
   },
   {
     "name": "Anima Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10495,8 +10495,8 @@
   },
   {
     "name": "Graceful Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10514,8 +10514,8 @@
   },
   {
     "name": "Wyrm Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10533,8 +10533,8 @@
   },
   {
     "name": "Reaching Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10552,8 +10552,8 @@
   },
   {
     "name": "Barbarous Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10571,8 +10571,8 @@
   },
   {
     "name": "Arcing Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10590,8 +10590,8 @@
   },
   {
     "name": "Waxing Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10609,8 +10609,8 @@
   },
   {
     "name": "Bladed Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10628,8 +10628,8 @@
   },
   {
     "name": "Guardian Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10647,8 +10647,8 @@
   },
   {
     "name": "Sinister Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10666,8 +10666,8 @@
   },
   {
     "name": "Lunar Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10685,8 +10685,8 @@
   },
   {
     "name": "Striking Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10704,8 +10704,8 @@
   },
   {
     "name": "Bolting Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10723,8 +10723,8 @@
   },
   {
     "name": "Aegis Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10742,8 +10742,8 @@
   },
   {
     "name": "Razor Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10761,8 +10761,8 @@
   },
   {
     "name": "Dreaming Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10780,8 +10780,8 @@
   },
   {
     "name": "Reaching Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10799,8 +10799,8 @@
   },
   {
     "name": "Barbarous Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10818,8 +10818,8 @@
   },
   {
     "name": "Arcing Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10837,8 +10837,8 @@
   },
   {
     "name": "Waxing Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10856,8 +10856,8 @@
   },
   {
     "name": "Bladed Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10875,8 +10875,8 @@
   },
   {
     "name": "Guardian Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10894,8 +10894,8 @@
   },
   {
     "name": "Sinister Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10913,8 +10913,8 @@
   },
   {
     "name": "Lunar Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10932,8 +10932,8 @@
   },
   {
     "name": "Striking Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10951,8 +10951,8 @@
   },
   {
     "name": "Bolting Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10970,8 +10970,8 @@
   },
   {
     "name": "Aegis Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -10989,8 +10989,8 @@
   },
   {
     "name": "Razor Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -11008,8 +11008,8 @@
   },
   {
     "name": "Dreaming Quarterstaff",
-    "category": "Staff",
-    "slot": "staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -11027,8 +11027,8 @@
   },
   {
     "name": "Ethereal Blade",
-    "category": "Dagger",
-    "slot": "dagger",
+    "category": "dagger",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Dagger",
@@ -11043,8 +11043,8 @@
   },
   {
     "name": "Glass Shank",
-    "category": "Dagger",
-    "slot": "dagger",
+    "category": "dagger",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Dagger",
@@ -11059,8 +11059,8 @@
   },
   {
     "name": "Crone Knife",
-    "category": "Dagger",
-    "slot": "dagger",
+    "category": "dagger",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -11078,8 +11078,8 @@
   },
   {
     "name": "Simple Dagger",
-    "category": "Dagger",
-    "slot": "dagger",
+    "category": "dagger",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -11097,8 +11097,8 @@
   },
   {
     "name": "Skinning Knife",
-    "category": "Dagger",
-    "slot": "dagger",
+    "category": "dagger",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -11116,8 +11116,8 @@
   },
   {
     "name": "Moon Dagger",
-    "category": "Dagger",
-    "slot": "dagger",
+    "category": "dagger",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -11133,8 +11133,8 @@
   },
   {
     "name": "Engraved Knife",
-    "category": "Dagger",
-    "slot": "dagger",
+    "category": "dagger",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -11152,8 +11152,8 @@
   },
   {
     "name": "Obsidian Dagger",
-    "category": "Dagger",
-    "slot": "dagger",
+    "category": "dagger",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -11171,8 +11171,8 @@
   },
   {
     "name": "Bloodletting Dagger",
-    "category": "Dagger",
-    "slot": "dagger",
+    "category": "dagger",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -11190,8 +11190,8 @@
   },
   {
     "name": "Mail Breaker",
-    "category": "Dagger",
-    "slot": "dagger",
+    "category": "dagger",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -11209,8 +11209,8 @@
   },
   {
     "name": "Kris Knife",
-    "category": "Dagger",
-    "slot": "dagger",
+    "category": "dagger",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -11228,8 +11228,8 @@
   },
   {
     "name": "Parrying Dagger",
-    "category": "Dagger",
-    "slot": "dagger",
+    "category": "dagger",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -11247,8 +11247,8 @@
   },
   {
     "name": "Arcane Dirk",
-    "category": "Dagger",
-    "slot": "dagger",
+    "category": "dagger",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -11266,8 +11266,8 @@
   },
   {
     "name": "Cinquedea",
-    "category": "Dagger",
-    "slot": "dagger",
+    "category": "dagger",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "dex",
       "int"
@@ -11285,8 +11285,8 @@
   },
   {
     "name": "Crude Claw",
-    "category": "Claw",
-    "slot": "claw",
+    "category": "claw",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Claw",
@@ -11301,8 +11301,8 @@
   },
   {
     "name": "Pict Claw",
-    "category": "Claw",
-    "slot": "claw",
+    "category": "claw",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -11319,8 +11319,8 @@
   },
   {
     "name": "Wolfbone Claw",
-    "category": "Claw",
-    "slot": "claw",
+    "category": "claw",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -11337,8 +11337,8 @@
   },
   {
     "name": "Forked Claw",
-    "category": "Claw",
-    "slot": "claw",
+    "category": "claw",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -11355,8 +11355,8 @@
   },
   {
     "name": "Plated Claw",
-    "category": "Claw",
-    "slot": "claw",
+    "category": "claw",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -11373,8 +11373,8 @@
   },
   {
     "name": "Edged Claw",
-    "category": "Claw",
-    "slot": "claw",
+    "category": "claw",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -11391,8 +11391,8 @@
   },
   {
     "name": "Arced Claw",
-    "category": "Claw",
-    "slot": "claw",
+    "category": "claw",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -11409,8 +11409,8 @@
   },
   {
     "name": "Hooked Claw",
-    "category": "Claw",
-    "slot": "claw",
+    "category": "claw",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -11427,8 +11427,8 @@
   },
   {
     "name": "Razorglass Claw",
-    "category": "Claw",
-    "slot": "claw",
+    "category": "claw",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -11445,8 +11445,8 @@
   },
   {
     "name": "Sharktooth Claw",
-    "category": "Claw",
-    "slot": "claw",
+    "category": "claw",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -11463,8 +11463,8 @@
   },
   {
     "name": "Armoured Claw",
-    "category": "Claw",
-    "slot": "claw",
+    "category": "claw",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -11481,8 +11481,8 @@
   },
   {
     "name": "Piercing Claw",
-    "category": "Claw",
-    "slot": "claw",
+    "category": "claw",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -11499,8 +11499,8 @@
   },
   {
     "name": "Talon Claw",
-    "category": "Claw",
-    "slot": "claw",
+    "category": "claw",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -11517,8 +11517,8 @@
   },
   {
     "name": "Rattling Sceptre",
-    "category": "Sceptre",
-    "slot": "sceptre",
+    "category": "sceptre",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Sceptre",
@@ -11527,8 +11527,8 @@
   },
   {
     "name": "Stoic Sceptre",
-    "category": "Sceptre",
-    "slot": "sceptre",
+    "category": "sceptre",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Sceptre",
@@ -11537,8 +11537,8 @@
   },
   {
     "name": "Lupine Sceptre",
-    "category": "Sceptre",
-    "slot": "sceptre",
+    "category": "sceptre",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Sceptre",
@@ -11547,8 +11547,8 @@
   },
   {
     "name": "Omen Sceptre",
-    "category": "Sceptre",
-    "slot": "sceptre",
+    "category": "sceptre",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Sceptre",
@@ -11557,8 +11557,8 @@
   },
   {
     "name": "Ochre Sceptre",
-    "category": "Sceptre",
-    "slot": "sceptre",
+    "category": "sceptre",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Sceptre",
@@ -11567,8 +11567,8 @@
   },
   {
     "name": "Shrine Sceptre",
-    "category": "Sceptre",
-    "slot": "sceptre",
+    "category": "sceptre",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Sceptre",
@@ -11577,8 +11577,8 @@
   },
   {
     "name": "Shrine Sceptre",
-    "category": "Sceptre",
-    "slot": "sceptre",
+    "category": "sceptre",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Sceptre",
@@ -11587,8 +11587,8 @@
   },
   {
     "name": "Shrine Sceptre",
-    "category": "Sceptre",
-    "slot": "sceptre",
+    "category": "sceptre",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Sceptre",
@@ -11597,8 +11597,8 @@
   },
   {
     "name": "Devouring Sceptre",
-    "category": "Sceptre",
-    "slot": "sceptre",
+    "category": "sceptre",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Sceptre",
@@ -11607,8 +11607,8 @@
   },
   {
     "name": "Clasped Sceptre",
-    "category": "Sceptre",
-    "slot": "sceptre",
+    "category": "sceptre",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Sceptre",
@@ -11617,8 +11617,8 @@
   },
   {
     "name": "Devotional Sceptre",
-    "category": "Sceptre",
-    "slot": "sceptre",
+    "category": "sceptre",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Sceptre",
@@ -11627,8 +11627,8 @@
   },
   {
     "name": "Wrath Sceptre",
-    "category": "Sceptre",
-    "slot": "sceptre",
+    "category": "sceptre",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Sceptre",
@@ -11637,8 +11637,8 @@
   },
   {
     "name": "Aromatic Sceptre",
-    "category": "Sceptre",
-    "slot": "sceptre",
+    "category": "sceptre",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Sceptre",
@@ -11647,8 +11647,8 @@
   },
   {
     "name": "Pious Sceptre",
-    "category": "Sceptre",
-    "slot": "sceptre",
+    "category": "sceptre",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Sceptre",
@@ -11657,8 +11657,8 @@
   },
   {
     "name": "Hallowed Sceptre",
-    "category": "Sceptre",
-    "slot": "sceptre",
+    "category": "sceptre",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Sceptre",
@@ -11667,8 +11667,8 @@
   },
   {
     "name": "Shrine Sceptre",
-    "category": "Sceptre",
-    "slot": "sceptre",
+    "category": "sceptre",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Sceptre",
@@ -11677,8 +11677,8 @@
   },
   {
     "name": "Shrine Sceptre",
-    "category": "Sceptre",
-    "slot": "sceptre",
+    "category": "sceptre",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Sceptre",
@@ -11687,8 +11687,8 @@
   },
   {
     "name": "Shrine Sceptre",
-    "category": "Sceptre",
-    "slot": "sceptre",
+    "category": "sceptre",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Sceptre",
@@ -11697,8 +11697,8 @@
   },
   {
     "name": "Shrine Sceptre (Purity of Fire)",
-    "category": "Sceptre",
-    "slot": "sceptre",
+    "category": "sceptre",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Sceptre",
@@ -11707,8 +11707,8 @@
   },
   {
     "name": "Shrine Sceptre (Purity of Cold)",
-    "category": "Sceptre",
-    "slot": "sceptre",
+    "category": "sceptre",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Sceptre",
@@ -11717,8 +11717,8 @@
   },
   {
     "name": "Shrine Sceptre (Purity of Lighting)",
-    "category": "Sceptre",
-    "slot": "sceptre",
+    "category": "sceptre",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Sceptre",
@@ -11727,8 +11727,8 @@
   },
   {
     "name": "Hardwood Spear",
-    "category": "Spear",
-    "slot": "spear",
+    "category": "spear",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Spear",
@@ -11743,8 +11743,8 @@
   },
   {
     "name": "Ironhead Spear",
-    "category": "Spear",
-    "slot": "spear",
+    "category": "spear",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex"
     ],
@@ -11761,8 +11761,8 @@
   },
   {
     "name": "Hunting Spear",
-    "category": "Spear",
-    "slot": "spear",
+    "category": "spear",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -11780,8 +11780,8 @@
   },
   {
     "name": "Winged Spear",
-    "category": "Spear",
-    "slot": "spear",
+    "category": "spear",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -11799,8 +11799,8 @@
   },
   {
     "name": "War Spear",
-    "category": "Spear",
-    "slot": "spear",
+    "category": "spear",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -11818,8 +11818,8 @@
   },
   {
     "name": "Forked Spear",
-    "category": "Spear",
-    "slot": "spear",
+    "category": "spear",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -11837,8 +11837,8 @@
   },
   {
     "name": "Barbed Spear",
-    "category": "Spear",
-    "slot": "spear",
+    "category": "spear",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -11856,8 +11856,8 @@
   },
   {
     "name": "Broad Spear",
-    "category": "Spear",
-    "slot": "spear",
+    "category": "spear",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -11875,8 +11875,8 @@
   },
   {
     "name": "Crossblade Spear",
-    "category": "Spear",
-    "slot": "spear",
+    "category": "spear",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -11894,8 +11894,8 @@
   },
   {
     "name": "Seaglass Spear",
-    "category": "Spear",
-    "slot": "spear",
+    "category": "spear",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex",
@@ -11914,8 +11914,8 @@
   },
   {
     "name": "Sword Spear",
-    "category": "Spear",
-    "slot": "spear",
+    "category": "spear",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -11933,8 +11933,8 @@
   },
   {
     "name": "Striking Spear",
-    "category": "Spear",
-    "slot": "spear",
+    "category": "spear",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -11952,8 +11952,8 @@
   },
   {
     "name": "Helix Spear",
-    "category": "Spear",
-    "slot": "spear",
+    "category": "spear",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -11971,8 +11971,8 @@
   },
   {
     "name": "Steelhead Spear",
-    "category": "Spear",
-    "slot": "spear",
+    "category": "spear",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -11990,8 +11990,8 @@
   },
   {
     "name": "Coursing Spear",
-    "category": "Spear",
-    "slot": "spear",
+    "category": "spear",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -12009,8 +12009,8 @@
   },
   {
     "name": "Swift Spear",
-    "category": "Spear",
-    "slot": "spear",
+    "category": "spear",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -12028,8 +12028,8 @@
   },
   {
     "name": "Branched Spear",
-    "category": "Spear",
-    "slot": "spear",
+    "category": "spear",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -12047,8 +12047,8 @@
   },
   {
     "name": "Jagged Spear",
-    "category": "Spear",
-    "slot": "spear",
+    "category": "spear",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -12066,8 +12066,8 @@
   },
   {
     "name": "Massive Spear",
-    "category": "Spear",
-    "slot": "spear",
+    "category": "spear",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -12085,8 +12085,8 @@
   },
   {
     "name": "Orichalcum Spear",
-    "category": "Spear",
-    "slot": "spear",
+    "category": "spear",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -12104,8 +12104,8 @@
   },
   {
     "name": "Pronged Spear",
-    "category": "Spear",
-    "slot": "spear",
+    "category": "spear",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -12123,8 +12123,8 @@
   },
   {
     "name": "Stalking Spear",
-    "category": "Spear",
-    "slot": "spear",
+    "category": "spear",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -12142,8 +12142,8 @@
   },
   {
     "name": "Flying Spear",
-    "category": "Spear",
-    "slot": "spear",
+    "category": "spear",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -12161,8 +12161,8 @@
   },
   {
     "name": "Grand Spear",
-    "category": "Spear",
-    "slot": "spear",
+    "category": "spear",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -12180,8 +12180,8 @@
   },
   {
     "name": "Spiked Spear",
-    "category": "Spear",
-    "slot": "spear",
+    "category": "spear",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex"
@@ -12199,8 +12199,8 @@
   },
   {
     "name": "Akoyan Spear",
-    "category": "Spear",
-    "slot": "spear",
+    "category": "spear",
+    "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "str",
       "dex",
@@ -12219,8 +12219,8 @@
   },
   {
     "name": "Splintered Flail",
-    "category": "Flail",
-    "slot": "flail",
+    "category": "flail",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
     "description": "Flail",
@@ -12235,8 +12235,8 @@
   },
   {
     "name": "Chain Flail",
-    "category": "Flail",
-    "slot": "flail",
+    "category": "flail",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str"
     ],
@@ -12253,8 +12253,8 @@
   },
   {
     "name": "Holy Flail",
-    "category": "Flail",
-    "slot": "flail",
+    "category": "flail",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "int"
@@ -12272,8 +12272,8 @@
   },
   {
     "name": "Iron Flail",
-    "category": "Flail",
-    "slot": "flail",
+    "category": "flail",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "int"
@@ -12291,8 +12291,8 @@
   },
   {
     "name": "Twin Flail",
-    "category": "Flail",
-    "slot": "flail",
+    "category": "flail",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "int"
@@ -12310,8 +12310,8 @@
   },
   {
     "name": "Slender Flail",
-    "category": "Flail",
-    "slot": "flail",
+    "category": "flail",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "int"
@@ -12329,8 +12329,8 @@
   },
   {
     "name": "Stone Flail",
-    "category": "Flail",
-    "slot": "flail",
+    "category": "flail",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "int"
@@ -12348,8 +12348,8 @@
   },
   {
     "name": "Ring Flail",
-    "category": "Flail",
-    "slot": "flail",
+    "category": "flail",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "int"
@@ -12367,8 +12367,8 @@
   },
   {
     "name": "Guarded Flail",
-    "category": "Flail",
-    "slot": "flail",
+    "category": "flail",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "int"
@@ -12386,8 +12386,8 @@
   },
   {
     "name": "Icicle Flail",
-    "category": "Flail",
-    "slot": "flail",
+    "category": "flail",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "int"
@@ -12403,8 +12403,8 @@
   },
   {
     "name": "Tearing Flail",
-    "category": "Flail",
-    "slot": "flail",
+    "category": "flail",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "int"
@@ -12422,8 +12422,8 @@
   },
   {
     "name": "Great Flail",
-    "category": "Flail",
-    "slot": "flail",
+    "category": "flail",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "int"
@@ -12441,8 +12441,8 @@
   },
   {
     "name": "Abyssal Flail",
-    "category": "Flail",
-    "slot": "flail",
+    "category": "flail",
+    "slot": "weapons - 1 hand",
     "attribute_requirements": [
       "str",
       "int"
@@ -12455,6 +12455,2352 @@
       "crit_chance": 10.0,
       "attack_rate": 1.45,
       "range": 11
+    },
+    "implicit": null
+  },
+  {
+    "name": "Broadhead Quiver",
+    "category": "quiver",
+    "slot": "offhand",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Quiver",
+    "base_stats": {},
+    "implicit": "Adds 1 to 3 Physical Damage to Attacks"
+  },
+  {
+    "name": "Fire Quiver",
+    "category": "quiver",
+    "slot": "offhand",
+    "attribute_requirements": [],
+    "default_ilvl": 8,
+    "description": "Quiver",
+    "base_stats": {},
+    "implicit": "Adds 3 to 5 Fire damage to Attacks"
+  },
+  {
+    "name": "Sacral Quiver",
+    "category": "quiver",
+    "slot": "offhand",
+    "attribute_requirements": [],
+    "default_ilvl": 16,
+    "description": "Quiver",
+    "base_stats": {},
+    "implicit": "Gain (2-3) Life per Enemy Hit with Attacks"
+  },
+  {
+    "name": "Two-Point Quiver",
+    "category": "quiver",
+    "slot": "offhand",
+    "attribute_requirements": [],
+    "default_ilvl": 24,
+    "description": "Quiver",
+    "base_stats": {},
+    "implicit": "(20-30)% increased Accuracy Rating"
+  },
+  {
+    "name": "Blunt Quiver",
+    "category": "quiver",
+    "slot": "offhand",
+    "attribute_requirements": [],
+    "default_ilvl": 32,
+    "description": "Quiver",
+    "base_stats": {},
+    "implicit": "(25-40)% increased Stun Buildup"
+  },
+  {
+    "name": "Toxic Quiver",
+    "category": "quiver",
+    "slot": "offhand",
+    "attribute_requirements": [],
+    "default_ilvl": 39,
+    "description": "Quiver",
+    "base_stats": {},
+    "implicit": "(20-30)% chance to Poison on Hit with Attacks"
+  },
+  {
+    "name": "Serrated Quiver",
+    "category": "quiver",
+    "slot": "offhand",
+    "attribute_requirements": [],
+    "default_ilvl": 44,
+    "description": "Quiver",
+    "base_stats": {},
+    "implicit": "Attacks have (20-30)% chance to cause Bleeding"
+  },
+  {
+    "name": "Primed Quiver",
+    "category": "quiver",
+    "slot": "offhand",
+    "attribute_requirements": [],
+    "default_ilvl": 51,
+    "description": "Quiver",
+    "base_stats": {},
+    "implicit": "(7-10)% increased Attack Speed"
+  },
+  {
+    "name": "Penetrating Quiver",
+    "category": "quiver",
+    "slot": "offhand",
+    "attribute_requirements": [],
+    "default_ilvl": 55,
+    "description": "Quiver",
+    "base_stats": {},
+    "implicit": "100% chance to Pierce an Enemy"
+  },
+  {
+    "name": "Volant Quiver",
+    "category": "quiver",
+    "slot": "offhand",
+    "attribute_requirements": [],
+    "default_ilvl": 60,
+    "description": "Quiver",
+    "base_stats": {},
+    "implicit": "(20-30)% increased Arrow Speed"
+  },
+  {
+    "name": "Visceral Quiver",
+    "category": "quiver",
+    "slot": "offhand",
+    "attribute_requirements": [],
+    "default_ilvl": 64,
+    "description": "Quiver",
+    "base_stats": {},
+    "implicit": "(20-30)% increased Critical Hit Chance for Attacks"
+  },
+  {
+    "name": "Splintered Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 18
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Painted Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 6,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 29
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Braced Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 12,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 41
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Barricade Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 16,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 50
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Effigial Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 21,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 60
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Rampart Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 28,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 75
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Heraldric Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 33,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 85
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Stone Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 36,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 91
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Crucible Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 45,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 110
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Ancestor Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 50,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 121
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Phalanx Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 52,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 125
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Defiant Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 58,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 137
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Blacksteel Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 65,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 152
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Aged Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 45,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 110
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Metalworked Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 48,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 116
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Cultist Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 51,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 123
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Bulwark Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 54,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 129
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Noble Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 59,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 139
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Goldworked Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 61,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 144
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Royal Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 65,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 152
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Fortress Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 70,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 167
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Vaal Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 75,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 182
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Tawhoan Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 80,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 197
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Aged Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 45,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 110
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Metalworked Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 48,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 116
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Cultist Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 51,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 123
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Bulwark Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 54,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 129
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Noble Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 59,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 139
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Goldworked Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 61,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 144
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Royal Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 65,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 152
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Fortress Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 70,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 167
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Vaal Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 75,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 182
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Tawhoan Tower Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str"
+    ],
+    "default_ilvl": 80,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 197
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Leather Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 10
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Wooden Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 5,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 16
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Plated Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 11,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 26
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Iron Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 16,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 33
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Ridged Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 22,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 43
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Spiked Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 26,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 49
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Ringed Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 33,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 60
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Edged Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 39,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 70
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Laminate Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 45,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 79
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Pearl Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 50,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 87
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Ornate Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 52,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 90
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Array Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 55,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 95
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Aegis Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 65,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 111
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Oak Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 45,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 79
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Painted Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 48,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 84
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Coiled Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 51,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 89
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Spikeward Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 54,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 93
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Jingling Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 59,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 101
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Bladeguard Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 61,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 105
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Ornate Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 65,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 111
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Gutspike Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 70,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 122
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Ancient Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 75,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 133
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Desert Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 80,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 144
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Oak Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 45,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 79
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Painted Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 48,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 84
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Coiled Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 51,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 89
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Spikeward Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 54,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 93
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Jingling Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 59,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 101
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Bladeguard Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 61,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 105
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Ornate Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 65,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 111
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Gutspike Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 70,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 122
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Ancient Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 75,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 133
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Desert Buckler",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "dex"
+    ],
+    "default_ilvl": 80,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 144
+    },
+    "implicit": "Grants Skill: Level (1-20) Parry"
+  },
+  {
+    "name": "Hardwood Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 7,
+      "armour": 10
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Pelage Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 8,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 14,
+      "armour": 18
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Studded Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 16,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 23,
+      "armour": 27
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Crescent Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 26,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 34,
+      "armour": 39
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Chiseled Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 33,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 41,
+      "armour": 47
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Feathered Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 37,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 46,
+      "armour": 51
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Stratified Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 46,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 56,
+      "armour": 62
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Carved Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 51,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 61,
+      "armour": 67
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Mosaic Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 52,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 62,
+      "armour": 69
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Aureate Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 57,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 68,
+      "armour": 74
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Grand Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 65,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 76,
+      "armour": 84
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Ironwood Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 45,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 54,
+      "armour": 61
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Fur-lined Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 48,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 58,
+      "armour": 64
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Mercenary Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 51,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 61,
+      "armour": 67
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Polished Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 54,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 64,
+      "armour": 71
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Stone Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 59,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 70,
+      "armour": 77
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Avian Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 62,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 73,
+      "armour": 80
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Mammoth Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 65,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 76,
+      "armour": 84
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Baroque Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 70,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 84,
+      "armour": 92
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Soaring Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 75,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 91,
+      "armour": 100
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Golden Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 80,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 99,
+      "armour": 109
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Ironwood Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 45,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 54,
+      "armour": 61
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Fur-lined Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 48,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 58,
+      "armour": 64
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Mercenary Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 51,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 61,
+      "armour": 67
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Polished Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 54,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 64,
+      "armour": 71
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Stone Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 59,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 70,
+      "armour": 77
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Avian Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 62,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 73,
+      "armour": 80
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Mammoth Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 65,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 76,
+      "armour": 84
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Baroque Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 70,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 84,
+      "armour": 92
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Soaring Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 75,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 91,
+      "armour": 100
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Golden Targe",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 80,
+    "description": "Shield",
+    "base_stats": {
+      "evasion": 99,
+      "armour": 109
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Blazon Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 10,
+      "energy_shield": 6
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Sigil Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 7,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 17,
+      "energy_shield": 8
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Emblem Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 16,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 27,
+      "energy_shield": 12
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Jingling Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 28,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 41,
+      "energy_shield": 16
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Sectarian Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 33,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 47,
+      "energy_shield": 18
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Omen Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 36,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 50,
+      "energy_shield": 19
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Wayward Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 45,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 61,
+      "energy_shield": 22
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Seer Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 50,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 66,
+      "energy_shield": 24
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Stoic Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 52,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 69,
+      "energy_shield": 24
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Empyreal Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 57,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 74,
+      "energy_shield": 26
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Deified Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 65,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 84,
+      "energy_shield": 29
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Painted Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 45,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 61,
+      "energy_shield": 22
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Engraved Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 48,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 64,
+      "energy_shield": 23
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Descry Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 51,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 67,
+      "energy_shield": 24
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Dekharan Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 54,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 71,
+      "energy_shield": 25
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Quartered Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 59,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 77,
+      "energy_shield": 27
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Glowering Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 62,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 80,
+      "energy_shield": 28
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Intricate Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 65,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 84,
+      "energy_shield": 29
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Sekheman Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 70,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 92,
+      "energy_shield": 32
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Vaal Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 75,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 100,
+      "energy_shield": 35
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Blacksteel Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 80,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 109,
+      "energy_shield": 37
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Painted Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 45,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 61,
+      "energy_shield": 22
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Engraved Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 48,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 64,
+      "energy_shield": 23
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Descry Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 51,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 67,
+      "energy_shield": 24
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Dekharan Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 54,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 71,
+      "energy_shield": 25
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Quartered Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 59,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 77,
+      "energy_shield": 27
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Glowering Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 62,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 80,
+      "energy_shield": 28
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Intricate Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 65,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 84,
+      "energy_shield": 29
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Sekheman Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 70,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 92,
+      "energy_shield": 32
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Vaal Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 75,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 100,
+      "energy_shield": 35
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Blacksteel Crest Shield",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 80,
+    "description": "Shield",
+    "base_stats": {
+      "armour": 109,
+      "energy_shield": 37
+    },
+    "implicit": "Grants Skill: Level (1-20) Raise Shield"
+  },
+  {
+    "name": "Golden Flame",
+    "category": "shield",
+    "slot": "offhand",
+    "attribute_requirements": [],
+    "default_ilvl": 15,
+    "description": "Shield",
+    "base_stats": {},
+    "implicit": "+(11-19)% to Chaos Resistance"
+  },
+  {
+    "name": "Twig Focus",
+    "category": "focus",
+    "slot": "offhand",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Focus",
+    "base_stats": {
+      "energy_shield": 12
+    },
+    "implicit": null
+  },
+  {
+    "name": "Woven Focus",
+    "category": "focus",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "int"
+    ],
+    "default_ilvl": 6,
+    "description": "Focus",
+    "base_stats": {
+      "energy_shield": 15
+    },
+    "implicit": null
+  },
+  {
+    "name": "Antler Focus",
+    "category": "focus",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "int"
+    ],
+    "default_ilvl": 10,
+    "description": "Focus",
+    "base_stats": {
+      "energy_shield": 17
+    },
+    "implicit": null
+  },
+  {
+    "name": "Engraved Focus",
+    "category": "focus",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "int"
+    ],
+    "default_ilvl": 16,
+    "description": "Focus",
+    "base_stats": {
+      "energy_shield": 21
+    },
+    "implicit": null
+  },
+  {
+    "name": "Tonal Focus",
+    "category": "focus",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "int"
+    ],
+    "default_ilvl": 22,
+    "description": "Focus",
+    "base_stats": {
+      "energy_shield": 25
+    },
+    "implicit": null
+  },
+  {
+    "name": "Crystal Focus",
+    "category": "focus",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "int"
+    ],
+    "default_ilvl": 26,
+    "description": "Focus",
+    "base_stats": {
+      "energy_shield": 28
+    },
+    "implicit": null
+  },
+  {
+    "name": "Voodoo Focus",
+    "category": "focus",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "int"
+    ],
+    "default_ilvl": 33,
+    "description": "Focus",
+    "base_stats": {
+      "energy_shield": 32
+    },
+    "implicit": null
+  },
+  {
+    "name": "Plumed Focus",
+    "category": "focus",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "int"
+    ],
+    "default_ilvl": 36,
+    "description": "Focus",
+    "base_stats": {
+      "energy_shield": 34
+    },
+    "implicit": null
+  },
+  {
+    "name": "Runed Focus",
+    "category": "focus",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "int"
+    ],
+    "default_ilvl": 45,
+    "description": "Focus",
+    "base_stats": {
+      "energy_shield": 40
+    },
+    "implicit": null
+  },
+  {
+    "name": "Whorl Focus",
+    "category": "focus",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "int"
+    ],
+    "default_ilvl": 51,
+    "description": "Focus",
+    "base_stats": {
+      "energy_shield": 43
+    },
+    "implicit": null
+  },
+  {
+    "name": "Elegant Focus",
+    "category": "focus",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "int"
+    ],
+    "default_ilvl": 52,
+    "description": "Focus",
+    "base_stats": {
+      "energy_shield": 44
+    },
+    "implicit": null
+  },
+  {
+    "name": "Attuned Focus",
+    "category": "focus",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "int"
+    ],
+    "default_ilvl": 57,
+    "description": "Focus",
+    "base_stats": {
+      "energy_shield": 47
+    },
+    "implicit": null
+  },
+  {
+    "name": "Magus Focus",
+    "category": "focus",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "int"
+    ],
+    "default_ilvl": 65,
+    "description": "Focus",
+    "base_stats": {
+      "energy_shield": 52
+    },
+    "implicit": null
+  },
+  {
+    "name": "Wreath Focus",
+    "category": "focus",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "int"
+    ],
+    "default_ilvl": 45,
+    "description": "Focus",
+    "base_stats": {
+      "energy_shield": 40
+    },
+    "implicit": null
+  },
+  {
+    "name": "Staghorn Focus",
+    "category": "focus",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "int"
+    ],
+    "default_ilvl": 48,
+    "description": "Focus",
+    "base_stats": {
+      "energy_shield": 42
+    },
+    "implicit": null
+  },
+  {
+    "name": "Jingling Focus",
+    "category": "focus",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "int"
+    ],
+    "default_ilvl": 51,
+    "description": "Focus",
+    "base_stats": {
+      "energy_shield": 43
+    },
+    "implicit": null
+  },
+  {
+    "name": "Arrayed Focus",
+    "category": "focus",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "int"
+    ],
+    "default_ilvl": 54,
+    "description": "Focus",
+    "base_stats": {
+      "energy_shield": 45
+    },
+    "implicit": null
+  },
+  {
+    "name": "Cultist Focus",
+    "category": "focus",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "int"
+    ],
+    "default_ilvl": 59,
+    "description": "Focus",
+    "base_stats": {
+      "energy_shield": 49
+    },
+    "implicit": null
+  },
+  {
+    "name": "Hallowed Focus",
+    "category": "focus",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "int"
+    ],
+    "default_ilvl": 61,
+    "description": "Focus",
+    "base_stats": {
+      "energy_shield": 50
+    },
+    "implicit": null
+  },
+  {
+    "name": "Druidic Focus",
+    "category": "focus",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "int"
+    ],
+    "default_ilvl": 65,
+    "description": "Focus",
+    "base_stats": {
+      "energy_shield": 52
+    },
+    "implicit": null
+  },
+  {
+    "name": "Leyline Focus",
+    "category": "focus",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "int"
+    ],
+    "default_ilvl": 70,
+    "description": "Focus",
+    "base_stats": {
+      "energy_shield": 58
+    },
+    "implicit": null
+  },
+  {
+    "name": "Sacred Focus",
+    "category": "focus",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "int"
+    ],
+    "default_ilvl": 75,
+    "description": "Focus",
+    "base_stats": {
+      "energy_shield": 63
+    },
+    "implicit": null
+  },
+  {
+    "name": "Tasalian Focus",
+    "category": "focus",
+    "slot": "offhand",
+    "attribute_requirements": [
+      "int"
+    ],
+    "default_ilvl": 80,
+    "description": "Focus",
+    "base_stats": {
+      "energy_shield": 68
     },
     "implicit": null
   }

@@ -98,7 +98,7 @@ export function ItemCreationPanel({ item, onItemChange, onMessage, onHistoryRese
       setAvailableSlots(data)
 
       // Set default to body armour (prefer body slot first)
-      const preferredOrder = ['body', 'helmet', 'gloves', 'boots', 'weapon', 'jewellery']
+      const preferredOrder = ['body', 'helmet', 'gloves', 'boots', 'weapon - 1 hand', 'weapon - 2 hand', 'offhand', 'jewellery']
       let defaultSlot = ''
       let defaultCategory = ''
 
@@ -152,6 +152,7 @@ export function ItemCreationPanel({ item, onItemChange, onMessage, onHistoryRese
           implicit_mods: [],
           prefix_mods: [],
           suffix_mods: [],
+          unrevealed_mods: [],
           corrupted: false,
           base_stats: baseStats,
           calculated_stats: calculateItemStats(baseStats, 20),
@@ -222,6 +223,7 @@ export function ItemCreationPanel({ item, onItemChange, onMessage, onHistoryRese
                 implicit_mods: [],
                 prefix_mods: [],
                 suffix_mods: [],
+                unrevealed_mods: [],
                 corrupted: false,
                 base_stats: baseStats,
                 calculated_stats: calculateItemStats(baseStats, 20),
