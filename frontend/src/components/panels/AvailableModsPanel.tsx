@@ -63,9 +63,24 @@ export function AvailableModsPanel({ item, collapsed = false }: AvailableModsPan
       }
 
       // Search filter
-      if (searchFilter && !mod.stat_text.toLowerCase().includes(searchFilter.toLowerCase()) &&
-          !mod.name.toLowerCase().includes(searchFilter.toLowerCase())) {
-        return false
+      if (searchFilter) {
+        const search = searchFilter.toLowerCase()
+        const formattedText = formatModText(mod).toLowerCase()
+        const modName = mod.name.toLowerCase()
+        const tags = (mod.tags || []).join(' ').toLowerCase()
+        const tier = `t${mod.tier}`.toLowerCase()
+        const ilvl = mod.required_ilvl ? `i${mod.required_ilvl}`.toLowerCase() : ''
+        const modGroup = (mod.mod_group || '').toLowerCase()
+
+        // Search across all fields
+        if (!formattedText.includes(search) &&
+            !modName.includes(search) &&
+            !tags.includes(search) &&
+            !tier.includes(search) &&
+            !ilvl.includes(search) &&
+            !modGroup.includes(search)) {
+          return false
+        }
       }
 
       return true

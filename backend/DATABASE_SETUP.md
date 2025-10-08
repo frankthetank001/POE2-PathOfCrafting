@@ -34,8 +34,8 @@ The system uses SQLite with SQLAlchemy ORM. All crafting data is stored in `back
 
 All data is loaded from JSON files in `backend/source_data/`:
 
-- `item_bases.json` - 434 unique base items
-- `modifiers.json` - 1,119 base modifiers
+- `generated_item_bases.json` - 434 unique base items (auto-generated from PathOfBuilding data)
+- `generated_modifiers.json` - 1,119 base modifiers (auto-generated from PathOfBuilding data)
 - `desecrated_modifiers.json` - 19 desecrated-only modifiers
 - `currency_configs.json` - 115 currency configurations
 - `essences.json` - 81 essences

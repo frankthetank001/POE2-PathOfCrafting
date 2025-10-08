@@ -161,7 +161,15 @@ When adding new currencies, essences, or mechanics:
 
 ## Adding New Modifiers
 
-Modifiers are in `backend/source_data/modifiers.json`:
+⚠️ **IMPORTANT**: `generated_modifiers.json` and `generated_item_bases.json` are AUTO-GENERATED from PathOfBuilding data.
+**DO NOT manually edit these files** - your changes will be overwritten when the scraper runs.
+
+For manual modifications:
+- Use `essence_modifiers.json` for essence-specific mods
+- Use `desecrated_modifiers.json` for desecrated-only mods
+- Other manual files: `modifier_exclusions.json`, `exclusion_groups.json`, etc.
+
+Auto-generated modifiers are in `backend/source_data/generated_modifiers.json` (from PathOfBuilding data):
 
 ```json
 {

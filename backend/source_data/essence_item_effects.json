@@ -1818,7 +1818,7 @@
   {
     "essence_name": "Essence of Insanity",
     "item_type": "Belt",
-    "modifier_type": "prefix",
+    "modifier_type": "suffix",
     "effect_text": "On Corruption, Item gains two Enchantments",
     "value_min": 1.0,
     "value_max": 1.0

@@ -60,7 +60,7 @@ def clear_existing_data(db: Session):
 
 def load_base_items(db: Session):
     """Load base items from JSON file."""
-    json_path = get_json_path("item_bases.json")
+    json_path = get_json_path("generated_item_bases.json")
 
     if not os.path.exists(json_path):
         print(f"Warning: {json_path} not found - skipping base items")
@@ -111,7 +111,7 @@ def load_base_items(db: Session):
 
 def load_modifiers(db: Session):
     """Load base modifiers from JSON file."""
-    json_path = get_json_path("modifiers.json")
+    json_path = get_json_path("generated_modifiers.json")
 
     if not os.path.exists(json_path):
         print(f"Warning: {json_path} not found - skipping base modifiers")
@@ -178,7 +178,7 @@ def load_modifiers(db: Session):
 def load_essence_modifiers(db: Session):
     """Load essence-specific modifiers from JSON file.
 
-    Updates existing modifiers if they already exist (from modifiers.json),
+    Updates existing modifiers if they already exist (from generated_modifiers.json),
     ensuring essence_modifiers.json takes precedence.
     """
     json_path = get_json_path("essence_modifiers.json")

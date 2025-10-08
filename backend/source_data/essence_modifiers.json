@@ -2103,7 +2103,9 @@
     "required_ilvl": 72,
     "weight": 1000,
     "mod_group": "maximumlifeincreasepercent",
-    "applicable_items": [],
+    "applicable_items": [
+      "body_armour"
+    ],
     "tags": [
       "resource",
       "life",
@@ -2112,6 +2114,34 @@
     "is_exclusive": true,
     "stat_order": [
       867
+    ]
+  },
+  {
+    "name": "Essences",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased effect of socketed items",
+    "stat_ranges": [
+      {
+        "min": 100.0,
+        "max": 100.0
+      }
+    ],
+    "stat_min": 100.0,
+    "stat_max": 100.0,
+    "required_ilvl": 1,
+    "weight": 1000,
+    "mod_group": "localsocketitemseffect",
+    "applicable_items": [
+      "boots",
+      "gloves"
+    ],
+    "tags": [
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      7245
     ]
   },
   {
@@ -2424,6 +2454,244 @@
     "is_exclusive": true,
     "stat_order": [
       2120
+    ]
+  },
+  {
+    "name": "Abyssal",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Bears the Mark of the Abyssal Lord",
+    "stat_ranges": [],
+    "stat_min": null,
+    "stat_max": null,
+    "required_ilvl": 1,
+    "weight": 1000,
+    "mod_group": "abyssal_mark",
+    "applicable_items": [
+      "amulet",
+      "ring",
+      "belt",
+      "body_armour",
+      "helmet",
+      "gloves",
+      "boots",
+      "weapon",
+      "shield"
+    ],
+    "tags": [
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      5974
+    ]
+  },
+  {
+    "name": "of the Abyss",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Bears the Mark of the Abyssal Lord",
+    "stat_ranges": [],
+    "stat_min": null,
+    "stat_max": null,
+    "required_ilvl": 1,
+    "weight": 1000,
+    "mod_group": "abyssal_mark",
+    "applicable_items": [
+      "amulet",
+      "ring",
+      "belt",
+      "body_armour",
+      "helmet",
+      "gloves",
+      "boots",
+      "weapon",
+      "shield"
+    ],
+    "tags": [
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      5974
+    ]
+  },
+  {
+    "name": "of the Essence",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% of Cold Damage taken Recouped as Life",
+    "stat_ranges": [
+      {
+        "min": 26.0,
+        "max": 30.0
+      }
+    ],
+    "stat_min": 26.0,
+    "stat_max": 30.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "essencecoldrecouplife",
+    "applicable_items": [
+      "helmet"
+    ],
+    "tags": [
+      "resource",
+      "life",
+      "elemental",
+      "cold",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      6075
+    ]
+  },
+  {
+    "name": "of the Essence",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Quantity of Gold Dropped by Slain Enemies",
+    "stat_ranges": [
+      {
+        "min": 10.0,
+        "max": 15.0
+      }
+    ],
+    "stat_min": 10.0,
+    "stat_max": 15.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "essencegolddropped",
+    "applicable_items": [
+      "gloves"
+    ],
+    "tags": [
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      6384
+    ]
+  },
+  {
+    "name": "of the Essence",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% of Lightning Damage taken Recouped as Life",
+    "stat_ranges": [
+      {
+        "min": 26.0,
+        "max": 30.0
+      }
+    ],
+    "stat_min": 26.0,
+    "stat_max": 30.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "essencelightningrecouplife",
+    "applicable_items": [
+      "gloves"
+    ],
+    "tags": [
+      "resource",
+      "life",
+      "elemental",
+      "lightning",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      6976
+    ]
+  },
+  {
+    "name": "of the Essence",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Hits against you have {}% reduced Critical Damage Bonus",
+    "stat_ranges": [
+      {
+        "min": 40.0,
+        "max": 50.0
+      }
+    ],
+    "stat_min": 40.0,
+    "stat_max": 50.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "essencereducedcriticaldamageagainstyou",
+    "applicable_items": [
+      "body_armour"
+    ],
+    "tags": [
+      "damage",
+      "critical",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      946
+    ]
+  },
+  {
+    "name": "of the Essence",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% of Fire Damage taken Recouped as Life",
+    "stat_ranges": [
+      {
+        "min": 26.0,
+        "max": 30.0
+      }
+    ],
+    "stat_min": 26.0,
+    "stat_max": 30.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "essencefirerecouplife",
+    "applicable_items": [
+      "belt"
+    ],
+    "tags": [
+      "resource",
+      "life",
+      "elemental",
+      "fire",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      6075
+    ]
+  },
+  {
+    "name": "of the Essence",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased maximum Mana",
+    "stat_ranges": [
+      {
+        "min": 4.0,
+        "max": 6.0
+      }
+    ],
+    "stat_min": 4.0,
+    "stat_max": 6.0,
+    "required_ilvl": 72,
+    "weight": 1000,
+    "mod_group": "essencemaximummana",
+    "applicable_items": [
+      "ring"
+    ],
+    "tags": [
+      "resource",
+      "mana",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      869
     ]
   }
 ]

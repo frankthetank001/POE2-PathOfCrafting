@@ -10,10 +10,13 @@
     "weight": 1,
     "mod_group": "dual_attributes",
     "applicable_items": [
-      "body_armour",
+      "amulet",
+      "ring",
+      "belt",
+      "gloves",
       "boots",
-      "charm",
-      "jewellery"
+      "body_armour",
+      "helmet"
     ],
     "tags": [
       "desecrated_only",
@@ -33,10 +36,13 @@
     "weight": 1,
     "mod_group": "dual_attributes",
     "applicable_items": [
-      "body_armour",
+      "amulet",
+      "ring",
+      "belt",
+      "gloves",
       "boots",
-      "charm",
-      "jewellery"
+      "body_armour",
+      "helmet"
     ],
     "tags": [
       "desecrated_only",
@@ -56,10 +62,13 @@
     "weight": 1,
     "mod_group": "dual_attributes",
     "applicable_items": [
-      "body_armour",
+      "amulet",
+      "ring",
+      "belt",
+      "gloves",
       "boots",
-      "charm",
-      "jewellery"
+      "body_armour",
+      "helmet"
     ],
     "tags": [
       "desecrated_only",
@@ -79,10 +88,13 @@
     "weight": 1,
     "mod_group": "dual_resistances",
     "applicable_items": [
-      "body_armour",
+      "amulet",
+      "ring",
+      "belt",
+      "gloves",
       "boots",
-      "charm",
-      "jewellery"
+      "body_armour",
+      "helmet"
     ],
     "tags": [
       "desecrated_only",
@@ -105,10 +117,13 @@
     "weight": 1,
     "mod_group": "dual_resistances",
     "applicable_items": [
-      "body_armour",
+      "amulet",
+      "ring",
+      "belt",
+      "gloves",
       "boots",
-      "charm",
-      "jewellery"
+      "body_armour",
+      "helmet"
     ],
     "tags": [
       "desecrated_only",
@@ -131,10 +146,13 @@
     "weight": 1,
     "mod_group": "dual_resistances",
     "applicable_items": [
-      "body_armour",
+      "amulet",
+      "ring",
+      "belt",
+      "gloves",
       "boots",
-      "charm",
-      "jewellery"
+      "body_armour",
+      "helmet"
     ],
     "tags": [
       "desecrated_only",
@@ -157,7 +175,8 @@
     "weight": 1,
     "mod_group": "spirit",
     "applicable_items": [
-      "body_armour"
+      "body_armour",
+      "helmet"
     ],
     "tags": [
       "desecrated_only",
@@ -176,8 +195,7 @@
     "weight": 1,
     "mod_group": "recoup",
     "applicable_items": [
-      "body_armour",
-      "boots"
+      "body_armour"
     ],
     "tags": [
       "desecrated_only",
@@ -198,8 +216,7 @@
     "weight": 1,
     "mod_group": "curse_protection",
     "applicable_items": [
-      "body_armour",
-      "boots"
+      "body_armour"
     ],
     "tags": [
       "desecrated_only",
@@ -220,8 +237,7 @@
     "weight": 1,
     "mod_group": "critical_protection",
     "applicable_items": [
-      "body_armour",
-      "boots"
+      "body_armour"
     ],
     "tags": [
       "desecrated_only",
@@ -281,7 +297,6 @@
     "weight": 1,
     "mod_group": "ailment_duration",
     "applicable_items": [
-      "charm",
       "belt"
     ],
     "tags": [
@@ -304,7 +319,6 @@
     "weight": 1,
     "mod_group": "ailment_duration",
     "applicable_items": [
-      "charm",
       "belt"
     ],
     "tags": [
@@ -346,7 +360,6 @@
     "weight": 1,
     "mod_group": "ailment_duration",
     "applicable_items": [
-      "charm",
       "belt"
     ],
     "tags": [
@@ -450,7 +463,8 @@
     "weight": 1,
     "mod_group": "attack_damage_low_life",
     "applicable_items": [
-      "jewellery"
+      "amulet",
+      "ring"
     ],
     "tags": [
       "desecrated_only",
@@ -553,7 +567,8 @@
     "weight": 1,
     "mod_group": "spell_damage_full_es",
     "applicable_items": [
-      "jewellery"
+      "amulet",
+      "ring"
     ],
     "tags": [
       "desecrated_only",
@@ -595,7 +610,8 @@
     "weight": 1,
     "mod_group": "minion_damage",
     "applicable_items": [
-      "jewellery"
+      "amulet",
+      "ring"
     ],
     "tags": [
       "desecrated_only",
@@ -616,7 +632,8 @@
     "weight": 1,
     "mod_group": "remnant_effect",
     "applicable_items": [
-      "jewellery"
+      "amulet",
+      "ring"
     ],
     "tags": [
       "desecrated_only",
@@ -654,7 +671,8 @@
     "weight": 1,
     "mod_group": "cooldown_recovery",
     "applicable_items": [
-      "jewellery"
+      "amulet",
+      "ring"
     ],
     "tags": [
       "desecrated_only",
@@ -673,7 +691,8 @@
     "weight": 1,
     "mod_group": "exposure_effect",
     "applicable_items": [
-      "jewellery"
+      "amulet",
+      "ring"
     ],
     "tags": [
       "desecrated_only",
@@ -712,7 +731,8 @@
     "weight": 1,
     "mod_group": "skill_duration",
     "applicable_items": [
-      "jewellery"
+      "amulet",
+      "ring"
     ],
     "tags": [
       "desecrated_only",
@@ -731,7 +751,8 @@
     "weight": 1,
     "mod_group": "skill_speed",
     "applicable_items": [
-      "jewellery"
+      "amulet",
+      "ring"
     ],
     "tags": [
       "desecrated_only",
@@ -751,7 +772,8 @@
     "weight": 1,
     "mod_group": "mom",
     "applicable_items": [
-      "amulet"
+      "amulet",
+      "body_armour"
     ],
     "tags": [
       "desecrated_only",
@@ -872,7 +894,8 @@
     "weight": 1,
     "mod_group": "life_on_kill",
     "applicable_items": [
-      "jewellery"
+      "amulet",
+      "ring"
     ],
     "tags": [
       "desecrated_only",
@@ -892,7 +915,8 @@
     "weight": 1,
     "mod_group": "mana_on_kill",
     "applicable_items": [
-      "jewellery"
+      "amulet",
+      "ring"
     ],
     "tags": [
       "desecrated_only",
@@ -912,7 +936,8 @@
     "weight": 1,
     "mod_group": "remnant_radius",
     "applicable_items": [
-      "jewellery"
+      "amulet",
+      "ring"
     ],
     "tags": [
       "desecrated_only",
@@ -1230,6 +1255,261 @@
     "tags": [
       "desecrated_only",
       "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% chance for Attack Hits to apply Incision",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% chance for Attack Hits to apply Incision",
+    "stat_min": 15,
+    "stat_max": 25,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "incision",
+    "applicable_items": [
+      "gloves",
+      "boots"
+    ],
+    "tags": [
+      "desecrated_only",
+      "fire",
+      "physical",
+      "ailment",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% chance to Daze on Hit",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% chance to Daze on Hit",
+    "stat_min": 10,
+    "stat_max": 20,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "daze",
+    "applicable_items": [
+      "gloves",
+      "boots"
+    ],
+    "tags": [
+      "desecrated_only",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% chance to Gain Arcane Surge when you deal a Critical Hit",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% chance to Gain Arcane Surge when you deal a Critical Hit",
+    "stat_min": 10,
+    "stat_max": 15,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "arcane_surge",
+    "applicable_items": [
+      "gloves",
+      "boots"
+    ],
+    "tags": [
+      "desecrated_only",
+      "caster",
+      "critical",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Cast Speed when on Full Life",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Cast Speed when on Full Life",
+    "stat_min": 8,
+    "stat_max": 15,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "cast_speed_conditional",
+    "applicable_items": [
+      "gloves",
+      "boots"
+    ],
+    "tags": [
+      "desecrated_only",
+      "speed",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased chance to inflict Bleeding",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased chance to inflict Bleeding",
+    "stat_min": 20,
+    "stat_max": 30,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "bleed_chance",
+    "applicable_items": [
+      "gloves",
+      "boots"
+    ],
+    "tags": [
+      "desecrated_only",
+      "bleed",
+      "physical",
+      "ailment",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased chance to Poison",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased chance to Poison",
+    "stat_min": 20,
+    "stat_max": 30,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "poison_chance",
+    "applicable_items": [
+      "gloves",
+      "boots"
+    ],
+    "tags": [
+      "desecrated_only",
+      "poison",
+      "chaos",
+      "ailment",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Magnitude of Ailments you inflict",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Magnitude of Ailments you inflict",
+    "stat_min": 10,
+    "stat_max": 20,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "ailment_magnitude",
+    "applicable_items": [
+      "gloves",
+      "boots"
+    ],
+    "tags": [
+      "desecrated_only",
+      "ailment",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Mana Cost Efficiency",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Mana Cost Efficiency",
+    "stat_min": 6,
+    "stat_max": 10,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "mana_efficiency_gloves",
+    "applicable_items": [
+      "gloves",
+      "boots",
+      "helmet"
+    ],
+    "tags": [
+      "desecrated_only",
+      "mana",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Skill Speed if you've consumed a Frenzy Charge Recently",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Skill Speed if you've consumed a Frenzy Charge Recently",
+    "stat_min": 8,
+    "stat_max": 12,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "skill_speed_frenzy",
+    "applicable_items": [
+      "gloves",
+      "boots"
+    ],
+    "tags": [
+      "desecrated_only",
+      "speed",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Life Cost Efficiency",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Life Cost Efficiency",
+    "stat_min": 8,
+    "stat_max": 12,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "life_efficiency",
+    "applicable_items": [
+      "helmet"
+    ],
+    "tags": [
+      "desecrated_only",
+      "life",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Presence Area of Effect",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Presence Area of Effect",
+    "stat_min": 25,
+    "stat_max": 35,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "presence_aoe",
+    "applicable_items": [
+      "helmet"
+    ],
+    "tags": [
+      "desecrated_only",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% of Elemental Damage taken Recouped as Energy Shield",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% of Elemental Damage taken Recouped as Energy Shield",
+    "stat_min": 10,
+    "stat_max": 20,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "elemental_recoup_es",
+    "applicable_items": [
+      "helmet"
+    ],
+    "tags": [
+      "desecrated_only",
+      "elemental",
+      "kurgal"
     ],
     "is_exclusive": true
   }
