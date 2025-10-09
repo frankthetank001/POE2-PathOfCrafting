@@ -461,7 +461,41 @@ class ModifierPool:
                 session.close()
 
         # Apply exclusions based on slot
-        return self._apply_exclusions(eligible, item_slot)
+        eligible = self._apply_exclusions(eligible, item_slot)
+
+        # Deduplicate mods based on (stat_text, tier, mod_type) to avoid duplicate entries
+        # This handles cases where the same mod exists with different names or applicable_items lists
+        # Prefer mods with specific weapon types over generic 'weapon' tag
+        seen_mods = {}
+        for mod in eligible:
+            # Use stat_text instead of name to catch mods with same effect but different names
+            # (e.g., "of the Abyss" vs "Abyssal" both giving "Bears the Mark of the Abyssal Lord")
+            key = (mod.stat_text, mod.tier, mod.mod_type)
+
+            # If we haven't seen this mod yet, add it
+            if key not in seen_mods:
+                seen_mods[key] = mod
+            else:
+                # If we have seen it, prefer the more specific one (not using generic 'weapon' tag)
+                existing_mod = seen_mods[key]
+                has_generic_weapon = "weapon" in mod.applicable_items and not any(
+                    w in mod.applicable_items for w in ["bow", "sword", "axe", "mace", "dagger", "claw", "wand",
+                    "sceptre", "flail", "spear", "crossbow", "staff", "warstaff"]
+                )
+                existing_has_generic = "weapon" in existing_mod.applicable_items and not any(
+                    w in existing_mod.applicable_items for w in ["bow", "sword", "axe", "mace", "dagger", "claw", "wand",
+                    "sceptre", "flail", "spear", "crossbow", "staff", "warstaff"]
+                )
+
+                # Keep the more specific one (the one NOT using generic weapon tag)
+                if has_generic_weapon and not existing_has_generic:
+                    # Keep existing (it's more specific)
+                    pass
+                elif not has_generic_weapon and existing_has_generic:
+                    # Replace with current (it's more specific)
+                    seen_mods[key] = mod
+
+        return list(seen_mods.values())
 
     def _is_mod_applicable_to_category(self, mod: ItemModifier, item_category: str, item=None) -> bool:
         """Check if a mod is applicable to an item category"""

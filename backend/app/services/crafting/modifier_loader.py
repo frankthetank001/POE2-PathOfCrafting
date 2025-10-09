@@ -217,7 +217,7 @@ class ModifierLoader:
             "One Handed Melee Weapon or Bow": ["weapon"],
             "Focus or Wand": ["focus"],
             "Martial Weapon": ["weapon"],
-            "Sceptre": ["weapon"],
+            "Sceptre": ["sceptre"],
             "Quiver": ["quiver"]
         }
         return type_mapping.get(item_type, [item_type.lower()])

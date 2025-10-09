@@ -2,7 +2,7 @@ name: CI
 
 on:
   push:
-    branches: [ main, develop ]
+    branches: [ develop ]  # Only auto-run on develop; main triggers via docker-build.yml
   pull_request:
     branches: [ main, develop ]
   workflow_call:  # Allow this workflow to be called by other workflows
