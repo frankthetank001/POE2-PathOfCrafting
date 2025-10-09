@@ -497,39 +497,125 @@ class ModifierPool:
 
         return list(seen_mods.values())
 
-    def _item_matches_weight_key(self, weight_key: str, item_category: str, item_slot: str) -> bool:
+    def _get_item_elemental_exclusions(self, item) -> list:
+        """
+        Determine which elemental damage types should be excluded for this item.
+        Based on the item's implicit skill (for staffs/wands/focuses).
+
+        Returns list of exclusion tags like ["no_cold_spell_mods", "no_lightning_spell_mods"]
+        """
+        if not item:
+            return []
+
+        # Read implicit from JSON file (not in database model yet)
+        import json
+        import os
+
+        # Get path to item bases JSON
+        json_path = os.path.join(
+            os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))),
+            "source_data",
+            "generated_item_bases.json"
+        )
+
+        if not os.path.exists(json_path):
+            return []
+
+        try:
+            with open(json_path, 'r') as f:
+                bases = json.load(f)
+
+            # Find base item
+            base_item = next((b for b in bases if b.get('name') == item.base_name), None)
+            if not base_item or not base_item.get('implicit'):
+                return []
+
+            implicit = base_item['implicit'].lower()
+        except Exception:
+            return []
+
+        # Map implicit skills to their primary element
+        fire_skills = ["firebolt", "solar orb", "flame wall", "magma barrier"]
+        cold_skills = ["freezing shards", "heart of ice", "frost wall", "ice nova"]
+        lightning_skills = ["lightning bolt", "spark", "storm wave", "enervating nova", "galvanic field"]
+        chaos_skills = ["soulrend", "reap", "dark pact", "feast of flesh", "profane ritual",
+                       "chaos bolt", "decompose", "wither", "exsanguinate", "bone blast"]
+        physical_skills = ["bone storm", "boneshatter", "volatile dead"]
+
+        # Determine item's element
+        item_element = None
+        if any(skill in implicit for skill in fire_skills):
+            item_element = "fire"
+        elif any(skill in implicit for skill in cold_skills):
+            item_element = "cold"
+        elif any(skill in implicit for skill in lightning_skills):
+            item_element = "lightning"
+        elif any(skill in implicit for skill in chaos_skills):
+            item_element = "chaos"
+        elif any(skill in implicit for skill in physical_skills):
+            item_element = "physical"
+
+        # Return exclusions for OTHER elements (not the item's own element)
+        all_exclusions = {
+            "fire": "no_fire_spell_mods",
+            "cold": "no_cold_spell_mods",
+            "lightning": "no_lightning_spell_mods",
+            "chaos": "no_chaos_spell_mods",
+            "physical": "no_physical_spell_mods"
+        }
+
+        if item_element:
+            # Exclude all elements EXCEPT the item's own element
+            return [tag for elem, tag in all_exclusions.items() if elem != item_element]
+
+        return []
+
+    def _item_matches_weight_key(self, weight_key: str, item_category: str, item_slot: str, item=None) -> bool:
         """
         Check if an item matches a specific weightKey string from PoB2.
-        
+
         Args:
             weight_key: The weightKey string to check (e.g., "ranged", "two_hand_weapon", "bow")
             item_category: The item's category (e.g., "bow", "sword", "str_armour")
             item_slot: The item's slot (e.g., "weapons - 2 hand", "body_armour")
-            
+            item: Optional item instance for elemental exclusion checks
+
         Returns:
             True if the item matches this weightKey
         """
+        # === Elemental Exclusion Tags ===
+        # Check if weight_key is an elemental exclusion tag (no_fire_spell_mods, etc.)
+        if weight_key.startswith("no_") and weight_key.endswith("_spell_mods"):
+            exclusions = self._get_item_elemental_exclusions(item)
+            return weight_key in exclusions
+
         # Direct category match (bow, sword, str_armour, etc.)
         if weight_key == item_category:
             return True
-        
+
         # === Generic Tags ===
         
-        # Ranged weapons (bow, crossbow, wand)
-        if weight_key == "ranged" and item_category in ["bow", "crossbow", "wand"]:
+        # Ranged weapons (bow, crossbow only - excludes wand which is a caster weapon)
+        if weight_key == "ranged" and item_category in ["bow", "crossbow"]:
             return True
         
-        # One-hand weapons
+        # One-hand weapons (attack weapons only, excludes caster weapons)
         if weight_key == "one_hand_weapon" and item_slot == "weapons - 1 hand":
-            return True
-        
-        # Two-hand weapons
+            caster_weapons = ["wand", "sceptre", "focus"]
+            if item_category not in caster_weapons:
+                return True
+
+        # Two-hand weapons (attack weapons only, excludes staff)
         if weight_key == "two_hand_weapon" and item_slot == "weapons - 2 hand":
-            return True
+            if item_category != "staff":
+                return True
         
-        # Generic weapon
+        # Generic weapon (attack weapons only, excludes caster weapons)
         if weight_key == "weapon" and "weapon" in item_slot:
-            return True
+            # Exclude caster weapons (staff, wand, sceptre, focus)
+            caster_weapons = ["staff", "wand", "sceptre", "focus"]
+            if item_category not in caster_weapons:
+                return True
         
         # Generic armour
         if weight_key == "armour" and "armour" in item_category:
@@ -556,37 +642,38 @@ class ModifierPool:
         
         return False
 
-    def _check_weight_condition(self, weight_conditions: dict, item_category: str, item_slot: str) -> bool:
+    def _check_weight_condition(self, weight_conditions: dict, item_category: str, item_slot: str, item=None) -> bool:
         """
         Evaluate if a mod can spawn on an item using PoB2's weight system.
-        
+
         Algorithm (FIRST MATCH WINS):
         1. Iterate through weightKey array in order
         2. Check if item matches each weight key
         3. On FIRST match, use corresponding weightVal
         4. Return True if weight > 0, False if weight = 0
-        
+
         Args:
             weight_conditions: Dict with "weightKey" and "weightVal" arrays
             item_category: The item's category
             item_slot: The item's slot
-            
+            item: Optional item instance for elemental exclusion checks
+
         Returns:
             True if mod can spawn (weight > 0), False otherwise
         """
         weight_keys = weight_conditions.get("weightKey", [])
         weight_vals = weight_conditions.get("weightVal", [])
-        
+
         if not weight_keys or not weight_vals:
             return False
-        
+
         # Iterate in order - FIRST MATCH WINS
         for i, weight_key in enumerate(weight_keys):
-            if self._item_matches_weight_key(weight_key, item_category, item_slot):
+            if self._item_matches_weight_key(weight_key, item_category, item_slot, item):
                 # First match found - use this weight
                 weight = weight_vals[i] if i < len(weight_vals) else 0
                 return weight > 0
-        
+
         # No match (shouldn't happen if "default" is always in weightKey)
         return False
 
@@ -610,7 +697,7 @@ class ModifierPool:
         # === Use weight system if available ===
         # If mod has weight_conditions, use PoB2's exact weight evaluation
         if mod.weight_conditions and item_slot:
-            return self._check_weight_condition(mod.weight_conditions, item_category, item_slot)
+            return self._check_weight_condition(mod.weight_conditions, item_category, item_slot, item)
         
         # === Fallback to old system for mods without weight_conditions ===
         # (essence-only, desecrated, or old data without weight info)

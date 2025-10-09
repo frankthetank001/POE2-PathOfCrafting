@@ -207,19 +207,42 @@ class ModifierLoader:
     def _map_essence_item_type_to_categories(cls, item_type: str) -> List[str]:
         """Map essence effect item types to our item categories."""
         type_mapping = {
+            # Armor pieces
             "Body Armour": ["body_armour"],
-            "Ring": ["ring"],
-            "Amulet": ["amulet"],
-            "Belt": ["belt"],
             "Helmet": ["helmet"],
             "Gloves": ["gloves"],
             "Boots": ["boots"],
             "Shield": ["shield"],
-            "One Handed Melee Weapon or Bow": ["weapon"],
-            "Focus or Wand": ["focus"],
-            "Martial Weapon": ["weapon"],
+            "Armour": ["str_armour", "dex_armour", "int_armour", "str_dex_armour", "str_int_armour", "dex_int_armour", "str_dex_int_armour"],
+
+            # Jewellery
+            "Ring": ["ring"],
+            "Amulet": ["amulet"],
+            "Belt": ["belt"],
+            "Jewellery": ["ring", "amulet", "belt"],
+
+            # Weapons - Melee One-Handed
+            "One Handed Melee Weapon": ["one_hand_sword", "one_hand_axe", "one_hand_mace", "flail", "dagger", "claw", "spear"],
+
+            # Weapons - Melee Two-Handed
+            "Two Handed Melee Weapon": ["two_hand_sword", "two_hand_axe", "two_hand_mace"],
+
+            # Weapons - Martial (all melee weapons)
+            "Martial Weapon": ["spear", "one_hand_sword", "one_hand_axe", "one_hand_mace", "flail", "dagger", "claw", "two_hand_axe", "two_hand_sword", "two_hand_mace"],
+
+            # Weapons - Ranged
+            "Bow": ["bow"],
+            "Crossbow": ["crossbow"],
+
+            # Weapons - Caster
+            "Wand": ["wand"],
+            "Focus": ["focus"],
+            "Staff": ["staff"],
             "Sceptre": ["sceptre"],
-            "Quiver": ["quiver"]
+
+            # Other
+            "Quiver": ["quiver"],
+            "Equipment": ["weapon", "armour", "ring", "amulet", "belt"],  # All equipment
         }
         return type_mapping.get(item_type, [item_type.lower()])
 
