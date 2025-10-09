@@ -46,6 +46,7 @@ class Modifier(Base):
     applicable_items = Column(JSON, default=[])  # ["ring", "amulet", "str_armour"]
     tags = Column(JSON, default=[])  # ["attribute", "defense"]
     is_exclusive = Column(Boolean, default=False)  # Cannot appear with other mods in same group
+    weight_conditions = Column(JSON, default=None, nullable=True)  # {"weightKey": ["ranged", "two_hand_weapon"], "weightVal": [0, 1]}
 
     # Composite indexes for efficient crafting queries
     __table_args__ = (

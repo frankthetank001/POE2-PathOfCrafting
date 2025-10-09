@@ -376,6 +376,11 @@
   position: relative;
 }
 
+.pool-mod-group.tag-filtered {
+  opacity: 0.3;
+  pointer-events: none;
+}
+
 .pool-mod-group.essence-only {
   border-left: 3px solid #9c4dd4;
   background: rgba(156, 77, 212, 0.1);
@@ -544,6 +549,68 @@
 .mod-tag-text:hover {
   /* Hover effect handled via inline styles to preserve tag-specific colors */
   transform: translateY(-1px);
+}
+
+/* Tier Details - Expandable Mod Tiers */
+.mod-tier-details {
+  margin-top: 0.5rem;
+  margin-left: 1rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.3rem;
+  padding: 0.5rem 0;
+  border-left: 2px solid #333;
+  padding-left: 0.75rem;
+}
+
+.tier-detail {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.3rem 0.5rem;
+  background: rgba(15, 15, 15, 0.8);
+  border: 1px solid #2a2a2a;
+  border-left: 3px solid #444;
+  border-radius: 4px;
+  transition: all 0.2s;
+  font-size: 0.8rem;
+}
+
+.tier-detail:hover {
+  border-left-color: #d4af37;
+  background: rgba(25, 25, 25, 0.9);
+}
+
+.tier-detail.unavailable {
+  opacity: 0.4;
+  background: rgba(10, 10, 10, 0.5);
+}
+
+.tier-label {
+  background: #444;
+  color: #fff;
+  padding: 0.15rem 0.4rem;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-weight: bold;
+  flex-shrink: 0;
+}
+
+.tier-stat {
+  color: #d4af37;
+  font-size: 0.8rem;
+  font-weight: 500;
+  flex: 1;
+}
+
+.tier-ilvl {
+  background: #555;
+  color: #ddd;
+  padding: 0.1rem 0.35rem;
+  border-radius: 2px;
+  font-size: 0.65rem;
+  margin-left: auto;
+  flex-shrink: 0;
 }
 
 /* Center Panel - Flexible with Tabs */

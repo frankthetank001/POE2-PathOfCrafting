@@ -46,6 +46,7 @@ class ItemModifier(BaseModel):
     mod_group: Optional[str] = None
     applicable_items: List[str] = Field(default_factory=list)
     tags: List[str] = Field(default_factory=list)
+    weight_conditions: Optional[Dict[str, List]] = None  # PoB2 weightKey/weightVal: {"weightKey": ["ranged", "two_hand_weapon"], "weightVal": [0, 1]}
     is_exclusive: bool = False  # True if mod is only available on unique/special items
     is_essence_only: bool = False  # True if mod is only available from essences
     is_unrevealed: bool = False  # True if this is an unrevealed desecrated modifier

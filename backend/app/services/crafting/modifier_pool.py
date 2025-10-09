@@ -497,6 +497,99 @@ class ModifierPool:
 
         return list(seen_mods.values())
 
+    def _item_matches_weight_key(self, weight_key: str, item_category: str, item_slot: str) -> bool:
+        """
+        Check if an item matches a specific weightKey string from PoB2.
+        
+        Args:
+            weight_key: The weightKey string to check (e.g., "ranged", "two_hand_weapon", "bow")
+            item_category: The item's category (e.g., "bow", "sword", "str_armour")
+            item_slot: The item's slot (e.g., "weapons - 2 hand", "body_armour")
+            
+        Returns:
+            True if the item matches this weightKey
+        """
+        # Direct category match (bow, sword, str_armour, etc.)
+        if weight_key == item_category:
+            return True
+        
+        # === Generic Tags ===
+        
+        # Ranged weapons (bow, crossbow, wand)
+        if weight_key == "ranged" and item_category in ["bow", "crossbow", "wand"]:
+            return True
+        
+        # One-hand weapons
+        if weight_key == "one_hand_weapon" and item_slot == "weapons - 1 hand":
+            return True
+        
+        # Two-hand weapons
+        if weight_key == "two_hand_weapon" and item_slot == "weapons - 2 hand":
+            return True
+        
+        # Generic weapon
+        if weight_key == "weapon" and "weapon" in item_slot:
+            return True
+        
+        # Generic armour
+        if weight_key == "armour" and "armour" in item_category:
+            return True
+        
+        # === Slots ===
+        # For things like body_armour, helmet, gloves, boots, amulet, ring, belt, etc.
+        if weight_key == item_slot:
+            return True
+        
+        # === Shield sub-types ===
+        if "shield" in weight_key and item_slot == "shield":
+            # Check if shield defense type matches
+            # e.g., "str_shield" matches if item_category is "str_shield"
+            if weight_key == item_category:
+                return True
+            # "shield" matches any shield
+            if weight_key == "shield":
+                return True
+        
+        # === Default always matches ===
+        if weight_key == "default":
+            return True
+        
+        return False
+
+    def _check_weight_condition(self, weight_conditions: dict, item_category: str, item_slot: str) -> bool:
+        """
+        Evaluate if a mod can spawn on an item using PoB2's weight system.
+        
+        Algorithm (FIRST MATCH WINS):
+        1. Iterate through weightKey array in order
+        2. Check if item matches each weight key
+        3. On FIRST match, use corresponding weightVal
+        4. Return True if weight > 0, False if weight = 0
+        
+        Args:
+            weight_conditions: Dict with "weightKey" and "weightVal" arrays
+            item_category: The item's category
+            item_slot: The item's slot
+            
+        Returns:
+            True if mod can spawn (weight > 0), False otherwise
+        """
+        weight_keys = weight_conditions.get("weightKey", [])
+        weight_vals = weight_conditions.get("weightVal", [])
+        
+        if not weight_keys or not weight_vals:
+            return False
+        
+        # Iterate in order - FIRST MATCH WINS
+        for i, weight_key in enumerate(weight_keys):
+            if self._item_matches_weight_key(weight_key, item_category, item_slot):
+                # First match found - use this weight
+                weight = weight_vals[i] if i < len(weight_vals) else 0
+                return weight > 0
+        
+        # No match (shouldn't happen if "default" is always in weightKey)
+        return False
+
     def _is_mod_applicable_to_category(self, mod: ItemModifier, item_category: str, item=None) -> bool:
         """Check if a mod is applicable to an item category"""
 
@@ -514,6 +607,14 @@ class ModifierPool:
             finally:
                 session.close()
 
+        # === Use weight system if available ===
+        # If mod has weight_conditions, use PoB2's exact weight evaluation
+        if mod.weight_conditions and item_slot:
+            return self._check_weight_condition(mod.weight_conditions, item_category, item_slot)
+        
+        # === Fallback to old system for mods without weight_conditions ===
+        # (essence-only, desecrated, or old data without weight info)
+        
         # Check if category matches directly
         if item_category in mod.applicable_items:
             return True

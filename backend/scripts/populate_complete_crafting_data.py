@@ -126,14 +126,16 @@ def load_modifiers(db: Session):
     seen_keys = set()
 
     for mod_data in modifiers_data:
-        # Create unique key from name, mod_type, tier, mod_group, and stat_text
-        # (since same name can have different effects for different mod groups)
+        # Create unique key from name, mod_type, tier, mod_group, stat_text, AND weightKey
+        # (since same name/tier can have different weight conditions for different item types)
+        weight_key_tuple = tuple(mod_data.get("weight_conditions", {}).get("weightKey", [])) if mod_data.get("weight_conditions") else ()
         mod_key = (
             mod_data["name"],
             mod_data["mod_type"],
             mod_data["tier"],
             mod_data.get("mod_group"),
-            mod_data["stat_text"]
+            mod_data["stat_text"],
+            weight_key_tuple  # Include weightKey to distinguish variants
         )
 
         # Skip if we've already seen this combination in this batch
@@ -143,13 +145,27 @@ def load_modifiers(db: Session):
         seen_keys.add(mod_key)
 
         # Check if modifier already exists in database
+        # Compare weight_conditions as JSON string for database lookup
         existing = db.query(Modifier).filter(
             Modifier.name == mod_data["name"],
             Modifier.mod_type == mod_data["mod_type"],
             Modifier.tier == mod_data["tier"],
             Modifier.mod_group == mod_data.get("mod_group"),
             Modifier.stat_text == mod_data["stat_text"]
-        ).first()
+        ).all()
+
+        # Further filter by weight_conditions since SQLAlchemy can't easily compare JSON
+        if existing:
+            for exist_mod in existing:
+                exist_weight_key = tuple(exist_mod.weight_conditions.get("weightKey", [])) if exist_mod.weight_conditions else ()
+                if exist_weight_key == weight_key_tuple:
+                    existing = exist_mod
+                    break
+            else:
+                existing = None
+        else:
+            existing = None
+
         if existing:
             continue
 
@@ -166,6 +182,7 @@ def load_modifiers(db: Session):
             mod_group=mod_data.get("mod_group"),
             applicable_items=mod_data.get("applicable_items", []),
             tags=mod_data.get("tags", []),
+            weight_conditions=mod_data.get("weight_conditions"),
             is_exclusive=mod_data.get("is_exclusive", False)
         )
         db.add(modifier)
@@ -197,13 +214,15 @@ def load_essence_modifiers(db: Session):
     seen_keys = set()
 
     for mod_data in essence_modifiers:
-        # Create unique key from name, mod_type, tier, mod_group, and stat_text
+        # Create unique key from name, mod_type, tier, mod_group, stat_text, AND weightKey
+        weight_key_tuple = tuple(mod_data.get("weight_conditions", {}).get("weightKey", [])) if mod_data.get("weight_conditions") else ()
         mod_key = (
             mod_data["name"],
             mod_data["mod_type"],
             mod_data["tier"],
             mod_data.get("mod_group"),
-            mod_data["stat_text"]
+            mod_data["stat_text"],
+            weight_key_tuple  # Include weightKey to distinguish variants
         )
 
         # Skip if we've already seen this combination in this batch
@@ -219,7 +238,19 @@ def load_essence_modifiers(db: Session):
             Modifier.tier == mod_data["tier"],
             Modifier.mod_group == mod_data.get("mod_group"),
             Modifier.stat_text == mod_data["stat_text"]
-        ).first()
+        ).all()
+
+        # Further filter by weight_conditions
+        if existing:
+            for exist_mod in existing:
+                exist_weight_key = tuple(exist_mod.weight_conditions.get("weightKey", [])) if exist_mod.weight_conditions else ()
+                if exist_weight_key == weight_key_tuple:
+                    existing = exist_mod
+                    break
+            else:
+                existing = None
+        else:
+            existing = None
 
         if existing:
             # Update existing modifier with essence data
@@ -230,6 +261,7 @@ def load_essence_modifiers(db: Session):
             existing.weight = mod_data.get("weight", 1000)
             existing.applicable_items = mod_data.get("applicable_items", [])
             existing.tags = mod_data.get("tags", [])
+            existing.weight_conditions = mod_data.get("weight_conditions")
             existing.is_exclusive = mod_data.get("is_exclusive", True)
             updated_count += 1
         else:
@@ -247,6 +279,7 @@ def load_essence_modifiers(db: Session):
                 mod_group=mod_data.get("mod_group"),
                 applicable_items=mod_data.get("applicable_items", []),
                 tags=mod_data.get("tags", []),
+                weight_conditions=mod_data.get("weight_conditions"),
                 is_exclusive=mod_data.get("is_exclusive", True)  # Default to True for essence mods
             )
             db.add(modifier)
@@ -283,6 +316,7 @@ def load_desecrated_modifiers(db: Session):
             mod_group=mod_data["mod_group"],
             applicable_items=mod_data["applicable_items"],
             tags=mod_data["tags"],
+            weight_conditions=mod_data.get("weight_conditions"),
             is_exclusive=mod_data["is_exclusive"]
         )
         db.add(modifier)

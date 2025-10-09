@@ -31,6 +31,7 @@ export interface ItemModifier {
   required_ilvl?: number
   mod_group?: string
   tags?: string[]
+  weight_conditions?: { weightKey: string[], weightVal: number[] }  // PoB2 weight system
   is_desecrated?: boolean  // Flag for desecrated mods (set by filter_mod_tags)
   is_unrevealed?: boolean  // True if this is an unrevealed desecrated modifier
   unrevealed_id?: string  // ID linking to UnrevealedModifier metadata

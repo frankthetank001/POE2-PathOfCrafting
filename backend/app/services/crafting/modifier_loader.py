@@ -60,6 +60,7 @@ class ModifierLoader:
                         mod_group=db_mod.mod_group,
                         applicable_items=db_mod.applicable_items,
                         tags=db_mod.tags,
+                        weight_conditions=db_mod.weight_conditions,
                         is_exclusive=db_mod.is_exclusive,
                     )
                 )

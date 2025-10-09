@@ -2008,20 +2008,14 @@ function GridCraftingSimulator() {
   const getGroupedMods = (modType: 'prefix' | 'suffix') => {
     let mods = modType === 'prefix' ? availableMods.prefixes : availableMods.suffixes
 
-    if (modPoolFilter.search) {
-      const search = modPoolFilter.search.toLowerCase()
-      mods = mods.filter(
-        mod =>
-          mod.name.toLowerCase().includes(search) ||
-          mod.stat_text.toLowerCase().includes(search) ||
-          mod.mod_group?.toLowerCase().includes(search)
-      )
+    // Apply search filter
+    if (searchQuery.trim()) {
+      mods = mods.filter(mod => isModMatchingSearch(mod))
     }
 
-    if (modPoolFilter.tags.length > 0) {
-      mods = mods.filter(mod =>
-        modPoolFilter.tags.some(tag => mod.tags?.includes(tag))
-      )
+    // Apply tag filters
+    if (activeTagFilters.size > 0) {
+      mods = mods.filter(mod => isModMatchingTagFilters(mod))
     }
 
     // Group by mod_group and sort by tier (tier 1 is highest)
@@ -2532,25 +2526,23 @@ function GridCraftingSimulator() {
                         {isExpanded && (
                           <div className="mod-tier-details">
                             {groupMods.map(mod => {
-                              // Format the value range for this tier - support hybrid mods
-                              let valueText = ''
+                              // Format the mod text with embedded value ranges
+                              let formattedText = mod.stat_text
+
                               if (mod.stat_ranges && mod.stat_ranges.length > 0) {
-                                // Hybrid mods: show all ranges
-                                if (mod.stat_ranges.length > 1) {
-                                  valueText = mod.stat_ranges.map(r =>
-                                    r.min === r.max ? `${r.min}` : `${r.min}-${r.max}`
-                                  ).join(', ')
-                                } else {
-                                  const r = mod.stat_ranges[0]
-                                  valueText = r.min === r.max ? `${r.min}` : `${r.min}-${r.max}`
-                                }
+                                // Replace each {} with the corresponding range in curly braces
+                                mod.stat_ranges.forEach(range => {
+                                  const rangeText = range.min === range.max
+                                    ? `${range.min}`
+                                    : `{${range.min}-${range.max}}`
+                                  formattedText = formattedText.replace('{}', rangeText)
+                                })
                               } else if (mod.stat_min !== undefined && mod.stat_max !== undefined) {
                                 // Legacy single range
-                                if (mod.stat_min === mod.stat_max) {
-                                  valueText = `${mod.stat_min}`
-                                } else {
-                                  valueText = `${mod.stat_min}-${mod.stat_max}`
-                                }
+                                const rangeText = mod.stat_min === mod.stat_max
+                                  ? `${mod.stat_min}`
+                                  : `{${mod.stat_min}-${mod.stat_max}}`
+                                formattedText = formattedText.replace('{}', rangeText)
                               }
 
                               return (
@@ -2559,8 +2551,7 @@ function GridCraftingSimulator() {
                                   className={`tier-detail ${mod.required_ilvl && mod.required_ilvl > item.item_level ? 'unavailable' : ''}`}
                                 >
                                   <span className="tier-label">T{mod.tier}</span>
-                                  <span className="tier-stat">{mod.stat_text}</span>
-                                  {valueText && <span className="tier-values">({valueText})</span>}
+                                  <span className="tier-stat">{formattedText}</span>
                                   <span className="tier-ilvl">ilvl {mod.required_ilvl || 1}</span>
                                 </div>
                               )
@@ -2852,25 +2843,23 @@ function GridCraftingSimulator() {
                         {isExpanded && (
                           <div className="mod-tier-details">
                             {groupMods.map(mod => {
-                              // Format the value range for this tier - support hybrid mods
-                              let valueText = ''
+                              // Format the mod text with embedded value ranges
+                              let formattedText = mod.stat_text
+
                               if (mod.stat_ranges && mod.stat_ranges.length > 0) {
-                                // Hybrid mods: show all ranges
-                                if (mod.stat_ranges.length > 1) {
-                                  valueText = mod.stat_ranges.map(r =>
-                                    r.min === r.max ? `${r.min}` : `${r.min}-${r.max}`
-                                  ).join(', ')
-                                } else {
-                                  const r = mod.stat_ranges[0]
-                                  valueText = r.min === r.max ? `${r.min}` : `${r.min}-${r.max}`
-                                }
+                                // Replace each {} with the corresponding range in curly braces
+                                mod.stat_ranges.forEach(range => {
+                                  const rangeText = range.min === range.max
+                                    ? `${range.min}`
+                                    : `{${range.min}-${range.max}}`
+                                  formattedText = formattedText.replace('{}', rangeText)
+                                })
                               } else if (mod.stat_min !== undefined && mod.stat_max !== undefined) {
                                 // Legacy single range
-                                if (mod.stat_min === mod.stat_max) {
-                                  valueText = `${mod.stat_min}`
-                                } else {
-                                  valueText = `${mod.stat_min}-${mod.stat_max}`
-                                }
+                                const rangeText = mod.stat_min === mod.stat_max
+                                  ? `${mod.stat_min}`
+                                  : `{${mod.stat_min}-${mod.stat_max}}`
+                                formattedText = formattedText.replace('{}', rangeText)
                               }
 
                               return (
@@ -2879,8 +2868,7 @@ function GridCraftingSimulator() {
                                   className={`tier-detail ${mod.required_ilvl && mod.required_ilvl > item.item_level ? 'unavailable' : ''}`}
                                 >
                                   <span className="tier-label">T{mod.tier}</span>
-                                  <span className="tier-stat">{mod.stat_text}</span>
-                                  {valueText && <span className="tier-values">({valueText})</span>}
+                                  <span className="tier-stat">{formattedText}</span>
                                   <span className="tier-ilvl">ilvl {mod.required_ilvl || 1}</span>
                                 </div>
                               )
