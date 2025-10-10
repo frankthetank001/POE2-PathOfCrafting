@@ -463,14 +463,21 @@ class ModifierPool:
         # Apply exclusions based on slot
         eligible = self._apply_exclusions(eligible, item_slot)
 
-        # Deduplicate mods based on (stat_text, tier, mod_type) to avoid duplicate entries
+        # Deduplicate mods based on (stat_text, tier, mod_type, special_tag) to avoid duplicate entries
         # This handles cases where the same mod exists with different names or applicable_items lists
         # Prefer mods with specific weapon types over generic 'weapon' tag
+        # Keep essence_only and desecrated_only mods separate even if they have the same stat_text
         seen_mods = {}
         for mod in eligible:
             # Use stat_text instead of name to catch mods with same effect but different names
             # (e.g., "of the Abyss" vs "Abyssal" both giving "Bears the Mark of the Abyssal Lord")
-            key = (mod.stat_text, mod.tier, mod.mod_type)
+            # Include essence_only/desecrated_only in key to prevent deduplication between them
+            special_tag = None
+            if "essence_only" in mod.tags:
+                special_tag = "essence_only"
+            elif "desecrated_only" in mod.tags:
+                special_tag = "desecrated_only"
+            key = (mod.stat_text, mod.tier, mod.mod_type, special_tag)
 
             # If we haven't seen this mod yet, add it
             if key not in seen_mods:

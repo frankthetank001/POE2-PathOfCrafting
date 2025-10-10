@@ -3295,12 +3295,12 @@
     "stat_text": "{}% increased Mana Cost Efficiency",
     "stat_ranges": [
       {
-        "min": 41.0,
-        "max": 50.0
+        "min": 28.0,
+        "max": 32.0
       }
     ],
-    "stat_min": 41.0,
-    "stat_max": 50.0,
+    "stat_min": 28.0,
+    "stat_max": 32.0,
     "required_ilvl": 72,
     "weight": 1000,
     "mod_group": "essencemanacoststaff",

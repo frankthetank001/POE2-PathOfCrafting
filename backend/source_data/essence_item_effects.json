@@ -946,7 +946,7 @@
   {
     "essence_name": "Perfect Essence of Battle",
     "item_type": "One Handed Melee Weapon",
-    "modifier_type": "prefix",
+    "modifier_type": "suffix",
     "effect_text": "+4 to Level of all Attack Skills",
     "value_min": 4.0,
     "value_max": 4.0
@@ -954,7 +954,7 @@
   {
     "essence_name": "Perfect Essence of Battle",
     "item_type": "Bow",
-    "modifier_type": "prefix",
+    "modifier_type": "suffix",
     "effect_text": "+4 to Level of all Attack Skills",
     "value_min": 4.0,
     "value_max": 4.0
@@ -962,7 +962,7 @@
   {
     "essence_name": "Perfect Essence of Battle",
     "item_type": "Two Handed Melee Weapon",
-    "modifier_type": "prefix",
+    "modifier_type": "suffix",
     "effect_text": "+6 to Level of all Attack Skills",
     "value_min": 6.0,
     "value_max": 6.0
@@ -970,7 +970,7 @@
   {
     "essence_name": "Perfect Essence of Battle",
     "item_type": "Crossbow",
-    "modifier_type": "prefix",
+    "modifier_type": "suffix",
     "effect_text": "+6 to Level of all Attack Skills",
     "value_min": 6.0,
     "value_max": 6.0
