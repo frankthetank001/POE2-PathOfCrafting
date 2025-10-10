@@ -10290,7 +10290,7 @@
   },
   {
     "name": "Wrapped Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
@@ -10306,7 +10306,7 @@
   },
   {
     "name": "Long Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex"
@@ -10324,7 +10324,7 @@
   },
   {
     "name": "Gothic Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10343,7 +10343,7 @@
   },
   {
     "name": "Crackling Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10362,7 +10362,7 @@
   },
   {
     "name": "Crescent Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10381,7 +10381,7 @@
   },
   {
     "name": "Steelpoint Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10400,7 +10400,7 @@
   },
   {
     "name": "Slicing Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10419,7 +10419,7 @@
   },
   {
     "name": "Barrier Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10438,7 +10438,7 @@
   },
   {
     "name": "Hefty Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10457,7 +10457,7 @@
   },
   {
     "name": "Smooth Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10476,7 +10476,7 @@
   },
   {
     "name": "Anima Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10495,7 +10495,7 @@
   },
   {
     "name": "Graceful Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10514,7 +10514,7 @@
   },
   {
     "name": "Wyrm Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10533,7 +10533,7 @@
   },
   {
     "name": "Reaching Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10552,7 +10552,7 @@
   },
   {
     "name": "Barbarous Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10571,7 +10571,7 @@
   },
   {
     "name": "Arcing Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10590,7 +10590,7 @@
   },
   {
     "name": "Waxing Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10609,7 +10609,7 @@
   },
   {
     "name": "Bladed Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10628,7 +10628,7 @@
   },
   {
     "name": "Guardian Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10647,7 +10647,7 @@
   },
   {
     "name": "Sinister Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10666,7 +10666,7 @@
   },
   {
     "name": "Lunar Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10685,7 +10685,7 @@
   },
   {
     "name": "Striking Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10704,7 +10704,7 @@
   },
   {
     "name": "Bolting Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10723,7 +10723,7 @@
   },
   {
     "name": "Aegis Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10742,7 +10742,7 @@
   },
   {
     "name": "Razor Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10761,7 +10761,7 @@
   },
   {
     "name": "Dreaming Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10780,7 +10780,7 @@
   },
   {
     "name": "Reaching Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10799,7 +10799,7 @@
   },
   {
     "name": "Barbarous Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10818,7 +10818,7 @@
   },
   {
     "name": "Arcing Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10837,7 +10837,7 @@
   },
   {
     "name": "Waxing Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10856,7 +10856,7 @@
   },
   {
     "name": "Bladed Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10875,7 +10875,7 @@
   },
   {
     "name": "Guardian Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10894,7 +10894,7 @@
   },
   {
     "name": "Sinister Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10913,7 +10913,7 @@
   },
   {
     "name": "Lunar Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10932,7 +10932,7 @@
   },
   {
     "name": "Striking Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10951,7 +10951,7 @@
   },
   {
     "name": "Bolting Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10970,7 +10970,7 @@
   },
   {
     "name": "Aegis Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10989,7 +10989,7 @@
   },
   {
     "name": "Razor Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -11008,7 +11008,7 @@
   },
   {
     "name": "Dreaming Quarterstaff",
-    "category": "staff",
+    "category": "warstaff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",

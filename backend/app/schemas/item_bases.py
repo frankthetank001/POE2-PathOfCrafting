@@ -119,10 +119,18 @@ def get_slot_category_combinations() -> dict:
         elif base.slot == 'weapons - 2 hand':
             weapon_2h_categories.add(base.category)
 
+    # Map category names to display names
+    category_display_names = {
+        'warstaff': 'quarterstaff'
+    }
+
+    def rename_categories(categories):
+        return [category_display_names.get(cat, cat) for cat in categories]
+
     if weapon_1h_categories:
-        result['weapon - 1 hand'] = sorted(weapon_1h_categories)
+        result['weapon - 1 hand'] = sorted(rename_categories(weapon_1h_categories))
     if weapon_2h_categories:
-        result['weapon - 2 hand'] = sorted(weapon_2h_categories)
+        result['weapon - 2 hand'] = sorted(rename_categories(weapon_2h_categories))
 
     # Offhand slot - quiver, shield, focus
     offhand_categories = set()
@@ -158,40 +166,47 @@ def get_bases_for_ui_slot_category(ui_slot: str, ui_category: str) -> List[ItemB
         List of matching ItemBase objects
     """
 
+    # Map display names back to database category names
+    display_to_db_category = {
+        'quarterstaff': 'warstaff'
+    }
+
+    db_category = display_to_db_category.get(ui_category, ui_category)
+
     bases = []
 
     # For armour slots, match by slot and category
     if ui_slot in ['helmet', 'gloves', 'boots']:
         for base in ITEM_BASES:
-            if base.slot == ui_slot and base.category == ui_category:
+            if base.slot == ui_slot and base.category == db_category:
                 bases.append(base)
-    
+
     elif ui_slot == 'body':
         for base in ITEM_BASES:
-            if base.slot == 'body_armour' and base.category == ui_category:
+            if base.slot == 'body_armour' and base.category == db_category:
                 bases.append(base)
 
     # For weapon slots, match by specific weapon slot and category
     elif ui_slot == 'weapon - 1 hand':
         for base in ITEM_BASES:
-            if base.slot == 'weapons - 1 hand' and base.category == ui_category:
+            if base.slot == 'weapons - 1 hand' and base.category == db_category:
                 bases.append(base)
-    
+
     elif ui_slot == 'weapon - 2 hand':
         for base in ITEM_BASES:
-            if base.slot == 'weapons - 2 hand' and base.category == ui_category:
+            if base.slot == 'weapons - 2 hand' and base.category == db_category:
                 bases.append(base)
 
     # For offhand slot, match by offhand slot and category
     elif ui_slot == 'offhand':
         for base in ITEM_BASES:
-            if base.slot == 'offhand' and base.category == ui_category:
+            if base.slot == 'offhand' and base.category == db_category:
                 bases.append(base)
 
     # For jewellery, category IS the slot
     elif ui_slot == 'jewellery':
         for base in ITEM_BASES:
-            if base.slot == ui_category:
+            if base.slot == db_category:
                 bases.append(base)
 
     return bases

@@ -52,7 +52,7 @@ EXPECTED_MOD_COUNTS: Dict[str, Tuple[int, int, int, int]] = {
     "two_hand_axe": (3, 3, 5, 4),  # 4 essence suffix (generic +4 and Perfect +6 attack skills)
     "two_hand_mace": (8, 8, 5, 4),  # 4 essence suffix (generic +4 and Perfect +6 attack skills)
     "two_hand_sword": (3, 3, 5, 4),  # 4 essence suffix (generic +4 and Perfect +6 attack skills)
-    "warstaff": (6, 6, 5, 3),
+    "warstaff": (6, 6, 5, 3),  # Desecrated: Kurgal/Amanamu/Ulaman bone mods only
 }
 
 
@@ -88,9 +88,10 @@ def create_test_item():
 # ============================================================================
 
 def count_mods_by_tags(mods, essence_tag="essence_only", desecrated_tag="desecrated_only"):
-    """Count modifiers by their tags."""
+    """Count modifiers by their tags. Excludes utzaal-only mods from desecrated count."""
     essence_count = sum(1 for mod in mods if essence_tag in mod.tags)
-    desecrated_count = sum(1 for mod in mods if desecrated_tag in mod.tags)
+    # Exclude utzaal mods from general desecrated count (they only appear with utzaal bone)
+    desecrated_count = sum(1 for mod in mods if desecrated_tag in mod.tags and "utzaal" not in mod.tags)
     return essence_count, desecrated_count
 
 

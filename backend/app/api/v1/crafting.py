@@ -260,6 +260,10 @@ async def reload_modifiers():
     global simulator
     from app.services.crafting.modifier_loader import ModifierLoader
     from app.services.crafting.config_service import crafting_config_service
+    import app.schemas.item_bases as item_bases_module
+
+    # Force reload item bases from database
+    item_bases_module.ITEM_BASES = item_bases_module.load_item_bases()
 
     # Force reload modifiers
     ModifierLoader.reload_modifiers()
@@ -392,27 +396,42 @@ def filter_item_tags(item: CraftableItem):
 @router.post("/available-mods")
 async def get_available_mods(item: CraftableItem) -> dict:
     try:
+        # Map display category names to database category names
+        display_to_db_category = {
+            'quarterstaff': 'warstaff'
+        }
+        db_category = display_to_db_category.get(item.base_category, item.base_category)
+
+        # Create a modified item with the correct database category
+        if item.base_category != db_category:
+            item_dict = item.model_dump()
+            item_dict['base_category'] = db_category
+            db_item = CraftableItem(**item_dict)
+        else:
+            db_item = item
+
         # Return ALL mods for the item category (frontend will handle ilvl filtering visually)
         available_prefixes = simulator.modifier_pool.get_all_mods_for_category(
-            item.base_category,
+            db_category,
             "prefix",
-            item
+            db_item
         )
 
         available_suffixes = simulator.modifier_pool.get_all_mods_for_category(
-            item.base_category,
+            db_category,
             "suffix",
-            item
+            db_item
         )
 
         # Separate essence-only and desecrated-only modifiers
+        # Exclude utzaal mods from general desecrated list (they only appear with utzaal bone)
         regular_prefixes = [mod for mod in available_prefixes if "essence_only" not in mod.tags and "desecrated_only" not in mod.tags]
         essence_prefixes = [mod for mod in available_prefixes if "essence_only" in mod.tags]
-        desecrated_prefixes = [mod for mod in available_prefixes if "desecrated_only" in mod.tags]
+        desecrated_prefixes = [mod for mod in available_prefixes if "desecrated_only" in mod.tags and "utzaal" not in mod.tags]
 
         regular_suffixes = [mod for mod in available_suffixes if "essence_only" not in mod.tags and "desecrated_only" not in mod.tags]
         essence_suffixes = [mod for mod in available_suffixes if "essence_only" in mod.tags]
-        desecrated_suffixes = [mod for mod in available_suffixes if "desecrated_only" in mod.tags]
+        desecrated_suffixes = [mod for mod in available_suffixes if "desecrated_only" in mod.tags and "utzaal" not in mod.tags]
 
         return {
             "prefixes": [filter_mod_tags(mod) for mod in regular_prefixes],

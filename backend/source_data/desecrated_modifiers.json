@@ -1895,7 +1895,8 @@
       "flail",
       "dagger",
       "claw",
-      "crossbow"
+      "crossbow",
+      "warstaff"
     ],
     "tags": [
       "desecrated_only",
@@ -1925,7 +1926,8 @@
       "flail",
       "dagger",
       "claw",
-      "crossbow"
+      "crossbow",
+      "warstaff"
     ],
     "tags": [
       "desecrated_only",
@@ -1955,7 +1957,8 @@
       "flail",
       "dagger",
       "claw",
-      "crossbow"
+      "crossbow",
+      "warstaff"
     ],
     "tags": [
       "desecrated_only",
@@ -2111,7 +2114,8 @@
       "flail",
       "dagger",
       "claw",
-      "crossbow"
+      "crossbow",
+      "warstaff"
     ],
     "tags": [
       "desecrated_only",
@@ -2159,7 +2163,8 @@
       "dagger",
       "claw",
       "sceptre",
-      "crossbow"
+      "crossbow",
+      "warstaff"
     ],
     "tags": [
       "desecrated_only",
@@ -2185,7 +2190,8 @@
       "flail",
       "dagger",
       "claw",
-      "crossbow"
+      "crossbow",
+      "warstaff"
     ],
     "tags": [
       "desecrated_only",
@@ -2857,257 +2863,130 @@
     "is_exclusive": true
   },
   {
-    "name": "{}% increased Damage with Combo Finishers",
+    "name": "{}% increased Cold Damage, {}% increased Freeze Buildup",
     "mod_type": "prefix",
     "tier": 1,
-    "stat_text": "{}% increased Damage with Combo Finishers",
-    "stat_min": 61,
-    "stat_max": 80,
+    "stat_text": "{}% increased Cold Damage, {}% increased Freeze Buildup",
+    "stat_min": 86,
+    "stat_max": 99,
     "required_ilvl": 65,
     "weight": 1,
-    "mod_group": "combo_finisher_damage",
+    "mod_group": "cold_damage_freeze",
     "applicable_items": [
       "warstaff"
     ],
     "tags": [
       "desecrated_only",
-      "damage",
-      "combo",
-      "utzaal"
-    ],
-    "is_exclusive": true
-  },
-  {
-    "name": "{}% increased Spell Damage per Combo Counter",
-    "mod_type": "prefix",
-    "tier": 1,
-    "stat_text": "{}% increased Spell Damage per Combo Counter",
-    "stat_min": 4,
-    "stat_max": 5,
-    "required_ilvl": 65,
-    "weight": 1,
-    "mod_group": "spell_damage_per_combo",
-    "applicable_items": [
-      "warstaff"
-    ],
-    "tags": [
-      "desecrated_only",
-      "damage",
-      "caster",
-      "combo",
-      "utzaal"
-    ],
-    "is_exclusive": true
-  },
-  {
-    "name": "Attacks with this Weapon deal {}% increased Elemental Damage",
-    "mod_type": "prefix",
-    "tier": 1,
-    "stat_text": "Attacks with this Weapon deal {}% increased Elemental Damage",
-    "stat_min": 81,
-    "stat_max": 100,
-    "required_ilvl": 65,
-    "weight": 1,
-    "mod_group": "attack_elemental_damage",
-    "applicable_items": [
-      "warstaff"
-    ],
-    "tags": [
-      "desecrated_only",
-      "damage",
       "elemental",
-      "attack",
-      "utzaal"
+      "cold",
+      "ailment",
+      "kurgal"
     ],
     "is_exclusive": true
   },
   {
-    "name": "{}% increased Attack and Spell Damage",
+    "name": "{}% increased Fire Damage, {}% increased Ignite Magnitude",
     "mod_type": "prefix",
     "tier": 1,
-    "stat_text": "{}% increased Attack and Spell Damage",
-    "stat_min": 51,
-    "stat_max": 65,
+    "stat_text": "{}% increased Fire Damage, {}% increased Ignite Magnitude",
+    "stat_min": 86,
+    "stat_max": 99,
     "required_ilvl": 65,
     "weight": 1,
-    "mod_group": "attack_spell_damage",
+    "mod_group": "fire_damage_ignite",
     "applicable_items": [
       "warstaff"
     ],
     "tags": [
       "desecrated_only",
-      "damage",
-      "attack",
-      "caster",
-      "utzaal"
+      "elemental",
+      "fire",
+      "ailment",
+      "amanamu"
     ],
     "is_exclusive": true
   },
   {
-    "name": "Combo Finishers grant {} Elemental Infusions",
+    "name": "{}% increased Lightning Damage, {}% increased Magnitude of Shock you inflict",
     "mod_type": "prefix",
     "tier": 1,
-    "stat_text": "Combo Finishers grant {} Elemental Infusions",
+    "stat_text": "{}% increased Lightning Damage, {}% increased Magnitude of Shock you inflict",
+    "stat_min": 86,
+    "stat_max": 99,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "lightning_damage_shock",
+    "applicable_items": [
+      "warstaff"
+    ],
+    "tags": [
+      "desecrated_only",
+      "elemental",
+      "lightning",
+      "ailment",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% chance to build an additional Combo on Hit",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% chance to build an additional Combo on Hit",
+    "stat_min": 25,
+    "stat_max": 40,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "combo_build_chance",
+    "applicable_items": [
+      "warstaff"
+    ],
+    "tags": [
+      "desecrated_only",
+      "combo",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Recover {}% of Maximum Life when you expend at least 10 Combo",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Recover {}% of Maximum Life when you expend at least 10 Combo",
+    "stat_min": 6,
+    "stat_max": 12,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "combo_life_recovery",
+    "applicable_items": [
+      "warstaff"
+    ],
+    "tags": [
+      "desecrated_only",
+      "life",
+      "combo",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Recover {}% of Maximum Mana when you expend at least 10 Combo",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Recover {}% of Maximum Mana when you expend at least 10 Combo",
     "stat_min": 4,
     "stat_max": 6,
     "required_ilvl": 65,
     "weight": 1,
-    "mod_group": "finisher_infusions",
-    "applicable_items": [
-      "warstaff"
-    ],
-    "tags": [
-      "desecrated_only",
-      "elemental",
-      "combo",
-      "utzaal"
-    ],
-    "is_exclusive": true
-  },
-  {
-    "name": "{}% increased Damage per Combo Counter",
-    "mod_type": "prefix",
-    "tier": 1,
-    "stat_text": "{}% increased Damage per Combo Counter",
-    "stat_min": 6,
-    "stat_max": 8,
-    "required_ilvl": 65,
-    "weight": 1,
-    "mod_group": "damage_per_combo",
-    "applicable_items": [
-      "warstaff"
-    ],
-    "tags": [
-      "desecrated_only",
-      "damage",
-      "combo",
-      "utzaal"
-    ],
-    "is_exclusive": true
-  },
-  {
-    "name": "{}% increased Attack and Cast Speed",
-    "mod_type": "suffix",
-    "tier": 1,
-    "stat_text": "{}% increased Attack and Cast Speed",
-    "stat_min": 21,
-    "stat_max": 25,
-    "required_ilvl": 65,
-    "weight": 1,
-    "mod_group": "attack_cast_speed",
-    "applicable_items": [
-      "warstaff"
-    ],
-    "tags": [
-      "desecrated_only",
-      "attack",
-      "caster",
-      "speed",
-      "utzaal"
-    ],
-    "is_exclusive": true
-  },
-  {
-    "name": "{}% increased Critical Hit Chance",
-    "mod_type": "suffix",
-    "tier": 1,
-    "stat_text": "{}% increased Critical Hit Chance",
-    "stat_min": 81,
-    "stat_max": 100,
-    "required_ilvl": 65,
-    "weight": 1,
-    "mod_group": "critical_hit_chance",
-    "applicable_items": [
-      "warstaff"
-    ],
-    "tags": [
-      "desecrated_only",
-      "critical",
-      "utzaal"
-    ],
-    "is_exclusive": true
-  },
-  {
-    "name": "+{} to Maximum Combo Count",
-    "mod_type": "suffix",
-    "tier": 1,
-    "stat_text": "+{} to Maximum Combo Count",
-    "stat_min": 2,
-    "stat_max": 3,
-    "required_ilvl": 65,
-    "weight": 1,
-    "mod_group": "max_combo_count",
-    "applicable_items": [
-      "warstaff"
-    ],
-    "tags": [
-      "desecrated_only",
-      "combo",
-      "utzaal"
-    ],
-    "is_exclusive": true
-  },
-  {
-    "name": "{}% increased Cost Efficiency of Skills",
-    "mod_type": "suffix",
-    "tier": 1,
-    "stat_text": "{}% increased Cost Efficiency of Skills",
-    "stat_min": 21,
-    "stat_max": 25,
-    "required_ilvl": 65,
-    "weight": 1,
-    "mod_group": "skill_cost_efficiency",
+    "mod_group": "combo_mana_recovery",
     "applicable_items": [
       "warstaff"
     ],
     "tags": [
       "desecrated_only",
       "mana",
-      "resource",
-      "utzaal"
-    ],
-    "is_exclusive": true
-  },
-  {
-    "name": "Combo Finishers inflict Exposure",
-    "mod_type": "suffix",
-    "tier": 1,
-    "stat_text": "Combo Finishers inflict Exposure",
-    "stat_min": 1,
-    "stat_max": 1,
-    "required_ilvl": 65,
-    "weight": 1,
-    "mod_group": "finisher_exposure",
-    "applicable_items": [
-      "warstaff"
-    ],
-    "tags": [
-      "desecrated_only",
-      "elemental",
       "combo",
-      "utzaal"
-    ],
-    "is_exclusive": true
-  },
-  {
-    "name": "Gain {}% of Damage as Extra Damage of a random Element on Combo Finishers",
-    "mod_type": "suffix",
-    "tier": 1,
-    "stat_text": "Gain {}% of Damage as Extra Damage of a random Element on Combo Finishers",
-    "stat_min": 21,
-    "stat_max": 30,
-    "required_ilvl": 65,
-    "weight": 1,
-    "mod_group": "finisher_extra_elemental",
-    "applicable_items": [
-      "warstaff"
-    ],
-    "tags": [
-      "desecrated_only",
-      "damage",
-      "elemental",
-      "combo",
-      "utzaal"
+      "kurgal"
     ],
     "is_exclusive": true
   },
@@ -4149,6 +4028,237 @@
       "desecrated_only",
       "block",
       "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Damage with Combo Finishers",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Damage with Combo Finishers",
+    "stat_min": 61,
+    "stat_max": 80,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "combo_finisher_damage",
+    "applicable_items": [],
+    "tags": [
+      "damage",
+      "combo",
+      "utzaal",
+      "desecrated_only"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Spell Damage per Combo Counter",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Spell Damage per Combo Counter",
+    "stat_min": 4,
+    "stat_max": 5,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "spell_damage_per_combo",
+    "applicable_items": [],
+    "tags": [
+      "damage",
+      "caster",
+      "combo",
+      "utzaal",
+      "desecrated_only"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Attacks with this Weapon deal {}% increased Elemental Damage",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Attacks with this Weapon deal {}% increased Elemental Damage",
+    "stat_min": 81,
+    "stat_max": 100,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "attack_elemental_damage",
+    "applicable_items": [],
+    "tags": [
+      "damage",
+      "elemental",
+      "attack",
+      "utzaal",
+      "desecrated_only"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Attack and Spell Damage",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Attack and Spell Damage",
+    "stat_min": 51,
+    "stat_max": 65,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "attack_spell_damage",
+    "applicable_items": [],
+    "tags": [
+      "damage",
+      "attack",
+      "caster",
+      "utzaal",
+      "desecrated_only"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Combo Finishers grant {} Elemental Infusions",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Combo Finishers grant {} Elemental Infusions",
+    "stat_min": 4,
+    "stat_max": 6,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "finisher_infusions",
+    "applicable_items": [],
+    "tags": [
+      "elemental",
+      "combo",
+      "utzaal",
+      "desecrated_only"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Damage per Combo Counter",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Damage per Combo Counter",
+    "stat_min": 6,
+    "stat_max": 8,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "damage_per_combo",
+    "applicable_items": [],
+    "tags": [
+      "damage",
+      "combo",
+      "utzaal",
+      "desecrated_only"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Attack and Cast Speed",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Attack and Cast Speed",
+    "stat_min": 21,
+    "stat_max": 25,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "attack_cast_speed",
+    "applicable_items": [],
+    "tags": [
+      "attack",
+      "caster",
+      "speed",
+      "utzaal",
+      "desecrated_only"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Critical Hit Chance",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Critical Hit Chance",
+    "stat_min": 81,
+    "stat_max": 100,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "critical_hit_chance",
+    "applicable_items": [],
+    "tags": [
+      "critical",
+      "utzaal",
+      "desecrated_only"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "+{} to Maximum Combo Count",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "+{} to Maximum Combo Count",
+    "stat_min": 2,
+    "stat_max": 3,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "max_combo_count",
+    "applicable_items": [],
+    "tags": [
+      "combo",
+      "utzaal",
+      "desecrated_only"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Cost Efficiency of Skills",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Cost Efficiency of Skills",
+    "stat_min": 21,
+    "stat_max": 25,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "skill_cost_efficiency",
+    "applicable_items": [],
+    "tags": [
+      "mana",
+      "resource",
+      "utzaal",
+      "desecrated_only"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Combo Finishers inflict Exposure",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Combo Finishers inflict Exposure",
+    "stat_min": 1,
+    "stat_max": 1,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "finisher_exposure",
+    "applicable_items": [],
+    "tags": [
+      "elemental",
+      "combo",
+      "utzaal",
+      "desecrated_only"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Gain {}% of Damage as Extra Damage of a random Element on Combo Finishers",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Gain {}% of Damage as Extra Damage of a random Element on Combo Finishers",
+    "stat_min": 21,
+    "stat_max": 30,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "finisher_extra_elemental",
+    "applicable_items": [],
+    "tags": [
+      "damage",
+      "elemental",
+      "combo",
+      "utzaal",
+      "desecrated_only"
     ],
     "is_exclusive": true
   }
