@@ -118,7 +118,7 @@ class ModifierPool:
             excluded_patterns = []
 
         eligible_mods = self._filter_eligible_mods(
-            pool, item_category, item_level, excluded_groups or [], min_mod_level, excluded_tags=excluded_tags, excluded_patterns=excluded_patterns, exclude_desecrated=True, item=item, mod_type=mod_type
+            pool, item_category, item_level, excluded_groups or [], min_mod_level, excluded_tags=excluded_tags, excluded_patterns=excluded_patterns, exclude_desecrated=True, exclude_essence=True, item=item, mod_type=mod_type
         )
 
         if not eligible_mods:
@@ -944,6 +944,7 @@ class ModifierPool:
             excluded_tags,
             excluded_patterns,
             exclude_desecrated=True,
+            exclude_essence=True,
             item=item
         )
 
