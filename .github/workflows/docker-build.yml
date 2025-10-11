@@ -94,6 +94,15 @@ jobs:
           type=semver,pattern={{major}}.{{minor}}
           type=sha
 
+    - name: Extract version
+      id: version
+      run: |
+        if [[ "${{ github.ref }}" =~ ^refs/tags/v([0-9]+\.[0-9]+\.[0-9]+)$ ]]; then
+          echo "version=${BASH_REMATCH[1]}" >> $GITHUB_OUTPUT
+        else
+          echo "version=0.3.0" >> $GITHUB_OUTPUT
+        fi
+
     - name: Build and push Frontend image
       uses: docker/build-push-action@v5
       with:
@@ -102,5 +111,7 @@ jobs:
         push: ${{ github.event_name != 'pull_request' }}
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+        build-args: |
+          APP_VERSION=${{ steps.version.outputs.version }}
         cache-from: type=gha
         cache-to: type=gha,mode=max

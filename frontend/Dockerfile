@@ -26,6 +26,10 @@ FROM node:18-alpine as builder
 
 WORKDIR /app
 
+# Accept version as build argument
+ARG APP_VERSION=0.3.0
+ENV VITE_APP_VERSION=${APP_VERSION}
+
 # Copy package files
 COPY package*.json ./
 
