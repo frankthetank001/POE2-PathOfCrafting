@@ -2445,7 +2445,9 @@
     "required_ilvl": 72,
     "weight": 1000,
     "mod_group": "physicaldamagetakenaschaos",
-    "applicable_items": [],
+    "applicable_items": [
+      "body_armour"
+    ],
     "tags": [
       "physical",
       "chaos",

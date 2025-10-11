@@ -195,7 +195,15 @@ class ModifierLoader:
             if mod.stat_text == normalized_effect or mod.stat_text == effect.effect_text:
                 # Check if the value ranges match
                 if effect.value_min is not None and effect.value_max is not None:
-                    if mod.stat_min == effect.value_min and mod.stat_max == effect.value_max:
+                    # For modifiers with multiple stat_ranges (like "X to Y" patterns),
+                    # check if the first range's min and last range's max match the effect values
+                    if mod.stat_ranges and len(mod.stat_ranges) > 0:
+                        first_min = mod.stat_ranges[0].min
+                        last_max = mod.stat_ranges[-1].max
+                        if first_min == effect.value_min and last_max == effect.value_max:
+                            return mod
+                    # Fallback to simple stat_min/stat_max comparison for single-value mods
+                    elif mod.stat_min == effect.value_min and mod.stat_max == effect.value_max:
                         return mod
                 else:
                     # No value specified, just match by stat_text

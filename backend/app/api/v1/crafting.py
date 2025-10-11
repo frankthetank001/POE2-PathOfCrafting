@@ -339,7 +339,7 @@ def filter_mod_tags(mod):
             'abyssal_mark',     # Internal marker for Mark of the Abyssal Lord
             'placeholder',      # Internal placeholder tags
             'drop', 'resource', 'energy_shield', 'flat_life_regen', 'armour',
-            'caster_damage', 'attack_damage', '*_damage', 'projectile', 'essence_*'
+            'caster_damage', 'attack_damage', '*_damage', 'projectile', 'essence_*',
             'essence*', 'perfect'
         ]
 

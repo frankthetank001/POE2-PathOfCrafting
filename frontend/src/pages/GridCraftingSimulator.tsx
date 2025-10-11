@@ -2489,7 +2489,17 @@ function GridCraftingSimulator() {
                             <span className="group-tier-range">{tierRangeText}</span>
                             <span className="group-max-ilvl">ilvl {maxIlvl}</span>
                             {bestTier.tags && bestTier.tags.length > 0 && (
-                              <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
+                              <div className="mod-tags-line" title="Click individual tags to filter">
+                                <button
+                                  className="apply-all-tags-btn"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    applyAllModTags(bestTier);
+                                  }}
+                                  title="Apply all tags as filters"
+                                >
+                                  ✓✓
+                                </button>
                                 {bestTier.tags.map((tag, i) => {
                                   const tagColor = getTagColor(tag)
                                   return (
@@ -2609,7 +2619,17 @@ function GridCraftingSimulator() {
                           </span>
                           <div className="compact-mod-info">
                             {mod.tags && mod.tags.length > 0 && (
-                              <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
+                              <div className="mod-tags-line" title="Click individual tags to filter">
+                                <button
+                                  className="apply-all-tags-btn"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    applyAllModTags(mod);
+                                  }}
+                                  title="Apply all tags as filters"
+                                >
+                                  ✓✓
+                                </button>
                                 {mod.tags.map((tag, i) => {
                                   const tagColor = getTagColor(tag)
                                   return (
@@ -2693,7 +2713,17 @@ function GridCraftingSimulator() {
                           </span>
                           <div className="compact-mod-info">
                             {mod.tags && mod.tags.length > 0 && (
-                              <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
+                              <div className="mod-tags-line" title="Click individual tags to filter">
+                                <button
+                                  className="apply-all-tags-btn"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    applyAllModTags(mod);
+                                  }}
+                                  title="Apply all tags as filters"
+                                >
+                                  ✓✓
+                                </button>
                                 {mod.tags.map((tag, i) => {
                                   const tagColor = getTagColor(tag)
                                   return (
@@ -2806,7 +2836,17 @@ function GridCraftingSimulator() {
                             <span className="group-tier-range">{tierRangeText}</span>
                             <span className="group-max-ilvl">ilvl {maxIlvl}</span>
                             {bestTier.tags && bestTier.tags.length > 0 && (
-                              <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
+                              <div className="mod-tags-line" title="Click individual tags to filter">
+                                <button
+                                  className="apply-all-tags-btn"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    applyAllModTags(bestTier);
+                                  }}
+                                  title="Apply all tags as filters"
+                                >
+                                  ✓✓
+                                </button>
                                 {bestTier.tags.map((tag, i) => {
                                   const tagColor = getTagColor(tag)
                                   return (
@@ -2926,7 +2966,17 @@ function GridCraftingSimulator() {
                           </span>
                           <div className="compact-mod-info">
                             {mod.tags && mod.tags.length > 0 && (
-                              <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
+                              <div className="mod-tags-line" title="Click individual tags to filter">
+                                <button
+                                  className="apply-all-tags-btn"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    applyAllModTags(mod);
+                                  }}
+                                  title="Apply all tags as filters"
+                                >
+                                  ✓✓
+                                </button>
                                 {mod.tags.map((tag, i) => {
                                   const tagColor = getTagColor(tag)
                                   return (
@@ -3010,7 +3060,17 @@ function GridCraftingSimulator() {
                           </span>
                           <div className="compact-mod-info">
                             {mod.tags && mod.tags.length > 0 && (
-                              <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
+                              <div className="mod-tags-line" title="Click individual tags to filter">
+                                <button
+                                  className="apply-all-tags-btn"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    applyAllModTags(mod);
+                                  }}
+                                  title="Apply all tags as filters"
+                                >
+                                  ✓✓
+                                </button>
                                 {mod.tags.map((tag, i) => {
                                   const tagColor = getTagColor(tag)
                                   return (
@@ -3074,7 +3134,17 @@ function GridCraftingSimulator() {
                           >
                             <span className="pool-mod-stat-main">{mod.stat_text}</span>
                             {mod.tags && mod.tags.length > 0 && (
-                              <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
+                              <div className="mod-tags-line" title="Click individual tags to filter">
+                                <button
+                                  className="apply-all-tags-btn"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    applyAllModTags(mod);
+                                  }}
+                                  title="Apply all tags as filters"
+                                >
+                                  ✓✓
+                                </button>
                                 {mod.tags.map((tag, i) => {
                                   const tagColor = getTagColor(tag)
                                   return (
@@ -3129,7 +3199,17 @@ function GridCraftingSimulator() {
                           >
                             <span className="pool-mod-stat-main">{mod.stat_text}</span>
                             {mod.tags && mod.tags.length > 0 && (
-                              <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
+                              <div className="mod-tags-line" title="Click individual tags to filter">
+                                <button
+                                  className="apply-all-tags-btn"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    applyAllModTags(mod);
+                                  }}
+                                  title="Apply all tags as filters"
+                                >
+                                  ✓✓
+                                </button>
                                 {mod.tags.map((tag, i) => {
                                   const tagColor = getTagColor(tag)
                                   return (
@@ -3194,7 +3274,17 @@ function GridCraftingSimulator() {
                           >
                             <span className="pool-mod-stat-main">{mod.stat_text}</span>
                             {mod.tags && mod.tags.length > 0 && (
-                              <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
+                              <div className="mod-tags-line" title="Click individual tags to filter">
+                                <button
+                                  className="apply-all-tags-btn"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    applyAllModTags(mod);
+                                  }}
+                                  title="Apply all tags as filters"
+                                >
+                                  ✓✓
+                                </button>
                                 {mod.tags.map((tag, i) => {
                                   const tagColor = getTagColor(tag)
                                   return (
@@ -3249,7 +3339,17 @@ function GridCraftingSimulator() {
                           >
                             <span className="pool-mod-stat-main">{mod.stat_text}</span>
                             {mod.tags && mod.tags.length > 0 && (
-                              <div className="mod-tags-line" title="Click individual tags to filter, or double-click the mod to apply all tags">
+                              <div className="mod-tags-line" title="Click individual tags to filter">
+                                <button
+                                  className="apply-all-tags-btn"
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    applyAllModTags(mod);
+                                  }}
+                                  title="Apply all tags as filters"
+                                >
+                                  ✓✓
+                                </button>
                                 {mod.tags.map((tag, i) => {
                                   const tagColor = getTagColor(tag)
                                   return (
@@ -3666,61 +3766,67 @@ function GridCraftingSimulator() {
           <div className="reveal-modal" onClick={(e) => e.stopPropagation()}>
             <h3>📋 Import Item from Clipboard</h3>
             {pasteError ? (
-              <div className="paste-error">
-                <p style={{ color: '#ff6666' }}>❌ {pasteError}</p>
+              <>
+                <div className="reveal-modal-content">
+                  <div className="paste-error">
+                    <p style={{ color: '#ff6666' }}>❌ {pasteError}</p>
+                  </div>
+                </div>
                 <div className="modal-buttons">
                   <button className="close-modal-btn" onClick={handleCancelPaste}>
                     Close
                   </button>
                 </div>
-              </div>
+              </>
             ) : pastedItemPreview ? (
               <>
-                <p>Parsed item successfully! Import to crafting simulator?</p>
-                {pasteWarnings.length > 0 && (
-                  <div className="paste-warnings" style={{
-                    backgroundColor: 'rgba(255, 200, 100, 0.1)',
-                    border: '1px solid rgba(255, 200, 100, 0.3)',
-                    padding: '10px',
-                    marginBottom: '10px',
-                    borderRadius: '4px'
-                  }}>
-                    <p style={{ color: '#ffcc66', fontWeight: 'bold', marginBottom: '5px' }}>⚠️ Warnings:</p>
-                    {pasteWarnings.map((warning, idx) => (
-                      <p key={idx} style={{ color: '#ffcc66', fontSize: '0.9em', margin: '3px 0' }}>
-                        • {warning}
-                      </p>
-                    ))}
-                  </div>
-                )}
-                <div className="item-preview">
-                  <div className="item-header">
-                    <span className={`item-rarity ${pastedItemPreview.rarity.toLowerCase()}`}>
-                      {pastedItemPreview.rarity}
-                    </span>
-                    <span className="item-name">{pastedItemPreview.base_name}</span>
-                    <span className="item-level">iLvl {pastedItemPreview.item_level}</span>
-                  </div>
-                  {pastedItemPreview.prefix_mods.length > 0 && (
-                    <div className="mods-section">
-                      <h4>Prefix Mods ({pastedItemPreview.prefix_mods.length}/3)</h4>
-                      {pastedItemPreview.prefix_mods.map((mod, idx) => (
-                        <div key={idx} className="mod-preview">
-                          {renderModifier(mod)}
-                        </div>
+                <div className="reveal-modal-content">
+                  <p>Parsed item successfully! Import to crafting simulator?</p>
+                  {pasteWarnings.length > 0 && (
+                    <div className="paste-warnings" style={{
+                      backgroundColor: 'rgba(255, 200, 100, 0.1)',
+                      border: '1px solid rgba(255, 200, 100, 0.3)',
+                      padding: '10px',
+                      marginBottom: '10px',
+                      borderRadius: '4px'
+                    }}>
+                      <p style={{ color: '#ffcc66', fontWeight: 'bold', marginBottom: '5px' }}>⚠️ Warnings:</p>
+                      {pasteWarnings.map((warning, idx) => (
+                        <p key={idx} style={{ color: '#ffcc66', fontSize: '0.9em', margin: '3px 0' }}>
+                          • {warning}
+                        </p>
                       ))}
                     </div>
                   )}
-                  {pastedItemPreview.suffix_mods.length > 0 && (
-                    <div className="mods-section">
-                      <h4>Suffix Mods ({pastedItemPreview.suffix_mods.length}/3)</h4>
-                      {pastedItemPreview.suffix_mods.map((mod, idx) => (
-                        <div key={idx} className="mod-preview">
-                          {renderModifier(mod)}
-                        </div>
-                      ))}
+                  <div className="item-preview">
+                    <div className="item-header">
+                      <span className={`item-rarity ${pastedItemPreview.rarity.toLowerCase()}`}>
+                        {pastedItemPreview.rarity}
+                      </span>
+                      <span className="item-name">{pastedItemPreview.base_name}</span>
+                      <span className="item-level">iLvl {pastedItemPreview.item_level}</span>
                     </div>
-                  )}
+                    {pastedItemPreview.prefix_mods.length > 0 && (
+                      <div className="mods-section">
+                        <h4>Prefix Mods ({pastedItemPreview.prefix_mods.length}/3)</h4>
+                        {pastedItemPreview.prefix_mods.map((mod, idx) => (
+                          <div key={idx} className="mod-preview">
+                            {renderModifier(mod)}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                    {pastedItemPreview.suffix_mods.length > 0 && (
+                      <div className="mods-section">
+                        <h4>Suffix Mods ({pastedItemPreview.suffix_mods.length}/3)</h4>
+                        {pastedItemPreview.suffix_mods.map((mod, idx) => (
+                          <div key={idx} className="mod-preview">
+                            {renderModifier(mod)}
+                          </div>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 </div>
                 <div className="modal-buttons">
                   <button className="reroll-btn" onClick={handleImportPastedItem}>
@@ -3732,7 +3838,9 @@ function GridCraftingSimulator() {
                 </div>
               </>
             ) : (
-              <p>Parsing item...</p>
+              <div className="reveal-modal-content">
+                <p>Parsing item...</p>
+              </div>
             )}
           </div>
         </div>
@@ -3750,49 +3858,51 @@ function GridCraftingSimulator() {
           <div className="modal-overlay" onClick={handleCloseRevealModal}>
             <div className="reveal-modal" onClick={(e) => e.stopPropagation()}>
               <h3>Choose a Desecrated Modifier</h3>
-              <p>Select one of the following modifiers to reveal:</p>
-              {requiredBossTag === 'ulaman' && <p className="omen-hint">🔱 Filtered to Ulaman (Sovereign) mods only</p>}
-              {requiredBossTag === 'amanamu' && <p className="omen-hint">👑 Filtered to Amanamu (Liege) mods only</p>}
-              {requiredBossTag === 'kurgal' && <p className="omen-hint">🩸 Filtered to Kurgal (Blackblooded) mods only</p>}
-              {hasAbyssalEchoes && (
-                <p className="omen-hint">
-                  {canReroll ? '✨ Omen of Abyssal Echoes: You may reroll once' : '✨ Omen of Abyssal Echoes (used)'}
-                </p>
-              )}
-              <div className="reveal-choices">
-                {revealChoices.map((choice, idx) => (
-                  <div
-                    key={idx}
-                    className="reveal-choice"
-                    onClick={() => handleSelectRevealChoice(choice)}
-                  >
-                    <div className="choice-stat">{renderModifier(choice)}</div>
-                    <div className="choice-metadata">
-                      <span className="choice-tier">T{choice.tier}</span>
-                      <span className="choice-name">{choice.name}</span>
-                      {choice.tags && choice.tags.length > 0 && (
-                        <div className="choice-tags">
-                          {choice.tags.map((tag, i) => {
-                            const tagColor = getTagColor(tag)
-                            return (
-                              <span
-                                key={i}
-                                className="choice-tag-badge"
-                                style={{
-                                  background: tagColor.bg,
-                                  borderColor: tagColor.border,
-                                  color: tagColor.text
-                                }}
-                              >
-                                {tag}
-                              </span>
-                            )
-                          })}
-                        </div>
-                      )}
+              <div className="reveal-modal-content">
+                <p>Select one of the following modifiers to reveal:</p>
+                {requiredBossTag === 'ulaman' && <p className="omen-hint">🔱 Filtered to Ulaman (Sovereign) mods only</p>}
+                {requiredBossTag === 'amanamu' && <p className="omen-hint">👑 Filtered to Amanamu (Liege) mods only</p>}
+                {requiredBossTag === 'kurgal' && <p className="omen-hint">🩸 Filtered to Kurgal (Blackblooded) mods only</p>}
+                {hasAbyssalEchoes && (
+                  <p className="omen-hint">
+                    {canReroll ? '✨ Omen of Abyssal Echoes: You may reroll once' : '✨ Omen of Abyssal Echoes (used)'}
+                  </p>
+                )}
+                <div className="reveal-choices">
+                  {revealChoices.map((choice, idx) => (
+                    <div
+                      key={idx}
+                      className="reveal-choice"
+                      onClick={() => handleSelectRevealChoice(choice)}
+                    >
+                      <div className="choice-stat">{renderModifier(choice)}</div>
+                      <div className="choice-metadata">
+                        <span className="choice-tier">T{choice.tier}</span>
+                        <span className="choice-name">{choice.name}</span>
+                        {choice.tags && choice.tags.length > 0 && (
+                          <div className="choice-tags">
+                            {choice.tags.map((tag, i) => {
+                              const tagColor = getTagColor(tag)
+                              return (
+                                <span
+                                  key={i}
+                                  className="choice-tag-badge"
+                                  style={{
+                                    background: tagColor.bg,
+                                    borderColor: tagColor.border,
+                                    color: tagColor.text
+                                  }}
+                                >
+                                  {tag}
+                                </span>
+                              )
+                            })}
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
               <div className="modal-buttons">
                 {canReroll && (
