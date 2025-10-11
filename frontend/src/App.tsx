@@ -1,28 +1,35 @@
-import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom'
-import ItemParser from './pages/ItemParser'
+import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom'
 import BuildBrowser from './pages/BuildBrowser'
 import GridCraftingSimulator from './pages/GridCraftingSimulator'
 import './App.css'
+
+function Navigation() {
+  const location = useLocation()
+
+  return (
+    <nav className="nav">
+      <div className="nav-container">
+        <h1 className="nav-title">POE2 - Path of Crafting (beta)</h1>
+        <div className="nav-links">
+          <Link to="/" className={`nav-link ${location.pathname === '/' ? 'nav-link-active' : ''}`}>
+            Crafting Simulator
+          </Link>
+          <span className="nav-link-disabled" title="Coming soon">Build Browser</span>
+        </div>
+      </div>
+    </nav>
+  )
+}
 
 function App() {
   return (
     <Router>
       <div className="app">
-        <nav className="nav">
-          <div className="nav-container">
-            <h1 className="nav-title">PoE2 AI TradeCraft</h1>
-            <div className="nav-links">
-              <Link to="/" className="nav-link">Crafting Simulator</Link>
-              <Link to="/parser" className="nav-link">Item Parser</Link>
-              <Link to="/builds" className="nav-link">Build Browser</Link>
-            </div>
-          </div>
-        </nav>
+        <Navigation />
 
         <main className="main">
           <Routes>
             <Route path="/" element={<GridCraftingSimulator />} />
-            <Route path="/parser" element={<ItemParser />} />
             <Route path="/builds" element={<BuildBrowser />} />
           </Routes>
         </main>
