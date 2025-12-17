@@ -229,6 +229,11 @@ class ItemParser:
         lines = [line.strip() for line in section.split("\n") if line.strip()]
         mods = []
 
+        # Pattern to detect mod headers
+        header_pattern = re.compile(
+            r'\{\s*(?:Prefix|Suffix|Implicit)\s+Modifier\s+"[^"]+"\s*(?:\(Tier:\s*\d+\))?\s*(?:—\s*.+)?\s*\}'
+        )
+
         i = 0
         while i < len(lines):
             line = lines[i]
@@ -239,25 +244,33 @@ class ItemParser:
 
             # Check if this line has detailed mod info format: { Prefix/Suffix Modifier "Name" (Tier: X) — Tags }
             detailed_match = re.match(
-                r'\{\s*(Prefix|Suffix)\s+Modifier\s+"([^"]+)"\s+\(Tier:\s*(\d+)\)\s*(?:—\s*(.+))?\s*\}',
+                r'\{\s*(Prefix|Suffix|Implicit)\s+Modifier\s+"([^"]+)"\s*(?:\(Tier:\s*(\d+)\))?\s*(?:—\s*(.+))?\s*\}',
                 line
             )
 
             if detailed_match:
                 mod_type = detailed_match.group(1).lower()
                 mod_name = detailed_match.group(2)
-                tier = int(detailed_match.group(3))
+                tier_str = detailed_match.group(3)
+                tier = int(tier_str) if tier_str else None
                 tags_str = detailed_match.group(4) or ""
                 tags = [tag.strip() for tag in tags_str.split(",") if tag.strip()]
 
-                # Next line should be the actual stat text
+                # Collect ALL stat lines until next header or end
                 i += 1
-                if i < len(lines):
+                stat_lines = []
+                all_values = []
+                while i < len(lines) and not header_pattern.match(lines[i]):
                     stat_line = lines[i]
-                    values = re.findall(r"\d+(?:\.\d+)?", stat_line)
+                    stat_lines.append(stat_line)
+                    all_values.extend(re.findall(r"\d+(?:\.\d+)?", stat_line))
+                    i += 1
+
+                if stat_lines:
+                    # Join stat lines with newline for hybrid mods
                     mods.append(ItemMod(
-                        text=stat_line,
-                        values=values,
+                        text="\n".join(stat_lines),
+                        values=all_values,
                         mod_name=mod_name,
                         tier=tier,
                         mod_type=mod_type,
@@ -267,7 +280,6 @@ class ItemParser:
                 # Simple format without detailed info
                 values = re.findall(r"\d+(?:\.\d+)?", line)
                 mods.append(ItemMod(text=line, values=values))
-
-            i += 1
+                i += 1
 
         return mods

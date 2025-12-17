@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { Tooltip } from './Tooltip'
 import { CurrencyTooltipWrapper } from './CurrencyTooltipWrapper'
+import { useGameVersion, isFeatureAvailable } from '../contexts/VersionContext'
 
 interface UnifiedCurrencyStashProps {
   categorizedCurrencies: {
@@ -34,6 +35,10 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
   searchFilter = () => true
 }) => {
   const [essencesExpanded, setEssencesExpanded] = useState(false)
+  const { gameVersion } = useGameVersion()
+
+  // Filter omens based on game version
+  const versionFilteredOmens = availableOmens.filter(omen => isFeatureAvailable(omen, gameVersion))
 
   const renderCurrencySlot = (currency: string, isImplemented: boolean, isAvailable: boolean) => {
     const additionalMechanics = !isImplemented
@@ -141,7 +146,7 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
           </div>
 
           {/* Right Column - Omens */}
-          {availableOmens.length > 0 && (
+          {versionFilteredOmens.length > 0 && (
             <div className="currency-section omens-section">
               <div className="currency-section-header">Omens</div>
               <div className="currency-section-content omens-grid">
@@ -165,7 +170,7 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
                   'Omen of Putrefaction', 'Omen of Light',
                   // Corruption
                   'Omen of Corruption'
-                ].filter(omen => availableOmens.includes(omen) && searchFilter(omen)).map((omen) => {
+                ].filter(omen => versionFilteredOmens.includes(omen) && searchFilter(omen)).map((omen) => {
                   const isActive = selectedOmens.includes(omen)
                   return (
                     <Tooltip

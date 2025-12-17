@@ -46,12 +46,13 @@ def create_test_modifier():
         tags: List[str] = None,
         mod_group: str = None,
         is_essence_only: bool = False,
+        stat_text: str = None,
     ):
         return ItemModifier(
             name=name,
             mod_type=mod_type,
             tier=tier,
-            stat_text=f"{name} stat text",
+            stat_text=stat_text or f"+{{}} {name}",  # Use {} placeholder for value matching
             stat_min=stat_min,
             stat_max=stat_max,
             required_ilvl=required_ilvl,
@@ -95,7 +96,7 @@ def create_essence_info():
         name: str = "Lesser Essence of Flames",
         essence_type: str = "flames",
         essence_tier: str = "lesser",
-        guaranteed_mod_name: str = "Fire Damage",
+        guaranteed_mod_name: str = "Essence Fire Damage",  # Must match modifier name in mock pool
         mod_type: str = "prefix",
     ):
         from app.schemas.crafting import EssenceItemEffect
@@ -109,13 +110,14 @@ def create_essence_info():
             mechanic = "remove_add_rare"  # Requires Rare item, rerolls
 
         # Create item effect for the guaranteed mod
+        # Use +{value} {name} pattern to match modifier stat_text after normalization
         item_effects = [
             EssenceItemEffect(
                 id=1,
                 essence_id=1,
                 item_type="Body Armour",  # Must match category mapping in mechanics.py
                 modifier_type=mod_type,
-                effect_text=f"{guaranteed_mod_name} effect",
+                effect_text=f"+10 {guaranteed_mod_name}",  # Will be normalized to +{} {name}
                 value_min=10,
                 value_max=20,
             )

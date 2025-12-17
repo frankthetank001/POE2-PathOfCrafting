@@ -842,10 +842,6 @@ class EssenceMechanic(CraftingMechanic):
         self.essence_info = essence_info
 
     def can_apply(self, item: CraftableItem) -> Tuple[bool, Optional[str]]:
-        # Check item type compatibility first
-        if not self._has_compatible_item_type(item):
-            logger.debug(f"{self.essence_info.name} incompatible with {item.base_category} - no matching item_effects")
-            return False, f"{self.essence_info.name} cannot be applied to {item.base_category} items"
 
         # Special check for Essence of the Abyss: cannot be used on items with desecrated mods or Mark of the Abyssal Lord
         if self.essence_info.name == "Essence of the Abyss":
@@ -906,52 +902,15 @@ class EssenceMechanic(CraftingMechanic):
             "alacrity": "castspeed",
             "haste": "attackspeed",
             "command": "minion",
-            "opulence": "itemrarity"
+            "opulence": "itemrarity",
+            # Corrupted essences - unique mod groups for essence-only modifiers
+            "hysteria": "essence_hysteria",
+            "delirium": "essence_delirium",
+            "horror": "essence_horror",
+            "insanity": "essence_insanity",
         }
         return essence_to_mod_group.get(self.essence_info.essence_type)
 
-    def _has_compatible_item_type(self, item: CraftableItem) -> bool:
-        """Check if essence has compatible effects for this item type."""
-        for effect in self.essence_info.item_effects:
-            if self._item_matches_effect_type(item, effect.item_type):
-                return True
-        return False
-
-    def _item_matches_effect_type(self, item: CraftableItem, effect_item_type: str) -> bool:
-        """Check if item matches the effect's target item type."""
-        item_category = item.base_category.lower()  # Normalize to lowercase
-        effect_type_lower = effect_item_type.lower()  # Normalize to lowercase
-
-        # Handle broad categories first
-        if effect_item_type == "All" or effect_item_type == "Equipment":
-            return True
-        elif effect_item_type == "Weapon":
-            weapon_types = ["one handed sword", "two handed sword", "bow", "crossbow", "wand", "staff", "sceptre", "dagger", "claw", "mace", "axe", "flail"]
-            return item_category in weapon_types
-        elif effect_item_type == "Armour":
-            armour_types = ["body armour", "helmet", "gloves", "boots", "shield", "str_armour", "dex_armour", "int_armour", "str_helmet", "dex_helmet", "int_helmet", "str_gloves", "dex_gloves", "int_gloves", "str_boots", "dex_boots", "int_boots", "body_armour"]
-            return item_category in armour_types
-        elif effect_item_type == "Jewellery":
-            # Support both lowercase (from item_bases.json) and uppercase variants
-            return item_category in ["ring", "amulet", "belt"]
-
-        # Direct category matches with mappings - normalize all to lowercase
-        category_mappings = {
-            "body armour": ["body armour", "body_armour", "str_armour", "dex_armour", "int_armour"],
-            "helmet": ["helmet", "str_helmet", "dex_helmet", "int_helmet"],
-            "gloves": ["gloves", "str_gloves", "dex_gloves", "int_gloves"],
-            "boots": ["boots", "str_boots", "dex_boots", "int_boots"],
-            "shield": ["shield"],
-            "ring": ["ring"],
-            "amulet": ["amulet"],
-            "belt": ["belt"],
-        }
-
-        if effect_type_lower in category_mappings:
-            return item_category in category_mappings[effect_type_lower]
-
-        # Fallback to case-insensitive direct comparison
-        return item_category == effect_type_lower
 
     def apply(
         self, item: CraftableItem, modifier_pool: ModifierPool
@@ -1027,46 +986,13 @@ class EssenceMechanic(CraftingMechanic):
         return True, f"Applied {self.essence_info.name}, removed {removed_mod_name}, added {guaranteed_mod.name}", manager.item
 
     def _create_guaranteed_modifier(self, item: CraftableItem, modifier_pool: ModifierPool) -> Optional[ItemModifier]:
-        """Get guaranteed modifier from modifier pool based on essence effect."""
-        # Find matching effect for this item type
-        matching_effect = None
-        for effect in self.essence_info.item_effects:
-            if self._item_matches_effect_type(item, effect.item_type):
-                matching_effect = effect
-                break
+        """Get guaranteed modifier from modifier pool based on essence effect.
 
-        if not matching_effect:
-            logger.warning(f"No matching effect for {item.base_category} in {self.essence_info.name}")
-            return None
-
-        # Map essence types to modifier groups in the pool
-        essence_to_mod_group = {
-            "insulation": "fireresistance",
-            "thawing": "coldresistance",
-            "grounding": "lightningresistance",
-            "ruin": "chaosresistance",
-            "body": "life",
-            "mind": "mana",
-            "enhancement": "alldefences",  # Global Defences (Armor/Evasion/ES)
-            "abrasion": "physicaldamage",
-            "flames": "firedamage",
-            "ice": "colddamage",
-            "electricity": "lightningdamage",
-            "battle": "accuracy",
-            "sorcery": "spelldamage",
-            "infinite": "attributes",
-            "seeking": "critical",
-            "alacrity": "castspeed",
-            "haste": "attackspeed",
-            "command": "minion",
-            "opulence": "itemrarity",
-            "abyss": "abyssal_mark"  # Special: adds placeholder for desecration
-        }
-
-        target_mod_group = essence_to_mod_group.get(self.essence_info.essence_type)
-        if not target_mod_group:
-            logger.warning(f"No modifier group mapping for essence type: {self.essence_info.essence_type}")
-            return None
+        Iterates through essence effects and finds one with matching modifiers
+        that apply to this item. The modifier pool's _modifier_applies_to_item
+        handles all item type/slot matching.
+        """
+        import re
 
         # Special handling for Essence of the Abyss - return Mark of the Abyssal Lord directly
         if self.essence_info.essence_type == "abyss":
@@ -1079,25 +1005,49 @@ class EssenceMechanic(CraftingMechanic):
                 logger.error("Mark of the Abyssal Lord not found in modifier pool")
                 return None
 
-        # Find suitable modifiers in the pool
-        mod_type = matching_effect.modifier_type
-        tier = self._get_tier_number()
+        # Try each effect and find one with matching modifiers for this item
+        matching_effect = None
+        best_mod = None
 
-        # Get modifiers from pool that match our criteria
-        suitable_mods = [
-            mod for mod in modifier_pool.modifiers
-            if (mod.mod_group == target_mod_group and
-                mod.mod_type.value == mod_type and
-                mod.tier <= tier and  # Essence tier controls quality
-                modifier_pool._modifier_applies_to_item(mod, item))
-        ]
+        for effect in self.essence_info.item_effects:
+            mod_type = effect.modifier_type
 
-        if not suitable_mods:
-            logger.warning(f"No suitable modifiers found for group {target_mod_group}, type {mod_type}")
+            # Normalize effect text: replace (min-max) and numeric values with {}
+            normalized_effect = re.sub(r'\(\d+(\.\d+)?-\d+(\.\d+)?\)', '{}', effect.effect_text)
+            normalized_effect = re.sub(r'\d+(\.\d+)?', '{}', normalized_effect)
+
+            # Find modifiers matching stat_text, mod_type, and item applicability
+            suitable_mods = [
+                mod for mod in modifier_pool.modifiers
+                if (mod.mod_type.value == mod_type and
+                    mod.stat_text == normalized_effect and
+                    modifier_pool._modifier_applies_to_item(mod, item))
+            ]
+
+            if not suitable_mods:
+                continue  # Try next effect
+
+            # Found matching modifiers - select the best one
+            if effect.value_min is not None:
+                matching_value_mods = [
+                    mod for mod in suitable_mods
+                    if mod.stat_min == effect.value_min and mod.stat_max == effect.value_max
+                ]
+                if matching_value_mods:
+                    best_mod = matching_value_mods[0]
+                else:
+                    # Fallback: find closest match by value
+                    best_mod = min(suitable_mods, key=lambda m: abs((m.stat_min or 0) - effect.value_min))
+            else:
+                # No value specified, choose best tier
+                best_mod = min(suitable_mods, key=lambda m: m.tier)
+
+            matching_effect = effect
+            break  # Found a match, stop searching
+
+        if not matching_effect or not best_mod:
+            logger.warning(f"No matching modifier for {self.essence_info.name} on {item.base_name}")
             return None
-
-        # Choose the best tier modifier (lowest tier number = highest quality)
-        best_mod = min(suitable_mods, key=lambda m: m.tier)
 
         # Create a copy with essence-specific values if the effect specifies them
         if matching_effect.value_min is not None and matching_effect.value_max is not None:
@@ -1931,15 +1881,10 @@ class OmenModifiedMechanic(CraftingMechanic):
         if item.rarity != ItemRarity.RARE:
             manager.upgrade_rarity(ItemRarity.RARE)
 
-        # Get the essence effect to determine what type of mod to add
-        matching_effect = None
-        for effect in base.essence_info.item_effects:
-            if base._item_matches_effect_type(item, effect.item_type):
-                matching_effect = effect
-                break
-
-        if not matching_effect:
-            return False, f"No matching effect for {item.base_category}", item
+        # Get the guaranteed modifier - this also validates that the essence applies to this item
+        guaranteed_mod = base._create_guaranteed_modifier(item, modifier_pool)
+        if not guaranteed_mod:
+            return False, f"No suitable {base.essence_info.essence_type} modifiers found for {item.base_name}", item
 
         # Special handling for Essence of the Abyss - Mark should choose prefix/suffix dynamically
         if base.essence_info.essence_type == "abyss":
@@ -1950,44 +1895,30 @@ class OmenModifiedMechanic(CraftingMechanic):
             if not can_add_prefix and not can_add_suffix:
                 return False, "No room to add Mark of the Abyssal Lord", item
 
-            # Get the Mark modifier
-            mark_mods = [mod for mod in modifier_pool.modifiers if mod.mod_group == "abyssal_mark"]
-            if not mark_mods:
-                return False, "Mark of the Abyssal Lord not found in modifier pool", item
-
-            mark = mark_mods[0].model_copy(deep=True)
-
             # Choose prefix or suffix based on availability ONLY
             # Crystallisation omens control what is REMOVED, not where Mark goes
             if can_add_prefix and can_add_suffix:
                 # Random choice when both slots available
-                mark.mod_type = random.choice([ModType.PREFIX, ModType.SUFFIX])
+                guaranteed_mod.mod_type = random.choice([ModType.PREFIX, ModType.SUFFIX])
             elif can_add_prefix:
-                mark.mod_type = ModType.PREFIX
+                guaranteed_mod.mod_type = ModType.PREFIX
             else:
-                mark.mod_type = ModType.SUFFIX
+                guaranteed_mod.mod_type = ModType.SUFFIX
 
-            manager.add_modifier(mark)
+            manager.add_modifier(guaranteed_mod)
             omen_text = f" with {', '.join([o.name for o in self.omen_chain])}" if self.omen_chain else ""
-            return True, f"Applied {base.essence_info.name}, removed {removed_mod_name}, added {mark.name} ({mark.mod_type.value}){omen_text}", manager.item
+            return True, f"Applied {base.essence_info.name}, removed {removed_mod_name}, added {guaranteed_mod.name} ({guaranteed_mod.mod_type.value}){omen_text}", manager.item
 
-        # For other essences, check if we can add the type specified by essence effect
-        essence_mod_type = matching_effect.modifier_type  # "prefix" or "suffix"
+        # For other essences, check if we can add the type specified by the modifier
+        essence_mod_type = guaranteed_mod.mod_type.value  # "prefix" or "suffix"
 
         # Validate that we have room for the mod type the essence wants to add
         if essence_mod_type == "prefix" and not item.can_add_prefix:
-            # If omen forced us to remove a suffix, but essence adds prefix, and we're full on prefixes
             omen_info = f" (Omen forced {removed_mod_type} removal)" if removed_mod_type else ""
             return False, f"No room for {essence_mod_type} (essence adds {essence_mod_type}){omen_info}", item
         elif essence_mod_type == "suffix" and not item.can_add_suffix:
-            # If omen forced us to remove a prefix, but essence adds suffix, and we're full on suffixes
             omen_info = f" (Omen forced {removed_mod_type} removal)" if removed_mod_type else ""
             return False, f"No room for {essence_mod_type} (essence adds {essence_mod_type}){omen_info}", item
-
-        # Add the guaranteed modifier
-        guaranteed_mod = base._create_guaranteed_modifier(item, modifier_pool)
-        if not guaranteed_mod:
-            return False, f"No suitable {base.essence_info.essence_type} modifiers found", item
 
         manager.add_modifier(guaranteed_mod)
 

@@ -1,9 +1,10 @@
-from typing import Optional, List
+from typing import Optional, List, Tuple
 import re
+import uuid
 
 from app.core.logging import get_logger
 from app.schemas.item import ParsedItem, ItemMod
-from app.schemas.crafting import CraftableItem, ItemModifier, ModType, ItemRarity
+from app.schemas.crafting import CraftableItem, ItemModifier, ModType, ItemRarity, UnrevealedModifier
 from app.schemas.item_bases import get_item_base_by_name, ITEM_BASES, ItemBase
 from app.services.crafting.modifier_pool import ModifierPool
 from app.services.stat_calculator import StatCalculator
@@ -19,6 +20,7 @@ class ItemConverter:
     def convert_to_craftable(self, parsed_item: ParsedItem) -> Optional[CraftableItem]:
         """Convert a ParsedItem to a CraftableItem"""
         self.failed_mods = []  # Reset failed mods list
+        self._pending_unrevealed_mods = []  # Track unrevealed mods for this conversion
         try:
             # Find base item from parsed base_type
             base = get_item_base_by_name(parsed_item.base_type)
@@ -111,6 +113,7 @@ class ItemConverter:
                 implicit_mods=implicit_mods,
                 prefix_mods=prefix_mods,
                 suffix_mods=suffix_mods,
+                unrevealed_mods=self._pending_unrevealed_mods,
                 corrupted=parsed_item.corrupted,
             )
 
@@ -166,6 +169,31 @@ class ItemConverter:
         # so we rely on stat text + value to find the correct mod and tier
         mod_type = force_type or item_mod.mod_type
 
+        # Handle unrevealed desecrated mods (placeholder text)
+        if item_mod.text.lower().strip() in ['desecrated prefix', 'desecrated suffix']:
+            is_prefix = 'prefix' in item_mod.text.lower()
+            unrevealed_id = str(uuid.uuid4())
+
+            # Create the unrevealed metadata
+            unrevealed_meta = UnrevealedModifier(
+                id=unrevealed_id,
+                mod_type=ModType.PREFIX if is_prefix else ModType.SUFFIX,
+                bone_type="unknown",  # We don't know from import
+                bone_part="unknown",  # We don't know from import
+            )
+            self._pending_unrevealed_mods.append(unrevealed_meta)
+
+            return ItemModifier(
+                name="Unrevealed Desecrated Mod",
+                mod_type=ModType.PREFIX if is_prefix else ModType.SUFFIX,
+                tier=0,
+                stat_text="Desecrated mod (unrevealed)",
+                is_unrevealed=True,
+                is_desecrated=True,
+                unrevealed_id=unrevealed_id,
+                tags=['desecrated_only']
+            )
+
         # Try to find matching modifier by stat text
         candidates = []
 
@@ -190,6 +218,8 @@ class ItemConverter:
         # Strip special markers like (desecrated), (fractured), (Placeholder for Desecration), etc.
         parsed_text = item_mod.text.lower()
         parsed_text = re.sub(r'\s*\((desecrated|fractured|corrupted|placeholder[^)]*)\)\s*$', '', parsed_text, flags=re.IGNORECASE).strip()
+        # Normalize newlines to comma+space for hybrid mod matching (DB uses ", " separator)
+        parsed_text = parsed_text.replace('\n', ', ')
 
         # Sort candidates by specificity (longer stat_text first) to match more specific mods first
         # This prevents "+{} to Accuracy Rating" from matching before "Allies in your Presence have +{} to Accuracy Rating"
@@ -213,22 +243,33 @@ class ItemConverter:
             full_pattern = f'^{pattern}$'
 
             if re.match(full_pattern, parsed_text):
-                # Check if the value falls within the mod's range
-                current_value = self._extract_value_from_text(item_mod.text)
+                # Extract ALL values from the mod text for hybrid mod matching
+                all_values = self._extract_all_values_from_text(item_mod.text)
+                current_value = all_values[0] if all_values else None
 
-                # If we have a value and the candidate has ranges, verify it's in range
-                if current_value is not None and candidate.stat_ranges:
-                    # Check if value is within any of the stat ranges
-                    in_range = any(
-                        stat_range.min <= current_value <= stat_range.max
-                        for stat_range in candidate.stat_ranges
-                    )
+                # If we have values and the candidate has ranges, verify each value is in its corresponding range
+                if all_values and candidate.stat_ranges:
+                    # For hybrid mods, check each value against its corresponding range
+                    if len(all_values) == len(candidate.stat_ranges):
+                        # Each value must be in its corresponding range
+                        in_range = all(
+                            stat_range.min <= value <= stat_range.max
+                            for value, stat_range in zip(all_values, candidate.stat_ranges)
+                        )
+                    else:
+                        # Fallback: check if first value is in any range
+                        in_range = any(
+                            stat_range.min <= current_value <= stat_range.max
+                            for stat_range in candidate.stat_ranges
+                        )
                     if not in_range:
-                        # Value doesn't match this tier's range, try next candidate
+                        # Values don't match this tier's ranges, try next candidate
                         continue
 
                 result_mod = candidate.model_copy()
                 result_mod.current_value = current_value
+                if len(all_values) > 1:
+                    result_mod.current_values = all_values
 
                 # If the original text had (desecrated), ensure the tag is present
                 if '(desecrated)' in item_mod.text.lower():
@@ -246,9 +287,17 @@ class ItemConverter:
     def _extract_value_from_text(self, text: str) -> Optional[float]:
         """Extract the first numeric value from mod text"""
         # Remove parentheses with ranges like (101-110)
-        text_no_ranges = re.sub(r'\(\d+-\d+\)', '', text)
+        text_no_ranges = re.sub(r'\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\)', '', text)
 
         match = re.search(r'(\d+(?:\.\d+)?)', text_no_ranges)
         if match:
             return float(match.group(1))
         return None
+
+    def _extract_all_values_from_text(self, text: str) -> List[float]:
+        """Extract all numeric values from mod text (for hybrid mods)"""
+        # Remove parentheses with ranges like (101-110) or (26-30)
+        text_no_ranges = re.sub(r'\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\)', '', text)
+
+        matches = re.findall(r'(\d+(?:\.\d+)?)', text_no_ranges)
+        return [float(m) for m in matches]

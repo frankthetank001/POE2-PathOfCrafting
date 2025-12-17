@@ -1,13 +1,35 @@
+import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom'
 import BuildBrowser from './pages/BuildBrowser'
 import GridCraftingSimulator from './pages/GridCraftingSimulator'
+import { VersionProvider, useGameVersion, GameVersion } from './contexts/VersionContext'
 import './App.css'
 
 // Version injected at build time from git tags
 declare const __APP_VERSION__: string
 
+// Patch notes for each version (changes from previous version)
+const PATCH_NOTES: Record<GameVersion, { title: string; changes: string[] }> = {
+  '0.4': {
+    title: 'Patch 0.4 Changes',
+    changes: [
+      'Removed: Omen of Homogenising Exaltation',
+      'Removed: Omen of Homogenising Coronation',
+    ],
+  },
+  '0.3': {
+    title: 'Patch 0.3 (Baseline)',
+    changes: [
+      'Initial crafting system',
+      'All Homogenising Omens available',
+    ],
+  },
+}
+
 function Navigation() {
   const location = useLocation()
+  const { gameVersion, setGameVersion } = useGameVersion()
+  const [showPatchNotes, setShowPatchNotes] = useState(false)
 
   return (
     <nav className="nav">
@@ -18,6 +40,42 @@ function Navigation() {
             Crafting Simulator
           </Link>
           <span className="nav-link-disabled" title="Coming soon">Build Browser</span>
+          <div className="version-selector">
+            <select
+              className="version-select"
+              value={gameVersion}
+              onChange={(e) => setGameVersion(e.target.value as GameVersion)}
+              title="Select PoE2 patch version"
+            >
+              <option value="0.4">Patch 0.4</option>
+              <option value="0.3">Patch 0.3</option>
+            </select>
+            <button
+              className="version-info-btn"
+              onClick={() => setShowPatchNotes(!showPatchNotes)}
+              title="View patch changes"
+            >
+              i
+            </button>
+            {showPatchNotes && (
+              <div className="patch-notes-popup">
+                <div className="patch-notes-header">
+                  {PATCH_NOTES[gameVersion].title}
+                  <button
+                    className="patch-notes-close"
+                    onClick={() => setShowPatchNotes(false)}
+                  >
+                    x
+                  </button>
+                </div>
+                <ul className="patch-notes-list">
+                  {PATCH_NOTES[gameVersion].changes.map((change, i) => (
+                    <li key={i}>{change}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
         </div>
       </div>
     </nav>
@@ -26,18 +84,20 @@ function Navigation() {
 
 function App() {
   return (
-    <Router>
-      <div className="app">
-        <Navigation />
+    <VersionProvider>
+      <Router>
+        <div className="app">
+          <Navigation />
 
-        <main className="main">
-          <Routes>
-            <Route path="/" element={<GridCraftingSimulator />} />
-            <Route path="/builds" element={<BuildBrowser />} />
-          </Routes>
-        </main>
-      </div>
-    </Router>
+          <main className="main">
+            <Routes>
+              <Route path="/" element={<GridCraftingSimulator />} />
+              <Route path="/builds" element={<BuildBrowser />} />
+            </Routes>
+          </main>
+        </div>
+      </Router>
+    </VersionProvider>
   )
 }
 

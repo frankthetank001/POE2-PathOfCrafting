@@ -276,6 +276,11 @@ class ModifierLoader:
             "grounding": "lightningresistance",
             "alacrity": "mana",
             "opulence": "itemrarity",
-            "command": "aura"
+            "command": "aura",
+            # Corrupted essences - unique mod groups
+            "hysteria": "essence_hysteria",
+            "delirium": "essence_delirium",
+            "horror": "essence_horror",
+            "insanity": "essence_insanity",
         }
         return group_mapping.get(essence_type, "misc")

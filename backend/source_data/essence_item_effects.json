@@ -1738,7 +1738,7 @@
   {
     "essence_name": "Essence of Hysteria",
     "item_type": "Boots",
-    "modifier_type": "suffix",
+    "modifier_type": "prefix",
     "effect_text": "30% increased Movement Speed",
     "value_min": 30.0,
     "value_max": 30.0

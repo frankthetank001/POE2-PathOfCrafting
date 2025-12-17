@@ -3550,15 +3550,16 @@ function GridCraftingSimulator() {
                                     )}
                                   </div>
                                 </div>
-                                {!isUnrevealed && (
-                                  <button
-                                    className="mod-remove-btn"
-                                    onClick={() => handleRemoveMod(idx, 'prefix')}
-                                    title="Remove this modifier"
-                                  >
-                                    ✕
-                                  </button>
-                                )}
+                                <button
+                                  className="mod-remove-btn"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleRemoveMod(idx, 'prefix')
+                                  }}
+                                  title="Remove this modifier"
+                                >
+                                  ✕
+                                </button>
                               </div>
                             )
                           })}
@@ -3645,15 +3646,16 @@ function GridCraftingSimulator() {
                                     )}
                                   </div>
                                 </div>
-                                {!isUnrevealed && (
-                                  <button
-                                    className="mod-remove-btn"
-                                    onClick={() => handleRemoveMod(idx, 'suffix')}
-                                    title="Remove this modifier"
-                                  >
-                                    ✕
-                                  </button>
-                                )}
+                                <button
+                                  className="mod-remove-btn"
+                                  onClick={(e) => {
+                                    e.stopPropagation()
+                                    handleRemoveMod(idx, 'suffix')
+                                  }}
+                                  title="Remove this modifier"
+                                >
+                                  ✕
+                                </button>
                               </div>
                             )
                           })}
