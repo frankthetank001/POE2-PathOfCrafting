@@ -17,22 +17,23 @@ from app.services.crafting.simulator import CraftingSimulator
 # ============================================================================
 
 # Format: item_category -> (desecrated_prefix, desecrated_suffix, essence_prefix, essence_suffix)
+# Note: Corrupted essences (Hysteria, Delirium, Horror, Insanity) add 3 essence suffixes to most equipment types
 EXPECTED_MOD_COUNTS: Dict[str, Tuple[int, int, int, int]] = {
     # Armor
-    "helmet": (0, 11, 1, 2),
-    "gloves": (0, 15, 1, 4),
-    "body_armour": (0, 11, 4, 2),
-    "boots": (0, 15, 1, 2),
+    "helmet": (0, 11, 1, 5),  # +3 from corrupted essences
+    "gloves": (0, 15, 1, 7),  # +3 from corrupted essences
+    "body_armour": (0, 11, 4, 5),  # +3 from corrupted essences
+    "boots": (0, 15, 1, 5),  # +3 from corrupted essences
 
     # Jewelry
-    "amulet": (11, 20, 2, 2),
-    "ring": (7, 15, 2, 1),
-    "belt": (8, 12, 1, 3),
+    "amulet": (11, 20, 2, 5),  # +3 from corrupted essences
+    "ring": (7, 15, 2, 4),  # +3 from corrupted essences
+    "belt": (8, 12, 1, 6),  # +3 from corrupted essences
 
     # Offhand
     "quiver": (3, 5, 1, 1),
     "focus": (6, 12, 2, 3),
-    "shield": (0, 18, 1, 1),
+    "shield": (0, 18, 1, 4),  # +3 from corrupted essences
 
     # 1H Weapons
     "wand": (6, 9, 1, 3),
