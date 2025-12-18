@@ -561,14 +561,13 @@ class TestDesecrationOmens:
         )
         # This is a Well of Souls specific omen - not implemented yet
 
-    @pytest.mark.skip(reason="Desecration + Omen combinations not yet implemented in OmenModifiedMechanic")
     def test_omen_of_sinistral_necromancy_prefix_only(self, create_test_item, create_omen_info, mock_modifier_pool):
         """Omen of Sinistral Necromancy should add only prefix desecrated mods."""
         item = create_test_item(rarity=ItemRarity.RARE)
 
         base_mechanic = DesecrationMechanic({
             "bone_type": "preserved",
-            "bone_part": "jawbone",
+            "bone_part": "rib",  # 'rib' works with armour (int_armour)
             "min_modifier_level": 40,
         })
 
@@ -578,16 +577,30 @@ class TestDesecrationOmens:
             affected_currency="Desecration",
             effect_type="sinistral",
         )
-        # When implemented: wrapped = OmenModifiedMechanic(base_mechanic, omen_info)
 
-    @pytest.mark.skip(reason="Desecration + Omen combinations not yet implemented in OmenModifiedMechanic")
+        # Mock get_eligible_mods to return some mods
+        mock_modifier_pool.get_eligible_mods.return_value = [
+            mock_modifier_pool.roll_random_modifier.return_value
+        ]
+
+        omen_mechanic = OmenModifiedMechanic(base_mechanic, omen_info)
+        success, message, result = omen_mechanic.apply(item, mock_modifier_pool)
+
+        assert success is True
+        # Should have added an unrevealed prefix modifier
+        assert len(result.unrevealed_mods) == 1
+        assert result.unrevealed_mods[0].mod_type == ModType.PREFIX
+        # Should have placeholder in prefix_mods
+        assert len(result.prefix_mods) == 1
+        assert result.prefix_mods[0].is_unrevealed is True
+
     def test_omen_of_dextral_necromancy_suffix_only(self, create_test_item, create_omen_info, mock_modifier_pool):
         """Omen of Dextral Necromancy should add only suffix desecrated mods."""
         item = create_test_item(rarity=ItemRarity.RARE)
 
         base_mechanic = DesecrationMechanic({
             "bone_type": "preserved",
-            "bone_part": "collarbone",
+            "bone_part": "rib",  # 'rib' works with armour (int_armour)
             "min_modifier_level": 40,
         })
 
@@ -597,7 +610,84 @@ class TestDesecrationOmens:
             affected_currency="Desecration",
             effect_type="dextral",
         )
-        # When implemented: wrapped = OmenModifiedMechanic(base_mechanic, omen_info)
+
+        # Mock get_eligible_mods to return some mods
+        mock_modifier_pool.get_eligible_mods.return_value = [
+            mock_modifier_pool.roll_random_modifier.return_value
+        ]
+
+        omen_mechanic = OmenModifiedMechanic(base_mechanic, omen_info)
+        success, message, result = omen_mechanic.apply(item, mock_modifier_pool)
+
+        assert success is True
+        # Should have added an unrevealed suffix modifier
+        assert len(result.unrevealed_mods) == 1
+        assert result.unrevealed_mods[0].mod_type == ModType.SUFFIX
+        # Should have placeholder in suffix_mods
+        assert len(result.suffix_mods) == 1
+        assert result.suffix_mods[0].is_unrevealed is True
+
+    def test_sinistral_necromancy_fails_when_no_prefix_slots(self, create_test_item, create_test_modifier, create_omen_info, mock_modifier_pool):
+        """Sinistral Necromancy should fail when item has no prefix slots."""
+        # Create item with max prefixes (3)
+        prefix1 = create_test_modifier("Prefix1", ModType.PREFIX)
+        prefix2 = create_test_modifier("Prefix2", ModType.PREFIX)
+        prefix3 = create_test_modifier("Prefix3", ModType.PREFIX)
+        item = create_test_item(rarity=ItemRarity.RARE, prefix_mods=[prefix1, prefix2, prefix3])
+
+        base_mechanic = DesecrationMechanic({
+            "bone_type": "preserved",
+            "bone_part": "rib",  # 'rib' works with armour (int_armour)
+            "min_modifier_level": 40,
+        })
+
+        omen_info = create_omen_info(
+            name="Omen of Sinistral Necromancy",
+            effect_description="Adds only prefix desecrated modifiers",
+            affected_currency="Desecration",
+            effect_type="sinistral",
+        )
+
+        mock_modifier_pool.get_eligible_mods.return_value = [
+            mock_modifier_pool.roll_random_modifier.return_value
+        ]
+
+        omen_mechanic = OmenModifiedMechanic(base_mechanic, omen_info)
+        success, message, result = omen_mechanic.apply(item, mock_modifier_pool)
+
+        assert success is False
+        assert "prefix" in message.lower()
+
+    def test_dextral_necromancy_fails_when_no_suffix_slots(self, create_test_item, create_test_modifier, create_omen_info, mock_modifier_pool):
+        """Dextral Necromancy should fail when item has no suffix slots."""
+        # Create item with max suffixes (3)
+        suffix1 = create_test_modifier("Suffix1", ModType.SUFFIX)
+        suffix2 = create_test_modifier("Suffix2", ModType.SUFFIX)
+        suffix3 = create_test_modifier("Suffix3", ModType.SUFFIX)
+        item = create_test_item(rarity=ItemRarity.RARE, suffix_mods=[suffix1, suffix2, suffix3])
+
+        base_mechanic = DesecrationMechanic({
+            "bone_type": "preserved",
+            "bone_part": "rib",  # 'rib' works with armour (int_armour)
+            "min_modifier_level": 40,
+        })
+
+        omen_info = create_omen_info(
+            name="Omen of Dextral Necromancy",
+            effect_description="Adds only suffix desecrated modifiers",
+            affected_currency="Desecration",
+            effect_type="dextral",
+        )
+
+        mock_modifier_pool.get_eligible_mods.return_value = [
+            mock_modifier_pool.roll_random_modifier.return_value
+        ]
+
+        omen_mechanic = OmenModifiedMechanic(base_mechanic, omen_info)
+        success, message, result = omen_mechanic.apply(item, mock_modifier_pool)
+
+        assert success is False
+        assert "suffix" in message.lower()
 
 
 # ============================================================================

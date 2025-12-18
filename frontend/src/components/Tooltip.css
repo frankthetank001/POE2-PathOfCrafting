@@ -16,6 +16,8 @@
   pointer-events: none;
   font-size: 0.9rem;
   line-height: 1.4;
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
 }
 
 /* Currency Tooltip Styles */

@@ -257,3 +257,79 @@ def test_abyss_with_dextral_adds_mark_as_suffix_when_prefixes_full(
     assert len(mark_in_prefixes) == 0, f"Expected no Mark in prefixes, found {len(mark_in_prefixes)}"
 
     print(f"✓ Test PASSED: Mark correctly added as SUFFIX when prefixes are full")
+
+
+def test_abyss_fails_on_item_with_desecrated_mod(modifier_pool, essence_of_abyss):
+    """Essence of the Abyss should not work on items with revealed desecrated modifiers."""
+    # Create item with a desecrated modifier
+    item = CraftableItem(
+        base_name="Gold Amulet",
+        base_category="amulet",
+        rarity=ItemRarity.RARE,
+        item_level=81,
+        quality=0,
+        prefix_mods=[
+            ItemModifier(
+                name="Desecrated Mod",
+                mod_type=ModType.PREFIX,
+                tier=1,
+                stat_text="Some desecrated effect",
+                stat_min=10,
+                stat_max=15,
+                current_value=12,
+                mod_group="desecrated_test",
+                tags=["desecrated_only"],
+                is_desecrated=True
+            )
+        ],
+        suffix_mods=[],
+        corrupted=False
+    )
+
+    base_essence = EssenceMechanic({}, essence_of_abyss)
+    success, message, result_item = base_essence.apply(item, modifier_pool)
+
+    assert success is False
+    assert "Desecrated" in message
+    print(f"✓ Test PASSED: Essence of Abyss correctly rejected on item with desecrated mod")
+
+
+def test_abyss_fails_on_item_with_unrevealed_desecrated_mod(modifier_pool, essence_of_abyss):
+    """Essence of the Abyss should not work on items with unrevealed desecrated modifiers."""
+    from app.schemas.crafting import UnrevealedModifier
+
+    # Create item with an unrevealed desecrated modifier
+    item = CraftableItem(
+        base_name="Gold Amulet",
+        base_category="amulet",
+        rarity=ItemRarity.RARE,
+        item_level=81,
+        quality=0,
+        prefix_mods=[
+            ItemModifier(
+                name="Unrevealed Desecrated Modifier",
+                mod_type=ModType.PREFIX,
+                tier=0,
+                stat_text="??? Unrevealed prefix modifier",
+                is_unrevealed=True,
+                unrevealed_id="test-unrevealed-id"
+            )
+        ],
+        suffix_mods=[],
+        corrupted=False,
+        unrevealed_mods=[
+            UnrevealedModifier(
+                id="test-unrevealed-id",
+                mod_type=ModType.PREFIX,
+                bone_type="preserved",
+                bone_part="collarbone"
+            )
+        ]
+    )
+
+    base_essence = EssenceMechanic({}, essence_of_abyss)
+    success, message, result_item = base_essence.apply(item, modifier_pool)
+
+    assert success is False
+    assert "unrevealed" in message.lower()
+    print(f"✓ Test PASSED: Essence of Abyss correctly rejected on item with unrevealed desecrated mod")

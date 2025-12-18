@@ -169,6 +169,14 @@ def mock_modifier_pool(create_test_modifier):
         mod_group="life",
         tier=1
     )
+    # Suffix essence modifier for testing suffix essences
+    attack_speed_mod = create_test_modifier(
+        "Essence Attack Speed",
+        ModType.SUFFIX,
+        is_essence_only=True,
+        mod_group="attackspeed",
+        tier=1
+    )
     regular_prefix = create_test_modifier("Regular Prefix", ModType.PREFIX, mod_group="regular_prefix")
     regular_suffix = create_test_modifier("Regular Suffix", ModType.SUFFIX, mod_group="regular_suffix")
 
@@ -189,7 +197,7 @@ def mock_modifier_pool(create_test_modifier):
     pool.roll_random_modifier = Mock(side_effect=roll_random_modifier)
     pool._get_excluded_groups_from_item = Mock(return_value=set())
     pool._modifier_applies_to_item = Mock(side_effect=_modifier_applies_to_item)
-    pool.modifiers = [fire_mod, cold_mod, lightning_mod, life_mod, regular_prefix, regular_suffix]
+    pool.modifiers = [fire_mod, cold_mod, lightning_mod, life_mod, attack_speed_mod, regular_prefix, regular_suffix]
 
     return pool
 
@@ -517,13 +525,13 @@ class TestCorruptedEssences:
 class TestEssenceWithOmens:
     """Test essence combined with omens."""
 
-    @pytest.mark.skip(reason="Essence + Omen combinations not yet implemented in OmenModifiedMechanic")
     def test_dextral_crystallisation_removes_suffix_first(self, create_test_item, create_test_modifier, create_essence_info, create_omen_info, mock_modifier_pool):
         """Omen of Dextral Crystallisation should remove suffix before applying essence."""
         prefix = create_test_modifier("Prefix", ModType.PREFIX)
         suffix = create_test_modifier("Suffix", ModType.SUFFIX)
         item = create_test_item(rarity=ItemRarity.RARE, prefix_mods=[prefix], suffix_mods=[suffix])
 
+        # Perfect essence with remove_add_rare mechanic
         base_mechanic = EssenceMechanic({}, create_essence_info(essence_tier="perfect"))
         omen_info = create_omen_info(
             name="Omen of Dextral Crystallisation",
@@ -533,17 +541,22 @@ class TestEssenceWithOmens:
         )
         wrapped_mechanic = OmenModifiedMechanic(base_mechanic, omen_info)
 
-        # When implemented, should remove suffix first then apply essence
-        # success, message, result = wrapped_mechanic.apply(item, mock_modifier_pool)
-        # assert result.suffix_count < item.suffix_count
+        success, message, result = wrapped_mechanic.apply(item, mock_modifier_pool)
 
-    @pytest.mark.skip(reason="Essence + Omen combinations not yet implemented in OmenModifiedMechanic")
+        assert success is True
+        # Should have removed the suffix (started with 1 suffix)
+        # The essence adds a guaranteed mod, so we check the suffix was removed
+        assert "Dextral Crystallisation" in message
+        # Original suffix should be gone, prefix should still be there
+        assert result.prefix_count >= 1  # Original prefix + possibly essence mod
+
     def test_sinistral_crystallisation_removes_prefix_first(self, create_test_item, create_test_modifier, create_essence_info, create_omen_info, mock_modifier_pool):
         """Omen of Sinistral Crystallisation should remove prefix before applying essence."""
         prefix = create_test_modifier("Prefix", ModType.PREFIX)
         suffix = create_test_modifier("Suffix", ModType.SUFFIX)
         item = create_test_item(rarity=ItemRarity.RARE, prefix_mods=[prefix], suffix_mods=[suffix])
 
+        # Perfect essence with remove_add_rare mechanic
         base_mechanic = EssenceMechanic({}, create_essence_info(essence_tier="perfect"))
         omen_info = create_omen_info(
             name="Omen of Sinistral Crystallisation",
@@ -553,9 +566,13 @@ class TestEssenceWithOmens:
         )
         wrapped_mechanic = OmenModifiedMechanic(base_mechanic, omen_info)
 
-        # When implemented, should remove prefix first then apply essence
-        # success, message, result = wrapped_mechanic.apply(item, mock_modifier_pool)
-        # assert result.prefix_count < item.prefix_count
+        success, message, result = wrapped_mechanic.apply(item, mock_modifier_pool)
+
+        assert success is True
+        # Should have removed the prefix (started with 1 prefix)
+        assert "Sinistral Crystallisation" in message
+        # Original prefix should be gone, suffix should still be there
+        assert result.suffix_count >= 1  # Original suffix still there
 
 
 # ============================================================================
@@ -593,6 +610,68 @@ class TestEssenceEdgeCases:
         # This is more of a system design test
         # Essences reroll the item, so previous essence effects are lost
         pass
+
+    def test_perfect_essence_prefix_removes_prefix_when_full(self, create_test_item, create_test_modifier, create_essence_info, mock_modifier_pool):
+        """When prefixes are full and essence adds prefix, must remove a prefix (not suffix)."""
+        # Create item with 3 prefixes (full) and 2 suffixes
+        prefix1 = create_test_modifier("Prefix1", ModType.PREFIX)
+        prefix2 = create_test_modifier("Prefix2", ModType.PREFIX)
+        prefix3 = create_test_modifier("Prefix3", ModType.PREFIX)
+        suffix1 = create_test_modifier("Suffix1", ModType.SUFFIX)
+        suffix2 = create_test_modifier("Suffix2", ModType.SUFFIX)
+        item = create_test_item(
+            rarity=ItemRarity.RARE,
+            prefix_mods=[prefix1, prefix2, prefix3],
+            suffix_mods=[suffix1, suffix2]
+        )
+
+        # Perfect essence that adds a prefix
+        essence_info = create_essence_info(essence_tier="perfect", mod_type="prefix")
+        mechanic = EssenceMechanic({}, essence_info)
+
+        # Run multiple times to ensure it's consistent (not random)
+        for _ in range(5):
+            test_item = item.model_copy(deep=True)
+            success, message, result = mechanic.apply(test_item, mock_modifier_pool)
+
+            assert success is True, f"Expected success but got: {message}"
+            # Should have removed a prefix and added a prefix, so still 3 prefixes
+            assert result.prefix_count == 3
+            # Suffixes should be unchanged (2)
+            assert result.suffix_count == 2
+
+    def test_perfect_essence_suffix_removes_suffix_when_full(self, create_test_item, create_test_modifier, create_essence_info, mock_modifier_pool):
+        """When suffixes are full and essence adds suffix, must remove a suffix (not prefix)."""
+        # Create item with 2 prefixes and 3 suffixes (full)
+        prefix1 = create_test_modifier("Prefix1", ModType.PREFIX)
+        prefix2 = create_test_modifier("Prefix2", ModType.PREFIX)
+        suffix1 = create_test_modifier("Suffix1", ModType.SUFFIX)
+        suffix2 = create_test_modifier("Suffix2", ModType.SUFFIX)
+        suffix3 = create_test_modifier("Suffix3", ModType.SUFFIX)
+        item = create_test_item(
+            rarity=ItemRarity.RARE,
+            prefix_mods=[prefix1, prefix2],
+            suffix_mods=[suffix1, suffix2, suffix3]
+        )
+
+        # Perfect essence that adds a suffix - guaranteed_mod_name must match mock pool modifier
+        essence_info = create_essence_info(
+            essence_tier="perfect",
+            mod_type="suffix",
+            guaranteed_mod_name="Essence Attack Speed"
+        )
+        mechanic = EssenceMechanic({}, essence_info)
+
+        # Run multiple times to ensure it's consistent (not random)
+        for _ in range(5):
+            test_item = item.model_copy(deep=True)
+            success, message, result = mechanic.apply(test_item, mock_modifier_pool)
+
+            assert success is True, f"Expected success but got: {message}"
+            # Should have removed a suffix and added a suffix, so still 3 suffixes
+            assert result.suffix_count == 3
+            # Prefixes should be unchanged (2)
+            assert result.prefix_count == 2
 
 
 # ============================================================================

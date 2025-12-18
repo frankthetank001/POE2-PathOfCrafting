@@ -854,10 +854,14 @@ class EssenceMechanic(CraftingMechanic):
                 mod.mod_group == "abyssal_mark" or mod.name == "Abyssal"
                 for mod in all_mods
             )
+            # Also check for unrevealed desecrated modifiers
+            has_unrevealed_desecrated = len(item.unrevealed_mods) > 0
             if has_desecrated:
                 return False, f"{self.essence_info.name} cannot be used on items with Desecrated modifiers"
             if has_abyssal_mark:
                 return False, f"{self.essence_info.name} cannot be used on items with Mark of the Abyssal Lord"
+            if has_unrevealed_desecrated:
+                return False, f"{self.essence_info.name} cannot be used on items with unrevealed Desecrated modifiers"
 
         # Check if the essence mod group already exists on the item
         target_mod_group = self._get_target_mod_group()
@@ -879,7 +883,62 @@ class EssenceMechanic(CraftingMechanic):
                 logger.debug(f"{self.essence_info.name} failed: item has 0 mods, needs at least 1")
                 return False, f"{self.essence_info.name} requires existing modifiers to replace"
 
+        # Check if the essence has any applicable item effects for this item type
+        # Skip this check for Essence of the Abyss (it applies to all items)
+        if self.essence_info.essence_type != "abyss":
+            if not self._has_applicable_effect_for_item(item):
+                return False, f"{self.essence_info.name} cannot be applied to {item.base_name}"
+
         return True, None
+
+    def _has_applicable_effect_for_item(self, item: CraftableItem) -> bool:
+        """Check if the essence has any item effect that applies to this item type."""
+        # Map item_type from essence effects to base_category
+        item_type_to_category = {
+            # Armour types
+            "Armour": ["body_armour", "int_armour", "str_armour", "dex_armour", "str_dex_armour",
+                       "str_int_armour", "dex_int_armour", "str_dex_int_armour", "helmet", "gloves", "boots", "shield"],
+            "Body Armour": ["body_armour", "int_armour", "str_armour", "dex_armour", "str_dex_armour",
+                            "str_int_armour", "dex_int_armour", "str_dex_int_armour"],
+            "Helmet": ["helmet"],
+            "Gloves": ["gloves"],
+            "Boots": ["boots"],
+            "Shield": ["shield"],
+            # Jewellery
+            "Jewellery": ["amulet", "ring"],
+            "Amulet": ["amulet"],
+            "Ring": ["ring"],
+            "Belt": ["belt"],
+            # Weapons
+            "One Handed Melee Weapon": ["one_handed_sword", "dagger", "claw", "mace", "axe", "sceptre", "wand"],
+            "Two Handed Melee Weapon": ["two_handed_sword", "staff", "flail"],
+            "Bow": ["bow"],
+            "Crossbow": ["crossbow"],
+            "Martial Weapon": ["one_handed_sword", "two_handed_sword", "bow", "crossbow", "dagger", "claw",
+                               "mace", "axe", "flail", "staff"],
+            "Caster Weapon": ["wand", "sceptre", "staff"],
+            "Quarterstaff": ["staff"],
+            "Focus": ["focus"],
+            # Generic
+            "Equipment": ["body_armour", "int_armour", "str_armour", "dex_armour", "str_dex_armour",
+                          "str_int_armour", "dex_int_armour", "str_dex_int_armour", "helmet", "gloves",
+                          "boots", "shield", "amulet", "ring", "belt"],
+        }
+
+        # Check each item effect
+        for effect in self.essence_info.item_effects:
+            effect_item_type = effect.item_type
+            applicable_categories = item_type_to_category.get(effect_item_type, [])
+
+            # Direct match
+            if item.base_category in applicable_categories:
+                return True
+
+            # Also check if item type matches directly (lowercase comparison)
+            if item.base_category.lower() == effect_item_type.lower().replace(" ", "_"):
+                return True
+
+        return False
 
     def _get_target_mod_group(self) -> Optional[str]:
         """Get the mod group this essence will add."""
@@ -951,18 +1010,40 @@ class EssenceMechanic(CraftingMechanic):
     def _apply_remove_add_rare(
         self, item: CraftableItem, manager: ItemStateManager, modifier_pool: ModifierPool
     ) -> Tuple[bool, str, CraftableItem]:
-        """Apply Perfect/Corrupted essence."""
+        """Apply Perfect/Corrupted essence.
+
+        Key mechanic: If prefixes are full and essence adds a prefix, MUST remove a prefix.
+        Same for suffixes. This ensures room is made for the guaranteed mod.
+        """
         removed_mod_name = "none"
 
-        # Remove random modifier if item has any
+        # First, determine what type of mod the essence will add
+        # Check the essence's item effects to find the applicable mod type
+        essence_mod_type = self._get_essence_mod_type_for_item(item, modifier_pool)
+
+        # Remove modifier if item has any
         if item.total_explicit_mods > 0:
-            # Randomly choose between prefix and suffix
-            if item.prefix_mods and item.suffix_mods:
-                mod_type = random.choice([ModType.PREFIX, ModType.SUFFIX])
-            elif item.prefix_mods:
+            # Determine what to remove based on essence mod type and available slots
+            # If essence adds a prefix and prefixes are full, MUST remove a prefix
+            # If essence adds a suffix and suffixes are full, MUST remove a suffix
+            if essence_mod_type == "prefix" and not item.can_add_prefix:
+                # Must remove a prefix to make room
+                if not item.prefix_mods:
+                    return False, f"No prefixes to remove but need room for prefix", item
                 mod_type = ModType.PREFIX
-            else:
+            elif essence_mod_type == "suffix" and not item.can_add_suffix:
+                # Must remove a suffix to make room
+                if not item.suffix_mods:
+                    return False, f"No suffixes to remove but need room for suffix", item
                 mod_type = ModType.SUFFIX
+            else:
+                # Random choice between prefix and suffix (normal behavior)
+                if item.prefix_mods and item.suffix_mods:
+                    mod_type = random.choice([ModType.PREFIX, ModType.SUFFIX])
+                elif item.prefix_mods:
+                    mod_type = ModType.PREFIX
+                else:
+                    mod_type = ModType.SUFFIX
 
             # Get the list of mods for that type
             mods_list = item.prefix_mods if mod_type == ModType.PREFIX else item.suffix_mods
@@ -984,6 +1065,35 @@ class EssenceMechanic(CraftingMechanic):
         manager.add_modifier(guaranteed_mod)
 
         return True, f"Applied {self.essence_info.name}, removed {removed_mod_name}, added {guaranteed_mod.name}", manager.item
+
+    def _get_essence_mod_type_for_item(self, item: CraftableItem, modifier_pool: ModifierPool) -> Optional[str]:
+        """Determine what type of mod (prefix/suffix) the essence will add for this item.
+
+        Returns 'prefix', 'suffix', or None if no applicable effect found.
+        """
+        import re
+
+        for effect in self.essence_info.item_effects:
+            mod_type = effect.modifier_type
+
+            # Normalize effect text
+            normalized_effect = re.sub(r'\(\d+(\.\d+)?-\d+(\.\d+)?\)', '{}', effect.effect_text)
+            normalized_effect = re.sub(r'\d+(\.\d+)?', '{}', normalized_effect)
+
+            # Check if any modifiers match this effect for this item
+            # Check both normalized format ({}%) and original format ((7-10)%) since
+            # essence-only modifiers may be created with either format
+            suitable_mods = [
+                mod for mod in modifier_pool.modifiers
+                if (mod.mod_type.value == mod_type and
+                    (mod.stat_text == normalized_effect or mod.stat_text == effect.effect_text) and
+                    modifier_pool._modifier_applies_to_item(mod, item))
+            ]
+
+            if suitable_mods:
+                return mod_type
+
+        return None
 
     def _create_guaranteed_modifier(self, item: CraftableItem, modifier_pool: ModifierPool) -> Optional[ItemModifier]:
         """Get guaranteed modifier from modifier pool based on essence effect.
@@ -1017,10 +1127,12 @@ class EssenceMechanic(CraftingMechanic):
             normalized_effect = re.sub(r'\d+(\.\d+)?', '{}', normalized_effect)
 
             # Find modifiers matching stat_text, mod_type, and item applicability
+            # Check both normalized format ({}%) and original format ((7-10)%) since
+            # essence-only modifiers may be created with either format
             suitable_mods = [
                 mod for mod in modifier_pool.modifiers
                 if (mod.mod_type.value == mod_type and
-                    mod.stat_text == normalized_effect and
+                    (mod.stat_text == normalized_effect or mod.stat_text == effect.effect_text) and
                     modifier_pool._modifier_applies_to_item(mod, item))
             ]
 
@@ -1624,6 +1736,15 @@ class OmenModifiedMechanic(CraftingMechanic):
         import uuid
         import random
 
+        # Check for Sinistral/Dextral Necromancy omens (force prefix/suffix)
+        force_prefix = False
+        force_suffix = False
+        for omen in self.omen_chain:
+            if "Sinistral Necromancy" in omen.name:
+                force_prefix = True
+            elif "Dextral Necromancy" in omen.name:
+                force_suffix = True
+
         # Check for boss-specific omens (consumed here, stored on unrevealed mod)
         boss_tag_map = {
             "Omen of the Sovereign": "ulaman",
@@ -1671,14 +1792,23 @@ class OmenModifiedMechanic(CraftingMechanic):
         can_add_prefix = item.can_add_prefix and prefix_mods
         can_add_suffix = item.can_add_suffix and suffix_mods
 
-        if can_add_prefix and can_add_suffix:
+        # Sinistral/Dextral Necromancy omens force prefix/suffix
+        if force_prefix:
+            if not can_add_prefix:
+                return False, "Sinistral Necromancy requires a prefix slot but item has no room for prefixes", item
+            mod_type = ModType.PREFIX
+        elif force_suffix:
+            if not can_add_suffix:
+                return False, "Dextral Necromancy requires a suffix slot but item has no room for suffixes", item
+            mod_type = ModType.SUFFIX
+        elif can_add_prefix and can_add_suffix:
             mod_type = random.choice([ModType.PREFIX, ModType.SUFFIX])
         elif can_add_prefix:
             mod_type = ModType.PREFIX
         elif can_add_suffix:
             mod_type = ModType.SUFFIX
         else:
-            return False, f"Item has no room for additional modifiers", item
+            return False, "Item has no room for additional modifiers", item
 
         # Create unrevealed modifier metadata with omen data
         # Note: Omen of Abyssal Echoes is NOT stored here - it's consumed when revealing
@@ -1846,8 +1976,14 @@ class OmenModifiedMechanic(CraftingMechanic):
         removed_mod_name = "none"
         removed_mod_type = None
 
+        # First, determine what type of mod the essence will add (before removal)
+        essence_mod_type = base._get_essence_mod_type_for_item(item, modifier_pool)
+
         if item.total_explicit_mods > 0:
-            # Determine which type to remove based on omens
+            # Determine which type to remove based on:
+            # 1. Omen constraints (highest priority)
+            # 2. Essence mod type requirements (must make room for guaranteed mod)
+            # 3. Random choice (default)
             if force_remove_prefix:
                 if not item.prefix_mods:
                     return False, "Omen of Sinistral Crystallisation requires prefixes to remove", item
@@ -1856,6 +1992,18 @@ class OmenModifiedMechanic(CraftingMechanic):
             elif force_remove_suffix:
                 if not item.suffix_mods:
                     return False, "Omen of Dextral Crystallisation requires suffixes to remove", item
+                mod_type = ModType.SUFFIX
+                removed_mod_type = "suffix"
+            elif essence_mod_type == "prefix" and not item.can_add_prefix:
+                # Must remove a prefix to make room for the guaranteed prefix mod
+                if not item.prefix_mods:
+                    return False, "No prefixes to remove but need room for prefix", item
+                mod_type = ModType.PREFIX
+                removed_mod_type = "prefix"
+            elif essence_mod_type == "suffix" and not item.can_add_suffix:
+                # Must remove a suffix to make room for the guaranteed suffix mod
+                if not item.suffix_mods:
+                    return False, "No suffixes to remove but need room for suffix", item
                 mod_type = ModType.SUFFIX
                 removed_mod_type = "suffix"
             else:

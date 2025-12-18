@@ -4026,5 +4026,138 @@
     "stat_order": [
       919
     ]
+  },
+  {
+    "name": "of the Essence",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Strength, Dexterity or Intelligence",
+    "stat_ranges": [
+      {
+        "min": 7.0,
+        "max": 10.0
+      }
+    ],
+    "stat_min": 7.0,
+    "stat_max": 10.0,
+    "required_ilvl": 1,
+    "weight": 1000,
+    "mod_group": "essenceinfiniteamulet",
+    "applicable_items": [
+      "amulet"
+    ],
+    "tags": [
+      "attribute",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      9999
+    ]
+  },
+  {
+    "name": "of the Essence",
+    "mod_type": "suffix",
+    "tier": 4,
+    "stat_text": "+{} to Strength, Dexterity or Intelligence",
+    "stat_ranges": [
+      {
+        "min": 9.0,
+        "max": 12.0
+      }
+    ],
+    "stat_min": 9.0,
+    "stat_max": 12.0,
+    "required_ilvl": 1,
+    "weight": 1000,
+    "mod_group": "essenceinfiniteequipment",
+    "applicable_items": [
+      "body_armour",
+      "helmet",
+      "gloves",
+      "boots",
+      "shield",
+      "amulet",
+      "ring",
+      "belt"
+    ],
+    "tags": [
+      "attribute",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      9998
+    ]
+  },
+  {
+    "name": "of the Essence",
+    "mod_type": "suffix",
+    "tier": 3,
+    "stat_text": "+{} to Strength, Dexterity or Intelligence",
+    "stat_ranges": [
+      {
+        "min": 17.0,
+        "max": 20.0
+      }
+    ],
+    "stat_min": 17.0,
+    "stat_max": 20.0,
+    "required_ilvl": 1,
+    "weight": 1000,
+    "mod_group": "essenceinfiniteequipment",
+    "applicable_items": [
+      "body_armour",
+      "helmet",
+      "gloves",
+      "boots",
+      "shield",
+      "amulet",
+      "ring",
+      "belt"
+    ],
+    "tags": [
+      "attribute",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      9998
+    ]
+  },
+  {
+    "name": "of the Essence",
+    "mod_type": "suffix",
+    "tier": 2,
+    "stat_text": "+{} to Strength, Dexterity or Intelligence",
+    "stat_ranges": [
+      {
+        "min": 25.0,
+        "max": 27.0
+      }
+    ],
+    "stat_min": 25.0,
+    "stat_max": 27.0,
+    "required_ilvl": 1,
+    "weight": 1000,
+    "mod_group": "essenceinfiniteequipment",
+    "applicable_items": [
+      "body_armour",
+      "helmet",
+      "gloves",
+      "boots",
+      "shield",
+      "amulet",
+      "ring",
+      "belt"
+    ],
+    "tags": [
+      "attribute",
+      "essence_only"
+    ],
+    "is_exclusive": true,
+    "stat_order": [
+      9998
+    ]
   }
 ]

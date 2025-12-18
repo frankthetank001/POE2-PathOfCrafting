@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react'
+import { createPortal } from 'react-dom'
 import './Tooltip.css'
 
 interface TooltipProps {
@@ -48,47 +49,57 @@ export function Tooltip({
     const viewportWidth = window.innerWidth
     const viewportHeight = window.innerHeight
 
+    // If tooltip hasn't rendered yet (zero dimensions), schedule another update
+    if (tooltipRect.height === 0 || tooltipRect.width === 0) {
+      requestAnimationFrame(updatePosition)
+      return
+    }
+
     let top = 0
     let left = 0
+
+    // Calculate available space in each direction
+    const spaceAbove = triggerRect.top
+    const spaceBelow = viewportHeight - triggerRect.bottom
+    const spaceLeft = triggerRect.left
+    const spaceRight = viewportWidth - triggerRect.right
 
     // Calculate position based on preferred position and available space
     switch (position) {
       case 'top':
-        top = triggerRect.top - tooltipRect.height - 8
-        left = triggerRect.left + (triggerRect.width - tooltipRect.width) / 2
-
-        // Flip to bottom if not enough space above
-        if (top < 0) {
+        // Default to top, flip to bottom if not enough space
+        if (spaceAbove >= tooltipRect.height + 8 || spaceAbove > spaceBelow) {
+          top = triggerRect.top - tooltipRect.height - 8
+        } else {
           top = triggerRect.bottom + 8
         }
+        left = triggerRect.left + (triggerRect.width - tooltipRect.width) / 2
         break
 
       case 'bottom':
-        top = triggerRect.bottom + 8
-        left = triggerRect.left + (triggerRect.width - tooltipRect.width) / 2
-
-        // Flip to top if not enough space below
-        if (top + tooltipRect.height > viewportHeight) {
+        // Default to bottom, flip to top if not enough space
+        if (spaceBelow >= tooltipRect.height + 8 || spaceBelow > spaceAbove) {
+          top = triggerRect.bottom + 8
+        } else {
           top = triggerRect.top - tooltipRect.height - 8
         }
+        left = triggerRect.left + (triggerRect.width - tooltipRect.width) / 2
         break
 
       case 'left':
         top = triggerRect.top + (triggerRect.height - tooltipRect.height) / 2
-        left = triggerRect.left - tooltipRect.width - 8
-
-        // Flip to right if not enough space to the left
-        if (left < 0) {
+        if (spaceLeft >= tooltipRect.width + 8 || spaceLeft > spaceRight) {
+          left = triggerRect.left - tooltipRect.width - 8
+        } else {
           left = triggerRect.right + 8
         }
         break
 
       case 'right':
         top = triggerRect.top + (triggerRect.height - tooltipRect.height) / 2
-        left = triggerRect.right + 8
-
-        // Flip to left if not enough space to the right
-        if (left + tooltipRect.width > viewportWidth) {
+        if (spaceRight >= tooltipRect.width + 8 || spaceRight > spaceLeft) {
+          left = triggerRect.right + 8
+        } else {
           left = triggerRect.left - tooltipRect.width - 8
         }
         break
@@ -115,6 +126,18 @@ export function Tooltip({
     if (isVisible) {
       updatePosition()
     }
+  }, [isVisible, content])
+
+  // Watch for tooltip size changes (e.g., when async content loads)
+  useEffect(() => {
+    if (!isVisible || !tooltipRef.current) return
+
+    const resizeObserver = new ResizeObserver(() => {
+      updatePosition()
+    })
+
+    resizeObserver.observe(tooltipRef.current)
+    return () => resizeObserver.disconnect()
   }, [isVisible])
 
   useEffect(() => {
@@ -125,7 +148,11 @@ export function Tooltip({
     }
 
     window.addEventListener('resize', handleResize)
-    return () => window.removeEventListener('resize', handleResize)
+    window.addEventListener('scroll', handleResize, true) // Capture scroll events
+    return () => {
+      window.removeEventListener('resize', handleResize)
+      window.removeEventListener('scroll', handleResize, true)
+    }
   }, [isVisible])
 
   return (
@@ -141,7 +168,7 @@ export function Tooltip({
         {children}
       </div>
 
-      {isVisible && (
+      {isVisible && createPortal(
         <div
           ref={tooltipRef}
           className="tooltip-content"
@@ -154,7 +181,8 @@ export function Tooltip({
           }}
         >
           {content}
-        </div>
+        </div>,
+        document.body
       )}
     </div>
   )
