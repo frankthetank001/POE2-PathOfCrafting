@@ -259,7 +259,7 @@ class TestEssenceOnNormalItems:
         item = create_test_item(rarity=ItemRarity.MAGIC)  # Changed to MAGIC
         essence_info = create_essence_info(
             name="Lesser Essence of Flames",
-            guaranteed_mod_name="Fire Damage",
+            guaranteed_mod_name="Essence Fire Damage",  # Must match mock modifier name
         )
         mechanic = EssenceMechanic({}, essence_info)
 
@@ -371,7 +371,7 @@ class TestEssenceTypes:
         item = create_test_item(rarity=ItemRarity.MAGIC, base_category="int_armour")
         essence_info = create_essence_info(
             essence_type="flames",
-            guaranteed_mod_name="Fire Damage",
+            guaranteed_mod_name="Essence Fire Damage",  # Must match mock modifier name
         )
         mechanic = EssenceMechanic({}, essence_info)
 
@@ -387,17 +387,8 @@ class TestEssenceTypes:
         item = create_test_item(rarity=ItemRarity.MAGIC, base_category="int_armour")
         essence_info = create_essence_info(
             essence_type="ice",
-            guaranteed_mod_name="Cold Damage",
+            guaranteed_mod_name="Essence Cold Damage",  # Must match mock modifier name
         )
-        # Need to update the item_effects to support ice type
-        from app.schemas.crafting import EssenceItemEffect
-        essence_info.item_effects = [
-            EssenceItemEffect(
-                id=1, essence_id=1, item_type="Body Armour",
-                modifier_type="prefix", effect_text="Cold Damage",
-                value_min=10, value_max=20
-            )
-        ]
         mechanic = EssenceMechanic({}, essence_info)
 
         success, message, result = mechanic.apply(item, mock_modifier_pool)
@@ -411,17 +402,8 @@ class TestEssenceTypes:
         item = create_test_item(rarity=ItemRarity.MAGIC, base_category="int_armour")
         essence_info = create_essence_info(
             essence_type="electricity",  # electricity is the type for lightning
-            guaranteed_mod_name="Lightning Damage",
+            guaranteed_mod_name="Essence Lightning Damage",  # Must match mock modifier name
         )
-        # Need to update the item_effects to support electricity type
-        from app.schemas.crafting import EssenceItemEffect
-        essence_info.item_effects = [
-            EssenceItemEffect(
-                id=1, essence_id=1, item_type="Body Armour",
-                modifier_type="prefix", effect_text="Lightning Damage",
-                value_min=10, value_max=20
-            )
-        ]
         mechanic = EssenceMechanic({}, essence_info)
 
         success, message, result = mechanic.apply(item, mock_modifier_pool)
@@ -487,7 +469,7 @@ class TestEssenceModifierSpecificity:
         item = create_test_item(rarity=ItemRarity.MAGIC)  # Changed to MAGIC
         essence_info = create_essence_info(
             mod_type="prefix",
-            guaranteed_mod_name="Fire Damage",
+            guaranteed_mod_name="Essence Fire Damage",  # Must match mock modifier name
         )
         mechanic = EssenceMechanic({}, essence_info)
 
