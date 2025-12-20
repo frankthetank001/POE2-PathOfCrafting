@@ -940,6 +940,53 @@ class EssenceMechanic(CraftingMechanic):
 
         return False
 
+    def _effect_applies_to_item(self, effect, item: CraftableItem) -> bool:
+        """Check if a specific effect applies to this item type."""
+        # Same mapping as _has_applicable_effect_for_item
+        item_type_to_category = {
+            # Armour types
+            "Armour": ["body_armour", "int_armour", "str_armour", "dex_armour", "str_dex_armour",
+                       "str_int_armour", "dex_int_armour", "str_dex_int_armour", "helmet", "gloves", "boots", "shield"],
+            "Body Armour": ["body_armour", "int_armour", "str_armour", "dex_armour", "str_dex_armour",
+                            "str_int_armour", "dex_int_armour", "str_dex_int_armour"],
+            "Helmet": ["helmet"],
+            "Gloves": ["gloves"],
+            "Boots": ["boots"],
+            "Shield": ["shield"],
+            # Jewellery
+            "Jewellery": ["amulet", "ring"],
+            "Amulet": ["amulet"],
+            "Ring": ["ring"],
+            "Belt": ["belt"],
+            # Weapons
+            "One Handed Melee Weapon": ["one_handed_sword", "dagger", "claw", "mace", "axe", "sceptre", "wand"],
+            "Two Handed Melee Weapon": ["two_handed_sword", "staff", "flail"],
+            "Bow": ["bow"],
+            "Crossbow": ["crossbow"],
+            "Martial Weapon": ["one_handed_sword", "two_handed_sword", "bow", "crossbow", "dagger", "claw",
+                               "mace", "axe", "flail", "staff"],
+            "Caster Weapon": ["wand", "sceptre", "staff"],
+            "Quarterstaff": ["staff"],
+            "Focus": ["focus"],
+            # Generic
+            "Equipment": ["body_armour", "int_armour", "str_armour", "dex_armour", "str_dex_armour",
+                          "str_int_armour", "dex_int_armour", "str_dex_int_armour", "helmet", "gloves",
+                          "boots", "shield", "amulet", "ring", "belt"],
+        }
+
+        effect_item_type = effect.item_type
+        applicable_categories = item_type_to_category.get(effect_item_type, [])
+
+        # Direct match
+        if item.base_category in applicable_categories:
+            return True
+
+        # Also check if item type matches directly (lowercase comparison)
+        if item.base_category.lower() == effect_item_type.lower().replace(" ", "_"):
+            return True
+
+        return False
+
     def _get_target_mod_group(self) -> Optional[str]:
         """Get the mod group this essence will add."""
         essence_to_mod_group = {
@@ -949,7 +996,7 @@ class EssenceMechanic(CraftingMechanic):
             "ruin": "chaosresistance",
             "body": "life",
             "mind": "mana",
-            "enhancement": "defences",
+            "enhancement": "alldefences",
             "abrasion": "physicaldamage",
             "flames": "firedamage",
             "ice": "colddamage",
@@ -1074,6 +1121,10 @@ class EssenceMechanic(CraftingMechanic):
         import re
 
         for effect in self.essence_info.item_effects:
+            # Skip effects that don't apply to this item type
+            if not self._effect_applies_to_item(effect, item):
+                continue
+
             mod_type = effect.modifier_type
 
             # Normalize effect text
@@ -1120,6 +1171,12 @@ class EssenceMechanic(CraftingMechanic):
         best_mod = None
 
         for effect in self.essence_info.item_effects:
+            # Skip effects that don't apply to this item type
+            # This ensures we use the correct effect (e.g., Amulet effect for amulets,
+            # not Gloves effect that happens to have mods applicable to amulets)
+            if not self._effect_applies_to_item(effect, item):
+                continue
+
             mod_type = effect.modifier_type
 
             # Normalize effect text: replace (min-max) and numeric values with {}

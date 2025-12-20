@@ -2005,6 +2005,32 @@ function GridCraftingSimulator() {
     return omenIncompatible || tagFiltered || searchFiltered
   }
 
+  // Format stat_text by replacing {} placeholders with actual value ranges
+  const formatStatTextWithRanges = (mod: ItemModifier): string => {
+    if (!mod.stat_ranges || mod.stat_ranges.length === 0) {
+      return mod.stat_text
+    }
+
+    let result = mod.stat_text
+    let rangeIndex = 0
+
+    // Replace each {} with the corresponding range
+    result = result.replace(/\{\}/g, () => {
+      if (rangeIndex < mod.stat_ranges!.length) {
+        const range = mod.stat_ranges![rangeIndex]
+        rangeIndex++
+        // Format as "min-max" or just "value" if min equals max
+        if (range.min === range.max) {
+          return String(range.min)
+        }
+        return `${range.min}-${range.max}`
+      }
+      return '{}'
+    })
+
+    return result
+  }
+
   const getGroupedMods = (modType: 'prefix' | 'suffix') => {
     let mods = modType === 'prefix' ? availableMods.prefixes : availableMods.suffixes
 
@@ -2423,7 +2449,7 @@ function GridCraftingSimulator() {
                 <div className="mods-pool-list">
                   {/* Normal Prefixes */}
                   {Object.entries(getGroupedMods('prefix')).map(([groupKey, groupMods]) => {
-                    const bestTier = groupMods[0] // Tier 1 (highest)
+                    const bestTier = groupMods[0] // T1 (best tier) for display
                     const maxIlvl = Math.max(...groupMods.map(m => m.required_ilvl || 1))
                     const unavailableCount = groupMods.filter(m => m.required_ilvl && m.required_ilvl > item.item_level).length
                     const allUnavailable = unavailableCount === groupMods.length
@@ -2448,7 +2474,7 @@ function GridCraftingSimulator() {
                           title="Click to expand/collapse, double-click to filter by all tags, drag to add to item"
                         >
                           <span className="pool-mod-stat-main">
-                            {bestTier.stat_text}
+                            {formatStatTextWithRanges(bestTier)}
                             {bestTier.exclusion_group_id && (() => {
                               const groupInfo = getModExclusionGroupInfo(bestTier)
                               const groupColor = getExclusionGroupColor(bestTier.exclusion_group_id)
@@ -2770,7 +2796,7 @@ function GridCraftingSimulator() {
                 <div className="mods-pool-list">
                   {/* Normal Suffixes */}
                   {Object.entries(getGroupedMods('suffix')).map(([groupKey, groupMods]) => {
-                    const bestTier = groupMods[0] // Tier 1 (highest)
+                    const bestTier = groupMods[0] // T1 (best tier) for display
                     const maxIlvl = Math.max(...groupMods.map(m => m.required_ilvl || 1))
                     const unavailableCount = groupMods.filter(m => m.required_ilvl && m.required_ilvl > item.item_level).length
                     const allUnavailable = unavailableCount === groupMods.length
@@ -2795,7 +2821,7 @@ function GridCraftingSimulator() {
                           title="Click to expand/collapse, double-click to filter by all tags, drag to add to item"
                         >
                           <span className="pool-mod-stat-main">
-                            {bestTier.stat_text}
+                            {formatStatTextWithRanges(bestTier)}
                             {bestTier.exclusion_group_id && (() => {
                               const groupInfo = getModExclusionGroupInfo(bestTier)
                               const groupColor = getExclusionGroupColor(bestTier.exclusion_group_id)

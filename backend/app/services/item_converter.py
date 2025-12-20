@@ -162,6 +162,14 @@ class ItemConverter:
                 'str_int_armour', 'str_dex_armour', 'dex_int_armour'
             ]:
                 return True
+            # Map attribute-specific gloves/helmet/boots categories to their slot
+            # e.g., dex_int_armour with slot=gloves should match mods with applicable_items=['gloves']
+            armour_categories = ['int_armour', 'str_armour', 'dex_armour',
+                                 'str_int_armour', 'str_dex_armour', 'dex_int_armour', 'str_dex_int_armour']
+            if base_category in armour_categories:
+                # These mods use slot names (gloves, helmet, boots) in applicable_items
+                if 'gloves' in mod.applicable_items or 'helmet' in mod.applicable_items or 'boots' in mod.applicable_items:
+                    return True
             return self.modifier_pool._is_mod_applicable_to_category(mod, base_category)
 
         # Always match by stat text and value range

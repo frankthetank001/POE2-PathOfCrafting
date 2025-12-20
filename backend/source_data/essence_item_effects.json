@@ -1754,7 +1754,7 @@
   {
     "essence_name": "Essence of Hysteria",
     "item_type": "Amulet",
-    "modifier_type": "prefix",
+    "modifier_type": "suffix",
     "effect_text": "(19-21)% of Damage taken Recouped as Life",
     "value_min": 19.0,
     "value_max": 21.0

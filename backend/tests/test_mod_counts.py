@@ -21,9 +21,9 @@ from app.services.crafting.simulator import CraftingSimulator
 EXPECTED_MOD_COUNTS: Dict[str, Tuple[int, int, int, int]] = {
     # Armor
     "helmet": (0, 11, 1, 5),  # +3 from corrupted essences
-    "gloves": (0, 15, 1, 7),  # +3 from corrupted essences
+    "gloves": (0, 15, 2, 7),  # +3 from corrupted essences
     "body_armour": (0, 11, 4, 5),  # +3 from corrupted essences
-    "boots": (0, 15, 1, 5),  # +3 from corrupted essences
+    "boots": (0, 15, 2, 5),  # +3 from corrupted essences
 
     # Jewelry
     "amulet": (11, 20, 2, 5),  # +3 from corrupted essences
