@@ -4261,5 +4261,352 @@
       "desecrated_only"
     ],
     "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Damage while you have a Totem",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "{}% increased Damage while you have a Totem",
+    "stat_min": 86,
+    "stat_max": 99,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "damage_with_totem_talisman",
+    "applicable_items": [
+      "talisman"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Attacks with this Weapon Penetrate {}% Cold Resistance",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Attacks with this Weapon Penetrate {}% Cold Resistance",
+    "stat_min": 15,
+    "stat_max": 25,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "cold_penetration_talisman",
+    "applicable_items": [
+      "talisman"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "elemental",
+      "cold",
+      "attack",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Attacks with this Weapon Penetrate {}% Fire Resistance",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Attacks with this Weapon Penetrate {}% Fire Resistance",
+    "stat_min": 15,
+    "stat_max": 25,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "fire_penetration_talisman",
+    "applicable_items": [
+      "talisman"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "elemental",
+      "fire",
+      "attack",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Attacks with this Weapon Penetrate {}% Lightning Resistance",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Attacks with this Weapon Penetrate {}% Lightning Resistance",
+    "stat_min": 15,
+    "stat_max": 25,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "lightning_penetration_talisman",
+    "applicable_items": [
+      "talisman"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "elemental",
+      "lightning",
+      "attack",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Companions deal {}% increased Damage, {}% increased Damage while your Companion is in your Presence",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Companions deal {}% increased Damage, {}% increased Damage while your Companion is in your Presence",
+    "stat_min": 40,
+    "stat_max": 59,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "companion_damage_talisman",
+    "applicable_items": [
+      "talisman"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Empowered Attacks deal {}% increased Damage",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Empowered Attacks deal {}% increased Damage",
+    "stat_min": 86,
+    "stat_max": 99,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "empowered_damage_talisman",
+    "applicable_items": [
+      "talisman"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "attack",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Melee Attack Skills have +{} to maximum number of Summoned Totems",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Melee Attack Skills have +{} to maximum number of Summoned Totems",
+    "stat_min": 1,
+    "stat_max": 1,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "max_totems_talisman",
+    "applicable_items": [
+      "talisman"
+    ],
+    "tags": [
+      "desecrated_only",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Minions deal {}% increased Damage if you've Hit Recently",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Minions deal {}% increased Damage if you've Hit Recently",
+    "stat_min": 60,
+    "stat_max": 79,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "minion_damage_hit_recently_talisman",
+    "applicable_items": [
+      "talisman"
+    ],
+    "tags": [
+      "desecrated_only",
+      "damage",
+      "minion",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Warcries Empower {} additional Attacks",
+    "mod_type": "prefix",
+    "tier": 1,
+    "stat_text": "Warcries Empower {} additional Attacks",
+    "stat_min": 1,
+    "stat_max": 2,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "warcry_empower_talisman",
+    "applicable_items": [
+      "talisman"
+    ],
+    "tags": [
+      "desecrated_only",
+      "attack"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Attack Speed, Companions have {}% increased Attack Speed",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Attack Speed, Companions have {}% increased Attack Speed",
+    "stat_min": 12,
+    "stat_max": 18,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "attack_speed_companion_talisman",
+    "applicable_items": [
+      "talisman"
+    ],
+    "tags": [
+      "desecrated_only",
+      "attack",
+      "speed",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Cost Efficiency of Attacks",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Cost Efficiency of Attacks",
+    "stat_min": 8,
+    "stat_max": 15,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "attack_cost_efficiency_talisman",
+    "applicable_items": [
+      "talisman"
+    ],
+    "tags": [
+      "desecrated_only",
+      "attack",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Critical Hit Chance against Marked Enemies",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Critical Hit Chance against Marked Enemies",
+    "stat_min": 39,
+    "stat_max": 51,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "crit_vs_marked_talisman",
+    "applicable_items": [
+      "talisman"
+    ],
+    "tags": [
+      "desecrated_only",
+      "critical"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Spirit Reservation Efficiency of Skills",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Spirit Reservation Efficiency of Skills",
+    "stat_min": 5,
+    "stat_max": 10,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "spirit_reservation_efficiency_talisman",
+    "applicable_items": [
+      "talisman"
+    ],
+    "tags": [
+      "desecrated_only",
+      "amanamu"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Totem Placement speed",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Totem Placement speed",
+    "stat_min": 25,
+    "stat_max": 31,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "totem_placement_speed_talisman",
+    "applicable_items": [
+      "talisman"
+    ],
+    "tags": [
+      "desecrated_only",
+      "speed",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% increased Warcry Cooldown Recovery Rate",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% increased Warcry Cooldown Recovery Rate",
+    "stat_min": 25,
+    "stat_max": 31,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "warcry_cooldown_talisman",
+    "applicable_items": [
+      "talisman"
+    ],
+    "tags": [
+      "desecrated_only",
+      "kurgal"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "{}% of Skill Mana Costs Converted to Life Costs",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "{}% of Skill Mana Costs Converted to Life Costs",
+    "stat_min": 15,
+    "stat_max": 20,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "mana_to_life_cost_talisman",
+    "applicable_items": [
+      "talisman"
+    ],
+    "tags": [
+      "desecrated_only",
+      "life",
+      "ulaman"
+    ],
+    "is_exclusive": true
+  },
+  {
+    "name": "Skills which create Fissures have a {}% chance to create an additional Fissure",
+    "mod_type": "suffix",
+    "tier": 1,
+    "stat_text": "Skills which create Fissures have a {}% chance to create an additional Fissure",
+    "stat_min": 25,
+    "stat_max": 31,
+    "required_ilvl": 65,
+    "weight": 1,
+    "mod_group": "fissure_chance_talisman",
+    "applicable_items": [
+      "talisman"
+    ],
+    "tags": [
+      "desecrated_only",
+      "attack",
+      "amanamu"
+    ],
+    "is_exclusive": true
   }
 ]

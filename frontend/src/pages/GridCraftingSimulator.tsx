@@ -543,6 +543,21 @@ function GridCraftingSimulator() {
     desecrated_suffixes: ItemModifier[]
   }>({ prefixes: [], suffixes: [], essence_prefixes: [], essence_suffixes: [], desecrated_prefixes: [], desecrated_suffixes: [] })
 
+  // Calculate total weights for probability display
+  const totalWeights = useMemo(() => {
+    const calcTotal = (mods: ItemModifier[]) =>
+      mods.reduce((sum, mod) => sum + (mod.weight || 0), 0)
+
+    return {
+      prefix: calcTotal(availableMods.prefixes),
+      suffix: calcTotal(availableMods.suffixes),
+      essence_prefix: calcTotal(availableMods.essence_prefixes),
+      essence_suffix: calcTotal(availableMods.essence_suffixes),
+      desecrated_prefix: calcTotal(availableMods.desecrated_prefixes),
+      desecrated_suffix: calcTotal(availableMods.desecrated_suffixes),
+    }
+  }, [availableMods])
+
   const [exclusionGroups, setExclusionGroups] = useState<Array<{
     id: string
     description: string
@@ -2514,6 +2529,11 @@ function GridCraftingSimulator() {
                             )}
                             <span className="group-tier-range">{tierRangeText}</span>
                             <span className="group-max-ilvl">ilvl {maxIlvl}</span>
+                            {bestTier.weight !== undefined && totalWeights.prefix > 0 && (
+                              <span className="mod-weight" title={`Weight: ${bestTier.weight} / ${totalWeights.prefix} total`}>
+                                {((bestTier.weight / totalWeights.prefix) * 100).toFixed(2)}%
+                              </span>
+                            )}
                             {bestTier.tags && bestTier.tags.length > 0 && (
                               <div className="mod-tags-line" title="Click individual tags to filter">
                                 <button
@@ -2581,6 +2601,10 @@ function GridCraftingSimulator() {
                                 formattedText = formattedText.replace('{}', rangeText)
                               }
 
+                              const tierPct = mod.weight && totalWeights.prefix > 0
+                                ? ((mod.weight / totalWeights.prefix) * 100).toFixed(2)
+                                : null
+
                               return (
                                 <div
                                   key={mod.tier}
@@ -2589,6 +2613,11 @@ function GridCraftingSimulator() {
                                   <span className="tier-label">T{mod.tier}</span>
                                   <span className="tier-stat">{formattedText}</span>
                                   <span className="tier-ilvl">ilvl {mod.required_ilvl || 1}</span>
+                                  {tierPct && (
+                                    <span className="tier-weight" title={`Weight: ${mod.weight} / ${totalWeights.prefix} total`}>
+                                      {tierPct}%
+                                    </span>
+                                  )}
                                 </div>
                               )
                             })}
@@ -2644,6 +2673,11 @@ function GridCraftingSimulator() {
                             })()}
                           </span>
                           <div className="compact-mod-info">
+                            {mod.weight !== undefined && totalWeights.essence_prefix > 0 && (
+                              <span className="mod-weight" title={`Weight: ${mod.weight} / ${totalWeights.essence_prefix} total`}>
+                                {((mod.weight / totalWeights.essence_prefix) * 100).toFixed(2)}%
+                              </span>
+                            )}
                             {mod.tags && mod.tags.length > 0 && (
                               <div className="mod-tags-line" title="Click individual tags to filter">
                                 <button
@@ -2738,6 +2772,11 @@ function GridCraftingSimulator() {
                             })()}
                           </span>
                           <div className="compact-mod-info">
+                            {mod.weight !== undefined && totalWeights.desecrated_prefix > 0 && (
+                              <span className="mod-weight" title={`Weight: ${mod.weight} / ${totalWeights.desecrated_prefix} total`}>
+                                {((mod.weight / totalWeights.desecrated_prefix) * 100).toFixed(2)}%
+                              </span>
+                            )}
                             {mod.tags && mod.tags.length > 0 && (
                               <div className="mod-tags-line" title="Click individual tags to filter">
                                 <button
@@ -2861,6 +2900,11 @@ function GridCraftingSimulator() {
                             )}
                             <span className="group-tier-range">{tierRangeText}</span>
                             <span className="group-max-ilvl">ilvl {maxIlvl}</span>
+                            {bestTier.weight !== undefined && totalWeights.suffix > 0 && (
+                              <span className="mod-weight" title={`Weight: ${bestTier.weight} / ${totalWeights.suffix} total`}>
+                                {((bestTier.weight / totalWeights.suffix) * 100).toFixed(2)}%
+                              </span>
+                            )}
                             {bestTier.tags && bestTier.tags.length > 0 && (
                               <div className="mod-tags-line" title="Click individual tags to filter">
                                 <button
@@ -2928,6 +2972,10 @@ function GridCraftingSimulator() {
                                 formattedText = formattedText.replace('{}', rangeText)
                               }
 
+                              const tierPct = mod.weight && totalWeights.suffix > 0
+                                ? ((mod.weight / totalWeights.suffix) * 100).toFixed(2)
+                                : null
+
                               return (
                                 <div
                                   key={mod.tier}
@@ -2936,6 +2984,11 @@ function GridCraftingSimulator() {
                                   <span className="tier-label">T{mod.tier}</span>
                                   <span className="tier-stat">{formattedText}</span>
                                   <span className="tier-ilvl">ilvl {mod.required_ilvl || 1}</span>
+                                  {tierPct && (
+                                    <span className="tier-weight" title={`Weight: ${mod.weight} / ${totalWeights.suffix} total`}>
+                                      {tierPct}%
+                                    </span>
+                                  )}
                                 </div>
                               )
                             })}
@@ -2991,6 +3044,11 @@ function GridCraftingSimulator() {
                             })()}
                           </span>
                           <div className="compact-mod-info">
+                            {mod.weight !== undefined && totalWeights.essence_suffix > 0 && (
+                              <span className="mod-weight" title={`Weight: ${mod.weight} / ${totalWeights.essence_suffix} total`}>
+                                {((mod.weight / totalWeights.essence_suffix) * 100).toFixed(2)}%
+                              </span>
+                            )}
                             {mod.tags && mod.tags.length > 0 && (
                               <div className="mod-tags-line" title="Click individual tags to filter">
                                 <button
@@ -3085,6 +3143,11 @@ function GridCraftingSimulator() {
                             })()}
                           </span>
                           <div className="compact-mod-info">
+                            {mod.weight !== undefined && totalWeights.desecrated_suffix > 0 && (
+                              <span className="mod-weight" title={`Weight: ${mod.weight} / ${totalWeights.desecrated_suffix} total`}>
+                                {((mod.weight / totalWeights.desecrated_suffix) * 100).toFixed(2)}%
+                              </span>
+                            )}
                             {mod.tags && mod.tags.length > 0 && (
                               <div className="mod-tags-line" title="Click individual tags to filter">
                                 <button

@@ -693,7 +693,7 @@
     "base_stats": {
       "evasion": 406
     },
-    "implicit": "(10-20)% reduced Movement Speed Penalty from using Skills while moving"
+    "implicit": "5% increased Movement Speed"
   },
   {
     "name": "Tattered Robe",
@@ -2219,6 +2219,24 @@
       "energy_shield": 46
     },
     "implicit": null
+  },
+  {
+    "name": "Sacrificial Regalia",
+    "category": "str_dex_int_armour",
+    "slot": "body_armour",
+    "attribute_requirements": [
+      "str",
+      "dex",
+      "int"
+    ],
+    "default_ilvl": 65,
+    "description": "Body Armour",
+    "base_stats": {
+      "evasion": 245,
+      "armour": 269,
+      "energy_shield": 93
+    },
+    "implicit": "+1 to Level of all Corrupted Skill Gems"
   },
   {
     "name": "Garment",
@@ -7279,6 +7297,158 @@
     "implicit": null
   },
   {
+    "name": "[DNT] Halfsword",
+    "category": "sword",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 67,
+    "description": "One Handed Sword",
+    "base_stats": {
+      "physical_min": 45,
+      "physical_max": 67,
+      "crit_chance": 5.0,
+      "attack_rate": 1.55,
+      "range": 11
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Flat Blade",
+    "category": "sword",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 72,
+    "description": "One Handed Sword",
+    "base_stats": {
+      "physical_min": 48,
+      "physical_max": 71,
+      "crit_chance": 5.0,
+      "attack_rate": 1.55,
+      "range": 11
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Siphoning Sword",
+    "category": "sword",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 77,
+    "description": "One Handed Sword",
+    "base_stats": {
+      "physical_min": 51,
+      "physical_max": 76,
+      "crit_chance": 5.0,
+      "attack_rate": 1.55,
+      "range": 11
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Rider Blade",
+    "category": "sword",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 78,
+    "description": "One Handed Sword",
+    "base_stats": {
+      "physical_min": 51,
+      "physical_max": 76,
+      "crit_chance": 5.0,
+      "attack_rate": 1.55,
+      "range": 11
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Molten Blade",
+    "category": "sword",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 79,
+    "description": "One Handed Sword",
+    "base_stats": {
+      "physical_min": 51,
+      "physical_max": 76,
+      "crit_chance": 5.0,
+      "attack_rate": 1.55,
+      "range": 11
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Reaper Sword",
+    "category": "sword",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 77,
+    "description": "One Handed Sword",
+    "base_stats": {
+      "physical_min": 51,
+      "physical_max": 76,
+      "crit_chance": 5.0,
+      "attack_rate": 1.55,
+      "range": 11
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Carved Blade",
+    "category": "sword",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 75,
+    "description": "One Handed Sword",
+    "base_stats": {
+      "physical_min": 49,
+      "physical_max": 74,
+      "crit_chance": 5.0,
+      "attack_rate": 1.55,
+      "range": 11
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Coveted Blade",
+    "category": "sword",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 78,
+    "description": "One Handed Sword",
+    "base_stats": {
+      "physical_min": 51,
+      "physical_max": 76,
+      "crit_chance": 5.0,
+      "attack_rate": 1.55,
+      "range": 11
+    },
+    "implicit": null
+  },
+  {
     "name": "Golden Blade",
     "category": "sword",
     "slot": "weapons - 1 hand",
@@ -7587,6 +7757,158 @@
     "implicit": null
   },
   {
+    "name": "[DNT] Ancient Longsword",
+    "category": "sword",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 67,
+    "description": "Two Handed Sword",
+    "base_stats": {
+      "physical_min": 74,
+      "physical_max": 123,
+      "crit_chance": 5.0,
+      "attack_rate": 1.3,
+      "range": 13
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Ferric Greatsword",
+    "category": "sword",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 72,
+    "description": "Two Handed Sword",
+    "base_stats": {
+      "physical_min": 78,
+      "physical_max": 131,
+      "crit_chance": 5.0,
+      "attack_rate": 1.3,
+      "range": 13
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Holy Greatblade",
+    "category": "sword",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 77,
+    "description": "Two Handed Sword",
+    "base_stats": {
+      "physical_min": 83,
+      "physical_max": 139,
+      "crit_chance": 5.0,
+      "attack_rate": 1.3,
+      "range": 13
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Wide Greatsword",
+    "category": "sword",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 78,
+    "description": "Two Handed Sword",
+    "base_stats": {
+      "physical_min": 83,
+      "physical_max": 139,
+      "crit_chance": 5.0,
+      "attack_rate": 1.3,
+      "range": 13
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Crested Greatsword",
+    "category": "sword",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 79,
+    "description": "Two Handed Sword",
+    "base_stats": {
+      "physical_min": 83,
+      "physical_max": 139,
+      "crit_chance": 5.0,
+      "attack_rate": 1.3,
+      "range": 13
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Jagged Greatsword",
+    "category": "sword",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 77,
+    "description": "Two Handed Sword",
+    "base_stats": {
+      "physical_min": 83,
+      "physical_max": 139,
+      "crit_chance": 5.0,
+      "attack_rate": 1.3,
+      "range": 13
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Carved Greatsword",
+    "category": "sword",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 75,
+    "description": "Two Handed Sword",
+    "base_stats": {
+      "physical_min": 81,
+      "physical_max": 135,
+      "crit_chance": 5.0,
+      "attack_rate": 1.3,
+      "range": 13
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Midnight Greatsword",
+    "category": "sword",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 78,
+    "description": "Two Handed Sword",
+    "base_stats": {
+      "physical_min": 83,
+      "physical_max": 139,
+      "crit_chance": 5.0,
+      "attack_rate": 1.3,
+      "range": 13
+    },
+    "implicit": null
+  },
+  {
     "name": "Energy Blade Two Handed",
     "category": "sword",
     "slot": "weapons - 2 hand",
@@ -7650,7 +7972,7 @@
       "attack_rate": 1.45,
       "range": 11
     },
-    "implicit": "Gain 1 Rage on Hit"
+    "implicit": "Grants 1 Rage on Hit"
   },
   {
     "name": "Bearded Axe",
@@ -7764,7 +8086,7 @@
       "attack_rate": 1.5,
       "range": 11
     },
-    "implicit": "Gain (28-35) Mana per Enemy Killed"
+    "implicit": "Gain (28-35) Mana per enemy killed"
   },
   {
     "name": "Boarding Hatchet",
@@ -7855,6 +8177,158 @@
     "base_stats": {
       "physical_min": 34,
       "physical_max": 79,
+      "crit_chance": 5.0,
+      "attack_rate": 1.5,
+      "range": 11
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Callous Hatchet",
+    "category": "axe",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 67,
+    "description": "One Handed Axe",
+    "base_stats": {
+      "physical_min": 35,
+      "physical_max": 81,
+      "crit_chance": 5.0,
+      "attack_rate": 1.5,
+      "range": 11
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Catcher Axe",
+    "category": "axe",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 72,
+    "description": "One Handed Axe",
+    "base_stats": {
+      "physical_min": 37,
+      "physical_max": 86,
+      "crit_chance": 5.0,
+      "attack_rate": 1.5,
+      "range": 11
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Aged Axe",
+    "category": "axe",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 77,
+    "description": "One Handed Axe",
+    "base_stats": {
+      "physical_min": 39,
+      "physical_max": 91,
+      "crit_chance": 5.0,
+      "attack_rate": 1.5,
+      "range": 11
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Towering Axe",
+    "category": "axe",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 78,
+    "description": "One Handed Axe",
+    "base_stats": {
+      "physical_min": 39,
+      "physical_max": 91,
+      "crit_chance": 5.0,
+      "attack_rate": 1.5,
+      "range": 11
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Vagabond Axe",
+    "category": "axe",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 79,
+    "description": "One Handed Axe",
+    "base_stats": {
+      "physical_min": 39,
+      "physical_max": 91,
+      "crit_chance": 5.0,
+      "attack_rate": 1.5,
+      "range": 11
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Moonlight Axe",
+    "category": "axe",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 77,
+    "description": "One Handed Axe",
+    "base_stats": {
+      "physical_min": 39,
+      "physical_max": 91,
+      "crit_chance": 5.0,
+      "attack_rate": 1.5,
+      "range": 11
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Hacking Hatchet",
+    "category": "axe",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 75,
+    "description": "One Handed Axe",
+    "base_stats": {
+      "physical_min": 38,
+      "physical_max": 89,
+      "crit_chance": 5.0,
+      "attack_rate": 1.5,
+      "range": 11
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Ritualistic Axe",
+    "category": "axe",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 78,
+    "description": "One Handed Axe",
+    "base_stats": {
+      "physical_min": 39,
+      "physical_max": 91,
       "crit_chance": 5.0,
       "attack_rate": 1.5,
       "range": 11
@@ -7969,7 +8443,7 @@
       "attack_rate": 1.2,
       "range": 13
     },
-    "implicit": "Gain (34-43) Life per Enemy Killed"
+    "implicit": "Gain (34-43) Life per enemy killed"
   },
   {
     "name": "Rending Halberd",
@@ -8096,6 +8570,158 @@
     "base_stats": {
       "physical_min": 59,
       "physical_max": 155,
+      "crit_chance": 5.0,
+      "attack_rate": 1.2,
+      "range": 13
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Dividing Greataxe",
+    "category": "axe",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 67,
+    "description": "Two Handed Axe",
+    "base_stats": {
+      "physical_min": 60,
+      "physical_max": 159,
+      "crit_chance": 5.0,
+      "attack_rate": 1.2,
+      "range": 13
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Feathersteel Halberd",
+    "category": "axe",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 72,
+    "description": "Two Handed Axe",
+    "base_stats": {
+      "physical_min": 64,
+      "physical_max": 170,
+      "crit_chance": 5.0,
+      "attack_rate": 1.2,
+      "range": 13
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Grimhold Axe",
+    "category": "axe",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 77,
+    "description": "Two Handed Axe",
+    "base_stats": {
+      "physical_min": 68,
+      "physical_max": 180,
+      "crit_chance": 5.0,
+      "attack_rate": 1.2,
+      "range": 13
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Notched Greataxe",
+    "category": "axe",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 78,
+    "description": "Two Handed Axe",
+    "base_stats": {
+      "physical_min": 68,
+      "physical_max": 180,
+      "crit_chance": 5.0,
+      "attack_rate": 1.2,
+      "range": 13
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Intricate Greataxe",
+    "category": "axe",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 79,
+    "description": "Two Handed Axe",
+    "base_stats": {
+      "physical_min": 68,
+      "physical_max": 180,
+      "crit_chance": 5.0,
+      "attack_rate": 1.2,
+      "range": 13
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Violent Greataxe",
+    "category": "axe",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 77,
+    "description": "Two Handed Axe",
+    "base_stats": {
+      "physical_min": 68,
+      "physical_max": 180,
+      "crit_chance": 5.0,
+      "attack_rate": 1.2,
+      "range": 13
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Severing Halberd",
+    "category": "axe",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 75,
+    "description": "Two Handed Axe",
+    "base_stats": {
+      "physical_min": 67,
+      "physical_max": 176,
+      "crit_chance": 5.0,
+      "attack_rate": 1.2,
+      "range": 13
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Clawed Greataxe",
+    "category": "axe",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 78,
+    "description": "Two Handed Axe",
+    "base_stats": {
+      "physical_min": 68,
+      "physical_max": 180,
       "crit_chance": 5.0,
       "attack_rate": 1.2,
       "range": 13
@@ -8610,13 +9236,13 @@
     "default_ilvl": 1,
     "description": "Two Handed Mace",
     "base_stats": {
-      "physical_min": 14,
-      "physical_max": 26,
+      "physical_min": 16,
+      "physical_max": 30,
       "crit_chance": 5.0,
-      "attack_rate": 1.05,
+      "attack_rate": 1.0,
       "range": 13
     },
-    "implicit": "Causes (30-50)% increased Stun Buildup"
+    "implicit": "Causes (20-40)% increased Stun Buildup"
   },
   {
     "name": "Forge Maul",
@@ -8628,13 +9254,13 @@
     "default_ilvl": 11,
     "description": "Two Handed Mace",
     "base_stats": {
-      "physical_min": 29,
-      "physical_max": 39,
+      "physical_min": 26,
+      "physical_max": 35,
       "crit_chance": 5.0,
       "attack_rate": 1.05,
       "range": 13
     },
-    "implicit": null
+    "implicit": "Crushes Enemies on Hit"
   },
   {
     "name": "Studded Greatclub",
@@ -8664,13 +9290,13 @@
     "default_ilvl": 22,
     "description": "Two Handed Mace",
     "base_stats": {
-      "physical_min": 32,
-      "physical_max": 43,
+      "physical_min": 36,
+      "physical_max": 49,
       "crit_chance": 5.0,
       "attack_rate": 1.05,
       "range": 13
     },
-    "implicit": "Strikes deal Splash damage to targets within 1.5 metres"
+    "implicit": "Strikes deal Splash Damage"
   },
   {
     "name": "Temple Maul",
@@ -8720,7 +9346,7 @@
     "base_stats": {
       "physical_min": 62,
       "physical_max": 75,
-      "crit_chance": 5.0,
+      "crit_chance": 8.0,
       "attack_rate": 1.1,
       "range": 13
     },
@@ -8754,13 +9380,13 @@
     "default_ilvl": 50,
     "description": "Two Handed Mace",
     "base_stats": {
-      "physical_min": 73,
-      "physical_max": 99,
+      "physical_min": 77,
+      "physical_max": 105,
       "crit_chance": 5.0,
       "attack_rate": 1.1,
       "range": 13
     },
-    "implicit": "Crushes Enemies on Hit"
+    "implicit": "Warcries Empower an additional Attack"
   },
   {
     "name": "Greatmace",
@@ -8826,13 +9452,13 @@
     "default_ilvl": 45,
     "description": "Two Handed Mace",
     "base_stats": {
-      "physical_min": 59,
-      "physical_max": 109,
+      "physical_min": 62,
+      "physical_max": 115,
       "crit_chance": 5.0,
       "attack_rate": 1.05,
       "range": 13
     },
-    "implicit": "Causes (30-50)% increased Stun Buildup"
+    "implicit": "Causes (20-40)% increased Stun Buildup"
   },
   {
     "name": "Blacksmith Maul",
@@ -8844,13 +9470,13 @@
     "default_ilvl": 48,
     "description": "Two Handed Mace",
     "base_stats": {
-      "physical_min": 84,
-      "physical_max": 113,
+      "physical_min": 75,
+      "physical_max": 102,
       "crit_chance": 5.0,
       "attack_rate": 1.05,
       "range": 13
     },
-    "implicit": null
+    "implicit": "Crushes Enemies on Hit"
   },
   {
     "name": "Zealot Greathammer",
@@ -8862,13 +9488,13 @@
     "default_ilvl": 51,
     "description": "Two Handed Mace",
     "base_stats": {
-      "physical_min": 62,
-      "physical_max": 83,
+      "physical_min": 70,
+      "physical_max": 95,
       "crit_chance": 5.0,
       "attack_rate": 1.05,
       "range": 13
     },
-    "implicit": "Strikes deal Splash damage to targets within 1.5 metres"
+    "implicit": "Strikes deal Splash Damage"
   },
   {
     "name": "Solemn Maul",
@@ -8916,9 +9542,9 @@
     "default_ilvl": 62,
     "description": "Two Handed Mace",
     "base_stats": {
-      "physical_min": 93,
-      "physical_max": 114,
-      "crit_chance": 5.0,
+      "physical_min": 92,
+      "physical_max": 112,
+      "crit_chance": 8.0,
       "attack_rate": 1.1,
       "range": 13
     },
@@ -8934,13 +9560,13 @@
     "default_ilvl": 67,
     "description": "Two Handed Mace",
     "base_stats": {
-      "physical_min": 112,
-      "physical_max": 151,
+      "physical_min": 101,
+      "physical_max": 136,
       "crit_chance": 5.0,
       "attack_rate": 1.05,
       "range": 13
     },
-    "implicit": null
+    "implicit": "Crushes Enemies on Hit"
   },
   {
     "name": "Sacred Maul",
@@ -8970,10 +9596,10 @@
     "default_ilvl": 77,
     "description": "Two Handed Mace",
     "base_stats": {
-      "physical_min": 94,
-      "physical_max": 174,
+      "physical_min": 105,
+      "physical_max": 196,
       "crit_chance": 5.0,
-      "attack_rate": 1.05,
+      "attack_rate": 1.0,
       "range": 13
     },
     "implicit": "Causes (30-50)% increased Stun Buildup"
@@ -8988,13 +9614,13 @@
     "default_ilvl": 78,
     "description": "Two Handed Mace",
     "base_stats": {
-      "physical_min": 89,
-      "physical_max": 120,
+      "physical_min": 101,
+      "physical_max": 137,
       "crit_chance": 5.0,
       "attack_rate": 1.05,
       "range": 13
     },
-    "implicit": "Strikes deal Splash damage to targets within 1.5 metres"
+    "implicit": "Strikes deal Splash Damage"
   },
   {
     "name": "Ruination Maul",
@@ -9006,9 +9632,9 @@
     "default_ilvl": 79,
     "description": "Two Handed Mace",
     "base_stats": {
-      "physical_min": 113,
-      "physical_max": 138,
-      "crit_chance": 5.0,
+      "physical_min": 104,
+      "physical_max": 127,
+      "crit_chance": 8.0,
       "attack_rate": 1.1,
       "range": 13
     },
@@ -9042,13 +9668,13 @@
     "default_ilvl": 78,
     "description": "Two Handed Mace",
     "base_stats": {
-      "physical_min": 107,
-      "physical_max": 145,
+      "physical_min": 113,
+      "physical_max": 153,
       "crit_chance": 5.0,
       "attack_rate": 1.1,
       "range": 13
     },
-    "implicit": "Crushes Enemies on Hit"
+    "implicit": "Warcries Empower an additional Attack"
   },
   {
     "name": "Crude Bow",
@@ -9095,7 +9721,7 @@
     "description": "Bow",
     "base_stats": {
       "physical_min": 12,
-      "physical_max": 18,
+      "physical_max": 20,
       "crit_chance": 5.0,
       "attack_rate": 1.15,
       "range": 120
@@ -9148,13 +9774,13 @@
     "default_ilvl": 28,
     "description": "Bow",
     "base_stats": {
-      "physical_min": 16,
-      "physical_max": 31,
+      "physical_min": 19,
+      "physical_max": 35,
       "crit_chance": 5.0,
-      "attack_rate": 1.1,
+      "attack_rate": 1.15,
       "range": 120
     },
-    "implicit": "Bow Attacks fire an additional Arrow"
+    "implicit": "+50% Surpassing chance to fire an additional Arrow"
   },
   {
     "name": "Cultist Bow",
@@ -9166,8 +9792,8 @@
     "default_ilvl": 33,
     "description": "Bow",
     "base_stats": {
-      "physical_min": 10,
-      "physical_max": 17,
+      "physical_min": 22,
+      "physical_max": 36,
       "crit_chance": 5.0,
       "attack_rate": 1.2,
       "range": 120
@@ -9350,10 +9976,10 @@
       "physical_min": 32,
       "physical_max": 60,
       "crit_chance": 5.0,
-      "attack_rate": 1.1,
+      "attack_rate": 1.15,
       "range": 120
     },
-    "implicit": "Bow Attacks fire an additional Arrow"
+    "implicit": "+50% Surpassing chance to fire an additional Arrow"
   },
   {
     "name": "Adherent Bow",
@@ -9365,8 +9991,8 @@
     "default_ilvl": 59,
     "description": "Bow",
     "base_stats": {
-      "physical_min": 21,
-      "physical_max": 34,
+      "physical_min": 35,
+      "physical_max": 59,
       "crit_chance": 5.0,
       "attack_rate": 1.2,
       "range": 120
@@ -9438,7 +10064,7 @@
     "description": "Bow",
     "base_stats": {
       "physical_min": 53,
-      "physical_max": 80,
+      "physical_max": 88,
       "crit_chance": 5.0,
       "attack_rate": 1.15,
       "range": 120
@@ -9458,10 +10084,10 @@
       "physical_min": 39,
       "physical_max": 72,
       "crit_chance": 5.0,
-      "attack_rate": 1.1,
+      "attack_rate": 1.15,
       "range": 120
     },
-    "implicit": "Bow Attacks fire an additional Arrow"
+    "implicit": "+50% Surpassing chance to fire an additional Arrow"
   },
   {
     "name": "Fanatic Bow",
@@ -9473,8 +10099,8 @@
     "default_ilvl": 79,
     "description": "Bow",
     "base_stats": {
-      "physical_min": 42,
-      "physical_max": 70,
+      "physical_min": 47,
+      "physical_max": 79,
       "crit_chance": 5.0,
       "attack_rate": 1.2,
       "range": 120
@@ -10289,8 +10915,28 @@
     "implicit": "Grants Skill: Level (1-20) Heart of Ice"
   },
   {
+    "name": "[DNT] Cragbreaker Staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Staff",
+    "base_stats": {},
+    "implicit": "Grants Skill: Level (1-20) [DNT] Crushing Earth"
+  },
+  {
+    "name": "Reflecting Staff",
+    "category": "staff",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Staff",
+    "base_stats": {},
+    "implicit": "Grants Skill: Level (1-20) Mirror of Refraction"
+  },
+  {
     "name": "Wrapped Quarterstaff",
-    "category": "warstaff",
+    "category": "staff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [],
     "default_ilvl": 1,
@@ -10306,7 +10952,7 @@
   },
   {
     "name": "Long Quarterstaff",
-    "category": "warstaff",
+    "category": "staff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex"
@@ -10324,7 +10970,7 @@
   },
   {
     "name": "Gothic Quarterstaff",
-    "category": "warstaff",
+    "category": "staff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10335,7 +10981,7 @@
     "base_stats": {
       "physical_min": 16,
       "physical_max": 26,
-      "crit_chance": 11.5,
+      "crit_chance": 12.0,
       "attack_rate": 1.4,
       "range": 13
     },
@@ -10343,7 +10989,7 @@
   },
   {
     "name": "Crackling Quarterstaff",
-    "category": "warstaff",
+    "category": "staff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10362,7 +11008,7 @@
   },
   {
     "name": "Crescent Quarterstaff",
-    "category": "warstaff",
+    "category": "staff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10381,7 +11027,7 @@
   },
   {
     "name": "Steelpoint Quarterstaff",
-    "category": "warstaff",
+    "category": "staff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10400,7 +11046,7 @@
   },
   {
     "name": "Slicing Quarterstaff",
-    "category": "warstaff",
+    "category": "staff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10419,7 +11065,7 @@
   },
   {
     "name": "Barrier Quarterstaff",
-    "category": "warstaff",
+    "category": "staff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10428,17 +11074,17 @@
     "default_ilvl": 37,
     "description": "Staff",
     "base_stats": {
-      "physical_min": 33,
-      "physical_max": 55,
+      "physical_min": 35,
+      "physical_max": 58,
       "crit_chance": 10.0,
       "attack_rate": 1.4,
       "range": 13
     },
-    "implicit": "+(10-15)% to Block chance"
+    "implicit": "+(12-18)% to Block chance"
   },
   {
     "name": "Hefty Quarterstaff",
-    "category": "warstaff",
+    "category": "staff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10448,16 +11094,16 @@
     "description": "Staff",
     "base_stats": {
       "physical_min": 39,
-      "physical_max": 80,
+      "physical_max": 81,
       "crit_chance": 10.0,
-      "attack_rate": 1.35,
+      "attack_rate": 1.3,
       "range": 13
     },
-    "implicit": null
+    "implicit": "(20-50)% chance to Daze on Hit"
   },
   {
     "name": "Smooth Quarterstaff",
-    "category": "warstaff",
+    "category": "staff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10466,8 +11112,8 @@
     "default_ilvl": 49,
     "description": "Staff",
     "base_stats": {
-      "physical_min": 64,
-      "physical_max": 87,
+      "physical_min": 59,
+      "physical_max": 79,
       "crit_chance": 0.0,
       "attack_rate": 1.5,
       "range": 13
@@ -10476,7 +11122,7 @@
   },
   {
     "name": "Anima Quarterstaff",
-    "category": "warstaff",
+    "category": "staff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10495,7 +11141,7 @@
   },
   {
     "name": "Graceful Quarterstaff",
-    "category": "warstaff",
+    "category": "staff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10514,7 +11160,7 @@
   },
   {
     "name": "Wyrm Quarterstaff",
-    "category": "warstaff",
+    "category": "staff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10533,7 +11179,7 @@
   },
   {
     "name": "Reaching Quarterstaff",
-    "category": "warstaff",
+    "category": "staff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10552,7 +11198,7 @@
   },
   {
     "name": "Barbarous Quarterstaff",
-    "category": "warstaff",
+    "category": "staff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10561,9 +11207,9 @@
     "default_ilvl": 48,
     "description": "Staff",
     "base_stats": {
-      "physical_min": 43,
-      "physical_max": 72,
-      "crit_chance": 11.5,
+      "physical_min": 42,
+      "physical_max": 71,
+      "crit_chance": 12.0,
       "attack_rate": 1.4,
       "range": 13
     },
@@ -10571,7 +11217,7 @@
   },
   {
     "name": "Arcing Quarterstaff",
-    "category": "warstaff",
+    "category": "staff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10590,7 +11236,7 @@
   },
   {
     "name": "Waxing Quarterstaff",
-    "category": "warstaff",
+    "category": "staff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10609,7 +11255,7 @@
   },
   {
     "name": "Bladed Quarterstaff",
-    "category": "warstaff",
+    "category": "staff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10628,7 +11274,7 @@
   },
   {
     "name": "Guardian Quarterstaff",
-    "category": "warstaff",
+    "category": "staff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10637,17 +11283,17 @@
     "default_ilvl": 62,
     "description": "Staff",
     "base_stats": {
-      "physical_min": 49,
-      "physical_max": 82,
+      "physical_min": 52,
+      "physical_max": 86,
       "crit_chance": 10.0,
       "attack_rate": 1.4,
       "range": 13
     },
-    "implicit": "+(10-15)% to Block chance"
+    "implicit": "+(12-18)% to Block chance"
   },
   {
     "name": "Sinister Quarterstaff",
-    "category": "warstaff",
+    "category": "staff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10657,8 +11303,8 @@
     "description": "Staff",
     "base_stats": {
       "physical_min": 55,
-      "physical_max": 92,
-      "crit_chance": 11.5,
+      "physical_max": 91,
+      "crit_chance": 12.0,
       "attack_rate": 1.4,
       "range": 13
     },
@@ -10666,7 +11312,7 @@
   },
   {
     "name": "Lunar Quarterstaff",
-    "category": "warstaff",
+    "category": "staff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10685,7 +11331,7 @@
   },
   {
     "name": "Striking Quarterstaff",
-    "category": "warstaff",
+    "category": "staff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10704,7 +11350,7 @@
   },
   {
     "name": "Bolting Quarterstaff",
-    "category": "warstaff",
+    "category": "staff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10723,7 +11369,7 @@
   },
   {
     "name": "Aegis Quarterstaff",
-    "category": "warstaff",
+    "category": "staff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10738,11 +11384,11 @@
       "attack_rate": 1.4,
       "range": 13
     },
-    "implicit": "+(10-15)% to Block chance"
+    "implicit": "+(12-18)% to Block chance"
   },
   {
     "name": "Razor Quarterstaff",
-    "category": "warstaff",
+    "category": "staff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -10760,255 +11406,27 @@
     "implicit": null
   },
   {
-    "name": "Dreaming Quarterstaff",
-    "category": "warstaff",
+    "name": "Skullcrusher Quarterstaff",
+    "category": "staff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
       "int"
     ],
-    "default_ilvl": 78,
+    "default_ilvl": 75,
     "description": "Staff",
     "base_stats": {
-      "physical_min": 99,
-      "physical_max": 133,
-      "crit_chance": 0.0,
-      "attack_rate": 1.5,
-      "range": 13
-    },
-    "implicit": null
-  },
-  {
-    "name": "Reaching Quarterstaff",
-    "category": "warstaff",
-    "slot": "weapons - 2 hand",
-    "attribute_requirements": [
-      "dex",
-      "int"
-    ],
-    "default_ilvl": 45,
-    "description": "Staff",
-    "base_stats": {
-      "physical_min": 35,
-      "physical_max": 72,
+      "physical_min": 59,
+      "physical_max": 122,
       "crit_chance": 10.0,
-      "attack_rate": 1.4,
+      "attack_rate": 1.3,
       "range": 13
     },
-    "implicit": "16% increased Melee Strike Range with this weapon"
-  },
-  {
-    "name": "Barbarous Quarterstaff",
-    "category": "warstaff",
-    "slot": "weapons - 2 hand",
-    "attribute_requirements": [
-      "dex",
-      "int"
-    ],
-    "default_ilvl": 48,
-    "description": "Staff",
-    "base_stats": {
-      "physical_min": 43,
-      "physical_max": 72,
-      "crit_chance": 11.5,
-      "attack_rate": 1.4,
-      "range": 13
-    },
-    "implicit": null
-  },
-  {
-    "name": "Arcing Quarterstaff",
-    "category": "warstaff",
-    "slot": "weapons - 2 hand",
-    "attribute_requirements": [
-      "dex",
-      "int"
-    ],
-    "default_ilvl": 51,
-    "description": "Staff",
-    "base_stats": {
-      "physical_min": 14,
-      "physical_max": 55,
-      "crit_chance": 10.0,
-      "attack_rate": 1.4,
-      "range": 13
-    },
-    "implicit": null
-  },
-  {
-    "name": "Waxing Quarterstaff",
-    "category": "warstaff",
-    "slot": "weapons - 2 hand",
-    "attribute_requirements": [
-      "dex",
-      "int"
-    ],
-    "default_ilvl": 54,
-    "description": "Staff",
-    "base_stats": {
-      "physical_min": 39,
-      "physical_max": 82,
-      "crit_chance": 10.0,
-      "attack_rate": 1.5,
-      "range": 13
-    },
-    "implicit": null
-  },
-  {
-    "name": "Bladed Quarterstaff",
-    "category": "warstaff",
-    "slot": "weapons - 2 hand",
-    "attribute_requirements": [
-      "dex",
-      "int"
-    ],
-    "default_ilvl": 59,
-    "description": "Staff",
-    "base_stats": {
-      "physical_min": 45,
-      "physical_max": 94,
-      "crit_chance": 10.0,
-      "attack_rate": 1.4,
-      "range": 13
-    },
-    "implicit": null
-  },
-  {
-    "name": "Guardian Quarterstaff",
-    "category": "warstaff",
-    "slot": "weapons - 2 hand",
-    "attribute_requirements": [
-      "dex",
-      "int"
-    ],
-    "default_ilvl": 62,
-    "description": "Staff",
-    "base_stats": {
-      "physical_min": 49,
-      "physical_max": 82,
-      "crit_chance": 10.0,
-      "attack_rate": 1.4,
-      "range": 13
-    },
-    "implicit": "+(10-15)% to Block chance"
-  },
-  {
-    "name": "Sinister Quarterstaff",
-    "category": "warstaff",
-    "slot": "weapons - 2 hand",
-    "attribute_requirements": [
-      "dex",
-      "int"
-    ],
-    "default_ilvl": 67,
-    "description": "Staff",
-    "base_stats": {
-      "physical_min": 55,
-      "physical_max": 92,
-      "crit_chance": 11.5,
-      "attack_rate": 1.4,
-      "range": 13
-    },
-    "implicit": null
-  },
-  {
-    "name": "Lunar Quarterstaff",
-    "category": "warstaff",
-    "slot": "weapons - 2 hand",
-    "attribute_requirements": [
-      "dex",
-      "int"
-    ],
-    "default_ilvl": 72,
-    "description": "Staff",
-    "base_stats": {
-      "physical_min": 50,
-      "physical_max": 103,
-      "crit_chance": 10.0,
-      "attack_rate": 1.5,
-      "range": 13
-    },
-    "implicit": null
-  },
-  {
-    "name": "Striking Quarterstaff",
-    "category": "warstaff",
-    "slot": "weapons - 2 hand",
-    "attribute_requirements": [
-      "dex",
-      "int"
-    ],
-    "default_ilvl": 77,
-    "description": "Staff",
-    "base_stats": {
-      "physical_min": 53,
-      "physical_max": 111,
-      "crit_chance": 10.0,
-      "attack_rate": 1.4,
-      "range": 13
-    },
-    "implicit": "16% increased Melee Strike Range with this weapon"
-  },
-  {
-    "name": "Bolting Quarterstaff",
-    "category": "warstaff",
-    "slot": "weapons - 2 hand",
-    "attribute_requirements": [
-      "dex",
-      "int"
-    ],
-    "default_ilvl": 78,
-    "description": "Staff",
-    "base_stats": {
-      "physical_min": 24,
-      "physical_max": 97,
-      "crit_chance": 10.0,
-      "attack_rate": 1.4,
-      "range": 13
-    },
-    "implicit": null
-  },
-  {
-    "name": "Aegis Quarterstaff",
-    "category": "warstaff",
-    "slot": "weapons - 2 hand",
-    "attribute_requirements": [
-      "dex",
-      "int"
-    ],
-    "default_ilvl": 79,
-    "description": "Staff",
-    "base_stats": {
-      "physical_min": 58,
-      "physical_max": 97,
-      "crit_chance": 10.0,
-      "attack_rate": 1.4,
-      "range": 13
-    },
-    "implicit": "+(10-15)% to Block chance"
-  },
-  {
-    "name": "Razor Quarterstaff",
-    "category": "warstaff",
-    "slot": "weapons - 2 hand",
-    "attribute_requirements": [
-      "dex",
-      "int"
-    ],
-    "default_ilvl": 77,
-    "description": "Staff",
-    "base_stats": {
-      "physical_min": 65,
-      "physical_max": 108,
-      "crit_chance": 10.0,
-      "attack_rate": 1.4,
-      "range": 13
-    },
-    "implicit": null
+    "implicit": "(20-50)% chance to Daze on Hit"
   },
   {
     "name": "Dreaming Quarterstaff",
-    "category": "warstaff",
+    "category": "staff",
     "slot": "weapons - 2 hand",
     "attribute_requirements": [
       "dex",
@@ -11277,6 +11695,158 @@
     "base_stats": {
       "physical_min": 21,
       "physical_max": 62,
+      "crit_chance": 15.0,
+      "attack_rate": 1.55,
+      "range": 10
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Crystalline Dagger",
+    "category": "dagger",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "dex",
+      "int"
+    ],
+    "default_ilvl": 67,
+    "description": "Dagger",
+    "base_stats": {
+      "physical_min": 21,
+      "physical_max": 63,
+      "crit_chance": 15.0,
+      "attack_rate": 1.55,
+      "range": 10
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Hag Knife",
+    "category": "dagger",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "dex",
+      "int"
+    ],
+    "default_ilvl": 72,
+    "description": "Dagger",
+    "base_stats": {
+      "physical_min": 22,
+      "physical_max": 66,
+      "crit_chance": 15.0,
+      "attack_rate": 1.55,
+      "range": 10
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Prominent Dagger",
+    "category": "dagger",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "dex",
+      "int"
+    ],
+    "default_ilvl": 77,
+    "description": "Dagger",
+    "base_stats": {
+      "physical_min": 23,
+      "physical_max": 69,
+      "crit_chance": 15.0,
+      "attack_rate": 1.55,
+      "range": 10
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Carving Knife",
+    "category": "dagger",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "dex",
+      "int"
+    ],
+    "default_ilvl": 78,
+    "description": "Dagger",
+    "base_stats": {
+      "physical_min": 23,
+      "physical_max": 69,
+      "crit_chance": 15.0,
+      "attack_rate": 1.55,
+      "range": 10
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Crescent Dagger",
+    "category": "dagger",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "dex",
+      "int"
+    ],
+    "default_ilvl": 79,
+    "description": "Dagger",
+    "base_stats": {
+      "physical_min": 23,
+      "physical_max": 69,
+      "crit_chance": 15.0,
+      "attack_rate": 1.55,
+      "range": 10
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Intricade Knife",
+    "category": "dagger",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "dex",
+      "int"
+    ],
+    "default_ilvl": 77,
+    "description": "Dagger",
+    "base_stats": {
+      "physical_min": 23,
+      "physical_max": 69,
+      "crit_chance": 15.0,
+      "attack_rate": 1.55,
+      "range": 10
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Midnight Dagger",
+    "category": "dagger",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "dex",
+      "int"
+    ],
+    "default_ilvl": 75,
+    "description": "Dagger",
+    "base_stats": {
+      "physical_min": 23,
+      "physical_max": 68,
+      "crit_chance": 15.0,
+      "attack_rate": 1.55,
+      "range": 10
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Ritualistic Dagger",
+    "category": "dagger",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "dex",
+      "int"
+    ],
+    "default_ilvl": 78,
+    "description": "Dagger",
+    "base_stats": {
+      "physical_min": 23,
+      "physical_max": 69,
       "crit_chance": 15.0,
       "attack_rate": 1.55,
       "range": 10
@@ -11739,7 +12309,7 @@
       "attack_rate": 1.6,
       "range": 15
     },
-    "implicit": null
+    "implicit": "Grants Skill: Spear Throw"
   },
   {
     "name": "Ironhead Spear",
@@ -11751,13 +12321,13 @@
     "default_ilvl": 5,
     "description": "Spear",
     "base_stats": {
-      "physical_min": 7,
-      "physical_max": 13,
+      "physical_min": 9,
+      "physical_max": 12,
       "crit_chance": 5.0,
       "attack_rate": 1.6,
       "range": 15
     },
-    "implicit": null
+    "implicit": "Grants Skill: Spear Throw"
   },
   {
     "name": "Hunting Spear",
@@ -11771,12 +12341,12 @@
     "description": "Spear",
     "base_stats": {
       "physical_min": 10,
-      "physical_max": 18,
+      "physical_max": 17,
       "crit_chance": 5.0,
       "attack_rate": 1.55,
       "range": 15
     },
-    "implicit": "(15-25)% chance to Maim on Hit"
+    "implicit": "Grants Skill: Spear Throw\\n(15-25)% chance to Maim on Hit"
   },
   {
     "name": "Winged Spear",
@@ -11792,10 +12362,10 @@
       "physical_min": 12,
       "physical_max": 22,
       "crit_chance": 5.0,
-      "attack_rate": 1.65,
+      "attack_rate": 1.7,
       "range": 15
     },
-    "implicit": null
+    "implicit": "Grants Skill: Spear Throw"
   },
   {
     "name": "War Spear",
@@ -11808,13 +12378,13 @@
     "default_ilvl": 21,
     "description": "Spear",
     "base_stats": {
-      "physical_min": 14,
-      "physical_max": 26,
+      "physical_min": 16,
+      "physical_max": 27,
       "crit_chance": 5.0,
       "attack_rate": 1.6,
       "range": 15
     },
-    "implicit": "(25-35)% increased Projectile Speed with this Weapon"
+    "implicit": "Grants Skill: Spear Throw\\n(25-35)% increased Projectile Speed with this Weapon"
   },
   {
     "name": "Forked Spear",
@@ -11827,13 +12397,13 @@
     "default_ilvl": 26,
     "description": "Spear",
     "base_stats": {
-      "physical_min": 17,
-      "physical_max": 32,
+      "physical_min": 13,
+      "physical_max": 38,
       "crit_chance": 5.0,
-      "attack_rate": 1.6,
+      "attack_rate": 1.55,
       "range": 15
     },
-    "implicit": null
+    "implicit": "Grants Skill: Spear Throw"
   },
   {
     "name": "Barbed Spear",
@@ -11848,11 +12418,11 @@
     "base_stats": {
       "physical_min": 20,
       "physical_max": 38,
-      "crit_chance": 6.5,
-      "attack_rate": 1.6,
+      "crit_chance": 6.0,
+      "attack_rate": 1.5,
       "range": 15
     },
-    "implicit": null
+    "implicit": "Grants Skill: Spear Throw\\nBleeding you inflict deals Damage (10-20)% faster"
   },
   {
     "name": "Broad Spear",
@@ -11865,13 +12435,13 @@
     "default_ilvl": 40,
     "description": "Spear",
     "base_stats": {
-      "physical_min": 26,
+      "physical_min": 32,
       "physical_max": 48,
       "crit_chance": 5.0,
-      "attack_rate": 1.5,
+      "attack_rate": 1.4,
       "range": 15
     },
-    "implicit": null
+    "implicit": "Grants Skill: Spear Throw\\n25% increased Melee Strike Range with this weapon"
   },
   {
     "name": "Crossblade Spear",
@@ -11884,13 +12454,13 @@
     "default_ilvl": 45,
     "description": "Spear",
     "base_stats": {
-      "physical_min": 28,
-      "physical_max": 51,
+      "physical_min": 25,
+      "physical_max": 52,
       "crit_chance": 5.0,
-      "attack_rate": 1.55,
+      "attack_rate": 1.6,
       "range": 15
     },
-    "implicit": null
+    "implicit": "Grants Skill: Spear Throw\\nPrevent +(3-7)% of Damage from Deflected Hits"
   },
   {
     "name": "Seaglass Spear",
@@ -11904,13 +12474,13 @@
     "default_ilvl": 51,
     "description": "Spear",
     "base_stats": {
-      "physical_min": 31,
-      "physical_max": 57,
+      "physical_min": 29,
+      "physical_max": 53,
       "crit_chance": 7.0,
-      "attack_rate": 1.5,
+      "attack_rate": 1.6,
       "range": 15
     },
-    "implicit": null
+    "implicit": "Grants Skill: Spear Throw"
   },
   {
     "name": "Sword Spear",
@@ -11929,7 +12499,7 @@
       "attack_rate": 1.6,
       "range": 15
     },
-    "implicit": null
+    "implicit": "Grants Skill: Spear Throw"
   },
   {
     "name": "Striking Spear",
@@ -11948,7 +12518,7 @@
       "attack_rate": 1.6,
       "range": 15
     },
-    "implicit": null
+    "implicit": "Grants Skill: Spear Throw"
   },
   {
     "name": "Helix Spear",
@@ -11967,7 +12537,7 @@
       "attack_rate": 1.6,
       "range": 15
     },
-    "implicit": null
+    "implicit": "Grants Skill: Spear Throw"
   },
   {
     "name": "Steelhead Spear",
@@ -11980,13 +12550,13 @@
     "default_ilvl": 45,
     "description": "Spear",
     "base_stats": {
-      "physical_min": 27,
-      "physical_max": 50,
+      "physical_min": 33,
+      "physical_max": 44,
       "crit_chance": 5.0,
       "attack_rate": 1.6,
       "range": 15
     },
-    "implicit": null
+    "implicit": "Grants Skill: Spear Throw"
   },
   {
     "name": "Coursing Spear",
@@ -11999,13 +12569,13 @@
     "default_ilvl": 48,
     "description": "Spear",
     "base_stats": {
-      "physical_min": 29,
-      "physical_max": 54,
+      "physical_min": 31,
+      "physical_max": 52,
       "crit_chance": 5.0,
       "attack_rate": 1.55,
       "range": 15
     },
-    "implicit": "(15-25)% chance to Maim on Hit"
+    "implicit": "Grants Skill: Spear Throw\\n(15-25)% chance to Maim on Hit"
   },
   {
     "name": "Swift Spear",
@@ -12018,13 +12588,13 @@
     "default_ilvl": 51,
     "description": "Spear",
     "base_stats": {
-      "physical_min": 28,
+      "physical_min": 32,
       "physical_max": 53,
       "crit_chance": 5.0,
       "attack_rate": 1.6,
       "range": 15
     },
-    "implicit": "(25-35)% increased Projectile Speed with this Weapon"
+    "implicit": "Grants Skill: Spear Throw\\n(25-35)% increased Projectile Speed with this Weapon"
   },
   {
     "name": "Branched Spear",
@@ -12037,13 +12607,13 @@
     "default_ilvl": 54,
     "description": "Spear",
     "base_stats": {
-      "physical_min": 31,
-      "physical_max": 58,
+      "physical_min": 23,
+      "physical_max": 69,
       "crit_chance": 5.0,
-      "attack_rate": 1.6,
+      "attack_rate": 1.55,
       "range": 15
     },
-    "implicit": null
+    "implicit": "Grants Skill: Spear Throw"
   },
   {
     "name": "Jagged Spear",
@@ -12058,11 +12628,11 @@
     "base_stats": {
       "physical_min": 33,
       "physical_max": 61,
-      "crit_chance": 6.5,
-      "attack_rate": 1.6,
+      "crit_chance": 6.0,
+      "attack_rate": 1.5,
       "range": 15
     },
-    "implicit": null
+    "implicit": "Grants Skill: Spear Throw\\nBleeding you inflict deals Damage (10-20)% faster"
   },
   {
     "name": "Massive Spear",
@@ -12075,13 +12645,13 @@
     "default_ilvl": 62,
     "description": "Spear",
     "base_stats": {
-      "physical_min": 38,
-      "physical_max": 70,
+      "physical_min": 46,
+      "physical_max": 69,
       "crit_chance": 5.0,
-      "attack_rate": 1.5,
+      "attack_rate": 1.4,
       "range": 15
     },
-    "implicit": null
+    "implicit": "Grants Skill: Spear Throw\\n25% increased Melee Strike Range with this weapon"
   },
   {
     "name": "Orichalcum Spear",
@@ -12094,13 +12664,32 @@
     "default_ilvl": 67,
     "description": "Spear",
     "base_stats": {
-      "physical_min": 38,
-      "physical_max": 70,
+      "physical_min": 46,
+      "physical_max": 62,
       "crit_chance": 5.0,
       "attack_rate": 1.6,
       "range": 15
     },
-    "implicit": null
+    "implicit": "Grants Skill: Spear Throw"
+  },
+  {
+    "name": "Soaring Spear",
+    "category": "spear",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 70,
+    "description": "Spear",
+    "base_stats": {
+      "physical_min": 35,
+      "physical_max": 65,
+      "crit_chance": 5.0,
+      "attack_rate": 1.7,
+      "range": 15
+    },
+    "implicit": "Grants Skill: Spear Throw"
   },
   {
     "name": "Pronged Spear",
@@ -12113,13 +12702,13 @@
     "default_ilvl": 72,
     "description": "Spear",
     "base_stats": {
-      "physical_min": 40,
-      "physical_max": 75,
+      "physical_min": 30,
+      "physical_max": 89,
       "crit_chance": 5.0,
-      "attack_rate": 1.6,
+      "attack_rate": 1.55,
       "range": 15
     },
-    "implicit": null
+    "implicit": "Grants Skill: Spear Throw"
   },
   {
     "name": "Stalking Spear",
@@ -12132,13 +12721,13 @@
     "default_ilvl": 77,
     "description": "Spear",
     "base_stats": {
-      "physical_min": 44,
-      "physical_max": 82,
+      "physical_min": 47,
+      "physical_max": 79,
       "crit_chance": 5.0,
       "attack_rate": 1.55,
       "range": 15
     },
-    "implicit": "(15-25)% chance to Maim on Hit"
+    "implicit": "Grants Skill: Spear Throw\\n(15-25)% chance to Maim on Hit"
   },
   {
     "name": "Flying Spear",
@@ -12151,13 +12740,13 @@
     "default_ilvl": 78,
     "description": "Spear",
     "base_stats": {
-      "physical_min": 41,
-      "physical_max": 76,
+      "physical_min": 46,
+      "physical_max": 77,
       "crit_chance": 5.0,
       "attack_rate": 1.6,
       "range": 15
     },
-    "implicit": "(25-35)% increased Projectile Speed with this Weapon"
+    "implicit": "Grants Skill: Spear Throw\\n(25-35)% increased Projectile Speed with this Weapon"
   },
   {
     "name": "Grand Spear",
@@ -12170,13 +12759,13 @@
     "default_ilvl": 79,
     "description": "Spear",
     "base_stats": {
-      "physical_min": 46,
-      "physical_max": 85,
+      "physical_min": 56,
+      "physical_max": 84,
       "crit_chance": 5.0,
-      "attack_rate": 1.5,
+      "attack_rate": 1.4,
       "range": 15
     },
-    "implicit": null
+    "implicit": "Grants Skill: Spear Throw\\n25% increased Melee Strike Range with this weapon"
   },
   {
     "name": "Spiked Spear",
@@ -12191,11 +12780,30 @@
     "base_stats": {
       "physical_min": 41,
       "physical_max": 76,
-      "crit_chance": 6.5,
-      "attack_rate": 1.6,
+      "crit_chance": 6.0,
+      "attack_rate": 1.5,
       "range": 15
     },
-    "implicit": null
+    "implicit": "Grants Skill: Spear Throw\\nBleeding you inflict deals Damage (10-20)% faster"
+  },
+  {
+    "name": "Guardian Spear",
+    "category": "spear",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "dex"
+    ],
+    "default_ilvl": 75,
+    "description": "Spear",
+    "base_stats": {
+      "physical_min": 38,
+      "physical_max": 79,
+      "crit_chance": 5.0,
+      "attack_rate": 1.55,
+      "range": 15
+    },
+    "implicit": "Grants Skill: Spear Throw\\nPrevent +(3-7)% of Damage from Deflected Hits"
   },
   {
     "name": "Akoyan Spear",
@@ -12209,13 +12817,13 @@
     "default_ilvl": 78,
     "description": "Spear",
     "base_stats": {
-      "physical_min": 43,
-      "physical_max": 80,
+      "physical_min": 39,
+      "physical_max": 72,
       "crit_chance": 7.0,
-      "attack_rate": 1.5,
+      "attack_rate": 1.6,
       "range": 15
     },
-    "implicit": null
+    "implicit": "Grants Skill: Spear Throw"
   },
   {
     "name": "Splintered Flail",
@@ -12455,6 +13063,630 @@
       "crit_chance": 10.0,
       "attack_rate": 1.45,
       "range": 11
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Slivered Flail",
+    "category": "flail",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 67,
+    "description": "Flail",
+    "base_stats": {
+      "physical_min": 37,
+      "physical_max": 68,
+      "crit_chance": 10.0,
+      "attack_rate": 1.45,
+      "range": 11
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Shackled Flail",
+    "category": "flail",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 72,
+    "description": "Flail",
+    "base_stats": {
+      "physical_min": 39,
+      "physical_max": 72,
+      "crit_chance": 10.0,
+      "attack_rate": 1.45,
+      "range": 11
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Righteous Flail",
+    "category": "flail",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 77,
+    "description": "Flail",
+    "base_stats": {
+      "physical_min": 41,
+      "physical_max": 76,
+      "crit_chance": 10.0,
+      "attack_rate": 1.45,
+      "range": 11
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Ferric Flail",
+    "category": "flail",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 78,
+    "description": "Flail",
+    "base_stats": {
+      "physical_min": 41,
+      "physical_max": 76,
+      "crit_chance": 10.0,
+      "attack_rate": 1.45,
+      "range": 11
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Twofold Flail",
+    "category": "flail",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 79,
+    "description": "Flail",
+    "base_stats": {
+      "physical_min": 41,
+      "physical_max": 76,
+      "crit_chance": 10.0,
+      "attack_rate": 1.45,
+      "range": 11
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Winding Flail",
+    "category": "flail",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 77,
+    "description": "Flail",
+    "base_stats": {
+      "physical_min": 41,
+      "physical_max": 76,
+      "crit_chance": 10.0,
+      "attack_rate": 1.45,
+      "range": 11
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Boulder Flail",
+    "category": "flail",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 75,
+    "description": "Flail",
+    "base_stats": {
+      "physical_min": 40,
+      "physical_max": 74,
+      "crit_chance": 10.0,
+      "attack_rate": 1.45,
+      "range": 11
+    },
+    "implicit": null
+  },
+  {
+    "name": "[DNT] Banded Flail",
+    "category": "flail",
+    "slot": "weapons - 1 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 78,
+    "description": "Flail",
+    "base_stats": {
+      "physical_min": 41,
+      "physical_max": 76,
+      "crit_chance": 10.0,
+      "attack_rate": 1.45,
+      "range": 11
+    },
+    "implicit": null
+  },
+  {
+    "name": "Changeling Talisman",
+    "category": "talisman",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [],
+    "default_ilvl": 1,
+    "description": "Talisman",
+    "base_stats": {
+      "physical_min": 9,
+      "physical_max": 15,
+      "crit_chance": 8.0,
+      "attack_rate": 1.25,
+      "range": 12
+    },
+    "implicit": null
+  },
+  {
+    "name": "Nettle Talisman",
+    "category": "talisman",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 5,
+    "description": "Talisman",
+    "base_stats": {
+      "physical_min": 12,
+      "physical_max": 20,
+      "crit_chance": 11.0,
+      "attack_rate": 1.25,
+      "range": 12
+    },
+    "implicit": null
+  },
+  {
+    "name": "Cinderbark Talisman",
+    "category": "talisman",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 10,
+    "description": "Talisman",
+    "base_stats": {
+      "physical_min": 12,
+      "physical_max": 25,
+      "crit_chance": 8.0,
+      "attack_rate": 1.2,
+      "range": 12
+    },
+    "implicit": "(50-80)% increased Flammability Magnitude"
+  },
+  {
+    "name": "Familial Talisman",
+    "category": "talisman",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 16,
+    "description": "Talisman",
+    "base_stats": {
+      "physical_min": 20,
+      "physical_max": 34,
+      "crit_chance": 8.0,
+      "attack_rate": 1.25,
+      "range": 12
+    },
+    "implicit": "Minions deal (30-50)% increased Damage"
+  },
+  {
+    "name": "Frenzied Talisman",
+    "category": "talisman",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 22,
+    "description": "Talisman",
+    "base_stats": {
+      "physical_min": 23,
+      "physical_max": 38,
+      "crit_chance": 8.0,
+      "attack_rate": 1.4,
+      "range": 12
+    },
+    "implicit": null
+  },
+  {
+    "name": "Primal Talisman",
+    "category": "talisman",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 28,
+    "description": "Talisman",
+    "base_stats": {
+      "physical_min": 31,
+      "physical_max": 46,
+      "crit_chance": 9.0,
+      "attack_rate": 1.3,
+      "range": 12
+    },
+    "implicit": "+(10-15)% to Block chance"
+  },
+  {
+    "name": "Rabid Talisman",
+    "category": "talisman",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 34,
+    "description": "Talisman",
+    "base_stats": {
+      "physical_min": 31,
+      "physical_max": 58,
+      "crit_chance": 8.0,
+      "attack_rate": 1.25,
+      "range": 12
+    },
+    "implicit": "+(8-12) to Maximum Rage"
+  },
+  {
+    "name": "Vicious Talisman",
+    "category": "talisman",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 40,
+    "description": "Talisman",
+    "base_stats": {
+      "physical_min": 43,
+      "physical_max": 71,
+      "crit_chance": 8.0,
+      "attack_rate": 1.25,
+      "range": 12
+    },
+    "implicit": null
+  },
+  {
+    "name": "Voltfang Talisman",
+    "category": "talisman",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 46,
+    "description": "Talisman",
+    "base_stats": {
+      "physical_min": 16,
+      "physical_max": 91,
+      "crit_chance": 8.0,
+      "attack_rate": 1.3,
+      "range": 12
+    },
+    "implicit": "(15-25)% increased Magnitude of Shock you inflict"
+  },
+  {
+    "name": "Lumbering Talisman",
+    "category": "talisman",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 52,
+    "description": "Talisman",
+    "base_stats": {
+      "physical_min": 71,
+      "physical_max": 107,
+      "crit_chance": 5.0,
+      "attack_rate": 1.1,
+      "range": 12
+    },
+    "implicit": null
+  },
+  {
+    "name": "Roaring Talisman",
+    "category": "talisman",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 58,
+    "description": "Talisman",
+    "base_stats": {
+      "physical_min": 57,
+      "physical_max": 96,
+      "crit_chance": 8.0,
+      "attack_rate": 1.25,
+      "range": 12
+    },
+    "implicit": "+(8-12) to Maximum Rage"
+  },
+  {
+    "name": "Wingbeat Talisman",
+    "category": "talisman",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 65,
+    "description": "Talisman",
+    "base_stats": {
+      "physical_min": 45,
+      "physical_max": 83,
+      "crit_chance": 7.0,
+      "attack_rate": 1.45,
+      "range": 12
+    },
+    "implicit": null
+  },
+  {
+    "name": "Condemned Talisman",
+    "category": "talisman",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 65,
+    "description": "Talisman",
+    "base_stats": {
+      "physical_min": 68,
+      "physical_max": 113,
+      "crit_chance": 9.0,
+      "attack_rate": 1.25,
+      "range": 12
+    },
+    "implicit": "(10-20)% increased Effect of your Mark Skills"
+  },
+  {
+    "name": "Howling Talisman",
+    "category": "talisman",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 55,
+    "description": "Talisman",
+    "base_stats": {
+      "physical_min": 52,
+      "physical_max": 78,
+      "crit_chance": 9.0,
+      "attack_rate": 1.3,
+      "range": 12
+    },
+    "implicit": "+(10-15)% to Block chance"
+  },
+  {
+    "name": "Fury Talisman",
+    "category": "talisman",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 59,
+    "description": "Talisman",
+    "base_stats": {
+      "physical_min": 49,
+      "physical_max": 91,
+      "crit_chance": 8.0,
+      "attack_rate": 1.25,
+      "range": 12
+    },
+    "implicit": "+(8-12) to Maximum Rage"
+  },
+  {
+    "name": "Cruel Talisman",
+    "category": "talisman",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 63,
+    "description": "Talisman",
+    "base_stats": {
+      "physical_min": 62,
+      "physical_max": 103,
+      "crit_chance": 8.0,
+      "attack_rate": 1.25,
+      "range": 12
+    },
+    "implicit": null
+  },
+  {
+    "name": "Spiny Talisman",
+    "category": "talisman",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 67,
+    "description": "Talisman",
+    "base_stats": {
+      "physical_min": 60,
+      "physical_max": 99,
+      "crit_chance": 11.0,
+      "attack_rate": 1.25,
+      "range": 12
+    },
+    "implicit": null
+  },
+  {
+    "name": "Ashbark Talisman",
+    "category": "talisman",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 72,
+    "description": "Talisman",
+    "base_stats": {
+      "physical_min": 50,
+      "physical_max": 105,
+      "crit_chance": 8.0,
+      "attack_rate": 1.2,
+      "range": 12
+    },
+    "implicit": "(50-80)% increased Flammability Magnitude"
+  },
+  {
+    "name": "Fang Talisman",
+    "category": "talisman",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 77,
+    "description": "Talisman",
+    "base_stats": {
+      "physical_min": 70,
+      "physical_max": 116,
+      "crit_chance": 8.0,
+      "attack_rate": 1.25,
+      "range": 12
+    },
+    "implicit": "Minions deal (30-50)% increased Damage"
+  },
+  {
+    "name": "Fungal Talisman",
+    "category": "talisman",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 78,
+    "description": "Talisman",
+    "base_stats": {
+      "physical_min": 59,
+      "physical_max": 98,
+      "crit_chance": 8.0,
+      "attack_rate": 1.4,
+      "range": 12
+    },
+    "implicit": null
+  },
+  {
+    "name": "Alpha Talisman",
+    "category": "talisman",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 75,
+    "description": "Talisman",
+    "base_stats": {
+      "physical_min": 63,
+      "physical_max": 94,
+      "crit_chance": 9.0,
+      "attack_rate": 1.3,
+      "range": 12
+    },
+    "implicit": "+(10-15)% to Block chance"
+  },
+  {
+    "name": "Maji Talisman",
+    "category": "talisman",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 79,
+    "description": "Talisman",
+    "base_stats": {
+      "physical_min": 61,
+      "physical_max": 114,
+      "crit_chance": 8.0,
+      "attack_rate": 1.25,
+      "range": 12
+    },
+    "implicit": "+(8-12) to Maximum Rage"
+  },
+  {
+    "name": "Wildwood Talisman",
+    "category": "talisman",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 70,
+    "description": "Talisman",
+    "base_stats": {
+      "physical_min": 67,
+      "physical_max": 112,
+      "crit_chance": 8.0,
+      "attack_rate": 1.25,
+      "range": 12
+    },
+    "implicit": null
+  },
+  {
+    "name": "Thunder Talisman",
+    "category": "talisman",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 77,
+    "description": "Talisman",
+    "base_stats": {
+      "physical_min": 23,
+      "physical_max": 130,
+      "crit_chance": 8.0,
+      "attack_rate": 1.3,
+      "range": 12
+    },
+    "implicit": "(15-25)% increased Magnitude of Shock you inflict"
+  },
+  {
+    "name": "Jade Talisman",
+    "category": "talisman",
+    "slot": "weapons - 2 hand",
+    "attribute_requirements": [
+      "str",
+      "int"
+    ],
+    "default_ilvl": 78,
+    "description": "Talisman",
+    "base_stats": {
+      "physical_min": 101,
+      "physical_max": 151,
+      "crit_chance": 5.0,
+      "attack_rate": 1.1,
+      "range": 12
     },
     "implicit": null
   },
@@ -12745,146 +13977,6 @@
     "description": "Shield",
     "base_stats": {
       "armour": 152
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Aged Tower Shield",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str"
-    ],
-    "default_ilvl": 45,
-    "description": "Shield",
-    "base_stats": {
-      "armour": 110
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Metalworked Tower Shield",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str"
-    ],
-    "default_ilvl": 48,
-    "description": "Shield",
-    "base_stats": {
-      "armour": 116
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Cultist Tower Shield",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str"
-    ],
-    "default_ilvl": 51,
-    "description": "Shield",
-    "base_stats": {
-      "armour": 123
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Bulwark Tower Shield",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str"
-    ],
-    "default_ilvl": 54,
-    "description": "Shield",
-    "base_stats": {
-      "armour": 129
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Noble Tower Shield",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str"
-    ],
-    "default_ilvl": 59,
-    "description": "Shield",
-    "base_stats": {
-      "armour": 139
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Goldworked Tower Shield",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str"
-    ],
-    "default_ilvl": 61,
-    "description": "Shield",
-    "base_stats": {
-      "armour": 144
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Royal Tower Shield",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str"
-    ],
-    "default_ilvl": 65,
-    "description": "Shield",
-    "base_stats": {
-      "armour": 152
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Fortress Tower Shield",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str"
-    ],
-    "default_ilvl": 70,
-    "description": "Shield",
-    "base_stats": {
-      "armour": 167
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Vaal Tower Shield",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str"
-    ],
-    "default_ilvl": 75,
-    "description": "Shield",
-    "base_stats": {
-      "armour": 182
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Tawhoan Tower Shield",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str"
-    ],
-    "default_ilvl": 80,
-    "description": "Shield",
-    "base_stats": {
-      "armour": 197
     },
     "implicit": "Grants Skill: Level (1-20) Raise Shield"
   },
@@ -13349,146 +14441,6 @@
     "implicit": "Grants Skill: Level (1-20) Parry"
   },
   {
-    "name": "Oak Buckler",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "dex"
-    ],
-    "default_ilvl": 45,
-    "description": "Shield",
-    "base_stats": {
-      "evasion": 79
-    },
-    "implicit": "Grants Skill: Level (1-20) Parry"
-  },
-  {
-    "name": "Painted Buckler",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "dex"
-    ],
-    "default_ilvl": 48,
-    "description": "Shield",
-    "base_stats": {
-      "evasion": 84
-    },
-    "implicit": "Grants Skill: Level (1-20) Parry"
-  },
-  {
-    "name": "Coiled Buckler",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "dex"
-    ],
-    "default_ilvl": 51,
-    "description": "Shield",
-    "base_stats": {
-      "evasion": 89
-    },
-    "implicit": "Grants Skill: Level (1-20) Parry"
-  },
-  {
-    "name": "Spikeward Buckler",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "dex"
-    ],
-    "default_ilvl": 54,
-    "description": "Shield",
-    "base_stats": {
-      "evasion": 93
-    },
-    "implicit": "Grants Skill: Level (1-20) Parry"
-  },
-  {
-    "name": "Jingling Buckler",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "dex"
-    ],
-    "default_ilvl": 59,
-    "description": "Shield",
-    "base_stats": {
-      "evasion": 101
-    },
-    "implicit": "Grants Skill: Level (1-20) Parry"
-  },
-  {
-    "name": "Bladeguard Buckler",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "dex"
-    ],
-    "default_ilvl": 61,
-    "description": "Shield",
-    "base_stats": {
-      "evasion": 105
-    },
-    "implicit": "Grants Skill: Level (1-20) Parry"
-  },
-  {
-    "name": "Ornate Buckler",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "dex"
-    ],
-    "default_ilvl": 65,
-    "description": "Shield",
-    "base_stats": {
-      "evasion": 111
-    },
-    "implicit": "Grants Skill: Level (1-20) Parry"
-  },
-  {
-    "name": "Gutspike Buckler",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "dex"
-    ],
-    "default_ilvl": 70,
-    "description": "Shield",
-    "base_stats": {
-      "evasion": 122
-    },
-    "implicit": "Grants Skill: Level (1-20) Parry"
-  },
-  {
-    "name": "Ancient Buckler",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "dex"
-    ],
-    "default_ilvl": 75,
-    "description": "Shield",
-    "base_stats": {
-      "evasion": 133
-    },
-    "implicit": "Grants Skill: Level (1-20) Parry"
-  },
-  {
-    "name": "Desert Buckler",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "dex"
-    ],
-    "default_ilvl": 80,
-    "description": "Shield",
-    "base_stats": {
-      "evasion": 144
-    },
-    "implicit": "Grants Skill: Level (1-20) Parry"
-  },
-  {
     "name": "Hardwood Targe",
     "category": "shield",
     "slot": "offhand",
@@ -13658,166 +14610,6 @@
     "base_stats": {
       "evasion": 76,
       "armour": 84
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Ironwood Targe",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str",
-      "dex"
-    ],
-    "default_ilvl": 45,
-    "description": "Shield",
-    "base_stats": {
-      "evasion": 54,
-      "armour": 61
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Fur-lined Targe",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str",
-      "dex"
-    ],
-    "default_ilvl": 48,
-    "description": "Shield",
-    "base_stats": {
-      "evasion": 58,
-      "armour": 64
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Mercenary Targe",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str",
-      "dex"
-    ],
-    "default_ilvl": 51,
-    "description": "Shield",
-    "base_stats": {
-      "evasion": 61,
-      "armour": 67
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Polished Targe",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str",
-      "dex"
-    ],
-    "default_ilvl": 54,
-    "description": "Shield",
-    "base_stats": {
-      "evasion": 64,
-      "armour": 71
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Stone Targe",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str",
-      "dex"
-    ],
-    "default_ilvl": 59,
-    "description": "Shield",
-    "base_stats": {
-      "evasion": 70,
-      "armour": 77
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Avian Targe",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str",
-      "dex"
-    ],
-    "default_ilvl": 62,
-    "description": "Shield",
-    "base_stats": {
-      "evasion": 73,
-      "armour": 80
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Mammoth Targe",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str",
-      "dex"
-    ],
-    "default_ilvl": 65,
-    "description": "Shield",
-    "base_stats": {
-      "evasion": 76,
-      "armour": 84
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Baroque Targe",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str",
-      "dex"
-    ],
-    "default_ilvl": 70,
-    "description": "Shield",
-    "base_stats": {
-      "evasion": 84,
-      "armour": 92
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Soaring Targe",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str",
-      "dex"
-    ],
-    "default_ilvl": 75,
-    "description": "Shield",
-    "base_stats": {
-      "evasion": 91,
-      "armour": 100
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Golden Targe",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str",
-      "dex"
-    ],
-    "default_ilvl": 80,
-    "description": "Shield",
-    "base_stats": {
-      "evasion": 99,
-      "armour": 109
     },
     "implicit": "Grants Skill: Level (1-20) Raise Shield"
   },
@@ -14315,166 +15107,6 @@
     "implicit": "Grants Skill: Level (1-20) Raise Shield"
   },
   {
-    "name": "Painted Crest Shield",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str",
-      "int"
-    ],
-    "default_ilvl": 45,
-    "description": "Shield",
-    "base_stats": {
-      "armour": 61,
-      "energy_shield": 22
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Engraved Crest Shield",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str",
-      "int"
-    ],
-    "default_ilvl": 48,
-    "description": "Shield",
-    "base_stats": {
-      "armour": 64,
-      "energy_shield": 23
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Descry Crest Shield",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str",
-      "int"
-    ],
-    "default_ilvl": 51,
-    "description": "Shield",
-    "base_stats": {
-      "armour": 67,
-      "energy_shield": 24
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Dekharan Crest Shield",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str",
-      "int"
-    ],
-    "default_ilvl": 54,
-    "description": "Shield",
-    "base_stats": {
-      "armour": 71,
-      "energy_shield": 25
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Quartered Crest Shield",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str",
-      "int"
-    ],
-    "default_ilvl": 59,
-    "description": "Shield",
-    "base_stats": {
-      "armour": 77,
-      "energy_shield": 27
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Glowering Crest Shield",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str",
-      "int"
-    ],
-    "default_ilvl": 62,
-    "description": "Shield",
-    "base_stats": {
-      "armour": 80,
-      "energy_shield": 28
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Intricate Crest Shield",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str",
-      "int"
-    ],
-    "default_ilvl": 65,
-    "description": "Shield",
-    "base_stats": {
-      "armour": 84,
-      "energy_shield": 29
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Sekheman Crest Shield",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str",
-      "int"
-    ],
-    "default_ilvl": 70,
-    "description": "Shield",
-    "base_stats": {
-      "armour": 92,
-      "energy_shield": 32
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Vaal Crest Shield",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str",
-      "int"
-    ],
-    "default_ilvl": 75,
-    "description": "Shield",
-    "base_stats": {
-      "armour": 100,
-      "energy_shield": 35
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
-    "name": "Blacksteel Crest Shield",
-    "category": "shield",
-    "slot": "offhand",
-    "attribute_requirements": [
-      "str",
-      "int"
-    ],
-    "default_ilvl": 80,
-    "description": "Shield",
-    "base_stats": {
-      "armour": 109,
-      "energy_shield": 37
-    },
-    "implicit": "Grants Skill: Level (1-20) Raise Shield"
-  },
-  {
     "name": "Golden Flame",
     "category": "shield",
     "slot": "offhand",
@@ -14744,7 +15376,7 @@
     "default_ilvl": 61,
     "description": "Focus",
     "base_stats": {
-      "energy_shield": 50
+      "energy_shield": 53
     },
     "implicit": null
   },
@@ -14758,7 +15390,7 @@
     "default_ilvl": 65,
     "description": "Focus",
     "base_stats": {
-      "energy_shield": 52
+      "energy_shield": 58
     },
     "implicit": null
   },
@@ -14772,7 +15404,7 @@
     "default_ilvl": 70,
     "description": "Focus",
     "base_stats": {
-      "energy_shield": 58
+      "energy_shield": 66
     },
     "implicit": null
   },
@@ -14786,7 +15418,7 @@
     "default_ilvl": 75,
     "description": "Focus",
     "base_stats": {
-      "energy_shield": 63
+      "energy_shield": 75
     },
     "implicit": null
   },
@@ -14800,7 +15432,7 @@
     "default_ilvl": 80,
     "description": "Focus",
     "base_stats": {
-      "energy_shield": 68
+      "energy_shield": 85
     },
     "implicit": null
   }

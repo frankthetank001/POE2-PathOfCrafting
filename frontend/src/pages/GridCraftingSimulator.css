@@ -639,6 +639,35 @@
   flex-shrink: 0;
 }
 
+/* Weight display for mods */
+.mod-weight {
+  background: linear-gradient(135deg, #3d5a80 0%, #2a4060 100%);
+  color: #a8d0e6;
+  padding: 0.1rem 0.35rem;
+  border-radius: 2px;
+  font-size: 0.65rem;
+  flex-shrink: 0;
+  border: 1px solid #4a6f95;
+}
+
+.tier-weight {
+  background: linear-gradient(135deg, #3d5a80 0%, #2a4060 100%);
+  color: #a8d0e6;
+  padding: 0.1rem 0.35rem;
+  border-radius: 2px;
+  font-size: 0.65rem;
+  flex-shrink: 0;
+  border: 1px solid #4a6f95;
+  min-width: 50px;
+  text-align: center;
+}
+
+.weight-probability {
+  color: #7fb3d5;
+  font-size: 0.6rem;
+  margin-left: 0.25rem;
+}
+
 /* Center Panel - Flexible with Tabs */
 .center-panel {
   flex: 0.7;
