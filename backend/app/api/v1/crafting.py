@@ -1,4 +1,4 @@
-from typing import List
+from typing import Dict, List
 
 from fastapi import APIRouter, HTTPException
 
@@ -33,6 +33,16 @@ async def get_available_currencies() -> List[str]:
     except Exception as e:
         logger.error(f"Error fetching currencies: {e}")
         raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/hidden-tags")
+async def get_hidden_tags() -> Dict[str, List[str]]:
+    """Get hidden tag configuration for frontend display filtering."""
+    from app.services.crafting.constants import HIDDEN_TAGS, HIDDEN_PATTERNS
+    return {
+        "hidden_tags": list(HIDDEN_TAGS),
+        "hidden_patterns": HIDDEN_PATTERNS
+    }
 
 
 @router.post("/currencies/available-for-item")
@@ -323,47 +333,18 @@ async def create_base_item(slot: str, category: str, item_level: int = 65):
 
 
 def filter_mod_tags(mod):
-    """Filter out internal/system tags that shouldn't be displayed to users
+    """Filter out internal/system tags that shouldn't be displayed to users.
 
-    Supports wildcard patterns using * (e.g., 'essence*' matches 'essence_only', 'essence_specific')
+    Uses hidden_tags.json as single source of truth for tag filtering.
     """
-    import fnmatch
+    from app.services.crafting.constants import filter_visible_tags
 
     if hasattr(mod, 'tags') and mod.tags:
-        # Blacklist: tags to hide from users (internal/system tags)
-        # Supports wildcards: * matches any sequence of characters
-        # Example: 'essence*' would match 'essence_only', 'essence_specific', etc.
-        hidden_tag_patterns = [
-            'essence_only',     # Internal flag for essence-only mods
-            'desecrated_only',  # Internal flag for desecrated mods
-            'abyssal_mark',     # Internal marker for Mark of the Abyssal Lord
-            'placeholder',      # Internal placeholder tags
-            'drop', 'resource', 'energy_shield', 'flat_life_regen', 'armour',
-            'caster_damage', 'attack_damage', '*_damage', 'projectile', 'essence_*',
-            'essence*', 'perfect'
-        ]
-
         # Check if this is a desecrated mod before filtering (from tags OR existing flag)
         is_desecrated = 'desecrated_only' in mod.tags or (hasattr(mod, 'is_desecrated') and mod.is_desecrated)
 
-        # Keep all tags EXCEPT those matching the blacklist patterns
-        def should_hide_tag(tag: str) -> bool:
-            """Check if tag matches any hidden pattern (supports wildcards)"""
-            tag_lower = tag.lower()
-            for pattern in hidden_tag_patterns:
-                # If pattern contains wildcard, use fnmatch; otherwise exact match
-                if '*' in pattern or '?' in pattern:
-                    if fnmatch.fnmatch(tag_lower, pattern.lower()):
-                        return True
-                else:
-                    if tag_lower == pattern.lower():
-                        return True
-            return False
-
-        filtered_tags = [
-            tag for tag in mod.tags
-            if not should_hide_tag(tag)
-        ]
+        # Filter tags using centralized utility
+        filtered_tags = filter_visible_tags(mod.tags)
 
         # Create a copy of the mod with filtered tags
         mod_dict = mod.model_dump()

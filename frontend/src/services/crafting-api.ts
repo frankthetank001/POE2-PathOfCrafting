@@ -26,9 +26,19 @@ const api = axios.create({
   },
 })
 
+export interface HiddenTagsConfig {
+  hidden_tags: string[]
+  hidden_patterns: string[]
+}
+
 export const craftingApi = {
   getCurrencies: async (): Promise<string[]> => {
     const response = await api.get<string[]>('/currencies')
+    return response.data
+  },
+
+  getHiddenTags: async (): Promise<HiddenTagsConfig> => {
+    const response = await api.get<HiddenTagsConfig>('/hidden-tags')
     return response.data
   },
 

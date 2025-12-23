@@ -1,5 +1,5 @@
-import { useState, useEffect, useMemo } from 'react'
-import { craftingApi } from '@/services/crafting-api'
+import { useState, useEffect, useMemo, useCallback } from 'react'
+import { craftingApi, HiddenTagsConfig } from '@/services/crafting-api'
 import { UnifiedCurrencyStash } from '@/components/UnifiedCurrencyStash'
 import type { CraftableItem, ItemModifier, ItemRarity, ItemBasesBySlot } from '@/types/crafting'
 import { CURRENCY_DESCRIPTIONS } from '@/data/currency-descriptions'
@@ -566,6 +566,12 @@ function GridCraftingSimulator() {
     tags?: string
   }>>([])
 
+  // Hidden tags config (loaded from API)
+  const [hiddenTagsConfig, setHiddenTagsConfig] = useState<HiddenTagsConfig>({
+    hidden_tags: [],
+    hidden_patterns: []
+  })
+
   const [modPoolFilter, setModPoolFilter] = useState<{
     search: string
     tags: string[]
@@ -729,35 +735,33 @@ function GridCraftingSimulator() {
   }
 
   // Filter out internal/system tags that shouldn't be displayed to users
-  const filterInternalTags = (tags: string[] | undefined): string[] => {
+  // Uses hidden_tags.json config loaded from API
+  const filterInternalTags = useCallback((tags: string[] | undefined): string[] => {
     if (!tags || tags.length === 0) return []
-
-    // Hidden tag patterns (matching backend logic)
-    const hiddenTagPatterns = [
-      'essence_only',
-      'desecrated_only',
-      'abyssal_mark',
-      'placeholder',
-      'drop',
-      'resource',
-      'energy_shield',
-      'flat_life_regen',
-      'armour',
-      'caster_damage',
-      'attack_damage',
-    ]
 
     const shouldHideTag = (tag: string): boolean => {
       const tagLower = tag.toLowerCase()
-      // Check exact matches and wildcard patterns
-      if (hiddenTagPatterns.includes(tagLower)) return true
-      // Check essence* wildcard
-      if (tagLower.startsWith('essence')) return true
+
+      // Check exact matches from config
+      if (hiddenTagsConfig.hidden_tags.includes(tagLower)) return true
+
+      // Check wildcard patterns from config
+      for (const pattern of hiddenTagsConfig.hidden_patterns) {
+        // Convert glob pattern to regex: * -> .*, ? -> .
+        const regexPattern = pattern
+          .replace(/[.+^${}()|[\]\\]/g, '\\$&')  // Escape special regex chars
+          .replace(/\*/g, '.*')
+          .replace(/\?/g, '.')
+        if (new RegExp(`^${regexPattern}$`, 'i').test(tagLower)) {
+          return true
+        }
+      }
+
       return false
     }
 
     return tags.filter(tag => !shouldHideTag(tag))
-  }
+  }, [hiddenTagsConfig])
 
   // Convert item to PoE2 text format
   const exportItemToText = (item: CraftableItem, format: 'detailed' | 'simple'): string => {
@@ -1138,10 +1142,20 @@ function GridCraftingSimulator() {
     }
   }
 
-  // Load exclusion groups once on mount
+  // Load exclusion groups and hidden tags config once on mount
   useEffect(() => {
     loadExclusionGroups()
+    loadHiddenTags()
   }, [])
+
+  const loadHiddenTags = async () => {
+    try {
+      const config = await craftingApi.getHiddenTags()
+      setHiddenTagsConfig(config)
+    } catch (error) {
+      console.error('Failed to load hidden tags config:', error)
+    }
+  }
 
   // Load available mods and currencies when item changes or exclusion groups change
   useEffect(() => {

@@ -1,30 +1,28 @@
 """
-Configuration Service - Smart Hybrid Architecture
+Configuration Service - JSON-Based Architecture
 
-This service loads all crafting configurations from the database and provides
-them to the crafting mechanics. Implements caching for performance.
+This service loads all crafting configurations directly from JSON files
+and pob-data, eliminating the need for SQLite database.
 """
 
-from typing import Dict, List, Optional, Any
-from functools import lru_cache
+import json
+from pathlib import Path
+from typing import Dict, List, Optional
 
-from sqlalchemy.orm import Session, joinedload
-from app.models.base import get_db
-from app.models.crafting import (
-    CurrencyConfig, Essence, EssenceItemEffect, Omen, OmenRule,
-    DesecrationBone, ModifierPool, PoolModifier
-)
 from app.schemas.crafting import (
-    CurrencyConfigInfo, EssenceInfo, EssenceItemEffect as EssenceItemEffectSchema,
+    CurrencyConfigInfo, EssenceInfo,
     OmenInfo, OmenRule as OmenRuleSchema, DesecrationBoneInfo, ModifierPoolInfo
 )
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)
 
+# Path to source_data JSON files
+SOURCE_DATA_PATH = Path(__file__).parent.parent.parent.parent / "source_data"
+
 
 class CraftingConfigService:
-    """Service for loading and caching crafting configurations."""
+    """Service for loading and caching crafting configurations from JSON files."""
 
     def __init__(self):
         self._currency_configs: Dict[str, CurrencyConfigInfo] = {}
@@ -35,149 +33,138 @@ class CraftingConfigService:
         self._loaded = False
 
     def ensure_loaded(self):
-        """Ensure all configurations are loaded from database."""
+        """Ensure all configurations are loaded from JSON files."""
         if not self._loaded:
             self.reload_all_configs()
 
     def reload_all_configs(self):
-        """Reload all configurations from database."""
+        """Reload all configurations from JSON files."""
         try:
-            db = next(get_db())
-            self._load_currency_configs(db)
-            self._load_essence_configs(db)
-            self._load_omen_configs(db)
-            self._load_bone_configs(db)
-            self._load_modifier_pools(db)
+            self._load_currency_configs()
+            self._load_essence_configs()
+            self._load_omen_configs()
+            self._load_bone_configs()
             self._loaded = True
-            logger.info("Successfully reloaded all crafting configurations")
+            logger.info("Successfully reloaded all crafting configurations from JSON")
         except Exception as e:
             logger.error(f"Failed to load crafting configurations: {e}")
             raise
 
-    def _load_currency_configs(self, db: Session):
-        """Load currency configurations from database."""
-        currency_configs = db.query(CurrencyConfig).all()
+    def _load_currency_configs(self):
+        """Load currency configurations from JSON file."""
+        json_path = SOURCE_DATA_PATH / "currency_configs.json"
+        if not json_path.exists():
+            logger.warning(f"currency_configs.json not found at {json_path}")
+            return
 
-        for config in currency_configs:
-            config_info = CurrencyConfigInfo(
-                id=config.id,
-                name=config.name,
-                currency_type=config.currency_type,
-                tier=config.tier,
-                rarity=config.rarity,
-                stack_size=config.stack_size,
-                mechanic_class=config.mechanic_class,
-                config_data=config.config_data or {}
-            )
-            self._currency_configs[config.name] = config_info
+        try:
+            with open(json_path, "r", encoding="utf-8") as f:
+                currency_list = json.load(f)
 
-    def _load_essence_configs(self, db: Session):
-        """Load essence configurations from database."""
-        essences = db.query(Essence).options(
-            joinedload(Essence.item_effects)
-        ).all()
-
-        for essence in essences:
-            # Convert item effects
-            item_effects = []
-            for effect in essence.item_effects:
-                effect_schema = EssenceItemEffectSchema(
-                    id=effect.id,
-                    essence_id=effect.essence_id,
-                    item_type=effect.item_type,
-                    modifier_type=effect.modifier_type,
-                    effect_text=effect.effect_text,
-                    value_min=effect.value_min,
-                    value_max=effect.value_max
+            config_id = 1
+            for config in currency_list:
+                config_info = CurrencyConfigInfo(
+                    id=config_id,
+                    name=config["name"],
+                    currency_type=config["currency_type"],
+                    tier=config.get("tier"),
+                    rarity=config["rarity"],
+                    stack_size=config.get("stack_size", 20),
+                    mechanic_class=config["mechanic_class"],
+                    config_data=config.get("config_data", {})
                 )
-                item_effects.append(effect_schema)
+                self._currency_configs[config["name"]] = config_info
+                config_id += 1
 
-            essence_info = EssenceInfo(
-                id=essence.id,
-                name=essence.name,
-                essence_tier=essence.essence_tier,
-                essence_type=essence.essence_type,
-                mechanic=essence.mechanic,
-                stack_size=essence.stack_size,
-                item_effects=item_effects
-            )
-            self._essence_configs[essence.name] = essence_info
+            logger.info(f"Loaded {len(self._currency_configs)} currency configs")
 
-    def _load_omen_configs(self, db: Session):
-        """Load omen configurations from database."""
-        omens = db.query(Omen).options(
-            joinedload(Omen.rules)
-        ).all()
+        except Exception as e:
+            logger.error(f"Error loading currency_configs.json: {e}")
 
-        for omen in omens:
-            # Convert rules
-            rules = []
-            for rule in omen.rules:
-                rule_schema = OmenRuleSchema(
-                    id=rule.id,
-                    omen_id=rule.omen_id,
-                    rule_type=rule.rule_type,
-                    rule_value=rule.rule_value,
-                    priority=rule.priority
+    def _load_essence_configs(self):
+        """Load essence configurations from pob-data loader."""
+        try:
+            from app.services.crafting.pob_data_loader import get_pob_data_loader
+            loader = get_pob_data_loader()
+            self._essence_configs = loader.get_essences()
+            logger.info(f"Loaded {len(self._essence_configs)} essence configs from pob-data")
+        except Exception as e:
+            logger.error(f"Error loading essences from pob-data: {e}")
+
+    def _load_omen_configs(self):
+        """Load omen configurations from JSON file."""
+        json_path = SOURCE_DATA_PATH / "omens.json"
+        if not json_path.exists():
+            logger.warning(f"omens.json not found at {json_path}")
+            return
+
+        try:
+            with open(json_path, "r", encoding="utf-8") as f:
+                omen_list = json.load(f)
+
+            omen_id = 1
+            for omen in omen_list:
+                # Convert rules if present
+                rules = []
+                for i, rule in enumerate(omen.get("rules", [])):
+                    rule_schema = OmenRuleSchema(
+                        id=i + 1,
+                        omen_id=omen_id,
+                        rule_type=rule.get("rule_type", ""),
+                        rule_value=rule.get("rule_value"),
+                        priority=rule.get("priority", 0)
+                    )
+                    rules.append(rule_schema)
+
+                omen_info = OmenInfo(
+                    id=omen_id,
+                    name=omen["name"],
+                    effect_description=omen["effect_description"],
+                    affected_currency=omen["affected_currency"],
+                    effect_type=omen.get("effect_type", ""),
+                    stack_size=omen.get("stack_size", 10),
+                    rules=rules
                 )
-                rules.append(rule_schema)
+                self._omen_configs[omen["name"]] = omen_info
+                omen_id += 1
 
-            omen_info = OmenInfo(
-                id=omen.id,
-                name=omen.name,
-                effect_description=omen.effect_description,
-                affected_currency=omen.affected_currency,
-                effect_type=omen.effect_type,
-                stack_size=omen.stack_size,
-                rules=rules
-            )
-            self._omen_configs[omen.name] = omen_info
+            logger.info(f"Loaded {len(self._omen_configs)} omen configs")
 
-    def _load_bone_configs(self, db: Session):
-        """Load desecration bone configurations from database."""
-        bones = db.query(DesecrationBone).all()
+        except Exception as e:
+            logger.error(f"Error loading omens.json: {e}")
 
-        for bone in bones:
-            bone_info = DesecrationBoneInfo(
-                id=bone.id,
-                name=bone.name,
-                bone_type=bone.bone_type,
-                bone_part=bone.bone_part,
-                mechanic=bone.mechanic,
-                stack_size=bone.stack_size,
-                applicable_items=bone.applicable_items or [],
-                min_modifier_level=bone.min_modifier_level,
-                max_item_level=bone.max_item_level,
-                function_description=bone.function_description
-            )
-            self._bone_configs[bone.name] = bone_info
+    def _load_bone_configs(self):
+        """Load desecration bone configurations from JSON file."""
+        json_path = SOURCE_DATA_PATH / "desecration_bones.json"
+        if not json_path.exists():
+            logger.warning(f"desecration_bones.json not found at {json_path}")
+            return
 
-    def _load_modifier_pools(self, db: Session):
-        """Load modifier pool configurations from database."""
-        pools = db.query(ModifierPool).options(
-            joinedload(ModifierPool.modifiers)
-        ).all()
+        try:
+            with open(json_path, "r", encoding="utf-8") as f:
+                bone_list = json.load(f)
 
-        for pool in pools:
-            # Convert pool modifiers
-            modifiers = []
-            for pool_mod in pool.modifiers:
-                mod_schema = PoolModifier(
-                    id=pool_mod.id,
-                    pool_id=pool_mod.pool_id,
-                    modifier_id=pool_mod.modifier_id,
-                    weight_multiplier=pool_mod.weight_multiplier
+            bone_id = 1
+            for bone in bone_list:
+                bone_info = DesecrationBoneInfo(
+                    id=bone_id,
+                    name=bone["name"],
+                    bone_type=bone["bone_type"],
+                    bone_part=bone["bone_part"],
+                    mechanic="add_desecrated_mod",
+                    stack_size=bone.get("stack_size", 20),
+                    applicable_items=bone.get("applicable_items", []),
+                    min_modifier_level=bone.get("min_modifier_level"),
+                    max_item_level=bone.get("max_item_level"),
+                    function_description=bone.get("function_description")
                 )
-                modifiers.append(mod_schema)
+                self._bone_configs[bone["name"]] = bone_info
+                bone_id += 1
 
-            pool_info = ModifierPoolInfo(
-                id=pool.id,
-                name=pool.name,
-                pool_type=pool.pool_type,
-                description=pool.description,
-                modifiers=modifiers
-            )
-            self._modifier_pools[pool.name] = pool_info
+            logger.info(f"Loaded {len(self._bone_configs)} bone configs")
+
+        except Exception as e:
+            logger.error(f"Error loading desecration_bones.json: {e}")
 
     # Public interface methods
     def get_currency_config(self, currency_name: str) -> Optional[CurrencyConfigInfo]:
@@ -300,5 +287,5 @@ def get_bone_configs_for_part(bone_part: str) -> List[DesecrationBoneInfo]:
 
 
 def reload_crafting_configs():
-    """Reload all crafting configurations from database."""
+    """Reload all crafting configurations from JSON files."""
     crafting_config_service.reload_all_configs()

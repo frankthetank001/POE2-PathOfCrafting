@@ -875,7 +875,7 @@ class EssenceMechanic(CraftingMechanic):
             if item.rarity != ItemRarity.MAGIC:
                 return False, f"{self.essence_info.name} can only be applied to Magic items"
         elif self.essence_info.mechanic == "remove_add_rare":
-            # Perfect/Corrupted essences - only work on Rare items
+            # Perfect/Corrupted essences - require Rare items with at least 1 mod
             if item.rarity != ItemRarity.RARE:
                 logger.debug(f"{self.essence_info.name} failed: item is {item.rarity}, needs RARE")
                 return False, f"{self.essence_info.name} can only be applied to Rare items"
@@ -1147,13 +1147,12 @@ class EssenceMechanic(CraftingMechanic):
         return None
 
     def _create_guaranteed_modifier(self, item: CraftableItem, modifier_pool: ModifierPool) -> Optional[ItemModifier]:
-        """Get guaranteed modifier from modifier pool based on essence effect.
+        """Get guaranteed modifier based on essence effect.
 
-        Iterates through essence effects and finds one with matching modifiers
-        that apply to this item. The modifier pool's _modifier_applies_to_item
-        handles all item type/slot matching.
+        Uses the direct mod_id from Essence.json to look up the exact modifier.
+        Falls back to stat_text matching for backwards compatibility.
         """
-        import re
+        from app.services.crafting.pob_data_loader import get_pob_data_loader
 
         # Special handling for Essence of the Abyss - return Mark of the Abyssal Lord directly
         if self.essence_info.essence_type == "abyss":
@@ -1166,83 +1165,86 @@ class EssenceMechanic(CraftingMechanic):
                 logger.error("Mark of the Abyssal Lord not found in modifier pool")
                 return None
 
-        # Try each effect and find one with matching modifiers for this item
+        # Find the effect that applies to this item type
         matching_effect = None
-        best_mod = None
-
         for effect in self.essence_info.item_effects:
-            # Skip effects that don't apply to this item type
-            # This ensures we use the correct effect (e.g., Amulet effect for amulets,
-            # not Gloves effect that happens to have mods applicable to amulets)
-            if not self._effect_applies_to_item(effect, item):
-                continue
+            if self._effect_applies_to_item(effect, item):
+                matching_effect = effect
+                break
 
-            mod_type = effect.modifier_type
+        if not matching_effect:
+            logger.warning(f"No matching effect for {self.essence_info.name} on {item.base_name}")
+            return None
 
-            # Normalize effect text: replace (min-max) and numeric values with {}
-            normalized_effect = re.sub(r'\(\d+(\.\d+)?-\d+(\.\d+)?\)', '{}', effect.effect_text)
-            normalized_effect = re.sub(r'\d+(\.\d+)?', '{}', normalized_effect)
+        # Use direct mod_id lookup if available (preferred method)
+        if matching_effect.mod_id:
+            loader = get_pob_data_loader()
+            base_mod = loader.get_modifier_by_id(matching_effect.mod_id)
 
-            # Find modifiers matching stat_text, mod_type, and item applicability
-            # Check both normalized format ({}%) and original format ((7-10)%) since
-            # essence-only modifiers may be created with either format
-            suitable_mods = [
-                mod for mod in modifier_pool.modifiers
-                if (mod.mod_type.value == mod_type and
-                    (mod.stat_text == normalized_effect or mod.stat_text == effect.effect_text) and
-                    modifier_pool._modifier_applies_to_item(mod, item))
-            ]
+            if base_mod:
+                # Roll the current value within the mod's range
+                current_value = None
+                if matching_effect.value_min is not None and matching_effect.value_max is not None:
+                    current_value = random.uniform(matching_effect.value_min, matching_effect.value_max)
 
-            if not suitable_mods:
-                continue  # Try next effect
-
-            # Found matching modifiers - select the best one
-            if effect.value_min is not None:
-                matching_value_mods = [
-                    mod for mod in suitable_mods
-                    if mod.stat_min == effect.value_min and mod.stat_max == effect.value_max
-                ]
-                if matching_value_mods:
-                    best_mod = matching_value_mods[0]
-                else:
-                    # Fallback: find closest match by value
-                    best_mod = min(suitable_mods, key=lambda m: abs((m.stat_min or 0) - effect.value_min))
+                # Create essence mod with proper values
+                essence_mod = ItemModifier(
+                    name=base_mod.name,
+                    mod_type=base_mod.mod_type,
+                    tier=base_mod.tier,
+                    stat_text=matching_effect.effect_text,
+                    stat_ranges=base_mod.stat_ranges,
+                    stat_min=matching_effect.value_min,
+                    stat_max=matching_effect.value_max,
+                    current_value=current_value,
+                    required_ilvl=base_mod.required_ilvl,
+                    mod_group=base_mod.mod_group,
+                    applicable_items=base_mod.applicable_items,
+                    tags=(base_mod.tags or []) + ["essence_guaranteed"],
+                    is_essence_only=True,
+                )
+                logger.info(f"Essence {self.essence_info.name}: Created mod {base_mod.name} via mod_id {matching_effect.mod_id}")
+                return essence_mod
             else:
-                # No value specified, choose best tier
-                best_mod = min(suitable_mods, key=lambda m: m.tier)
+                logger.warning(f"Mod ID {matching_effect.mod_id} not found in pob-data")
 
-            matching_effect = effect
-            break  # Found a match, stop searching
+        # Fallback: try to find matching modifier in pool by stat_text
+        import re
+        logger.warning(f"Falling back to stat_text matching for {self.essence_info.name}")
+        normalized_effect = re.sub(r'\(\d+(\.\d+)?-\d+(\.\d+)?\)', '{}', matching_effect.effect_text)
+        normalized_effect = re.sub(r'\d+(\.\d+)?', '{}', normalized_effect)
 
-        if not matching_effect or not best_mod:
+        suitable_mods = [
+            mod for mod in modifier_pool.modifiers
+            if (mod.mod_type.value == matching_effect.modifier_type and
+                (mod.stat_text == normalized_effect or mod.stat_text == matching_effect.effect_text) and
+                modifier_pool._modifier_applies_to_item(mod, item))
+        ]
+
+        if not suitable_mods:
             logger.warning(f"No matching modifier for {self.essence_info.name} on {item.base_name}")
             return None
 
-        # Create a copy with essence-specific values if the effect specifies them
+        best_mod = suitable_mods[0]
         if matching_effect.value_min is not None and matching_effect.value_max is not None:
-            # Use essence-specific values
             current_value = random.uniform(matching_effect.value_min, matching_effect.value_max)
-
-            # Create modified copy
             essence_mod = ItemModifier(
                 name=best_mod.name,
                 mod_type=best_mod.mod_type,
                 tier=best_mod.tier,
-                stat_text=matching_effect.effect_text,  # Use essence effect text
-                stat_ranges=best_mod.stat_ranges,  # Preserve any existing stat_ranges
+                stat_text=matching_effect.effect_text,
+                stat_ranges=best_mod.stat_ranges,
                 stat_min=matching_effect.value_min,
                 stat_max=matching_effect.value_max,
                 current_value=current_value,
-                current_values=best_mod.current_values,  # Preserve any existing current_values
                 required_ilvl=best_mod.required_ilvl,
                 mod_group=best_mod.mod_group,
                 applicable_items=best_mod.applicable_items,
-                tags=best_mod.tags + ["essence_guaranteed"]
+                tags=(best_mod.tags or []) + ["essence_guaranteed"]
             )
             return essence_mod
-        else:
-            # Use pool modifier as-is
-            return best_mod
+
+        return best_mod
 
 # REMOVED: Duplicate method definition that was missing int_armour/str_armour/dex_armour mappings
 
@@ -2025,11 +2027,11 @@ class OmenModifiedMechanic(CraftingMechanic):
             elif "Dextral Crystallisation" in omen.name:
                 force_remove_suffix = True
 
-        # For magic_to_rare essences, just upgrade and add mod (no removal)
+        # For magic_to_rare essences, just upgrade and add mod (no removal needed)
         if base.essence_info.mechanic == "magic_to_rare":
             return base.apply(item, modifier_pool)
 
-        # For remove_add_rare essences, handle removal with omen constraints
+        # For remove_add_rare essences (Perfect/Corrupted), handle removal with omen constraints
         removed_mod_name = "none"
         removed_mod_type = None
 

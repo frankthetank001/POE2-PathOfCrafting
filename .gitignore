@@ -77,3 +77,6 @@ Thumbs.db
 Desktop.ini
 .Spotlight-V100
 .Trashes
+
+# POB data cache (fetched from GitHub at runtime)
+backend/source_data/pob-data/

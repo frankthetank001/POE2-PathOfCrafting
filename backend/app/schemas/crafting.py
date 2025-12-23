@@ -206,6 +206,7 @@ class EssenceItemEffect(BaseModel):
     effect_text: str  # "+(30-39) to maximum Life"
     value_min: Optional[float] = None  # 30
     value_max: Optional[float] = None  # 39
+    mod_id: Optional[str] = None  # Direct reference to mod ID in ModItem.json
 
 
 class EssenceInfo(BaseModel):

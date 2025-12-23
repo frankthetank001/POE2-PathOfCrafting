@@ -7,6 +7,15 @@ from app.schemas.crafting import ItemModifier, ModType
 from app.services.crafting.exclusion_service import exclusion_service
 
 
+def _get_item_slot(base_name: str) -> Optional[str]:
+    """Get item slot from base name using item_bases module (no database)."""
+    from app.schemas.item_bases import get_item_base_by_name
+    base_item = get_item_base_by_name(base_name)
+    if base_item:
+        return base_item.slot
+    return None
+
+
 class ModifierPool:
     def __init__(self, modifiers: List[ItemModifier]) -> None:
         self.modifiers = modifiers
@@ -366,15 +375,7 @@ class ModifierPool:
         # Get item slot for exclusions
         item_slot = None
         if item:
-            from app.models.base import SessionLocal
-            from app.models.crafting import BaseItem
-            session = SessionLocal()
-            try:
-                base_item = session.query(BaseItem).filter(BaseItem.name == item.base_name).first()
-                if base_item:
-                    item_slot = base_item.slot
-            finally:
-                session.close()
+            item_slot = _get_item_slot(item.base_name)
 
         # Apply exclusions based on slot
         return self._apply_exclusions(eligible, item_slot)
@@ -450,15 +451,7 @@ class ModifierPool:
         # Get item slot for exclusions
         item_slot = None
         if item:
-            from app.models.base import SessionLocal
-            from app.models.crafting import BaseItem
-            session = SessionLocal()
-            try:
-                base_item = session.query(BaseItem).filter(BaseItem.name == item.base_name).first()
-                if base_item:
-                    item_slot = base_item.slot
-            finally:
-                session.close()
+            item_slot = _get_item_slot(item.base_name)
 
         # Apply exclusions based on slot
         eligible = self._apply_exclusions(eligible, item_slot)
@@ -691,15 +684,7 @@ class ModifierPool:
         item_slot = None
         if item:
             # Determine slot from base_name if we have the item
-            from app.models.base import SessionLocal
-            from app.models.crafting import BaseItem
-            session = SessionLocal()
-            try:
-                base_item = session.query(BaseItem).filter(BaseItem.name == item.base_name).first()
-                if base_item:
-                    item_slot = base_item.slot
-            finally:
-                session.close()
+            item_slot = _get_item_slot(item.base_name)
 
         # === Use weight system if available ===
         # If mod has weight_conditions, use PoB2's exact weight evaluation

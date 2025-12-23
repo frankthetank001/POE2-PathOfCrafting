@@ -1,3 +1,9 @@
+"""
+Item Bases - Loads item base definitions from pob-data.
+
+This replaces the SQLite database approach with direct pob-data loading.
+"""
+
 from typing import List, Optional, Dict, Union
 from pydantic import BaseModel
 
@@ -12,43 +18,38 @@ class ItemBase(BaseModel):
     base_stats: Dict[str, Union[int, float]] = {}  # {'evasion': 266, 'armour': 100, 'attack_rate': 1.1}
 
 
-# Database loader functions (moved here to avoid circular imports)
-def load_item_bases():
-    """Load item bases from database with fallback to static data"""
+def load_item_bases() -> List[ItemBase]:
+    """Load item bases from pob-data."""
     try:
-        from sqlalchemy.orm import sessionmaker
-        from app.models.base import engine
-        from app.models.crafting import BaseItem as DBBaseItem
+        from app.services.crafting.pob_data_loader import get_pob_data_loader
 
-        SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-        session = SessionLocal()
+        loader = get_pob_data_loader()
+        base_items = loader.get_base_items()
 
-        try:
-            # Query all item bases from database
-            db_bases = session.query(DBBaseItem).all()
+        item_bases = []
+        for base_info in base_items.values():
+            # Get extended attributes stored during loading
+            slot = getattr(base_info, '_slot', base_info.category)
+            attr_reqs = getattr(base_info, '_attribute_requirements', [])
 
-            item_bases = []
-            for db_base in db_bases:
-                item_bases.append(
-                    ItemBase(
-                        name=db_base.name,
-                        category=db_base.category,
-                        slot=db_base.slot,
-                        attribute_requirements=db_base.attribute_requirements or [],
-                        default_ilvl=db_base.default_ilvl,
-                        description=db_base.description,
-                        base_stats=db_base.base_stats or {},
-                    )
+            item_bases.append(
+                ItemBase(
+                    name=base_info.name,
+                    category=base_info.category,
+                    slot=slot,
+                    attribute_requirements=attr_reqs,
+                    default_ilvl=base_info.required_level or 65,
+                    description=None,
+                    base_stats=base_info.base_stats or {},
                 )
+            )
 
-            return item_bases
-
-        finally:
-            session.close()
+        return item_bases
 
     except Exception as e:
-        print(f"Warning: Could not load from database ({e}), using minimal fallback")
+        print(f"Warning: Could not load from pob-data ({e}), using minimal fallback")
         return MINIMAL_FALLBACK_BASES
+
 
 # Minimal fallback bases for emergency scenarios only
 MINIMAL_FALLBACK_BASES = [
@@ -219,6 +220,6 @@ def get_default_base_for_category(slot: str, category: str) -> Optional[ItemBase
     if bases:
         return bases[0]
 
-    # Fallback to direct database slot/category match
+    # Fallback to direct slot/category match
     bases = [base for base in ITEM_BASES if base.slot == slot and base.category == category]
     return bases[0] if bases else None

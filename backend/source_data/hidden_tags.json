@@ -1,0 +1,25 @@
+{
+  "description": "Tags that are internal/system tags and should be hidden from display",
+  "hidden_tags": [
+    "essence_only",
+    "desecrated_only",
+    "abyssal_mark",
+    "placeholder",
+    "drop",
+    "resource",
+    "energy_shield",
+    "flat_life_regen",
+    "armour",
+    "caster_damage",
+    "attack_damage",
+    "projectile",
+    "perfect",
+    "desecrated",
+    "unveiled_mod"
+  ],
+  "hidden_patterns": [
+    "*_damage",
+    "essence_*",
+    "essence*"
+  ]
+}
