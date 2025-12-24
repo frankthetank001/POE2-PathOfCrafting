@@ -1,0 +1,195 @@
+/* PoE2 Mod Line Component */
+
+.poe2-mod-line {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 5px 12px;
+  margin: 1px 0;
+  font-family: 'Fontin', Georgia, serif;
+  font-size: 0.9rem;
+  line-height: 1.4;
+  position: relative;
+  background: transparent;
+  border-left: 2px solid transparent;
+  transition: background 0.15s ease;
+}
+
+.poe2-mod-line:hover {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.poe2-mod-line.clickable {
+  cursor: pointer;
+}
+
+.poe2-mod-line.clickable:hover {
+  background: rgba(255, 255, 255, 0.05);
+}
+
+/* Mod types */
+.poe2-mod-line.implicit {
+  color: #8888cc;
+  border-left-color: rgba(136, 136, 204, 0.3);
+}
+
+.poe2-mod-line.prefix,
+.poe2-mod-line.suffix {
+  color: #8888ff;
+  border-left-color: rgba(136, 136, 255, 0.3);
+}
+
+/* Desecrated */
+.poe2-mod-line.desecrated {
+  color: #44ff88;
+  border-left-color: rgba(68, 255, 136, 0.5);
+  text-shadow: 0 0 6px rgba(68, 255, 136, 0.2);
+}
+
+/* Unrevealed */
+.poe2-mod-line.unrevealed {
+  color: #44ff88;
+  background: rgba(68, 255, 136, 0.06);
+  border: 1px dashed rgba(68, 255, 136, 0.3);
+  border-left: 3px solid rgba(68, 255, 136, 0.5);
+  margin: 2px 4px;
+  padding: 6px 10px;
+}
+
+.poe2-mod-line.unrevealed:hover {
+  background: rgba(68, 255, 136, 0.12);
+  border-color: rgba(68, 255, 136, 0.5);
+  text-shadow: 0 0 8px rgba(68, 255, 136, 0.4);
+}
+
+/* Fractured - PoE2 golden/brown style */
+.poe2-mod-line.fractured {
+  color: #a38d6d;
+  border-left: 3px solid #a38d6d;
+  background: rgba(163, 141, 109, 0.06);
+}
+
+.poe2-mod-line.fractured::before {
+  content: '';
+  position: absolute;
+  left: -1px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, #a38d6d 0%, #7a6a52 50%, #a38d6d 100%);
+}
+
+/* Content */
+.poe2-mod-content {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.poe2-mod-text {
+  flex: 1;
+  min-width: 0;
+}
+
+.poe2-mod-tier {
+  font-family: 'Exo2', sans-serif;
+  font-size: 0.7rem;
+  color: #666;
+  padding: 1px 4px;
+  background: rgba(100, 100, 100, 0.2);
+  border-radius: 2px;
+}
+
+.poe2-mod-name {
+  font-size: 0.75rem;
+  color: #555;
+  font-style: italic;
+}
+
+/* Remove button */
+.poe2-mod-remove {
+  background: none;
+  border: none;
+  color: #666;
+  font-size: 0.8rem;
+  padding: 2px 6px;
+  cursor: pointer;
+  opacity: 0;
+  transition: opacity 0.15s ease, color 0.15s ease;
+  margin-left: 8px;
+}
+
+.poe2-mod-line:hover .poe2-mod-remove {
+  opacity: 1;
+}
+
+.poe2-mod-remove:hover {
+  color: #ff6666;
+}
+
+/* ==================== Separator ==================== */
+
+.poe2-separator {
+  height: 1px;
+  margin: 6px 12px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    rgba(80, 70, 55, 0.6) 20%,
+    rgba(80, 70, 55, 0.6) 80%,
+    transparent 100%
+  );
+  position: relative;
+}
+
+.poe2-separator::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  background: #3d3529;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+}
+
+/* ==================== Section ==================== */
+
+.poe2-section {
+  padding: 8px 0;
+}
+
+.poe2-section-title {
+  font-family: 'FontinSmallCaps', 'Fontin', Georgia, serif;
+  font-size: 0.8rem;
+  color: #7f7f7f;
+  padding: 0 12px 4px;
+  letter-spacing: 0.5px;
+}
+
+/* ==================== Property ==================== */
+
+.poe2-property {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 12px;
+  font-size: 0.85rem;
+}
+
+.poe2-property-label {
+  color: #7f7f7f;
+}
+
+.poe2-property-value {
+  color: #ffffff;
+  font-family: 'Exo2', sans-serif;
+  font-weight: 500;
+}
+
+.poe2-property-value.augmented {
+  color: #8888ff;
+}

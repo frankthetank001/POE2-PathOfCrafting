@@ -806,58 +806,139 @@
   gap: 1rem;
 }
 
+/* ==================== PoE2 Authentic Item Display ==================== */
 .item-display {
-  background: #2a2a2a;
-  border: 1px solid #444;
-  border-radius: 6px;
-  padding: 0.5rem;
+  background: linear-gradient(180deg, #1a1814 0%, #0c0a08 100%);
+  border: 1px solid #3d3529;
+  border-radius: 0;
+  padding: 0;
   flex: 1;
   overflow-y: auto;
-  font-size: 0.8rem;
+  font-size: 0.9rem;
+  font-family: 'Fontin', 'FontinSmallCaps', Georgia, serif;
+  position: relative;
+  box-shadow:
+    inset 0 0 60px rgba(0, 0, 0, 0.8),
+    0 0 20px rgba(0, 0, 0, 0.9);
 }
 
-/* Rarity-based borders */
+/* PoE2 Style Frame Corners */
+.item-display::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  border: 1px solid rgba(80, 70, 55, 0.5);
+  pointer-events: none;
+}
+
+/* Rarity-based top accent bar */
 .item-display.rarity-normal {
-  border: 3px solid #c8c8c8;
-  box-shadow: 0 0 10px rgba(200, 200, 200, 0.3);
+  border-top: 3px solid #c8c8c8;
+  box-shadow:
+    inset 0 0 60px rgba(0, 0, 0, 0.8),
+    0 0 15px rgba(200, 200, 200, 0.15);
 }
 
 .item-display.rarity-magic {
-  border: 3px solid #8888ff;
-  box-shadow: 0 0 10px rgba(136, 136, 255, 0.4);
+  border-top: 3px solid #8888ff;
+  box-shadow:
+    inset 0 0 60px rgba(0, 0, 0, 0.8),
+    0 0 15px rgba(136, 136, 255, 0.2),
+    inset 0 1px 30px rgba(136, 136, 255, 0.05);
 }
 
 .item-display.rarity-rare {
-  border: 3px solid #ffff77;
-  box-shadow: 0 0 10px rgba(255, 255, 119, 0.4);
+  border-top: 3px solid #ffff77;
+  box-shadow:
+    inset 0 0 60px rgba(0, 0, 0, 0.8),
+    0 0 15px rgba(255, 255, 119, 0.2),
+    inset 0 1px 30px rgba(255, 255, 119, 0.05);
 }
 
+.item-display.rarity-unique {
+  border-top: 3px solid #af6025;
+  box-shadow:
+    inset 0 0 60px rgba(0, 0, 0, 0.8),
+    0 0 15px rgba(175, 96, 37, 0.3),
+    inset 0 1px 30px rgba(175, 96, 37, 0.08);
+}
+
+/* PoE2 Item Header with Rarity Background */
 .item-header {
   display: flex;
   align-items: center;
   gap: 0.75rem;
-  padding-bottom: 1rem;
-  margin-bottom: 1rem;
-  border-bottom: 2px solid #444;
+  padding: 12px 16px 10px;
+  margin-bottom: 0;
+  border-bottom: 1px solid rgba(80, 70, 55, 0.6);
+  position: relative;
 }
 
+.item-display.rarity-normal .item-header {
+  background: linear-gradient(180deg, rgba(180, 180, 180, 0.15) 0%, rgba(100, 100, 100, 0.05) 100%);
+}
+
+.item-display.rarity-magic .item-header {
+  background: linear-gradient(180deg, rgba(136, 136, 255, 0.2) 0%, rgba(136, 136, 255, 0.05) 100%);
+}
+
+.item-display.rarity-rare .item-header {
+  background: linear-gradient(180deg, rgba(255, 255, 119, 0.2) 0%, rgba(255, 255, 119, 0.05) 100%);
+}
+
+.item-display.rarity-unique .item-header {
+  background: linear-gradient(180deg, rgba(175, 96, 37, 0.25) 0%, rgba(175, 96, 37, 0.08) 100%);
+}
+
+/* PoE2 Item Name Styling */
 .item-name {
-  font-size: 0.95rem;
-  font-weight: bold;
+  font-family: 'FontinSmallCaps', 'Fontin', Georgia, serif;
+  font-size: 1.1rem;
+  font-weight: normal;
   margin: 0;
+  letter-spacing: 0.5px;
+  flex: 1;
 }
 
+.item-name.rarity-normal {
+  color: #c8c8c8;
+  text-shadow: 0 0 8px rgba(200, 200, 200, 0.3);
+}
+
+.item-name.rarity-magic {
+  color: #8888ff;
+  text-shadow: 0 0 10px rgba(136, 136, 255, 0.4);
+}
+
+.item-name.rarity-rare {
+  color: #ffff77;
+  text-shadow: 0 0 10px rgba(255, 255, 119, 0.4);
+}
+
+.item-name.rarity-unique {
+  color: #af6025;
+  text-shadow: 0 0 10px rgba(175, 96, 37, 0.5);
+}
+
+/* Rarity colors */
 .rarity-normal { color: #c8c8c8; }
 .rarity-magic { color: #8888ff; }
 .rarity-rare { color: #ffff77; }
 .rarity-unique { color: #af6025; }
 
 .item-rarity-badge {
-  padding: 0.25rem 0.75rem;
-  background: rgba(212, 175, 55, 0.2);
-  border-radius: 4px;
-  font-size: 0.9rem;
-  color: #d4af37;
+  padding: 0.2rem 0.5rem;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(80, 70, 55, 0.6);
+  border-radius: 2px;
+  font-size: 0.75rem;
+  font-family: 'Exo2', sans-serif;
+  color: #7f7f7f;
+  text-transform: uppercase;
+  letter-spacing: 1px;
 }
 
 .copy-item-btn {
@@ -899,17 +980,35 @@
   font-weight: bold;
 }
 
+/* PoE2 Stats & Mods Sections */
 .stats-section, .mods-section {
-  margin-top: 1rem;
-  padding-top: 1rem;
-  border-top: 1px solid #444;
+  margin-top: 0;
+  padding: 10px 16px;
+  border-top: 1px solid rgba(80, 70, 55, 0.4);
+  position: relative;
+}
+
+/* PoE2 Section Separator Line */
+.stats-section::before, .mods-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 8px;
+  height: 8px;
+  background: #3d3529;
+  clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+  margin-top: -4px;
 }
 
 .stats-title, .mods-title {
-  color: #d4af37;
-  font-size: 1rem;
-  margin: 0 0 0.75rem 0;
-  font-weight: 600;
+  font-family: 'FontinSmallCaps', 'Fontin', Georgia, serif;
+  color: #7f7f7f;
+  font-size: 0.85rem;
+  margin: 0 0 0.5rem 0;
+  font-weight: normal;
+  letter-spacing: 0.5px;
 }
 
 .stat-row {
@@ -929,54 +1028,75 @@
   font-size: 0.9rem;
 }
 
+/* PoE2 Mod Line Styling */
 .mod-line {
-  padding: 0.5rem;
-  margin: 0.25rem 0;
-  border-radius: 4px;
-  font-size: 0.95rem;
+  padding: 6px 8px;
+  margin: 2px 0;
+  border-radius: 0;
+  font-size: 0.9rem;
+  font-family: 'Fontin', Georgia, serif;
   position: relative;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  background: transparent;
+  border-left: 2px solid transparent;
+  transition: background 0.15s ease;
 }
 
-.mod-line.prefix {
-  color: #88ccff;
-  background: rgba(136, 204, 255, 0.05);
+.mod-line:hover {
+  background: rgba(255, 255, 255, 0.03);
 }
 
+/* PoE2 uses the same blue for all explicit mods */
+.mod-line.prefix,
 .mod-line.suffix {
-  color: #ffaa44;
-  background: rgba(255, 170, 68, 0.05);
+  color: #8888ff;
+  border-left-color: rgba(136, 136, 255, 0.3);
 }
 
+/* Desecrated mods - green with subtle glow */
 .mod-line.desecrated,
 .mod-line.desecrated_only {
   color: #44ff88;
-  background: rgba(68, 255, 136, 0.1);
-  border: 1px solid rgba(68, 255, 136, 0.3);
-  box-shadow: 0 0 8px rgba(68, 255, 136, 0.2);
+  border-left-color: rgba(68, 255, 136, 0.5);
+  text-shadow: 0 0 6px rgba(68, 255, 136, 0.3);
 }
 
+/* Unrevealed mods */
 .mod-line.unrevealed {
   color: #44ff88;
-  background: rgba(68, 255, 136, 0.15);
-  border: 2px dashed rgba(68, 255, 136, 0.5);
-  box-shadow: 0 0 12px rgba(68, 255, 136, 0.3);
+  background: rgba(68, 255, 136, 0.08);
+  border: 1px dashed rgba(68, 255, 136, 0.4);
+  border-left: 3px solid rgba(68, 255, 136, 0.6);
+  cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .mod-line.unrevealed:hover {
-  background: rgba(68, 255, 136, 0.25);
+  background: rgba(68, 255, 136, 0.15);
   border-color: rgba(68, 255, 136, 0.7);
-  box-shadow: 0 0 16px rgba(68, 255, 136, 0.4);
-  transform: translateY(-2px);
+  text-shadow: 0 0 8px rgba(68, 255, 136, 0.5);
 }
 
+/* Fractured mods - PoE2 style golden/brown */
 .mod-line.fractured {
-  color: #ff9933 !important;
-  background: rgba(255, 153, 51, 0.25) !important;
-  border: 3px solid #ff9933 !important;
-  box-shadow: 0 0 12px rgba(255, 153, 51, 0.6), inset 0 0 8px rgba(255, 153, 51, 0.2) !important;
-  font-weight: 600;
-  animation: fractured-pulse 2s ease-in-out infinite;
+  color: #a38d6d !important;
+  background: rgba(163, 141, 109, 0.1) !important;
+  border-left: 3px solid #a38d6d !important;
+  box-shadow: none !important;
+  font-weight: normal;
+  animation: none;
+}
+
+.mod-line.fractured::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: linear-gradient(180deg, #a38d6d, #7a6a52, #a38d6d);
 }
 
 @keyframes fractured-pulse {
@@ -1465,6 +1585,97 @@
   border-radius: 6px;
   color: #d4af37;
   text-align: center;
+}
+
+/* Currency Value Section - Market Intelligence */
+.currency-value-section {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: linear-gradient(135deg, rgba(26, 24, 20, 0.95), rgba(12, 10, 8, 0.95));
+  border: 1px solid rgba(80, 70, 55, 0.5);
+  border-radius: 2px;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.4);
+}
+
+.currency-value-section h4 {
+  font-family: 'FontinSmallCaps', 'Fontin', Georgia, serif;
+  color: #aa9e82;
+  font-size: 0.9rem;
+  margin: 0 0 0.75rem 0;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.currency-value-display {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.value-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.75rem;
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 2px;
+  border-left: 2px solid transparent;
+}
+
+.value-row.primary {
+  border-left: 3px solid;
+}
+
+.value-row.primary:nth-child(1) {
+  border-left-color: #d4af37;
+}
+
+.value-row.primary:nth-child(2) {
+  border-left-color: #88ccff;
+}
+
+.value-label {
+  font-family: 'Fontin', Georgia, serif;
+  color: #7f7f7f;
+  font-size: 0.9rem;
+}
+
+.value-amount {
+  font-family: 'Exo2', sans-serif;
+  font-weight: 600;
+  font-size: 1.1rem;
+}
+
+.value-amount.exalted {
+  color: #d4af37;
+}
+
+.value-amount.divine {
+  color: #88ccff;
+}
+
+.market-source {
+  margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(80, 70, 55, 0.4);
+}
+
+.source-label {
+  font-family: 'Fontin', Georgia, serif;
+  color: #555;
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+.currency-value-section.loading {
+  text-align: center;
+  padding: 1rem;
+}
+
+.loading-text {
+  color: #666;
+  font-style: italic;
 }
 
 /* Right Panel - Crafting Controls (flexible) */

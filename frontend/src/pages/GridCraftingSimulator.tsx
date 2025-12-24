@@ -1,6 +1,8 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { craftingApi, HiddenTagsConfig } from '@/services/crafting-api'
+import { marketApi, ExchangeRates } from '@/services/market-api'
 import { UnifiedCurrencyStash } from '@/components/UnifiedCurrencyStash'
+import { PoE2ItemFrame, PoE2Separator, PoE2Section, PoE2Property } from '@/components/poe2'
 import type { CraftableItem, ItemModifier, ItemRarity, ItemBasesBySlot } from '@/types/crafting'
 import { CURRENCY_DESCRIPTIONS } from '@/data/currency-descriptions'
 import './GridCraftingSimulator.css'
@@ -99,6 +101,7 @@ interface TabContentProps {
   history: string[]
   itemHistory: CraftableItem[]
   currencySpent: Record<string, number>
+  exchangeRates: ExchangeRates | null
   onRevertToStep: (stepIndex: number) => void
   onClearHistory: () => void
   onHistoryReset: () => void
@@ -449,15 +452,54 @@ function HistoryTab({ history, itemHistory, onRevertToStep, onClearHistory }: Ta
   )
 }
 
-function CurrencyTab({ currencySpent }: TabContentProps) {
+function CurrencyTab({ currencySpent, exchangeRates }: TabContentProps) {
   const getTotalSpent = (): number => {
     return Object.values(currencySpent).reduce((sum, count) => sum + count, 0)
   }
 
+  // Calculate total cost in exalted and divine
+  const calculateCosts = () => {
+    if (!exchangeRates) return null
+
+    let totalExalted = 0
+    const breakdown: Record<string, number> = {}
+
+    for (const [currency, count] of Object.entries(currencySpent)) {
+      // Normalize currency name to match API format (lowercase, handle variations)
+      const normalizedName = currency.toLowerCase()
+        .replace(/^orb of /, '')
+        .replace(/^greater /, '')
+        .replace(/^perfect /, '')
+        .replace(/ orb$/, '')
+        .replace(/ /g, '-')
+
+      // Try to find matching rate
+      const rate = exchangeRates.rates[normalizedName]
+        || exchangeRates.rates[currency.toLowerCase()]
+        || Object.values(exchangeRates.rates).find(r =>
+            r.name.toLowerCase() === currency.toLowerCase()
+          )
+
+      if (rate) {
+        const exaltedValue = count * rate.exalted_value
+        totalExalted += exaltedValue
+        breakdown[currency] = exaltedValue
+      }
+    }
+
+    // Calculate divine equivalent
+    const divineRate = exchangeRates.rates['divine']
+    const totalDivine = divineRate ? totalExalted / divineRate.exalted_value : 0
+
+    return { totalExalted, totalDivine, breakdown }
+  }
+
+  const costs = calculateCosts()
+
   return (
     <div className="tab-content">
       <div className="currency-tracker">
-        <h3>💰 Currency Spent</h3>
+        <h3>Currency Spent</h3>
 
         {Object.keys(currencySpent).length === 0 ? (
           <div className="empty-history">No currency spent yet</div>
@@ -467,13 +509,39 @@ function CurrencyTab({ currencySpent }: TabContentProps) {
               {Object.entries(currencySpent).map(([currency, count]) => (
                 <div key={currency} className="currency-spent-item">
                   <span className="currency-spent-name">{currency}</span>
-                  <span className="currency-spent-count">{count}</span>
+                  <span className="currency-spent-count">x{count}</span>
                 </div>
               ))}
             </div>
             <div className="currency-total">
               <strong>Total: {getTotalSpent()} currencies used</strong>
             </div>
+
+            {/* Market Value Section */}
+            {costs && exchangeRates && (
+              <div className="currency-value-section">
+                <h4>Estimated Value</h4>
+                <div className="currency-value-display">
+                  <div className="value-row primary">
+                    <span className="value-label">Exalted Orbs:</span>
+                    <span className="value-amount exalted">{costs.totalExalted.toFixed(2)}</span>
+                  </div>
+                  <div className="value-row primary">
+                    <span className="value-label">Divine Orbs:</span>
+                    <span className="value-amount divine">{costs.totalDivine.toFixed(4)}</span>
+                  </div>
+                </div>
+                <div className="market-source">
+                  <span className="source-label">League: {exchangeRates.league}</span>
+                </div>
+              </div>
+            )}
+
+            {!exchangeRates && (
+              <div className="currency-value-section loading">
+                <span className="loading-text">Loading market data...</span>
+              </div>
+            )}
           </>
         )}
       </div>
@@ -524,6 +592,7 @@ function GridCraftingSimulator() {
   const [history, setHistory] = useState<string[]>([])
   const [itemHistory, setItemHistory] = useState<CraftableItem[]>([])
   const [currencySpent, setCurrencySpent] = useState<Record<string, number>>({})
+  const [exchangeRates, setExchangeRates] = useState<ExchangeRates | null>(null)
 
   // Redo stacks for Ctrl+R and Ctrl+Y
   const [redoItemStack, setRedoItemStack] = useState<CraftableItem[]>([])
@@ -639,6 +708,7 @@ function GridCraftingSimulator() {
     history,
     itemHistory,
     currencySpent,
+    exchangeRates,
     onRevertToStep: handleRevertToStep,
     onClearHistory: handleClearHistory,
     onHistoryReset: handleHistoryReset,
@@ -866,6 +936,19 @@ function GridCraftingSimulator() {
 
     document.addEventListener('paste', handlePaste)
     return () => document.removeEventListener('paste', handlePaste)
+  }, [])
+
+  // Fetch exchange rates on mount
+  useEffect(() => {
+    const fetchExchangeRates = async () => {
+      try {
+        const rates = await marketApi.getExchangeRates()
+        setExchangeRates(rates)
+      } catch (error) {
+        console.error('Failed to fetch exchange rates:', error)
+      }
+    }
+    fetchExchangeRates()
   }, [])
 
 
@@ -3604,51 +3687,54 @@ function GridCraftingSimulator() {
                     // Show sophisticated item preview after creation
                     <div className="item-created-view">
                       <div className="current-item-display">
-                    <div
-                      className={`item-display rarity-${item.rarity.toLowerCase()}`}
+                    <PoE2ItemFrame
+                      rarity={item.rarity}
+                      itemName={item.base_name}
+                      itemBase={item.rarity === 'Rare' ? item.base_category?.replace('_', ' ') : undefined}
                       onDrop={handleDrop}
                       onDragOver={handleDragOver}
+                      className="item-display-frame"
+                      headerActions={
+                        <>
+                          <span className="poe2-rarity-badge">{item.rarity}</span>
+                          <button
+                            className="copy-item-btn"
+                            onClick={(e) => handleCopyItem(e.ctrlKey ? 'detailed' : 'simple')}
+                            title="Copy item to clipboard&#10;Click = Simple format&#10;Ctrl+Click = Detailed format (with mod info)"
+                          >
+                            Copy
+                          </button>
+                        </>
+                      }
                     >
-                      <div className="item-header">
-                        <h2 className={`item-name rarity-${item.rarity.toLowerCase()}`}>{item.base_name}</h2>
-                        <div className="item-rarity-badge">{item.rarity}</div>
-                        <button
-                          className="copy-item-btn"
-                          onClick={(e) => handleCopyItem(e.ctrlKey ? 'detailed' : 'simple')}
-                          title="Copy item to clipboard&#10;Click = Simple format&#10;Ctrl+Click = Detailed format (with mod info)"
-                        >
-                          📋 Copy
-                        </button>
-                      </div>
+                      {/* Item Properties */}
+                      <PoE2Section>
+                        <PoE2Property label="Item Level" value={item.item_level} />
+                        {item.quality > 0 && (
+                          <PoE2Property label="Quality" value={`+${item.quality}%`} augmented />
+                        )}
+                      </PoE2Section>
 
-                      <div className="item-details">
-                        <div className="detail-row">
-                          <span className="detail-label">Item Level:</span>
-                          <span className="detail-value">{item.item_level}</span>
-                        </div>
-                        <div className="detail-row">
-                          <span className="detail-label">Quality:</span>
-                          <span className="detail-value">+{item.quality}%</span>
-                        </div>
-                        <div className="detail-row">
-                          <span className="detail-label">Category:</span>
-                          <span className="detail-value">{item.base_category?.replace('_', ' ')}</span>
-                        </div>
-                      </div>
-
+                      {/* Base Stats */}
                       {Object.keys(item.calculated_stats || {}).length > 0 && (
-                        <div className="stats-section">
-                          <h4 className="stats-title">Base Stats</h4>
-                          {Object.entries(item.calculated_stats || {}).map(([statName, value]) => (
-                            <div key={statName} className="stat-row">
-                              <span className="stat-label">{statName}:</span>
-                              <span className="stat-value">{value}</span>
-                            </div>
-                          ))}
-                        </div>
+                        <>
+                          <PoE2Separator />
+                          <PoE2Section title="Defense">
+                            {Object.entries(item.calculated_stats || {}).map(([statName, value]) => (
+                              <PoE2Property
+                                key={statName}
+                                label={statName.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                                value={value}
+                              />
+                            ))}
+                          </PoE2Section>
+                        </>
                       )}
 
+                      {/* Prefix Mods */}
                       {item.prefix_mods.length > 0 && (
+                        <>
+                        <PoE2Separator />
                         <div className="mods-section">
                           <h4 className="mods-title">Prefixes ({item.prefix_mods.length}/3)</h4>
                           {item.prefix_mods.map((mod, idx) => {
@@ -3742,9 +3828,13 @@ function GridCraftingSimulator() {
                             )
                           })}
                         </div>
+                        </>
                       )}
 
+                      {/* Suffix Mods */}
                       {item.suffix_mods.length > 0 && (
+                        <>
+                        <PoE2Separator />
                         <div className="mods-section">
                           <h4 className="mods-title">Suffixes ({item.suffix_mods.length}/3)</h4>
                           {item.suffix_mods.map((mod, idx) => {
@@ -3838,6 +3928,7 @@ function GridCraftingSimulator() {
                             )
                           })}
                         </div>
+                        </>
                       )}
 
                       {item.prefix_mods.length === 0 && item.suffix_mods.length === 0 && (
@@ -3845,7 +3936,7 @@ function GridCraftingSimulator() {
                           <p>No explicit modifiers yet</p>
                         </div>
                       )}
-                    </div>
+                    </PoE2ItemFrame>
 
                     <div className="item-controls">
                       <button

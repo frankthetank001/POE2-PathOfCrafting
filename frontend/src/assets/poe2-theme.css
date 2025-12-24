@@ -1,0 +1,291 @@
+/* PoE2 Theme - Authentic Path of Exile 2 Styling */
+
+:root {
+  /* Rarity Colors */
+  --poe2-normal: #c8c8c8;
+  --poe2-magic: #8888ff;
+  --poe2-rare: #ffff77;
+  --poe2-unique: #af6025;
+  --poe2-currency: #aa9e82;
+  --poe2-gem: #1ba29b;
+  --poe2-divination: #0ebaff;
+  --poe2-prophecy: #b54bff;
+
+  /* Damage/Element Colors */
+  --poe2-fire: #c80000;
+  --poe2-cold: #5aadff;
+  --poe2-lightning: #ffff00;
+  --poe2-chaos: #d02090;
+  --poe2-physical: #e0e0e0;
+
+  /* Mod Colors */
+  --poe2-mod-prefix: #8888ff;
+  --poe2-mod-suffix: #8888ff;
+  --poe2-mod-implicit: #9999cc;
+  --poe2-mod-enchant: #b4b4ff;
+  --poe2-mod-crafted: #b8daf2;
+  --poe2-mod-fractured: #a38d6d;
+  --poe2-mod-corrupted: #d20000;
+  --poe2-mod-essence: #aa9e82;
+
+  /* Status Colors */
+  --poe2-corrupted: #d20000;
+  --poe2-mirrored: #aa9e82;
+  --poe2-unidentified: #d20000;
+
+  /* UI Colors */
+  --poe2-bg-dark: #0c0b0b;
+  --poe2-bg-item: #0c0b0b;
+  --poe2-border-dark: #27211f;
+  --poe2-border-light: #433c38;
+  --poe2-text-default: #7f7f7f;
+  --poe2-text-value: #ffffff;
+
+  /* Rarity Header Backgrounds (gradients) */
+  --poe2-header-normal: linear-gradient(to right, transparent, rgba(136, 136, 136, 0.35), transparent);
+  --poe2-header-magic: linear-gradient(to right, transparent, rgba(136, 136, 255, 0.35), transparent);
+  --poe2-header-rare: linear-gradient(to right, transparent, rgba(255, 255, 119, 0.35), transparent);
+  --poe2-header-unique: linear-gradient(to right, transparent, rgba(175, 96, 37, 0.45), transparent);
+
+  /* Item Tooltip Separator */
+  --poe2-separator: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='8'%3E%3Cpath d='M0,4 L45,4 L50,0 L55,4 L100,4' stroke='%23433c38' fill='none' stroke-width='1'/%3E%3C/svg%3E");
+
+  /* Fonts */
+  --poe2-font-main: 'Fontin', 'FrizQuadrataC', Georgia, serif;
+  --poe2-font-header: 'FontinSmallCaps', 'Fontin', 'FrizQuadrataC', Georgia, serif;
+  --poe2-font-numbers: 'Exo2', -apple-system, sans-serif;
+}
+
+/* ==================== Item Tooltip Base Styles ==================== */
+
+.poe2-item-tooltip {
+  background-color: var(--poe2-bg-item);
+  border: 1px solid var(--poe2-border-dark);
+  font-family: var(--poe2-font-main);
+  font-size: 14px;
+  line-height: 1.4;
+  min-width: 280px;
+  max-width: 450px;
+  padding: 0;
+  color: var(--poe2-text-value);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.8);
+}
+
+/* Item Header */
+.poe2-item-header {
+  text-align: center;
+  padding: 8px 16px;
+  position: relative;
+}
+
+.poe2-item-header.rarity-normal {
+  background: var(--poe2-header-normal);
+}
+
+.poe2-item-header.rarity-magic {
+  background: var(--poe2-header-magic);
+}
+
+.poe2-item-header.rarity-rare {
+  background: var(--poe2-header-rare);
+}
+
+.poe2-item-header.rarity-unique {
+  background: var(--poe2-header-unique);
+}
+
+.poe2-item-name {
+  font-family: var(--poe2-font-header);
+  font-size: 18px;
+  margin: 0;
+  text-shadow: 0 0 6px currentColor;
+}
+
+.poe2-item-name.rarity-normal { color: var(--poe2-normal); }
+.poe2-item-name.rarity-magic { color: var(--poe2-magic); }
+.poe2-item-name.rarity-rare { color: var(--poe2-rare); }
+.poe2-item-name.rarity-unique { color: var(--poe2-unique); }
+
+.poe2-item-base {
+  font-family: var(--poe2-font-header);
+  font-size: 15px;
+  color: inherit;
+  opacity: 0.9;
+  margin-top: 2px;
+}
+
+/* Separator Line */
+.poe2-separator {
+  height: 8px;
+  background: var(--poe2-separator);
+  background-repeat: repeat-x;
+  background-position: center;
+  margin: 0;
+  opacity: 0.7;
+}
+
+/* Alternative simple separator */
+.poe2-separator-simple {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    var(--poe2-border-light) 20%,
+    var(--poe2-border-light) 80%,
+    transparent 100%
+  );
+  margin: 6px 12px;
+}
+
+/* Item Properties Section */
+.poe2-item-properties {
+  padding: 6px 12px;
+  color: var(--poe2-text-default);
+}
+
+.poe2-property-line {
+  display: flex;
+  justify-content: space-between;
+  margin: 2px 0;
+}
+
+.poe2-property-name {
+  color: var(--poe2-text-default);
+}
+
+.poe2-property-value {
+  color: var(--poe2-text-value);
+  font-family: var(--poe2-font-numbers);
+  font-weight: 500;
+}
+
+.poe2-property-value.augmented {
+  color: var(--poe2-magic);
+}
+
+/* Requirements */
+.poe2-requirements {
+  padding: 4px 12px;
+  color: var(--poe2-text-default);
+  font-size: 13px;
+}
+
+.poe2-requirements span {
+  color: var(--poe2-text-value);
+}
+
+/* Item Level */
+.poe2-item-level {
+  padding: 4px 12px;
+  color: var(--poe2-text-default);
+  font-size: 13px;
+}
+
+/* Mods Section */
+.poe2-mods-section {
+  padding: 6px 12px;
+}
+
+.poe2-mod-line {
+  margin: 3px 0;
+  line-height: 1.5;
+}
+
+/* Implicit mods */
+.poe2-mod-line.implicit {
+  color: var(--poe2-mod-implicit);
+}
+
+/* Explicit mods (prefix/suffix) */
+.poe2-mod-line.explicit {
+  color: var(--poe2-magic);
+}
+
+/* Crafted mods */
+.poe2-mod-line.crafted {
+  color: var(--poe2-mod-crafted);
+}
+
+/* Fractured mods */
+.poe2-mod-line.fractured {
+  color: var(--poe2-mod-fractured);
+}
+
+/* Enchant mods */
+.poe2-mod-line.enchant {
+  color: var(--poe2-mod-enchant);
+}
+
+/* Mod tier indicator */
+.poe2-mod-tier {
+  font-size: 11px;
+  opacity: 0.6;
+  margin-left: 4px;
+}
+
+/* Mod value highlight */
+.poe2-mod-value {
+  color: var(--poe2-text-value);
+  font-family: var(--poe2-font-numbers);
+  font-weight: 600;
+}
+
+/* Status Text */
+.poe2-corrupted-text {
+  text-align: center;
+  padding: 6px 12px;
+  color: var(--poe2-corrupted);
+  font-weight: bold;
+}
+
+.poe2-mirrored-text {
+  text-align: center;
+  padding: 6px 12px;
+  color: var(--poe2-mirrored);
+}
+
+.poe2-unidentified-text {
+  text-align: center;
+  padding: 6px 12px;
+  color: var(--poe2-unidentified);
+}
+
+/* Flavour Text (for uniques) */
+.poe2-flavour-text {
+  padding: 8px 12px;
+  color: var(--poe2-unique);
+  font-style: italic;
+  text-align: center;
+  font-size: 13px;
+}
+
+/* ==================== Damage Type Styling ==================== */
+
+.poe2-fire { color: var(--poe2-fire); }
+.poe2-cold { color: var(--poe2-cold); }
+.poe2-lightning { color: var(--poe2-lightning); }
+.poe2-chaos { color: var(--poe2-chaos); }
+.poe2-physical { color: var(--poe2-physical); }
+
+/* ==================== Mod Pool / Crafting UI Styles ==================== */
+
+.poe2-prefix-color { color: #88ccff; }
+.poe2-suffix-color { color: #ffaa44; }
+
+/* For crafting simulator mod pool */
+.poe2-mod-weight {
+  font-family: var(--poe2-font-numbers);
+  font-size: 12px;
+  color: #888;
+}
+
+.poe2-mod-tier-badge {
+  display: inline-block;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-size: 10px;
+  font-family: var(--poe2-font-numbers);
+  background: rgba(136, 136, 255, 0.2);
+  color: var(--poe2-magic);
+  margin-left: 4px;
+}

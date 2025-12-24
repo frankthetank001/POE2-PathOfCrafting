@@ -1,0 +1,262 @@
+/* PoE2ItemTooltip Component Styles */
+
+.poe2-item-tooltip {
+  background-color: var(--poe2-bg-item, #0c0b0b);
+  border: 1px solid var(--poe2-border-dark, #27211f);
+  font-family: var(--poe2-font-main, 'Fontin', Georgia, serif);
+  font-size: 14px;
+  line-height: 1.4;
+  min-width: 280px;
+  max-width: 450px;
+  padding: 0;
+  color: var(--poe2-text-value, #ffffff);
+  box-shadow:
+    0 0 10px rgba(0, 0, 0, 0.8),
+    inset 0 0 30px rgba(0, 0, 0, 0.3);
+  position: relative;
+  overflow: hidden;
+}
+
+.poe2-item-tooltip.compact {
+  min-width: 220px;
+  font-size: 13px;
+}
+
+/* Header Section */
+.poe2-item-header {
+  text-align: center;
+  padding: 10px 16px 8px;
+  position: relative;
+}
+
+.poe2-item-header::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--poe2-border-light, #433c38),
+    transparent
+  );
+}
+
+.poe2-item-header::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 10%;
+  right: 10%;
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent,
+    var(--poe2-border-light, #433c38),
+    transparent
+  );
+}
+
+.poe2-item-header.rarity-normal {
+  background: linear-gradient(to right, transparent, rgba(136, 136, 136, 0.25), transparent);
+}
+
+.poe2-item-header.rarity-magic {
+  background: linear-gradient(to right, transparent, rgba(136, 136, 255, 0.25), transparent);
+}
+
+.poe2-item-header.rarity-rare {
+  background: linear-gradient(to right, transparent, rgba(255, 255, 119, 0.25), transparent);
+}
+
+.poe2-item-header.rarity-unique {
+  background: linear-gradient(to right, transparent, rgba(175, 96, 37, 0.35), transparent);
+}
+
+.poe2-item-name {
+  font-family: var(--poe2-font-header, 'FontinSmallCaps', Georgia, serif);
+  font-size: 19px;
+  margin: 0;
+  letter-spacing: 0.5px;
+}
+
+.poe2-item-name.rarity-normal {
+  color: var(--poe2-normal, #c8c8c8);
+  text-shadow: 0 0 8px rgba(200, 200, 200, 0.4);
+}
+
+.poe2-item-name.rarity-magic {
+  color: var(--poe2-magic, #8888ff);
+  text-shadow: 0 0 8px rgba(136, 136, 255, 0.5);
+}
+
+.poe2-item-name.rarity-rare {
+  color: var(--poe2-rare, #ffff77);
+  text-shadow: 0 0 8px rgba(255, 255, 119, 0.5);
+}
+
+.poe2-item-name.rarity-unique {
+  color: var(--poe2-unique, #af6025);
+  text-shadow: 0 0 8px rgba(175, 96, 37, 0.6);
+}
+
+.poe2-item-base {
+  font-family: var(--poe2-font-header, 'FontinSmallCaps', Georgia, serif);
+  font-size: 15px;
+  color: inherit;
+  opacity: 0.85;
+  margin-top: 3px;
+}
+
+/* Separator */
+.poe2-separator-simple {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    var(--poe2-border-light, #433c38) 15%,
+    var(--poe2-border-light, #433c38) 85%,
+    transparent 100%
+  );
+  margin: 4px 8px;
+}
+
+/* Properties Section */
+.poe2-item-properties {
+  padding: 4px 14px;
+  color: var(--poe2-text-default, #7f7f7f);
+}
+
+.poe2-property-line {
+  display: flex;
+  justify-content: space-between;
+  margin: 2px 0;
+  gap: 12px;
+}
+
+.poe2-property-name {
+  color: var(--poe2-text-default, #7f7f7f);
+}
+
+.poe2-property-value {
+  color: var(--poe2-text-value, #ffffff);
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+  font-weight: 500;
+}
+
+.poe2-property-value.augmented {
+  color: var(--poe2-magic, #8888ff);
+}
+
+/* Item Level */
+.poe2-item-level {
+  padding: 4px 14px 6px;
+  color: var(--poe2-text-default, #7f7f7f);
+  font-size: 13px;
+}
+
+.poe2-item-level span {
+  color: var(--poe2-text-value, #ffffff);
+}
+
+/* Mods Section */
+.poe2-mods-section {
+  padding: 6px 14px;
+}
+
+.poe2-mod-line {
+  margin: 4px 0;
+  line-height: 1.5;
+  position: relative;
+}
+
+/* Implicit mods - slightly muted blue */
+.poe2-mod-line.implicit {
+  color: #8888cc;
+}
+
+/* Explicit mods - bright magic blue */
+.poe2-mod-line.explicit {
+  color: var(--poe2-magic, #8888ff);
+}
+
+/* Crafted mods */
+.poe2-mod-line.crafted {
+  color: var(--poe2-mod-crafted, #b8daf2);
+}
+
+/* Fractured mods - golden/brown with emphasis */
+.poe2-mod-line.fractured {
+  color: var(--poe2-mod-fractured, #a38d6d);
+  position: relative;
+}
+
+.poe2-mod-line.fractured::before {
+  content: '';
+  position: absolute;
+  left: -10px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 4px;
+  height: 4px;
+  background: var(--poe2-mod-fractured, #a38d6d);
+  border-radius: 50%;
+  opacity: 0.8;
+}
+
+/* Desecrated mods */
+.poe2-mod-line.desecrated {
+  color: #44ff88;
+  text-shadow: 0 0 6px rgba(68, 255, 136, 0.3);
+}
+
+/* Mod tier indicator */
+.poe2-mod-tier {
+  font-size: 10px;
+  color: var(--poe2-text-default, #7f7f7f);
+  margin-left: 6px;
+  opacity: 0.7;
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+}
+
+/* Mod value highlight */
+.poe2-mod-value {
+  color: var(--poe2-text-value, #ffffff);
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+  font-weight: 600;
+}
+
+/* Status Text */
+.poe2-corrupted-text {
+  text-align: center;
+  padding: 8px 14px 10px;
+  color: var(--poe2-corrupted, #d20000);
+  font-weight: bold;
+  letter-spacing: 0.5px;
+}
+
+.poe2-mirrored-text {
+  text-align: center;
+  padding: 8px 14px;
+  color: var(--poe2-mirrored, #aa9e82);
+}
+
+/* Compact Mode Adjustments */
+.poe2-item-tooltip.compact .poe2-item-header {
+  padding: 8px 12px 6px;
+}
+
+.poe2-item-tooltip.compact .poe2-item-name {
+  font-size: 16px;
+}
+
+.poe2-item-tooltip.compact .poe2-item-properties,
+.poe2-item-tooltip.compact .poe2-mods-section {
+  padding: 4px 10px;
+}
+
+.poe2-item-tooltip.compact .poe2-mod-line {
+  margin: 2px 0;
+}

@@ -1,0 +1,237 @@
+/* PoE2 Item Frame - Authentic Game Style */
+
+.poe2-frame {
+  background: linear-gradient(180deg, #1a1814 0%, #0c0a08 100%);
+  border: 1px solid #3d3529;
+  font-family: 'Fontin', 'FontinSmallCaps', Georgia, serif;
+  position: relative;
+  box-shadow:
+    inset 0 0 60px rgba(0, 0, 0, 0.8),
+    0 0 20px rgba(0, 0, 0, 0.9);
+  overflow: hidden;
+}
+
+/* Inner border effect */
+.poe2-frame::before {
+  content: '';
+  position: absolute;
+  top: 1px;
+  left: 1px;
+  right: 1px;
+  bottom: 1px;
+  border: 1px solid rgba(80, 70, 55, 0.3);
+  pointer-events: none;
+}
+
+/* Rarity-based top accent bar */
+.poe2-frame.rarity-normal {
+  border-top: 3px solid #c8c8c8;
+}
+
+.poe2-frame.rarity-magic {
+  border-top: 3px solid #8888ff;
+  box-shadow:
+    inset 0 0 60px rgba(0, 0, 0, 0.8),
+    0 0 15px rgba(136, 136, 255, 0.15),
+    inset 0 1px 30px rgba(136, 136, 255, 0.03);
+}
+
+.poe2-frame.rarity-rare {
+  border-top: 3px solid #ffff77;
+  box-shadow:
+    inset 0 0 60px rgba(0, 0, 0, 0.8),
+    0 0 15px rgba(255, 255, 119, 0.15),
+    inset 0 1px 30px rgba(255, 255, 119, 0.03);
+}
+
+.poe2-frame.rarity-unique {
+  border-top: 3px solid #af6025;
+  box-shadow:
+    inset 0 0 60px rgba(0, 0, 0, 0.8),
+    0 0 15px rgba(175, 96, 37, 0.2),
+    inset 0 1px 30px rgba(175, 96, 37, 0.05);
+}
+
+/* Header */
+.poe2-frame-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px 10px;
+  border-bottom: 1px solid rgba(80, 70, 55, 0.5);
+  position: relative;
+}
+
+.poe2-frame.rarity-normal .poe2-frame-header {
+  background: linear-gradient(180deg, rgba(180, 180, 180, 0.12) 0%, transparent 100%);
+}
+
+.poe2-frame.rarity-magic .poe2-frame-header {
+  background: linear-gradient(180deg, rgba(136, 136, 255, 0.15) 0%, transparent 100%);
+}
+
+.poe2-frame.rarity-rare .poe2-frame-header {
+  background: linear-gradient(180deg, rgba(255, 255, 119, 0.15) 0%, transparent 100%);
+}
+
+.poe2-frame.rarity-unique .poe2-frame-header {
+  background: linear-gradient(180deg, rgba(175, 96, 37, 0.2) 0%, transparent 100%);
+}
+
+.poe2-frame-header-content {
+  flex: 1;
+  min-width: 0;
+}
+
+.poe2-frame-name {
+  font-family: 'FontinSmallCaps', 'Fontin', Georgia, serif;
+  font-size: 1.15rem;
+  font-weight: normal;
+  margin: 0;
+  letter-spacing: 0.5px;
+  line-height: 1.2;
+}
+
+.poe2-frame-name.rarity-normal {
+  color: #c8c8c8;
+  text-shadow: 0 0 8px rgba(200, 200, 200, 0.3);
+}
+
+.poe2-frame-name.rarity-magic {
+  color: #8888ff;
+  text-shadow: 0 0 10px rgba(136, 136, 255, 0.4);
+}
+
+.poe2-frame-name.rarity-rare {
+  color: #ffff77;
+  text-shadow: 0 0 10px rgba(255, 255, 119, 0.4);
+}
+
+.poe2-frame-name.rarity-unique {
+  color: #af6025;
+  text-shadow: 0 0 10px rgba(175, 96, 37, 0.5);
+}
+
+.poe2-frame-base {
+  font-family: 'FontinSmallCaps', 'Fontin', Georgia, serif;
+  font-size: 0.9rem;
+  color: #7f7f7f;
+  margin-top: 2px;
+}
+
+.poe2-frame-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  margin-left: 12px;
+}
+
+/* Content area */
+.poe2-frame-content {
+  padding: 0;
+}
+
+/* Drag and drop states */
+.poe2-frame[data-drag-over="true"] {
+  border-color: #d4af37;
+  box-shadow:
+    inset 0 0 60px rgba(0, 0, 0, 0.8),
+    0 0 20px rgba(212, 175, 55, 0.3),
+    inset 0 0 30px rgba(212, 175, 55, 0.05);
+}
+
+/* Rarity badge in header */
+.poe2-rarity-badge {
+  padding: 2px 8px;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(80, 70, 55, 0.5);
+  border-radius: 2px;
+  font-family: 'Exo2', sans-serif;
+  font-size: 0.7rem;
+  color: #7f7f7f;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* Copy button */
+.poe2-frame .copy-item-btn {
+  padding: 4px 10px;
+  background: rgba(100, 100, 100, 0.2);
+  border: 1px solid rgba(80, 70, 55, 0.5);
+  border-radius: 2px;
+  color: #7f7f7f;
+  font-family: 'Exo2', sans-serif;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.poe2-frame .copy-item-btn:hover {
+  background: rgba(100, 100, 100, 0.3);
+  color: #aaa;
+  border-color: rgba(100, 100, 100, 0.5);
+}
+
+/* Make frame scrollable for long content */
+.poe2-frame.item-display-frame {
+  flex: 1;
+  overflow-y: auto;
+  max-height: 100%;
+}
+
+/* Mods section inside frame */
+.poe2-frame .mods-section {
+  padding: 8px 0;
+  margin: 0;
+  border-top: none;
+}
+
+.poe2-frame .mods-section::before {
+  display: none;
+}
+
+.poe2-frame .mods-title {
+  font-family: 'FontinSmallCaps', 'Fontin', Georgia, serif;
+  color: #7f7f7f;
+  font-size: 0.8rem;
+  padding: 0 12px 4px;
+  margin: 0;
+  font-weight: normal;
+}
+
+/* Mod lines inside frame */
+.poe2-frame .mod-line {
+  padding: 5px 12px;
+  margin: 1px 0;
+  border-radius: 0;
+  font-family: 'Fontin', Georgia, serif;
+  font-size: 0.85rem;
+  background: transparent;
+  border-left: 2px solid transparent;
+}
+
+.poe2-frame .mod-line.prefix,
+.poe2-frame .mod-line.suffix {
+  color: #8888ff;
+  border-left-color: rgba(136, 136, 255, 0.3);
+}
+
+.poe2-frame .mod-line.fractured {
+  color: #a38d6d;
+  border-left-color: #a38d6d;
+  background: rgba(163, 141, 109, 0.05);
+}
+
+.poe2-frame .mod-line.desecrated,
+.poe2-frame .mod-line.unrevealed {
+  color: #44ff88;
+  border-left-color: rgba(68, 255, 136, 0.5);
+}
+
+/* Empty mods message */
+.poe2-frame .empty-mods {
+  padding: 16px;
+  text-align: center;
+  color: #555;
+  font-style: italic;
+}
