@@ -144,11 +144,11 @@ def test_essence_abyssal_lord_with_sinistral_crystallisation():
     # The essence mod can be in either position based on available slots
     # Check by mod_group since the name can vary ("Abyssal", "Mark of the Abyssal Lord", etc.)
     all_mods = item.prefix_mods + item.suffix_mods
-    has_essence_mod = any(mod.mod_group == "abyssal_mark" for mod in all_mods)
+    has_essence_mod = any(mod.mod_group == "AbyssTargetMod" for mod in all_mods)
 
     all_mod_info = [f"{mod.name} (group: {mod.mod_group})" for mod in all_mods]
     assert has_essence_mod, \
-        f"Expected essence mod (abyssal_mark group) in either prefix or suffix, but mods are: {all_mod_info}"
+        f"Expected essence mod (AbyssTargetMod group) in either prefix or suffix, but mods are: {all_mod_info}"
 
 
 def test_desecration_replaces_mark_of_abyssal_lord():
@@ -242,7 +242,7 @@ def test_desecration_replaces_mark_of_abyssal_lord():
 
     # Verify Mark was added as prefix
     mark_in_prefixes = any(
-        mod.mod_group == "abyssal_mark" for mod in result1.result_item.prefix_mods
+        mod.mod_group == "AbyssTargetMod" for mod in result1.result_item.prefix_mods
     )
     assert mark_in_prefixes, "Mark of the Abyssal Lord should be in prefixes"
 
@@ -259,7 +259,7 @@ def test_desecration_replaces_mark_of_abyssal_lord():
     # Verify Mark was replaced with unrevealed desecrated modifier
     item2 = result2.result_item
     mark_still_present = any(
-        mod.mod_group == "abyssal_mark"
+        mod.mod_group == "AbyssTargetMod"
         for mod in item2.prefix_mods + item2.suffix_mods
     )
     assert not mark_still_present, "Mark should be replaced, not present anymore"
@@ -350,7 +350,7 @@ def test_mark_placement_random_when_both_slots_available():
 
     # Verify Mark was added
     all_mods = result.result_item.prefix_mods + result.result_item.suffix_mods
-    has_mark = any(mod.mod_group == "abyssal_mark" for mod in all_mods)
+    has_mark = any(mod.mod_group == "AbyssTargetMod" for mod in all_mods)
     assert has_mark, "Mark should be added to either prefix or suffix"
 
     # Verify total mod count is correct (started with 3, removed 1, added 1 = 3)

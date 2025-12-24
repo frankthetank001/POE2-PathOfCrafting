@@ -156,6 +156,10 @@ class ItemConverter:
                 return True
             if 'jewellery' in mod.applicable_items and base_category in ['ring', 'amulet', 'belt']:
                 return True
+            # Special case: AbyssTargetMod (Mark of the Abyssal Lord) can appear on any item
+            # even though it has empty applicable_items in the database
+            if mod.mod_group == 'AbyssTargetMod':
+                return True
             # Map specific armour types to generic 'body_armour' category
             if 'body_armour' in mod.applicable_items and base_category in [
                 'int_armour', 'str_armour', 'dex_armour',

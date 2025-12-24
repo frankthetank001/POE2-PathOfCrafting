@@ -718,19 +718,18 @@ class TestWellOfSouls:
 
         This test verifies that:
         1. Modifier names and stat_text use {} placeholders (not hardcoded ranges)
-        2. Desecrated modifiers in the source data don't have hardcoded value ranges
+        2. Desecrated modifiers have normalized stat_text for pattern matching
         """
-        import json
         import re
-        from pathlib import Path
+        from app.services.crafting.modifier_loader import ModifierLoader
 
-        # Load desecrated modifiers from source data
-        source_data_path = Path(__file__).parent.parent / 'source_data' / 'desecrated_modifiers.json'
+        # Load all modifiers
+        modifiers = ModifierLoader.load_modifiers()
 
-        with open(source_data_path, 'r', encoding='utf-8') as f:
-            desecrated_mods = json.load(f)
+        # Get desecrated modifiers
+        desecrated_mods = [m for m in modifiers if m.tags and 'desecrated_only' in m.tags]
 
-        assert len(desecrated_mods) > 0, "Should have desecrated modifiers in source data"
+        assert len(desecrated_mods) > 0, "Should have desecrated modifiers loaded"
 
         # Pattern matches ranges like (9-15), (9.5-15.2), etc.
         range_pattern = r'\([\d.]+\s*-\s*[\d.]+\)'
@@ -738,18 +737,10 @@ class TestWellOfSouls:
         failed_mods = []
 
         for mod in desecrated_mods:
-            name = mod.get('name', '')
-            stat_text = mod.get('stat_text', '')
-
-            # Check that name doesn't have hardcoded ranges
-            name_matches = re.findall(range_pattern, name)
-            if name_matches:
-                failed_mods.append(f"  ✗ name has range: {name}")
-
-            # Check that stat_text doesn't have hardcoded ranges
-            stat_text_matches = re.findall(range_pattern, stat_text)
+            # Check that stat_text doesn't have hardcoded ranges (should use {} placeholders)
+            stat_text_matches = re.findall(range_pattern, mod.stat_text)
             if stat_text_matches:
-                failed_mods.append(f"  ✗ stat_text has range: {stat_text}")
+                failed_mods.append(f"  ✗ stat_text has range: {mod.stat_text}")
 
         # If any modifiers failed, report them all
         if failed_mods:

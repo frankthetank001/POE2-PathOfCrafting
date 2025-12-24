@@ -477,8 +477,11 @@ class POBDataLoader:
                     stat_lines.append(stat)
                 else:
                     break
-            stat_text = "\n".join(stat_lines) if stat_lines else ""
-            stat_ranges = self._parse_stat_ranges(stat_text)
+            raw_stat_text = "\n".join(stat_lines) if stat_lines else ""
+            stat_ranges = self._parse_stat_ranges(raw_stat_text)
+            # Normalize stat_text by replacing range patterns with {} placeholders
+            # e.g., "+(85-123) to Accuracy Rating" -> "+{} to Accuracy Rating"
+            stat_text = self._normalize_stat_text(raw_stat_text)
 
             weight_key = mod_info.get("weightKey", [])
             weight_val = mod_info.get("weightVal", [])
@@ -530,6 +533,16 @@ class POBDataLoader:
                 pass
 
         return ranges
+
+    def _normalize_stat_text(self, stat_text: str) -> str:
+        """Normalize stat_text by replacing range patterns with {} placeholders.
+
+        Converts pob-data format like '+(85-123) to Accuracy Rating'
+        to placeholder format '+{} to Accuracy Rating' for pattern matching.
+        """
+        # Replace range patterns (X-Y) with {} placeholder
+        pattern = r'\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\)'
+        return re.sub(pattern, '{}', stat_text)
 
     def _extract_value_range(self, stat_text: str) -> Tuple[Optional[float], Optional[float]]:
         """Extract first value range from stat text."""

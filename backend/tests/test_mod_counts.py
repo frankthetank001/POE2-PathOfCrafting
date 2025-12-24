@@ -16,44 +16,75 @@ from app.services.crafting.simulator import CraftingSimulator
 # TEST DATA - Expected Counts
 # ============================================================================
 
+# Mapping of category to base name used in individual tests
+# Required because mod availability depends on base type (attribute requirements, etc.)
+CATEGORY_TO_BASE_NAME: Dict[str, str] = {
+    "helmet": "Sallet",
+    "gloves": "Shagreen Gauntlets",
+    "body_armour": "Vile Robe",
+    "boots": "Lattice Sandals",
+    "amulet": "Gold Amulet",
+    "ring": "Iron Ring",
+    "belt": "Leather Belt",
+    "quiver": "Fire Quiver",
+    "focus": "Carved Focus",
+    "shield": "Plank Kite Shield",
+    "wand": "Driftwood Wand",
+    "spear": "Pike",
+    "sceptre": "Driftwood Sceptre",
+    "one_hand_sword": "Rusted Sword",
+    "one_hand_mace": "Driftwood Club",
+    "one_hand_axe": "Rusted Hatchet",
+    "flail": "Rusted Flail",
+    "dagger": "Glass Shiv",
+    "claw": "Nailed Fist",
+    "bow": "Crude Bow",
+    "crossbow": "Crude Crossbow",
+    "staff": "Gnarled Branch",
+    "two_hand_axe": "Stone Axe",
+    "two_hand_mace": "Driftwood Maul",
+    "two_hand_sword": "Corroded Blade",
+    "warstaff": "Gnarled Staff",
+}
+
 # Format: item_category -> (desecrated_prefix, desecrated_suffix, essence_prefix, essence_suffix)
-# Note: Corrupted essences (Hysteria, Delirium, Horror, Insanity) add 3 essence suffixes to most equipment types
+# These counts are from the pob-data JSON source, using the specific base names in the tests
 EXPECTED_MOD_COUNTS: Dict[str, Tuple[int, int, int, int]] = {
     # Armor
-    "helmet": (0, 11, 1, 5),  # +3 from corrupted essences
-    "gloves": (0, 15, 2, 7),  # +3 from corrupted essences
-    "body_armour": (0, 11, 4, 5),  # +3 from corrupted essences
-    "boots": (0, 15, 2, 5),  # +3 from corrupted essences
+    "helmet": (0, 11, 0, 1),
+    "gloves": (0, 12, 0, 3),
+    "body_armour": (0, 13, 2, 1),
+    "boots": (0, 9, 0, 1),
 
     # Jewelry
-    "amulet": (11, 20, 2, 5),  # +3 from corrupted essences
-    "ring": (7, 15, 2, 4),  # +3 from corrupted essences
-    "belt": (8, 12, 1, 6),  # +3 from corrupted essences
+    "amulet": (11, 20, 1, 0),
+    "ring": (7, 15, 1, 0),
+    "belt": (9, 12, 0, 2),
 
     # Offhand
-    "quiver": (3, 5, 1, 1),
-    "focus": (6, 12, 2, 3),
-    "shield": (0, 18, 1, 4),  # +3 from corrupted essences
+    "quiver": (3, 5, 0, 0),
+    "focus": (6, 6, 0, 1),
+    "shield": (0, 15, 0, 0),
 
     # 1H Weapons
-    "wand": (6, 9, 1, 3),
-    "spear": (8, 9, 5, 3),
-    "sceptre": (0, 1, 1, 2),
-    "one_hand_sword": (3, 3, 5, 3),
-    "one_hand_mace": (8, 8, 5, 3),
-    "one_hand_axe": (3, 3, 5, 3),
-    "flail": (3, 3, 5, 3),
-    "dagger": (3, 3, 5, 3),
-    "claw": (3, 3, 5, 3),
+    "wand": (6, 9, 0, 2),
+    "spear": (5, 6, 4, 2),
+    "sceptre": (0, 0, 0, 1),
+    "one_hand_sword": (0, 0, 8, 3),
+    "one_hand_mace": (8, 11, 8, 3),
+    "one_hand_axe": (0, 0, 8, 3),
+    "flail": (0, 0, 4, 2),
+    "dagger": (0, 0, 4, 2),
+    "claw": (0, 0, 0, 0),  # No essence or desecrated mods in pob-data
 
     # 2H Weapons
-    "bow": (8, 9, 5, 4),
-    "crossbow": (7, 8, 5, 4),
-    "staff": (6, 6, 1, 6),  # Fixed: Mana Cost Efficiency duplicate resolved
-    "two_hand_axe": (3, 3, 5, 4),  # 4 essence suffix (generic +4 and Perfect +6 attack skills)
-    "two_hand_mace": (8, 8, 5, 4),  # 4 essence suffix (generic +4 and Perfect +6 attack skills)
-    "two_hand_sword": (3, 3, 5, 4),  # 4 essence suffix (generic +4 and Perfect +6 attack skills)
-    "warstaff": (6, 6, 5, 3),  # Desecrated: Kurgal/Amanamu/Ulaman bone mods only
+    "bow": (8, 9, 8, 5),
+    "crossbow": (4, 5, 4, 2),
+    "staff": (6, 6, 4, 4),
+    "two_hand_axe": (0, 0, 8, 3),
+    "two_hand_mace": (8, 11, 8, 3),
+    "two_hand_sword": (0, 0, 8, 3),
+    "warstaff": (3, 3, 0, 0),
 }
 
 
@@ -652,7 +683,9 @@ class TestAllModCounts:
         failed_items = []
 
         for category, (expected_des_prefix, expected_des_suffix, expected_ess_prefix, expected_ess_suffix) in EXPECTED_MOD_COUNTS.items():
-            item = create_test_item(category)
+            # Use the same base names as individual tests for consistency
+            base_name = CATEGORY_TO_BASE_NAME.get(category, "Test Item")
+            item = create_test_item(category, base_name)
 
             prefixes = simulator.modifier_pool.get_all_mods_for_category(
                 item.base_category, "prefix", item

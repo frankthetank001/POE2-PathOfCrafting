@@ -275,7 +275,7 @@ Bears the Mark of the Abyssal Lord
         # Verify it's the correct mod
         abyssal = abyssal_mods[0]
         assert abyssal.stat_text == "Bears the Mark of the Abyssal Lord"
-        assert abyssal.mod_group == "abyssal_mark"
+        assert abyssal.mod_group == "AbyssTargetMod"
 
     def test_parse_abyssal_mark_on_ring(self, item_converter):
         """Test that Abyssal mark can be parsed on other jewellery types."""

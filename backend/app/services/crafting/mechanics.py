@@ -627,7 +627,7 @@ class DesecrationMechanic(CraftingMechanic):
 
         # Check prefixes first
         for i, mod in enumerate(item.prefix_mods):
-            if mod.mod_group == 'abyssal_mark':
+            if mod.mod_group == 'AbyssTargetMod':
                 mark_mod = mod
                 mark_index = i
                 mark_mod_type = ModType.PREFIX
@@ -636,7 +636,7 @@ class DesecrationMechanic(CraftingMechanic):
         # If not found in prefixes, check suffixes
         if not mark_mod:
             for i, mod in enumerate(item.suffix_mods):
-                if mod.mod_group == 'abyssal_mark':
+                if mod.mod_group == 'AbyssTargetMod':
                     mark_mod = mod
                     mark_index = i
                     mark_mod_type = ModType.SUFFIX
@@ -851,7 +851,7 @@ class EssenceMechanic(CraftingMechanic):
                 for mod in all_mods
             )
             has_abyssal_mark = any(
-                mod.mod_group == "abyssal_mark" or mod.name == "Abyssal"
+                mod.mod_group == "AbyssTargetMod" or mod.name == "Abyssal"
                 for mod in all_mods
             )
             # Also check for unrevealed desecrated modifiers
@@ -1156,7 +1156,7 @@ class EssenceMechanic(CraftingMechanic):
 
         # Special handling for Essence of the Abyss - return Mark of the Abyssal Lord directly
         if self.essence_info.essence_type == "abyss":
-            mark_mods = [mod for mod in modifier_pool.modifiers if mod.mod_group == "abyssal_mark"]
+            mark_mods = [mod for mod in modifier_pool.modifiers if mod.mod_group == "AbyssTargetMod"]
             if mark_mods:
                 mark = mark_mods[0].model_copy(deep=True)
                 logger.info(f"Essence of the Abyss: Adding {mark.name}")
