@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { craftingApi, HiddenTagsConfig } from '@/services/crafting-api'
-import { marketApi, ExchangeRates } from '@/services/market-api'
+import { marketApi, ExchangeRates, ItemPriceEstimate } from '@/services/market-api'
 import { UnifiedCurrencyStash } from '@/components/UnifiedCurrencyStash'
 import { PoE2ItemFrame, PoE2Separator, PoE2Section, PoE2Property } from '@/components/poe2'
 import type { CraftableItem, ItemModifier, ItemRarity, ItemBasesBySlot } from '@/types/crafting'
@@ -593,6 +593,8 @@ function GridCraftingSimulator() {
   const [itemHistory, setItemHistory] = useState<CraftableItem[]>([])
   const [currencySpent, setCurrencySpent] = useState<Record<string, number>>({})
   const [exchangeRates, setExchangeRates] = useState<ExchangeRates | null>(null)
+  const [itemPrice, setItemPrice] = useState<ItemPriceEstimate | null>(null)
+  const [priceCheckLoading, setPriceCheckLoading] = useState(false)
 
   // Redo stacks for Ctrl+R and Ctrl+Y
   const [redoItemStack, setRedoItemStack] = useState<CraftableItem[]>([])
@@ -950,6 +952,41 @@ function GridCraftingSimulator() {
     }
     fetchExchangeRates()
   }, [])
+
+  // Clear price estimate when item changes
+  useEffect(() => {
+    setItemPrice(null)
+  }, [item])
+
+  // Handle price check
+  const handlePriceCheck = async () => {
+    if (priceCheckLoading) return
+
+    // Need at least one mod to price
+    const hasMods = item.prefix_mods.length > 0 || item.suffix_mods.length > 0
+    if (!hasMods) {
+      setMessage('Item needs mods to estimate price')
+      return
+    }
+
+    setPriceCheckLoading(true)
+    setItemPrice(null)
+
+    try {
+      const estimate = await marketApi.priceItem(item)
+      setItemPrice(estimate)
+      setMessage(`Price check complete: ~${estimate.median_price.toFixed(1)} chaos (${estimate.confidence} confidence)`)
+    } catch (error: any) {
+      console.error('Price check failed:', error)
+      if (error.response?.status === 404) {
+        setMessage('No comparable items found on trade')
+      } else {
+        setMessage('Price check failed - try again later')
+      }
+    } finally {
+      setPriceCheckLoading(false)
+    }
+  }
 
 
   // Drag and drop handlers
@@ -3686,6 +3723,70 @@ function GridCraftingSimulator() {
                   ) : (
                     // Show sophisticated item preview after creation
                     <div className="item-created-view">
+                      {/* Compact Value Bar - Cost & Price */}
+                      <div className="item-value-bar">
+                        <div className="value-section cost-section">
+                          <span className="value-label">Cost:</span>
+                          {Object.keys(currencySpent).length > 0 && exchangeRates ? (
+                            <span className="value-amount">
+                              {(() => {
+                                let totalExalted = 0
+                                for (const [currency, count] of Object.entries(currencySpent)) {
+                                  const rate = exchangeRates.rates[currency]
+                                  if (rate) {
+                                    totalExalted += count * rate.exalted_value
+                                  }
+                                }
+                                return `${totalExalted.toFixed(2)} ex`
+                              })()}
+                            </span>
+                          ) : (
+                            <span className="value-amount dim">0 ex</span>
+                          )}
+                        </div>
+                        <div className="value-section price-section">
+                          <span className="value-label">Worth:</span>
+                          {itemPrice ? (
+                            <span className={`value-amount ${itemPrice.confidence}`}>
+                              {itemPrice.median_price.toFixed(0)}c
+                              {itemPrice.exalted_value && ` (${itemPrice.exalted_value.toFixed(2)} ex)`}
+                            </span>
+                          ) : (
+                            <button
+                              className="mini-price-btn"
+                              onClick={handlePriceCheck}
+                              disabled={priceCheckLoading || (item.prefix_mods.length === 0 && item.suffix_mods.length === 0)}
+                              title="Check market value"
+                            >
+                              {priceCheckLoading ? '...' : '?'}
+                            </button>
+                          )}
+                          {itemPrice && (
+                            <>
+                              <button
+                                className="mini-price-btn refresh"
+                                onClick={handlePriceCheck}
+                                disabled={priceCheckLoading}
+                                title="Refresh price"
+                              >
+                                {priceCheckLoading ? '...' : '↻'}
+                              </button>
+                              {itemPrice.trade_url && (
+                                <a
+                                  href={itemPrice.trade_url}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  className="mini-trade-link"
+                                  title="View on trade site"
+                                >
+                                  ↗
+                                </a>
+                              )}
+                            </>
+                          )}
+                        </div>
+                      </div>
+
                       <div className="current-item-display">
                     <PoE2ItemFrame
                       rarity={item.rarity}

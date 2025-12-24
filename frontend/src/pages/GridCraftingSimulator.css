@@ -3558,3 +3558,101 @@
     grid-template-columns: repeat(auto-fill, minmax(32px, 1fr));
   }
 }
+
+/* ==================== Item Value Bar (Cost & Price) ==================== */
+
+.item-value-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: linear-gradient(180deg, #1a1a1a 0%, #0d0d0d 100%);
+  border: 1px solid #3d3529;
+  border-radius: 4px;
+  padding: 0.4rem 0.6rem;
+  margin-bottom: 0.5rem;
+  font-size: 0.8rem;
+}
+
+.value-section {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.value-label {
+  color: #888;
+  font-size: 0.75rem;
+}
+
+.item-value-bar .value-amount {
+  font-weight: 600;
+  font-family: 'Consolas', monospace;
+  color: #ffaa00;
+}
+
+.item-value-bar .value-amount.dim {
+  color: #555;
+}
+
+.item-value-bar .value-amount.high {
+  color: #7fff7f;
+}
+
+.item-value-bar .value-amount.medium {
+  color: #ffd700;
+}
+
+.item-value-bar .value-amount.low {
+  color: #ff6b6b;
+}
+
+.mini-price-btn {
+  background: #28a745;
+  color: white;
+  border: none;
+  border-radius: 3px;
+  padding: 0.15rem 0.4rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.mini-price-btn:hover:not(:disabled) {
+  background: #34c759;
+}
+
+.mini-price-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.mini-price-btn.refresh {
+  background: #444;
+  padding: 0.15rem 0.3rem;
+  margin-left: 0.25rem;
+}
+
+.mini-price-btn.refresh:hover:not(:disabled) {
+  background: #555;
+}
+
+.mini-trade-link {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #2a5298;
+  color: white;
+  border-radius: 3px;
+  padding: 0.15rem 0.35rem;
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-decoration: none;
+  margin-left: 0.25rem;
+  transition: all 0.15s;
+}
+
+.mini-trade-link:hover {
+  background: #3a6ab8;
+  color: white;
+}

@@ -4,12 +4,13 @@ Market Intelligence API
 Provides currency exchange rates and cost estimation endpoints.
 """
 
-from typing import Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel, Field
 
 from app.core.logging import get_logger
+from app.schemas.crafting import CraftableItem
 from app.services.market import (
     get_market_service,
     CurrencyPrice,
@@ -17,6 +18,7 @@ from app.services.market import (
     CraftingCost,
     League,
 )
+from app.services.market.item_pricer import get_item_pricer
 
 logger = get_logger(__name__)
 
@@ -240,4 +242,75 @@ async def convert_currency(
         raise
     except Exception as e:
         logger.error(f"Error converting currency: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# Item Price Estimation
+class ItemPriceRequest(BaseModel):
+    """Request to estimate item price."""
+    item: CraftableItem = Field(..., description="The item to price")
+    league: Optional[str] = Field(None, description="League name (uses default if not specified)")
+
+
+class ItemPriceResponse(BaseModel):
+    """Response with item price estimate."""
+    min_price: float = Field(..., description="Minimum price found")
+    max_price: float = Field(..., description="Maximum price found")
+    median_price: float = Field(..., description="Median price")
+    average_price: float = Field(..., description="Average price")
+    currency: str = Field(..., description="Price currency (chaos)")
+    num_listings: int = Field(..., description="Number of comparable listings found")
+    confidence: str = Field(..., description="Confidence level: high, medium, low")
+
+    # Normalized values
+    exalted_value: Optional[float] = Field(None, description="Median price in Exalted Orbs")
+    divine_value: Optional[float] = Field(None, description="Median price in Divine Orbs")
+
+    # Search info
+    search_criteria: Dict[str, Any] = Field(
+        default_factory=dict,
+        description="Pseudo stats used for search"
+    )
+
+    # Trade URL
+    trade_url: Optional[str] = Field(None, description="URL to view search on trade site")
+
+
+@router.post("/price-item", response_model=ItemPriceResponse)
+async def estimate_item_price(request: ItemPriceRequest) -> ItemPriceResponse:
+    """
+    Estimate the market value of an item.
+
+    Searches the POE2 trade site for comparable items using pseudo mod
+    normalization. Returns price statistics and confidence level.
+
+    Note: This endpoint makes external API calls and may be rate limited.
+    """
+    try:
+        pricer = await get_item_pricer()
+        estimate = await pricer.estimate_price(request.item, request.league)
+
+        if estimate is None:
+            raise HTTPException(
+                status_code=404,
+                detail="Unable to estimate price. No comparable items found or item has no priceable mods."
+            )
+
+        return ItemPriceResponse(
+            min_price=estimate.min_price,
+            max_price=estimate.max_price,
+            median_price=estimate.median_price,
+            average_price=estimate.average_price,
+            currency=estimate.currency,
+            num_listings=estimate.num_listings,
+            confidence=estimate.confidence,
+            exalted_value=estimate.exalted_value,
+            divine_value=estimate.divine_value,
+            search_criteria=estimate.search_criteria,
+            trade_url=estimate.trade_url,
+        )
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error estimating item price: {e}")
         raise HTTPException(status_code=500, detail=str(e))

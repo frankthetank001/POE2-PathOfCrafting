@@ -1,4 +1,5 @@
 import axios from 'axios'
+import type { CraftableItem } from '@/types/crafting'
 
 // Get API URL from runtime config (loaded from config.js) or fall back to env/localhost
 const getApiBaseUrl = () => {
@@ -58,6 +59,20 @@ export interface ConvertResult {
   from: string
   to: string
   result: number
+}
+
+export interface ItemPriceEstimate {
+  min_price: number
+  max_price: number
+  median_price: number
+  average_price: number
+  currency: string
+  num_listings: number
+  confidence: 'high' | 'medium' | 'low'
+  exalted_value: number | null
+  divine_value: number | null
+  search_criteria: Record<string, number>
+  trade_url: string | null
 }
 
 // API client
@@ -121,6 +136,21 @@ export const marketApi = {
         to: toCurrency,
         ...(league ? { league } : {}),
       },
+    })
+    return response.data
+  },
+
+  /**
+   * Estimate the market value of an item
+   * Note: This makes external API calls and may be rate limited
+   */
+  priceItem: async (
+    item: CraftableItem,
+    league?: string
+  ): Promise<ItemPriceEstimate> => {
+    const response = await api.post<ItemPriceEstimate>('/price-item', {
+      item,
+      league,
     })
     return response.data
   },
