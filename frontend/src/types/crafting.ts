@@ -10,6 +10,7 @@ export enum ModType {
   SUFFIX = 'suffix',
   IMPLICIT = 'implicit',
   DESECRATED = 'desecrated',
+  RUNE = 'rune',
 }
 
 export interface StatRange {
@@ -56,6 +57,15 @@ export interface UnrevealedModifier {
   has_abyssal_echoes?: boolean
 }
 
+export interface SocketedRune {
+  name: string  // e.g., "Greater Iron Rune"
+  base_type: string  // e.g., "Greater Iron Rune"
+  icon?: string  // URL to rune icon
+  socket_index: number  // Which socket this rune is in (0-indexed)
+  mods: string[]  // Mod texts that apply to this item type (e.g., "18% increased Armour, Evasion and Energy Shield")
+  bonded_mods?: string[]  // Class-specific "Bonded" mods (e.g., "+10 to maximum Life")
+}
+
 export interface ItemBase {
   name: string
   category?: string
@@ -80,6 +90,7 @@ export interface CraftableItem {
   prefix_mods: ItemModifier[]
   suffix_mods: ItemModifier[]
   unrevealed_mods: UnrevealedModifier[]
+  socketed_runes: SocketedRune[]  // Runes socketed into this item
 
   corrupted: boolean
   base_stats: Record<string, number>

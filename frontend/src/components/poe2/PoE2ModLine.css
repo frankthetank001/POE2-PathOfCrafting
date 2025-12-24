@@ -46,6 +46,18 @@
   text-shadow: 0 0 6px rgba(68, 255, 136, 0.2);
 }
 
+/* Rune mods - amber/brown color */
+.poe2-mod-line.rune {
+  color: #d4a574;
+  border-left-color: rgba(212, 165, 116, 0.5);
+}
+
+.poe2-mod-line.rune .poe2-mod-tier {
+  background: rgba(212, 165, 116, 0.2);
+  border-color: rgba(212, 165, 116, 0.4);
+  color: #d4a574;
+}
+
 /* Unrevealed */
 .poe2-mod-line.unrevealed {
   color: #44ff88;
@@ -192,4 +204,26 @@
 
 .poe2-property-value.augmented {
   color: #8888ff;
+}
+
+/* ==================== Status Text ==================== */
+
+.poe2-status-text {
+  font-family: 'FontinSmallCaps', 'Fontin', Georgia, serif;
+  font-size: 0.9rem;
+  font-weight: bold;
+  text-align: center;
+  padding: 8px 12px;
+  margin-top: 4px;
+  border-top: 1px solid rgba(80, 70, 55, 0.3);
+}
+
+.poe2-status-text.corrupted {
+  color: #d20000;
+  text-shadow: 0 0 8px rgba(210, 0, 0, 0.4);
+}
+
+.poe2-status-text.desecrated {
+  color: #44ff88;
+  text-shadow: 0 0 8px rgba(68, 255, 136, 0.4);
 }

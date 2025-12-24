@@ -76,6 +76,24 @@ class TradeListing:
     account_name: str
     indexed_time: Optional[str] = None
 
+    # Equipment stats
+    armour: Optional[int] = None
+    evasion: Optional[int] = None
+    energy_shield: Optional[int] = None
+    quality: Optional[int] = None
+
+    # Prefix/suffix split (with tier info)
+    prefix_mods: Optional[List[Dict[str, Any]]] = None  # [{text, tier, name}, ...]
+    suffix_mods: Optional[List[Dict[str, Any]]] = None
+
+    # Rune mods
+    rune_mods: Optional[List[str]] = None  # Mod texts from socketed runes
+    socketed_rune_name: Optional[str] = None  # Name of socketed rune (e.g., "Greater Iron Rune")
+
+    # Flags
+    is_corrupted: bool = False
+    is_desecrated: bool = False
+
 
 class TradeAPIClient:
     """
@@ -241,19 +259,141 @@ class TradeAPIClient:
             listing_data = result.get("listing", {})
             item_data = result.get("item", {})
             price_data = listing_data.get("price", {})
+            extended_data = item_data.get("extended", {})
 
-            return TradeListing(
+            # Combine explicit mods from various sources
+            # - explicitMods: normal explicit mods
+            # - desecratedMods: mods on desecrated items
+            # - runeMods: mods from socketed runes
+            explicit_mods = item_data.get("explicitMods", [])
+            desecrated_mods = item_data.get("desecratedMods", [])
+            rune_mods = item_data.get("runeMods", [])
+
+            # Combine all explicit-type mods
+            all_explicit_mods = explicit_mods + desecrated_mods + rune_mods
+
+            # Extract equipment stats from extended data (easier than parsing properties)
+            armour = extended_data.get("ar")
+            evasion = extended_data.get("ev")
+            energy_shield = extended_data.get("es")
+
+            # Extract quality from properties (format: "[Quality]" with value "+20%")
+            quality = None
+            for prop in item_data.get("properties", []):
+                prop_name = prop.get("name", "")
+                if "Quality" in prop_name:
+                    values = prop.get("values", [])
+                    if values and len(values) > 0:
+                        try:
+                            val_str = values[0][0] if isinstance(values[0], list) else values[0]
+                            val_clean = str(val_str).replace("%", "").replace("+", "").strip()
+                            quality = int(float(val_clean)) if val_clean else None
+                        except (ValueError, IndexError):
+                            pass
+                    break
+
+            # Extract prefix/suffix mods with tier info from extended.mods
+            # Key insight: hashes.explicit and explicitMods are in the SAME display order
+            # We iterate through hashes to get the stat_hash, use it to look up tier info
+            prefix_mods = []
+            suffix_mods = []
+
+            hashes_data = extended_data.get("hashes", {})
+            mods_data = extended_data.get("mods", {})
+
+            def build_hash_to_mod_info(mod_entries: List) -> Dict[str, Dict]:
+                """Build mapping from stat hash to mod info (name, tier)."""
+                hash_to_info = {}
+                for mod_entry in mod_entries:
+                    tier = mod_entry.get("tier", "")
+                    name = mod_entry.get("name", "")
+                    for mag in mod_entry.get("magnitudes", []):
+                        stat_hash = mag.get("hash", "")
+                        if stat_hash:
+                            hash_to_info[stat_hash] = {"name": name, "tier": tier}
+                return hash_to_info
+
+            def process_mods_in_order(mod_texts: List[str], hash_entries: List, hash_to_info: Dict, is_desecrated: bool = False):
+                """Process mods - hashes and mod_texts are in same display order."""
+                results_prefix = []
+                results_suffix = []
+
+                for i, entry in enumerate(hash_entries):
+                    try:
+                        if not entry or len(entry) < 1:
+                            continue
+                        stat_hash = entry[0]
+                        mod_text = mod_texts[i] if i < len(mod_texts) else ""
+
+                        info = hash_to_info.get(stat_hash, {})
+                        tier_str = info.get("tier", "")
+                        mod_name = info.get("name", "")
+
+                        if not mod_text:
+                            continue
+
+                        mod_info = {"text": mod_text, "name": mod_name, "tier": tier_str, "is_desecrated": is_desecrated}
+
+                        if tier_str.startswith("P"):
+                            results_prefix.append(mod_info)
+                        elif tier_str.startswith("S"):
+                            results_suffix.append(mod_info)
+                    except (TypeError, IndexError):
+                        continue
+
+                return results_prefix, results_suffix
+
+            # Process explicit mods (not desecrated)
+            explicit_info = build_hash_to_mod_info(mods_data.get("explicit", []))
+            p, s = process_mods_in_order(explicit_mods, hashes_data.get("explicit", []), explicit_info, is_desecrated=False)
+            prefix_mods.extend(p)
+            suffix_mods.extend(s)
+
+            # Process desecrated mods (marked as desecrated)
+            desecrated_info = build_hash_to_mod_info(mods_data.get("desecrated", []))
+            p, s = process_mods_in_order(desecrated_mods, hashes_data.get("desecrated", []), desecrated_info, is_desecrated=True)
+            prefix_mods.extend(p)
+            suffix_mods.extend(s)
+
+            # Extract rune mods and socketed rune name
+            rune_mod_texts = rune_mods if rune_mods else None
+            socketed_rune_name = None
+            socketed_items = item_data.get("socketedItems", [])
+            if socketed_items:
+                # Get the first socketed rune's name
+                for socketed in socketed_items:
+                    if socketed.get("baseType", "").endswith("Rune"):
+                        socketed_rune_name = socketed.get("typeLine") or socketed.get("baseType")
+                        break
+
+            # Check flags
+            is_corrupted = item_data.get("corrupted", False)
+            is_desecrated = item_data.get("desecrated", False) or len(desecrated_mods) > 0
+
+            parsed = TradeListing(
                 item_hash=result.get("id", ""),
                 price_amount=float(price_data.get("amount", 0)),
                 price_currency=price_data.get("currency", "chaos"),
                 item_name=item_data.get("name", ""),
                 item_base=item_data.get("typeLine", ""),
                 item_level=item_data.get("ilvl", 0),
-                explicit_mods=item_data.get("explicitMods", []),
+                explicit_mods=all_explicit_mods,
                 implicit_mods=item_data.get("implicitMods", []),
                 account_name=listing_data.get("account", {}).get("name", ""),
                 indexed_time=listing_data.get("indexed"),
+                armour=armour,
+                evasion=evasion,
+                energy_shield=energy_shield,
+                quality=quality,
+                prefix_mods=prefix_mods if prefix_mods else None,
+                suffix_mods=suffix_mods if suffix_mods else None,
+                rune_mods=rune_mod_texts,
+                socketed_rune_name=socketed_rune_name,
+                is_corrupted=is_corrupted,
+                is_desecrated=is_desecrated,
             )
+
+            return parsed
         except (KeyError, TypeError, ValueError) as e:
             logger.warning(f"Failed to parse listing: {e}")
             return None

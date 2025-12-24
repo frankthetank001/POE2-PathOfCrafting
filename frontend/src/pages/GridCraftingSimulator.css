@@ -1063,6 +1063,23 @@
   text-shadow: 0 0 6px rgba(68, 255, 136, 0.3);
 }
 
+/* Rune mods - amber/brown color */
+.mod-line.rune {
+  color: #d4a574;
+  border-left-color: rgba(212, 165, 116, 0.5);
+}
+
+.mod-line.rune .mod-tier {
+  background: rgba(212, 165, 116, 0.2);
+  border-color: rgba(212, 165, 116, 0.4);
+  color: #d4a574;
+}
+
+/* Bonded rune mods - slightly different shade */
+.mod-line.rune.bonded {
+  color: #e8c094;
+}
+
 /* Unrevealed mods */
 .mod-line.unrevealed {
   color: #44ff88;
@@ -3696,6 +3713,117 @@
 .mod-line.price-excluded .mod-stat {
   text-decoration: line-through;
   text-decoration-color: rgba(255, 100, 100, 0.4);
+}
+
+/* Price Filter Property Styling (for rarity, etc.) */
+.price-filter-property {
+  transition: all 0.15s ease;
+  padding: 2px 4px;
+  margin: -2px -4px;
+  border-radius: 3px;
+}
+
+.price-filter-property.filter-enabled {
+  background: rgba(100, 200, 100, 0.15);
+  border: 1px solid rgba(100, 200, 100, 0.4);
+}
+
+.price-filter-property.filter-enabled:hover {
+  background: rgba(100, 200, 100, 0.25);
+}
+
+.price-filter-property.filter-disabled {
+  background: rgba(255, 100, 100, 0.1);
+  border: 1px solid rgba(255, 100, 100, 0.3);
+  opacity: 0.5;
+}
+
+.price-filter-property.filter-disabled:hover {
+  background: rgba(255, 100, 100, 0.2);
+  opacity: 0.7;
+}
+
+/* Enhanced mod selection highlighting */
+.mod-line.price-selected {
+  border-left: 3px solid rgba(100, 200, 100, 0.8);
+  margin-left: -3px;
+  padding-left: 0;
+  background: rgba(100, 200, 100, 0.08);
+}
+
+.mod-line.price-selected:hover {
+  background: rgba(100, 200, 100, 0.15);
+}
+
+/* Mod min value slider for price search - appears on hover */
+.mod-min-slider {
+  display: none;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.5rem;
+  background: rgba(40, 40, 40, 0.95);
+  border-radius: 4px;
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(100, 200, 100, 0.3);
+}
+
+.mod-line.price-selected:hover .mod-min-slider {
+  display: flex;
+}
+
+.mod-min-slider .slider-label {
+  font-size: 0.7rem;
+  color: #888;
+  white-space: nowrap;
+}
+
+.mod-min-slider .min-value-slider {
+  flex: 1;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(100, 100, 100, 0.4);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.mod-min-slider .min-value-slider::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 14px;
+  height: 14px;
+  background: linear-gradient(135deg, #4a9eff 0%, #2a7edf 100%);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+  transition: transform 0.1s ease;
+}
+
+.mod-min-slider .min-value-slider::-webkit-slider-thumb:hover {
+  transform: scale(1.15);
+}
+
+.mod-min-slider .min-value-slider::-moz-range-thumb {
+  width: 14px;
+  height: 14px;
+  background: linear-gradient(135deg, #4a9eff 0%, #2a7edf 100%);
+  border-radius: 50%;
+  cursor: pointer;
+  border: none;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.mod-min-slider .slider-value {
+  font-size: 0.75rem;
+  color: #4a9eff;
+  font-weight: 600;
+  min-width: 2.5rem;
+  text-align: right;
 }
 
 /* Price Results Fly-out Panel */

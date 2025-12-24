@@ -39,7 +39,7 @@ GITHUB_RAW_BASE = "https://raw.githubusercontent.com/repoe-fork/pob-data/master/
 GITHUB_API_BASE = "https://api.github.com/repos/repoe-fork/pob-data/contents/pob-data/poe2"
 
 # Files to fetch
-POB_DATA_FILES = ["ModItem.json", "ModCorrupted.json", "ModVeiled.json", "Essence.json"]
+POB_DATA_FILES = ["ModItem.json", "ModCorrupted.json", "ModVeiled.json", "ModRunes.json", "Essence.json"]
 
 
 def ensure_pob_data_exists() -> Path:
@@ -146,6 +146,7 @@ class POBDataLoader:
         self._base_items: Dict[str, BaseItemInfo] = {}
         self._item_type_tags: Dict[str, List[str]] = {}
         self._mod_data: Dict[str, dict] = {}
+        self._rune_data: Dict[str, Dict[str, dict]] = {}  # rune_name -> item_type -> mods
 
         self._loaded = False
         POBDataLoader._initialized = True
@@ -162,6 +163,7 @@ class POBDataLoader:
         self._load_mod_item()
         self._load_mod_corrupted()
         self._load_mod_veiled()
+        self._load_mod_runes()
         self._load_essences()
 
         # Renumber tiers so T1 = best (highest values)
@@ -172,6 +174,7 @@ class POBDataLoader:
             f"Loaded {len(self._modifiers)} regular mods, "
             f"{len(self._corrupted_mods)} corrupted mods, "
             f"{len(self._desecrated_mods)} desecrated mods, "
+            f"{len(self._rune_data)} runes, "
             f"{len(self._essences)} essences, "
             f"{len(self._base_items)} base items"
         )
@@ -186,6 +189,7 @@ class POBDataLoader:
         self._base_items = {}
         self._item_type_tags = {}
         self._mod_data = {}
+        self._rune_data = {}
         self._loaded = False
         self.load_all()
 
@@ -384,6 +388,53 @@ class POBDataLoader:
         except Exception as e:
             logger.error(f"Error loading ModVeiled.json: {e}")
 
+    def _load_mod_runes(self) -> None:
+        """Load rune mods from ModRunes.json.
+
+        Structure: { "Rune Name": { "armour": {...}, "weapon": {...}, ... } }
+        Each item type entry has:
+        - rank: [level]
+        - statOrder: [stat ids]
+        - type: "Rune"
+        - "1", "2", etc: mod text lines (Bonded: prefix for class-specific mods)
+        """
+        mod_file = self.pob_data_path / "ModRunes.json"
+        if not mod_file.exists():
+            logger.warning(f"ModRunes.json not found: {mod_file}")
+            return
+
+        try:
+            with open(mod_file, "r", encoding="utf-8") as f:
+                runes_data = json.load(f)
+
+            for rune_name, item_types in runes_data.items():
+                self._rune_data[rune_name] = {}
+                for item_type, rune_info in item_types.items():
+                    # Extract mod texts (numbered keys "1", "2", etc.)
+                    mods = []
+                    bonded_mods = []
+                    for i in range(1, 10):
+                        mod_text = rune_info.get(str(i))
+                        if mod_text:
+                            if mod_text.startswith("Bonded:"):
+                                bonded_mods.append(mod_text)
+                            else:
+                                mods.append(mod_text)
+                        else:
+                            break
+
+                    self._rune_data[rune_name][item_type] = {
+                        "rank": rune_info.get("rank", [0]),
+                        "stat_order": rune_info.get("statOrder", []),
+                        "mods": mods,
+                        "bonded_mods": bonded_mods,
+                    }
+
+            logger.info(f"Loaded {len(self._rune_data)} runes")
+
+        except Exception as e:
+            logger.error(f"Error loading ModRunes.json: {e}")
+
     def _load_essences(self) -> None:
         """Load essence data from Essence.json."""
         essence_file = self.pob_data_path / "Essence.json"
@@ -541,8 +592,13 @@ class POBDataLoader:
             return None
 
     def _parse_stat_ranges(self, stat_text: str) -> List[StatRange]:
-        """Parse stat ranges from stat text like 'Adds (3-4) to (5-8) Cold damage'."""
+        """Parse stat ranges from stat text like 'Adds (3-4) to (5-8) Cold damage'.
+
+        For fixed-value mods like '35% increased Movement Speed', extracts the value
+        and uses it for both min and max.
+        """
         ranges = []
+        # First try to find range patterns like (3-4)
         pattern = r'\((\d+(?:\.\d+)?)-(\d+(?:\.\d+)?)\)'
         matches = re.findall(pattern, stat_text)
 
@@ -553,6 +609,18 @@ class POBDataLoader:
                 ranges.append(StatRange(min=min_val, max=max_val))
             except (ValueError, IndexError):
                 pass
+
+        # If no ranges found, try to extract fixed values (e.g., "35% increased Movement Speed")
+        if not ranges:
+            # Match numbers at the start or after +/- signs
+            fixed_pattern = r'(?:^|[+\-])(\d+(?:\.\d+)?)'
+            fixed_matches = re.findall(fixed_pattern, stat_text)
+            for match in fixed_matches:
+                try:
+                    val = float(match)
+                    ranges.append(StatRange(min=val, max=val))
+                except ValueError:
+                    pass
 
         return ranges
 
@@ -873,6 +941,82 @@ class POBDataLoader:
                 return True
 
         return False
+
+    def get_all_runes(self) -> Dict[str, Dict[str, dict]]:
+        """Get all rune data keyed by rune name."""
+        if not self._loaded:
+            self.load_all()
+        return self._rune_data
+
+    def get_rune_by_name(self, rune_name: str) -> Optional[Dict[str, dict]]:
+        """Get rune data by name. Returns dict of item_type -> mods."""
+        if not self._loaded:
+            self.load_all()
+        return self._rune_data.get(rune_name)
+
+    def get_rune_mods_for_item_type(
+        self,
+        rune_name: str,
+        item_category: str
+    ) -> Optional[dict]:
+        """Get rune mods for a specific item type.
+
+        Args:
+            rune_name: Name of the rune (e.g., "Greater Iron Rune")
+            item_category: Category of item (armour, weapon, caster, etc.)
+
+        Returns:
+            Dict with 'mods' and 'bonded_mods' lists, or None if not found
+        """
+        if not self._loaded:
+            self.load_all()
+
+        rune = self._rune_data.get(rune_name)
+        if not rune:
+            return None
+
+        # Try exact match first
+        if item_category in rune:
+            return rune[item_category]
+
+        # Map common categories to rune item types
+        category_mapping = {
+            # Armour types map to "armour"
+            "str_armour": "armour",
+            "dex_armour": "armour",
+            "int_armour": "armour",
+            "str_dex_armour": "armour",
+            "str_int_armour": "armour",
+            "dex_int_armour": "armour",
+            "body_armour": "body armour",
+            "helmet": "helmet",
+            "gloves": "gloves",
+            "boots": "boots",
+            # Weapon types
+            "sword": "weapon",
+            "axe": "weapon",
+            "mace": "weapon",
+            "dagger": "weapon",
+            "claw": "weapon",
+            "spear": "weapon",
+            "flail": "weapon",
+            "bow": "bow",
+            "crossbow": "crossbow",
+            "staff": "weapon",
+            # Caster types
+            "wand": "caster",
+            "sceptre": "sceptre",
+            "focus": "focus",
+            # Offhand
+            "shield": "shield",
+            "quiver": "quiver",
+        }
+
+        mapped = category_mapping.get(item_category)
+        if mapped and mapped in rune:
+            return rune[mapped]
+
+        return None
 
 
 # Singleton instance

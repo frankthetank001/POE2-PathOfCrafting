@@ -25,6 +25,13 @@ class ItemMod(BaseModel):
     tags: List[str] = Field(default_factory=list)
 
 
+class ParsedRune(BaseModel):
+    """Represents a rune parsed from item text"""
+    name: Optional[str] = None  # Rune name if known (from socket info or detailed format)
+    mods: List[str] = Field(default_factory=list)  # Mod texts from the rune
+    bonded_mods: List[str] = Field(default_factory=list)  # Class-specific bonded mods
+
+
 class ParsedItem(BaseModel):
     rarity: ItemRarity
     name: str
@@ -35,6 +42,7 @@ class ParsedItem(BaseModel):
     requirements: Dict[str, int] = Field(default_factory=dict)
     implicits: List[ItemMod] = Field(default_factory=list)
     explicits: List[ItemMod] = Field(default_factory=list)
+    runes: List[ParsedRune] = Field(default_factory=list)  # Socketed runes
     corrupted: bool = False
     identified: bool = True
     raw_text: str

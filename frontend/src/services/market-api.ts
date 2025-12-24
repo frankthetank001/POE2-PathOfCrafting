@@ -61,6 +61,13 @@ export interface ConvertResult {
   result: number
 }
 
+export interface TradeMod {
+  text: string
+  name: string
+  tier: string
+  is_desecrated?: boolean
+}
+
 export interface PriceListing {
   price_amount: number
   price_currency: string
@@ -72,6 +79,24 @@ export interface PriceListing {
   implicit_mods: string[]
   account_name: string
   indexed_time: string | null
+
+  // Equipment stats
+  armour?: number | null
+  evasion?: number | null
+  energy_shield?: number | null
+  quality?: number | null
+
+  // Prefix/suffix split with tier info
+  prefix_mods?: TradeMod[] | null
+  suffix_mods?: TradeMod[] | null
+
+  // Rune mods
+  rune_mods?: string[] | null
+  socketed_rune_name?: string | null
+
+  // Flags
+  is_corrupted?: boolean
+  is_desecrated?: boolean
 }
 
 export interface ItemPriceEstimate {
@@ -162,13 +187,17 @@ export const marketApi = {
     item: CraftableItem,
     league?: string,
     equipmentFilters?: Record<string, number>,
-    equipmentEnabled?: Record<string, boolean>
+    equipmentEnabled?: Record<string, boolean>,
+    rarityEnabled?: boolean,
+    modMinValues?: Record<number, number>
   ): Promise<ItemPriceEstimate> => {
     const response = await api.post<ItemPriceEstimate>('/price-item', {
       item,
       league,
       equipment_filters: equipmentFilters,
       equipment_enabled: equipmentEnabled,
+      rarity_enabled: rarityEnabled,
+      mod_min_values: modMinValues,
     })
     return response.data
   },

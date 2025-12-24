@@ -2,8 +2,8 @@ import { useState, useEffect, useMemo, useCallback } from 'react'
 import { craftingApi, HiddenTagsConfig } from '@/services/crafting-api'
 import { marketApi, ExchangeRates, ItemPriceEstimate } from '@/services/market-api'
 import { UnifiedCurrencyStash } from '@/components/UnifiedCurrencyStash'
-import { PoE2ItemFrame, PoE2Separator, PoE2Section, PoE2Property } from '@/components/poe2'
-import type { CraftableItem, ItemModifier, ItemRarity, ItemBasesBySlot } from '@/types/crafting'
+import { PoE2ItemFrame, PoE2Separator, PoE2Section, PoE2Property, PoE2TradeListingPreview } from '@/components/poe2'
+import type { CraftableItem, ItemModifier, ItemRarity, ItemBasesBySlot, SocketedRune } from '@/types/crafting'
 import { CURRENCY_DESCRIPTIONS } from '@/data/currency-descriptions'
 import './GridCraftingSimulator.css'
 
@@ -236,6 +236,7 @@ function ItemTab({ setItem, onHistoryReset, setMessage, onItemCreated }: TabCont
         prefix_mods: [],
         suffix_mods: [],
         unrevealed_mods: [],
+        socketed_runes: [],
         corrupted: false,
         base_stats: baseData.base_stats,
         calculated_stats: initialStats,
@@ -561,6 +562,7 @@ function GridCraftingSimulator() {
     prefix_mods: [],
     suffix_mods: [],
     unrevealed_mods: [],
+    socketed_runes: [],
     corrupted: false,
     base_stats: {},
     calculated_stats: {},
@@ -602,6 +604,10 @@ function GridCraftingSimulator() {
   // Equipment stat filters for price search (min values)
   const [priceEquipmentFilters, setPriceEquipmentFilters] = useState<Record<string, number>>({})
   const [priceEquipmentEnabled, setPriceEquipmentEnabled] = useState<Record<string, boolean>>({})
+  // Rarity filter for price search (enabled by default)
+  const [priceRarityEnabled, setPriceRarityEnabled] = useState(true)
+  // Min values for mod filters (key = "prefix-0", "suffix-1", etc.)
+  const [priceModMinValues, setPriceModMinValues] = useState<Record<string, number>>({})
 
   // Redo stacks for Ctrl+R and Ctrl+Y
   const [redoItemStack, setRedoItemStack] = useState<CraftableItem[]>([])
@@ -879,6 +885,24 @@ function GridCraftingSimulator() {
       lines.push('--------')
     }
 
+    // Socketed rune mods
+    if (item.socketed_runes && item.socketed_runes.length > 0) {
+      item.socketed_runes.forEach(rune => {
+        if (format === 'detailed') {
+          lines.push(`{ Rune "${rune.name}" }`)
+        }
+        rune.mods.forEach(modText => {
+          lines.push(`${modText} (rune)`)
+        })
+        if (rune.bonded_mods) {
+          rune.bonded_mods.forEach(modText => {
+            lines.push(`${modText} (bonded)`)
+          })
+        }
+      })
+      lines.push('--------')
+    }
+
     // Explicit mods
     const allMods: { mod: ItemModifier; type: 'prefix' | 'suffix' }[] = [
       ...item.prefix_mods.map(m => ({ mod: m, type: 'prefix' as const })),
@@ -965,16 +989,28 @@ function GridCraftingSimulator() {
     setItemPrice(null)
     // Initialize all mods as selected for price search
     const allMods = new Set<string>()
-    item.prefix_mods.forEach((_, idx) => allMods.add(`prefix-${idx}`))
-    item.suffix_mods.forEach((_, idx) => allMods.add(`suffix-${idx}`))
-    setPriceSearchMods(allMods)
+    const modMinValues: Record<string, number> = {}
 
-    // Initialize equipment filters from calculated stats
+    item.prefix_mods.forEach((mod, idx) => {
+      allMods.add(`prefix-${idx}`)
+      // Get the mod's current value for the min slider
+      const value = mod.current_values?.[0] ?? mod.current_value ?? mod.stat_min ?? 0
+      modMinValues[`prefix-${idx}`] = Math.floor(value * 0.8) // Default to 80% of rolled value
+    })
+    item.suffix_mods.forEach((mod, idx) => {
+      allMods.add(`suffix-${idx}`)
+      const value = mod.current_values?.[0] ?? mod.current_value ?? mod.stat_min ?? 0
+      modMinValues[`suffix-${idx}`] = Math.floor(value * 0.8)
+    })
+    setPriceSearchMods(allMods)
+    setPriceModMinValues(modMinValues)
+
+    // Initialize equipment filters from calculated stats (excluding EnergyShield - not useful for trade)
     const equipFilters: Record<string, number> = {}
     const equipEnabled: Record<string, boolean> = {}
     if (item.calculated_stats) {
       for (const [stat, value] of Object.entries(item.calculated_stats)) {
-        if (['Armour', 'Evasion', 'EnergyShield'].includes(stat) && value > 0) {
+        if (['Armour', 'Evasion'].includes(stat) && value > 0) {
           // Default to ~50% of the value as minimum
           equipFilters[stat] = Math.floor(value * 0.5)
           equipEnabled[stat] = true
@@ -1029,12 +1065,39 @@ function GridCraftingSimulator() {
         suffix_mods: selectedSuffixes,
       }
 
-      // Pass equipment filters if we're refreshing with custom values
+      // Build mod min values indexed by position in filtered item
+      // Map from original indices to new indices in filtered arrays
+      const modMinValuesForApi: Record<number, number> = {}
+      let newPrefixIdx = 0
+      item.prefix_mods.forEach((_, origIdx) => {
+        if (priceSearchMods.has(`prefix-${origIdx}`)) {
+          const minVal = priceModMinValues[`prefix-${origIdx}`]
+          if (minVal !== undefined) {
+            modMinValuesForApi[newPrefixIdx] = minVal
+          }
+          newPrefixIdx++
+        }
+      })
+      let newSuffixIdx = 0
+      item.suffix_mods.forEach((_, origIdx) => {
+        if (priceSearchMods.has(`suffix-${origIdx}`)) {
+          const minVal = priceModMinValues[`suffix-${origIdx}`]
+          if (minVal !== undefined) {
+            // Suffix indices come after prefix indices in the combined list
+            modMinValuesForApi[selectedPrefixes.length + newSuffixIdx] = minVal
+          }
+          newSuffixIdx++
+        }
+      })
+
+      // Pass filters - always pass rarity, equipment filters only when refreshing
       const estimate = await marketApi.priceItem(
         filteredItem,
         undefined,
         useFilters ? priceEquipmentFilters : undefined,
-        useFilters ? priceEquipmentEnabled : undefined
+        useFilters ? priceEquipmentEnabled : undefined,
+        priceRarityEnabled,
+        useFilters ? modMinValuesForApi : undefined
       )
       setItemPrice(estimate)
       setPriceModalOpen(true)
@@ -1452,7 +1515,7 @@ function GridCraftingSimulator() {
   useEffect(() => {
     if (item.base_stats && Object.keys(item.base_stats).length > 0) {
       const allMods = [...item.prefix_mods, ...item.suffix_mods]
-      const newCalculatedStats = calculateItemStats(item.base_stats, item.quality, allMods)
+      const newCalculatedStats = calculateItemStats(item.base_stats, item.quality, allMods, item.socketed_runes)
 
       // Only update if stats actually changed to avoid infinite loop
       if (JSON.stringify(newCalculatedStats) !== JSON.stringify(item.calculated_stats)) {
@@ -1462,9 +1525,9 @@ function GridCraftingSimulator() {
         }))
       }
     }
-  }, [item.prefix_mods, item.suffix_mods, item.quality, item.base_stats])
+  }, [item.prefix_mods, item.suffix_mods, item.quality, item.base_stats, item.socketed_runes])
 
-  const calculateItemStats = (baseStats: Record<string, number>, quality: number, mods: ItemModifier[] = []): Record<string, number> => {
+  const calculateItemStats = (baseStats: Record<string, number>, quality: number, mods: ItemModifier[] = [], socketedRunes: SocketedRune[] = []): Record<string, number> => {
     const calculated = { ...baseStats }
 
     // Step 1: Collect flat modifiers
@@ -1503,10 +1566,10 @@ function GridCraftingSimulator() {
       }
     }
 
-    // Step 2: Collect percentage modifiers (quality + increased stack additively)
-    let armourIncrease = quality
-    let evasionIncrease = quality
-    let energyShieldIncrease = quality
+    // Step 2: Collect percentage modifiers (these apply to base+flat)
+    let armourIncrease = 0
+    let evasionIncrease = 0
+    let energyShieldIncrease = 0
 
     for (const mod of mods) {
       const statText = mod.stat_text.toLowerCase()
@@ -1554,16 +1617,68 @@ function GridCraftingSimulator() {
       }
     }
 
-    // Step 3: Apply formula: (Base + Flat) × (1 + Quality% + Increased%)
+    // Step 2b: Process socketed rune mods
+    for (const rune of socketedRunes) {
+      const allRuneMods = [...rune.mods, ...(rune.bonded_mods || [])]
+      for (const modText of allRuneMods) {
+        const textLower = modText.toLowerCase()
+
+        // Extract percentage value (e.g., "18% increased")
+        const percentMatch = modText.match(/(\d+)%/)
+        if (percentMatch) {
+          const value = parseFloat(percentMatch[1])
+
+          // Check for defence percentage mods
+          if (textLower.includes('increased armour, evasion and energy shield')) {
+            armourIncrease += value
+            evasionIncrease += value
+            energyShieldIncrease += value
+          } else if (textLower.includes('increased armour and evasion')) {
+            armourIncrease += value
+            evasionIncrease += value
+          } else if (textLower.includes('increased armour and energy shield')) {
+            armourIncrease += value
+            energyShieldIncrease += value
+          } else if (textLower.includes('increased evasion and energy shield')) {
+            evasionIncrease += value
+            energyShieldIncrease += value
+          } else if (textLower.includes('increased armour')) {
+            armourIncrease += value
+          } else if (textLower.includes('increased evasion')) {
+            evasionIncrease += value
+          } else if (textLower.includes('increased energy shield')) {
+            energyShieldIncrease += value
+          }
+        }
+
+        // Extract flat value (e.g., "+30 to maximum Energy Shield")
+        const flatMatch = modText.match(/\+(\d+)/)
+        if (flatMatch && modText.includes('+')) {
+          const value = parseInt(flatMatch[1])
+
+          if (textLower.includes('to armour')) {
+            flatArmour += value
+          } else if (textLower.includes('to evasion')) {
+            flatEvasion += value
+          } else if (textLower.includes('to energy shield') || textLower.includes('to maximum energy shield')) {
+            flatEnergyShield += value
+          }
+        }
+      }
+    }
+
+    // Step 3: Apply formula: (Base + Flat) × (1 + Quality%) × (1 + Increased%)
+    // In PoE2, quality acts as a separate "more" multiplier, not additive with "increased"
     // Keys match pob-data source of truth: Armour, Evasion, EnergyShield
+    const qualityMultiplier = 1 + quality / 100
     if (calculated.Armour !== undefined) {
-      calculated.Armour = Math.floor((baseStats.Armour + flatArmour) * (1 + armourIncrease / 100))
+      calculated.Armour = Math.floor((baseStats.Armour + flatArmour) * qualityMultiplier * (1 + armourIncrease / 100))
     }
     if (calculated.Evasion !== undefined) {
-      calculated.Evasion = Math.floor((baseStats.Evasion + flatEvasion) * (1 + evasionIncrease / 100))
+      calculated.Evasion = Math.floor((baseStats.Evasion + flatEvasion) * qualityMultiplier * (1 + evasionIncrease / 100))
     }
     if (calculated.EnergyShield !== undefined) {
-      calculated.EnergyShield = Math.floor((baseStats.EnergyShield + flatEnergyShield) * (1 + energyShieldIncrease / 100))
+      calculated.EnergyShield = Math.floor((baseStats.EnergyShield + flatEnergyShield) * qualityMultiplier * (1 + energyShieldIncrease / 100))
     }
 
     return calculated
@@ -3908,6 +4023,14 @@ function GridCraftingSimulator() {
                     >
                       {/* Item Properties */}
                       <PoE2Section>
+                        <div
+                          className={`price-filter-property ${priceModalOpen ? (priceRarityEnabled ? 'filter-enabled' : 'filter-disabled') : ''}`}
+                          onClick={() => priceModalOpen && setPriceRarityEnabled(prev => !prev)}
+                          style={{ cursor: priceModalOpen ? 'pointer' : 'default' }}
+                          title={priceModalOpen ? (priceRarityEnabled ? 'Click to exclude rarity from search' : 'Click to include rarity in search') : ''}
+                        >
+                          <PoE2Property label="Rarity" value={item.rarity} />
+                        </div>
                         <PoE2Property label="Item Level" value={item.item_level} />
                         {item.quality > 0 && (
                           <PoE2Property label="Quality" value={`+${item.quality}%`} augmented />
@@ -3925,6 +4048,41 @@ function GridCraftingSimulator() {
                                 label={statName.replace(/([A-Z])/g, ' $1').trim()}
                                 value={value}
                               />
+                            ))}
+                          </PoE2Section>
+                        </>
+                      )}
+
+                      {/* Socketed Runes */}
+                      {item.socketed_runes && item.socketed_runes.length > 0 && (
+                        <>
+                          <PoE2Separator />
+                          <PoE2Section title={item.socketed_runes[0]?.name || 'Rune'}>
+                            {item.socketed_runes.map((rune, runeIdx) => (
+                              <div key={runeIdx}>
+                                {/* Regular rune mods */}
+                                {rune.mods.map((modText, modIdx) => (
+                                  <div key={`rune-${runeIdx}-mod-${modIdx}`} className="mod-line rune">
+                                    <div className="mod-content">
+                                      <div className="mod-stat">{modText}</div>
+                                      <div className="mod-metadata">
+                                        <span className="mod-tier">rune</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))}
+                                {/* Bonded mods (class-specific) */}
+                                {rune.bonded_mods && rune.bonded_mods.map((modText, modIdx) => (
+                                  <div key={`rune-${runeIdx}-bonded-${modIdx}`} className="mod-line rune bonded">
+                                    <div className="mod-content">
+                                      <div className="mod-stat">{modText}</div>
+                                      <div className="mod-metadata">
+                                        <span className="mod-tier">bonded</span>
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))}
+                              </div>
                             ))}
                           </PoE2Section>
                         </>
@@ -4032,6 +4190,44 @@ function GridCraftingSimulator() {
                                     )}
                                   </div>
                                 </div>
+                                {/* Min value slider for price search */}
+                                {priceModalOpen && isPriceSelected && !isUnrevealed && (
+                                  <div className="mod-min-slider" onClick={(e) => e.stopPropagation()}>
+                                    <span className="slider-label">Min:</span>
+                                    <input
+                                      type="range"
+                                      min={0}
+                                      max={(() => {
+                                        // Find T1 max for this mod group from all available mods
+                                        const allMods = [
+                                          ...availableMods.prefixes, ...availableMods.suffixes,
+                                          ...availableMods.essence_prefixes, ...availableMods.essence_suffixes,
+                                          ...availableMods.desecrated_prefixes, ...availableMods.desecrated_suffixes
+                                        ]
+                                        // Get mod_group - either from mod directly or by finding it in pool by mod_id
+                                        let modGroup = mod.mod_group
+                                        if (!modGroup && mod.mod_id) {
+                                          const poolMod = allMods.find(m => m.mod_id === mod.mod_id)
+                                          modGroup = poolMod?.mod_group
+                                        }
+                                        // Find T1 version
+                                        const t1Mod = modGroup
+                                          ? allMods.find(m => m.mod_group === modGroup && m.tier === 1)
+                                          : null
+                                        return t1Mod?.stat_max ?? mod.stat_max ?? 100
+                                      })()}
+                                      value={priceModMinValues[`prefix-${idx}`] ?? 0}
+                                      onChange={(e) => {
+                                        setPriceModMinValues(prev => ({
+                                          ...prev,
+                                          [`prefix-${idx}`]: parseInt(e.target.value)
+                                        }))
+                                      }}
+                                      className="min-value-slider"
+                                    />
+                                    <span className="slider-value">{priceModMinValues[`prefix-${idx}`] ?? 0}</span>
+                                  </div>
+                                )}
                                 <button
                                   className="mod-remove-btn"
                                   onClick={(e) => {
@@ -4151,6 +4347,44 @@ function GridCraftingSimulator() {
                                     )}
                                   </div>
                                 </div>
+                                {/* Min value slider for price search */}
+                                {priceModalOpen && isPriceSelected && !isUnrevealed && (
+                                  <div className="mod-min-slider" onClick={(e) => e.stopPropagation()}>
+                                    <span className="slider-label">Min:</span>
+                                    <input
+                                      type="range"
+                                      min={0}
+                                      max={(() => {
+                                        // Find T1 max for this mod group from all available mods
+                                        const allMods = [
+                                          ...availableMods.prefixes, ...availableMods.suffixes,
+                                          ...availableMods.essence_prefixes, ...availableMods.essence_suffixes,
+                                          ...availableMods.desecrated_prefixes, ...availableMods.desecrated_suffixes
+                                        ]
+                                        // Get mod_group - either from mod directly or by finding it in pool by mod_id
+                                        let modGroup = mod.mod_group
+                                        if (!modGroup && mod.mod_id) {
+                                          const poolMod = allMods.find(m => m.mod_id === mod.mod_id)
+                                          modGroup = poolMod?.mod_group
+                                        }
+                                        // Find T1 version
+                                        const t1Mod = modGroup
+                                          ? allMods.find(m => m.mod_group === modGroup && m.tier === 1)
+                                          : null
+                                        return t1Mod?.stat_max ?? mod.stat_max ?? 100
+                                      })()}
+                                      value={priceModMinValues[`suffix-${idx}`] ?? 0}
+                                      onChange={(e) => {
+                                        setPriceModMinValues(prev => ({
+                                          ...prev,
+                                          [`suffix-${idx}`]: parseInt(e.target.value)
+                                        }))
+                                      }}
+                                      className="min-value-slider"
+                                    />
+                                    <span className="slider-value">{priceModMinValues[`suffix-${idx}`] ?? 0}</span>
+                                  </div>
+                                )}
                                 <button
                                   className="mod-remove-btn"
                                   onClick={(e) => {
@@ -4478,42 +4712,7 @@ function GridCraftingSimulator() {
                               className="item-preview-tooltip"
                               style={{ display: 'none' }}
                             >
-                              <div className="poe2-frame rarity-rare">
-                                <div className="poe2-frame-header">
-                                  <div className="poe2-frame-header-content">
-                                    <h2 className="poe2-frame-name rarity-rare">{listing.item_name || 'Rare Item'}</h2>
-                                    <div className="poe2-frame-base">{listing.item_base}</div>
-                                  </div>
-                                </div>
-                                <div className="poe2-frame-content">
-                                  <div className="poe2-item-properties">
-                                    <div className="poe2-property-line">
-                                      <span className="poe2-property-name">Item Level:</span>
-                                      <span className="poe2-property-value">{listing.item_level}</span>
-                                    </div>
-                                  </div>
-                                  {listing.implicit_mods && listing.implicit_mods.length > 0 && (
-                                    <>
-                                      <div className="poe2-separator-simple" />
-                                      <div className="poe2-mods-section">
-                                        {listing.implicit_mods.map((mod, i) => (
-                                          <div key={i} className="poe2-mod-line implicit">{mod}</div>
-                                        ))}
-                                      </div>
-                                    </>
-                                  )}
-                                  {listing.explicit_mods.length > 0 && (
-                                    <>
-                                      <div className="poe2-separator-simple" />
-                                      <div className="poe2-mods-section">
-                                        {listing.explicit_mods.map((mod, i) => (
-                                          <div key={i} className="poe2-mod-line explicit">{mod}</div>
-                                        ))}
-                                      </div>
-                                    </>
-                                  )}
-                                </div>
-                              </div>
+                              <PoE2TradeListingPreview listing={listing} />
                             </div>
                           </td>
                           <td className="listing-price-cell">

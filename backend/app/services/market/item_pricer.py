@@ -29,6 +29,24 @@ class PriceListing:
     account_name: str
     indexed_time: Optional[str] = None
 
+    # Equipment stats
+    armour: Optional[int] = None
+    evasion: Optional[int] = None
+    energy_shield: Optional[int] = None
+    quality: Optional[int] = None
+
+    # Prefix/suffix split with tier info
+    prefix_mods: Optional[List[Dict[str, Any]]] = None
+    suffix_mods: Optional[List[Dict[str, Any]]] = None
+
+    # Rune mods
+    rune_mods: Optional[List[str]] = None
+    socketed_rune_name: Optional[str] = None
+
+    # Flags
+    is_corrupted: bool = False
+    is_desecrated: bool = False
+
 logger = get_logger(__name__)
 
 # Cache for mod data lookups
@@ -135,6 +153,8 @@ class ItemPricer:
         league: Optional[str] = None,
         equipment_filters: Optional[Dict[str, float]] = None,
         equipment_enabled: Optional[Dict[str, bool]] = None,
+        rarity_enabled: Optional[bool] = True,
+        mod_min_values: Optional[Dict[str, float]] = None,
     ) -> Optional[PriceEstimate]:
         """
         Estimate the price of an item.
@@ -144,6 +164,8 @@ class ItemPricer:
             league: League to search in
             equipment_filters: Custom min values for equipment stats
             equipment_enabled: Which equipment filters are enabled
+            rarity_enabled: Whether to filter by item rarity
+            mod_min_values: Custom min values for mods by string index (0-based, prefixes first then suffixes)
 
         Returns:
             PriceEstimate or None if unable to price
@@ -162,7 +184,7 @@ class ItemPricer:
 
         # Try progressively relaxed searches
         for strictness in [0.9, 0.8, 0.7, 0.5]:
-            query = self._build_query(item, mod_filters, strictness, equipment_filters, equipment_enabled)
+            query = self._build_query(item, mod_filters, strictness, equipment_filters, equipment_enabled, rarity_enabled, mod_min_values)
             listings, query_id = await self._trade_client.search_and_fetch(query, league, max_results=20)
 
             if len(listings) >= 5:
@@ -170,7 +192,7 @@ class ItemPricer:
                 return await self._calculate_price(listings, mod_filters, strictness, trade_url, item)
 
         # If we still don't have enough results, try one more with very relaxed criteria
-        query = self._build_query(item, mod_filters, 0.3, equipment_filters, equipment_enabled)
+        query = self._build_query(item, mod_filters, 0.3, equipment_filters, equipment_enabled, rarity_enabled, mod_min_values)
         listings, query_id = await self._trade_client.search_and_fetch(query, league, max_results=20)
 
         if listings:
@@ -183,21 +205,28 @@ class ItemPricer:
         """
         Extract mod filters from an item using trade_hash.
 
-        Returns a dict of stat_id -> {value, name, is_pseudo}
+        Returns a dict of stat_id -> {value, name, is_pseudo, mod_index}
+        mod_index is 0-based with prefixes first, then suffixes (implicits not indexed for user control)
         """
         filters: Dict[str, Dict[str, Any]] = {}
         pseudo_totals: Dict[str, float] = {}
+        pseudo_indices: Dict[str, List[int]] = {}  # Track indices that contribute to each pseudo
 
-        # Collect all mods
-        all_mods = (
-            item.prefix_mods +
-            item.suffix_mods +
-            item.implicit_mods
-        )
+        # Process prefix and suffix mods with indices (for user-controlled min values)
+        explicit_mods_with_idx = []
+        for idx, mod in enumerate(item.prefix_mods):
+            explicit_mods_with_idx.append((mod, idx))
+        for idx, mod in enumerate(item.suffix_mods):
+            explicit_mods_with_idx.append((mod, len(item.prefix_mods) + idx))
 
-        logger.info(f"Extracting filters from {len(all_mods)} mods")
+        # Implicit mods don't get indices (not user-controllable)
+        implicit_mods = [(mod, None) for mod in item.implicit_mods]
 
-        for mod in all_mods:
+        all_mods_with_idx = explicit_mods_with_idx + implicit_mods
+
+        logger.info(f"Extracting filters from {len(all_mods_with_idx)} mods")
+
+        for mod, mod_index in all_mods_with_idx:
             # Get the rolled value
             value = self._get_mod_value(mod)
             if value is None or value == 0:
@@ -207,7 +236,11 @@ class ItemPricer:
             if mod.mod_group and mod.mod_group in PSEUDO_MOD_GROUPS:
                 pseudo_id = PSEUDO_MOD_GROUPS[mod.mod_group]
                 pseudo_totals[pseudo_id] = pseudo_totals.get(pseudo_id, 0) + value
-                logger.info(f"Mod '{mod.name}' (group={mod.mod_group}) -> pseudo {pseudo_id} += {value}")
+                if mod_index is not None:
+                    if pseudo_id not in pseudo_indices:
+                        pseudo_indices[pseudo_id] = []
+                    pseudo_indices[pseudo_id].append(mod_index)
+                logger.info(f"Mod '{mod.name}' (group={mod.mod_group}, idx={mod_index}) -> pseudo {pseudo_id} += {value}")
             else:
                 # Try to get trade_hash (from mod or lookup)
                 trade_hash = self._get_trade_hash(mod)
@@ -221,8 +254,9 @@ class ItemPricer:
                             "name": mod.name,
                             "stat_text": mod.stat_text,
                             "is_pseudo": False,
+                            "mod_index": mod_index,
                         }
-                    logger.info(f"Mod '{mod.name}' (hash={trade_hash}) -> {stat_id} = {value}")
+                    logger.info(f"Mod '{mod.name}' (hash={trade_hash}, idx={mod_index}) -> {stat_id} = {value}")
                 else:
                     logger.warning(f"Mod '{mod.name}' (id={mod.mod_id}, group={mod.mod_group}) has no trade_hash, skipping")
 
@@ -232,8 +266,9 @@ class ItemPricer:
                 "value": total,
                 "name": pseudo_id.split(".")[-1],
                 "is_pseudo": True,
+                "mod_indices": pseudo_indices.get(pseudo_id, []),  # All contributing mod indices
             }
-            logger.info(f"Pseudo total: {pseudo_id} = {total}")
+            logger.info(f"Pseudo total: {pseudo_id} = {total} (indices={pseudo_indices.get(pseudo_id, [])})")
 
         logger.info(f"Extracted {len(filters)} filters: {list(filters.keys())}")
         return filters
@@ -284,6 +319,8 @@ class ItemPricer:
         strictness: float = 0.85,
         equipment_filters: Optional[Dict[str, float]] = None,
         equipment_enabled: Optional[Dict[str, bool]] = None,
+        rarity_enabled: Optional[bool] = True,
+        mod_min_values: Optional[Dict[str, float]] = None,
     ) -> Dict[str, Any]:
         """
         Build a trade API query from mod filters.
@@ -294,6 +331,8 @@ class ItemPricer:
             strictness: How strict to be (0.5 = 50% of value, 1.0 = exact)
             equipment_filters: Custom min values for equipment stats
             equipment_enabled: Which equipment filters are enabled
+            mod_min_values: Custom min values for mods by string index
+            rarity_enabled: Whether to filter by item rarity
         """
         filters = []
 
@@ -305,7 +344,23 @@ class ItemPricer:
             if value < 5:
                 continue
 
-            min_value = int(value * strictness)
+            # Check if we have custom min value from user
+            min_value = None
+            if mod_min_values:
+                # For explicit mods, check single mod_index
+                mod_index = filter_info.get("mod_index")
+                if mod_index is not None:
+                    # Keys are strings in the dict
+                    str_idx = str(mod_index)
+                    if str_idx in mod_min_values:
+                        min_value = int(mod_min_values[str_idx])
+                        logger.info(f"Using custom min value for {stat_id} (idx={mod_index}): {min_value}")
+                # For pseudo mods, could sum user values but for now just use strictness
+                # (pseudo mods aggregate multiple mods, so user control is complex)
+
+            # Fall back to strictness-based calculation
+            if min_value is None:
+                min_value = int(value * strictness)
 
             filters.append({
                 "id": stat_id,
@@ -376,15 +431,20 @@ class ItemPricer:
                     "filters": equip_filters
                 }
 
-        # Add rarity filter for rare items
-        if item.rarity == "Rare":
-            if "filters" not in query["query"]:
-                query["query"]["filters"] = {}
-            if "type_filters" not in query["query"]["filters"]:
-                query["query"]["filters"]["type_filters"] = {"filters": {}}
-            query["query"]["filters"]["type_filters"]["filters"]["rarity"] = {
-                "option": "rare"
-            }
+        # Add rarity filter if enabled
+        if rarity_enabled and item.rarity:
+            rarity_option = item.rarity.lower()  # "Rare" -> "rare", "Magic" -> "magic"
+            if rarity_option in ["rare", "magic", "normal", "unique"]:
+                if "filters" not in query["query"]:
+                    query["query"]["filters"] = {}
+                if "type_filters" not in query["query"]["filters"]:
+                    query["query"]["filters"]["type_filters"] = {"filters": {}}
+                query["query"]["filters"]["type_filters"]["filters"]["rarity"] = {
+                    "option": rarity_option
+                }
+                logger.info(f"Rarity filter: {rarity_option}")
+        elif not rarity_enabled:
+            logger.info("Rarity filter disabled by user")
 
         return query
 
@@ -420,6 +480,16 @@ class ItemPricer:
                     implicit_mods=listing.implicit_mods,
                     account_name=listing.account_name,
                     indexed_time=listing.indexed_time,
+                    armour=listing.armour,
+                    evasion=listing.evasion,
+                    energy_shield=listing.energy_shield,
+                    quality=listing.quality,
+                    prefix_mods=listing.prefix_mods,
+                    suffix_mods=listing.suffix_mods,
+                    rune_mods=listing.rune_mods,
+                    socketed_rune_name=listing.socketed_rune_name,
+                    is_corrupted=listing.is_corrupted,
+                    is_desecrated=listing.is_desecrated,
                 ))
 
         if not chaos_prices:

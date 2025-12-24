@@ -16,6 +16,7 @@ class ModType(str, Enum):
     SUFFIX = "suffix"
     IMPLICIT = "implicit"
     DESECRATED = "desecrated"
+    RUNE = "rune"
 
 
 class ModifierValue(BaseModel):
@@ -69,6 +70,16 @@ class UnrevealedModifier(BaseModel):
     has_abyssal_echoes: bool = False  # True if Omen of Abyssal Echoes was active
 
 
+class SocketedRune(BaseModel):
+    """Represents a rune socketed into an item"""
+    name: str  # Display name (e.g., "Greater Iron Rune")
+    base_type: str  # Base type name
+    icon: Optional[str] = None  # URL to rune icon
+    socket_index: int = 0  # Which socket this rune is in (0-indexed)
+    mods: List[str] = Field(default_factory=list)  # Mod texts that apply to this item type
+    bonded_mods: List[str] = Field(default_factory=list)  # Class-specific "Bonded" mods
+
+
 class CraftableItem(BaseModel):
     base_name: str
     base_category: str
@@ -80,6 +91,7 @@ class CraftableItem(BaseModel):
     prefix_mods: List[ItemModifier] = Field(default_factory=list)
     suffix_mods: List[ItemModifier] = Field(default_factory=list)
     unrevealed_mods: List[UnrevealedModifier] = Field(default_factory=list)  # Unrevealed desecrated mods
+    socketed_runes: List[SocketedRune] = Field(default_factory=list)  # Runes socketed into this item
 
     corrupted: bool = False
     base_stats: Dict[str, float] = Field(default_factory=dict)  # Base stats from item base (int or float)

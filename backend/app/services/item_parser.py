@@ -2,7 +2,7 @@ import re
 from typing import List, Optional, Tuple
 
 from app.core.logging import get_logger
-from app.schemas.item import ItemMod, ItemRarity, ItemSocket, ParsedItem
+from app.schemas.item import ItemMod, ItemRarity, ItemSocket, ParsedItem, ParsedRune
 
 logger = get_logger(__name__)
 
@@ -30,6 +30,7 @@ class ItemParser:
         requirements = {}
         implicits: List[ItemMod] = []
         explicits: List[ItemMod] = []
+        runes: List[ParsedRune] = []
         corrupted = False
 
         implicit_found = False
@@ -54,6 +55,13 @@ class ItemParser:
 
             if "Corrupted" in section:
                 corrupted = True
+
+            # Check for rune mods - lines ending with "(rune)" or "(bonded)"
+            if any(line.endswith("(rune)") or line.endswith("(bonded)") for line in lines):
+                parsed_rune = ItemParser._parse_rune_section(lines)
+                if parsed_rune:
+                    runes.append(parsed_rune)
+                continue  # Skip further mod processing for this section
 
             # Check for mods in any section after the first (i > 0)
             # This allows mods to appear in section 1 (for items without properties)
@@ -93,6 +101,7 @@ class ItemParser:
             requirements=requirements,
             implicits=implicits,
             explicits=explicits,
+            runes=runes,
             corrupted=corrupted,
             raw_text=item_text,
         )
@@ -283,3 +292,37 @@ class ItemParser:
                 i += 1
 
         return mods
+
+    @staticmethod
+    def _parse_rune_section(lines: List[str]) -> Optional[ParsedRune]:
+        """Parse a section containing rune mods (lines ending with (rune) or (bonded))"""
+        rune_mods = []
+        bonded_mods = []
+        rune_name = None
+
+        for line in lines:
+            line = line.strip()
+            if not line:
+                continue
+
+            # Check for rune header format: { Rune "Greater Iron Rune" }
+            rune_header_match = re.match(r'\{\s*Rune\s+"([^"]+)"\s*\}', line)
+            if rune_header_match:
+                rune_name = rune_header_match.group(1)
+                continue
+
+            # Check for rune mod
+            if line.endswith("(rune)"):
+                mod_text = line[:-6].strip()  # Remove " (rune)" suffix
+                rune_mods.append(mod_text)
+            elif line.endswith("(bonded)"):
+                mod_text = line[:-8].strip()  # Remove " (bonded)" suffix
+                bonded_mods.append(mod_text)
+
+        if rune_mods or bonded_mods:
+            return ParsedRune(
+                name=rune_name,
+                mods=rune_mods,
+                bonded_mods=bonded_mods
+            )
+        return None

@@ -252,6 +252,8 @@ class ItemPriceRequest(BaseModel):
     league: Optional[str] = Field(None, description="League name (uses default if not specified)")
     equipment_filters: Optional[Dict[str, float]] = Field(None, description="Custom min values for equipment stats (Armour, Evasion, EnergyShield)")
     equipment_enabled: Optional[Dict[str, bool]] = Field(None, description="Which equipment filters are enabled")
+    rarity_enabled: Optional[bool] = Field(True, description="Whether to filter by item rarity")
+    mod_min_values: Optional[Dict[str, float]] = Field(None, description="Custom min values for mods by index (0-based, prefixes first then suffixes, keys are string indices)")
 
 
 class PriceListingResponse(BaseModel):
@@ -266,6 +268,24 @@ class PriceListingResponse(BaseModel):
     implicit_mods: List[str] = Field(default_factory=list, description="Implicit mods")
     account_name: str = Field(..., description="Seller account name")
     indexed_time: Optional[str] = Field(None, description="When the item was listed (ISO timestamp)")
+
+    # Equipment stats
+    armour: Optional[int] = Field(None, description="Armour value")
+    evasion: Optional[int] = Field(None, description="Evasion rating")
+    energy_shield: Optional[int] = Field(None, description="Energy shield")
+    quality: Optional[int] = Field(None, description="Quality percentage")
+
+    # Prefix/suffix split with tier info
+    prefix_mods: Optional[List[Dict[str, Any]]] = Field(None, description="Prefix mods with tier info")
+    suffix_mods: Optional[List[Dict[str, Any]]] = Field(None, description="Suffix mods with tier info")
+
+    # Rune mods
+    rune_mods: Optional[List[str]] = Field(None, description="Mods from socketed runes")
+    socketed_rune_name: Optional[str] = Field(None, description="Name of socketed rune")
+
+    # Flags
+    is_corrupted: bool = Field(False, description="Whether item is corrupted")
+    is_desecrated: bool = Field(False, description="Whether item is desecrated")
 
 
 class ItemPriceResponse(BaseModel):
@@ -314,7 +334,9 @@ async def estimate_item_price(request: ItemPriceRequest) -> ItemPriceResponse:
             request.item,
             request.league,
             equipment_filters=request.equipment_filters,
-            equipment_enabled=request.equipment_enabled
+            equipment_enabled=request.equipment_enabled,
+            rarity_enabled=request.rarity_enabled,
+            mod_min_values=request.mod_min_values
         )
 
         if estimate is None:
@@ -338,6 +360,16 @@ async def estimate_item_price(request: ItemPriceRequest) -> ItemPriceResponse:
                     implicit_mods=listing.implicit_mods,
                     account_name=listing.account_name,
                     indexed_time=listing.indexed_time,
+                    armour=listing.armour,
+                    evasion=listing.evasion,
+                    energy_shield=listing.energy_shield,
+                    quality=listing.quality,
+                    prefix_mods=listing.prefix_mods,
+                    suffix_mods=listing.suffix_mods,
+                    rune_mods=listing.rune_mods,
+                    socketed_rune_name=listing.socketed_rune_name,
+                    is_corrupted=listing.is_corrupted,
+                    is_desecrated=listing.is_desecrated,
                 ))
 
         return ItemPriceResponse(

@@ -4,7 +4,7 @@ import uuid
 
 from app.core.logging import get_logger
 from app.schemas.item import ParsedItem, ItemMod
-from app.schemas.crafting import CraftableItem, ItemModifier, ModType, ItemRarity, UnrevealedModifier
+from app.schemas.crafting import CraftableItem, ItemModifier, ModType, ItemRarity, UnrevealedModifier, SocketedRune
 from app.schemas.item_bases import get_item_base_by_name, ITEM_BASES, ItemBase
 from app.services.crafting.modifier_pool import ModifierPool
 from app.services.stat_calculator import StatCalculator
@@ -104,6 +104,18 @@ class ItemConverter:
                         "reason": "Could not match modifier in database"
                     })
 
+            # Convert runes
+            socketed_runes = []
+            for idx, parsed_rune in enumerate(parsed_item.runes):
+                socketed_rune = SocketedRune(
+                    name=parsed_rune.name or "Unknown Rune",
+                    base_type=parsed_rune.name or "Unknown Rune",
+                    socket_index=idx,
+                    mods=parsed_rune.mods,
+                    bonded_mods=parsed_rune.bonded_mods
+                )
+                socketed_runes.append(socketed_rune)
+
             item = CraftableItem(
                 base_name=base.name,
                 base_category=base.category,
@@ -114,6 +126,7 @@ class ItemConverter:
                 prefix_mods=prefix_mods,
                 suffix_mods=suffix_mods,
                 unrevealed_mods=self._pending_unrevealed_mods,
+                socketed_runes=socketed_runes,
                 corrupted=parsed_item.corrupted,
             )
 
