@@ -612,6 +612,33 @@
   background: rgba(10, 10, 10, 0.5);
 }
 
+/* Essence guarantee indicator for mod tiers */
+.tier-detail.has-essence-guarantee {
+  border-left-color: #9c4dd4;
+  background: rgba(156, 77, 212, 0.15);
+}
+
+.tier-detail.has-essence-guarantee:hover {
+  border-left-color: #b366e0;
+  background: rgba(156, 77, 212, 0.25);
+}
+
+.essence-guarantee-indicator {
+  color: #b366e0;
+  font-size: 0.7rem;
+  margin-right: 0.25rem;
+  cursor: help;
+}
+
+/* Essence guarantee indicator on mod group header */
+.essence-guarantee-group-indicator {
+  color: #9c4dd4;
+  font-size: 0.65rem;
+  margin-right: 0.3rem;
+  cursor: help;
+  opacity: 0.85;
+}
+
 .tier-label {
   background: #444;
   color: #fff;

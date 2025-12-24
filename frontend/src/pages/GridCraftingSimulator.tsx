@@ -541,7 +541,13 @@ function GridCraftingSimulator() {
     essence_suffixes: ItemModifier[]
     desecrated_prefixes: ItemModifier[]
     desecrated_suffixes: ItemModifier[]
-  }>({ prefixes: [], suffixes: [], essence_prefixes: [], essence_suffixes: [], desecrated_prefixes: [], desecrated_suffixes: [] })
+    essence_guarantees: Record<string, Array<{
+      essence_name: string
+      essence_tier: string
+      item_type: string
+      applicable_items: string[]
+    }>>
+  }>({ prefixes: [], suffixes: [], essence_prefixes: [], essence_suffixes: [], desecrated_prefixes: [], desecrated_suffixes: [], essence_guarantees: {} })
 
   // Calculate total weights for probability display
   const totalWeights = useMemo(() => {
@@ -1447,6 +1453,7 @@ function GridCraftingSimulator() {
       essence_suffixes: annotate(mods.essence_suffixes),
       desecrated_prefixes: annotate(mods.desecrated_prefixes),
       desecrated_suffixes: annotate(mods.desecrated_suffixes),
+      essence_guarantees: mods.essence_guarantees || {},
     }
   }
 
@@ -2491,6 +2498,12 @@ function GridCraftingSimulator() {
                     const worstTier = Math.max(...groupMods.map(m => m.tier))
                     const tierRangeText = bestAvailableTier ? `T${bestAvailableTier}-T${worstTier}` : `T1-T${worstTier}`
 
+                    // Check if any tier in this group has essence guarantees
+                    const essenceGuaranteeTiers = groupMods.filter(m =>
+                      m.mod_id && availableMods.essence_guarantees[m.mod_id]
+                    )
+                    const hasAnyEssenceGuarantee = essenceGuaranteeTiers.length > 0
+
                     return (
                       <div key={groupKey} className={`pool-mod-group ${isGroupGreyedOut ? 'omen-incompatible' : ''}`}>
                         <div
@@ -2539,6 +2552,14 @@ function GridCraftingSimulator() {
                                 title={`${unavailableCount} unavailable tier${unavailableCount > 1 ? 's' : ''}`}
                               >
                                 ⚠
+                              </span>
+                            )}
+                            {hasAnyEssenceGuarantee && (
+                              <span
+                                className="essence-guarantee-group-indicator"
+                                title={`${essenceGuaranteeTiers.length} tier${essenceGuaranteeTiers.length > 1 ? 's' : ''} can be guaranteed by essence`}
+                              >
+                                ◆
                               </span>
                             )}
                             <span className="group-tier-range">{tierRangeText}</span>
@@ -2619,12 +2640,24 @@ function GridCraftingSimulator() {
                                 ? ((mod.weight / totalWeights.prefix) * 100).toFixed(2)
                                 : null
 
+                              // Check if this mod has essence guarantees
+                              const essenceGuarantees = mod.mod_id ? availableMods.essence_guarantees[mod.mod_id] : null
+                              const hasEssenceGuarantee = essenceGuarantees && essenceGuarantees.length > 0
+
                               return (
                                 <div
                                   key={mod.tier}
-                                  className={`tier-detail ${mod.required_ilvl && mod.required_ilvl > item.item_level ? 'unavailable' : ''}`}
+                                  className={`tier-detail ${mod.required_ilvl && mod.required_ilvl > item.item_level ? 'unavailable' : ''} ${hasEssenceGuarantee ? 'has-essence-guarantee' : ''}`}
                                 >
                                   <span className="tier-label">T{mod.tier}</span>
+                                  {hasEssenceGuarantee && (
+                                    <span
+                                      className="essence-guarantee-indicator"
+                                      title={`Guaranteed by: ${[...new Set(essenceGuarantees.map(g => g.essence_name))].join(', ')}`}
+                                    >
+                                      ◆
+                                    </span>
+                                  )}
                                   <span className="tier-stat">{formattedText}</span>
                                   <span className="tier-ilvl">ilvl {mod.required_ilvl || 1}</span>
                                   {tierPct && (
@@ -2862,6 +2895,12 @@ function GridCraftingSimulator() {
                     const worstTier = Math.max(...groupMods.map(m => m.tier))
                     const tierRangeText = bestAvailableTier ? `T${bestAvailableTier}-T${worstTier}` : `T1-T${worstTier}`
 
+                    // Check if any tier in this group has essence guarantees
+                    const essenceGuaranteeTiers = groupMods.filter(m =>
+                      m.mod_id && availableMods.essence_guarantees[m.mod_id]
+                    )
+                    const hasAnyEssenceGuarantee = essenceGuaranteeTiers.length > 0
+
                     return (
                       <div key={groupKey} className={`pool-mod-group ${isGroupGreyedOut ? 'omen-incompatible' : ''}`}>
                         <div
@@ -2910,6 +2949,14 @@ function GridCraftingSimulator() {
                                 title={`${unavailableCount} unavailable tier${unavailableCount > 1 ? 's' : ''}`}
                               >
                                 ⚠
+                              </span>
+                            )}
+                            {hasAnyEssenceGuarantee && (
+                              <span
+                                className="essence-guarantee-group-indicator"
+                                title={`${essenceGuaranteeTiers.length} tier${essenceGuaranteeTiers.length > 1 ? 's' : ''} can be guaranteed by essence`}
+                              >
+                                ◆
                               </span>
                             )}
                             <span className="group-tier-range">{tierRangeText}</span>
@@ -2990,12 +3037,24 @@ function GridCraftingSimulator() {
                                 ? ((mod.weight / totalWeights.suffix) * 100).toFixed(2)
                                 : null
 
+                              // Check if this mod has essence guarantees
+                              const essenceGuarantees = mod.mod_id ? availableMods.essence_guarantees[mod.mod_id] : null
+                              const hasEssenceGuarantee = essenceGuarantees && essenceGuarantees.length > 0
+
                               return (
                                 <div
                                   key={mod.tier}
-                                  className={`tier-detail ${mod.required_ilvl && mod.required_ilvl > item.item_level ? 'unavailable' : ''}`}
+                                  className={`tier-detail ${mod.required_ilvl && mod.required_ilvl > item.item_level ? 'unavailable' : ''} ${hasEssenceGuarantee ? 'has-essence-guarantee' : ''}`}
                                 >
                                   <span className="tier-label">T{mod.tier}</span>
+                                  {hasEssenceGuarantee && (
+                                    <span
+                                      className="essence-guarantee-indicator"
+                                      title={`Guaranteed by: ${[...new Set(essenceGuarantees.map(g => g.essence_name))].join(', ')}`}
+                                    >
+                                      ◆
+                                    </span>
+                                  )}
                                   <span className="tier-stat">{formattedText}</span>
                                   <span className="tier-ilvl">ilvl {mod.required_ilvl || 1}</span>
                                   {tierPct && (

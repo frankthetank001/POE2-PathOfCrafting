@@ -414,6 +414,21 @@ async def get_available_mods(item: CraftableItem) -> dict:
         essence_suffixes = [mod for mod in available_suffixes if "essence_only" in mod.tags]
         desecrated_suffixes = [mod for mod in available_suffixes if "desecrated_only" in mod.tags and "utzaal" not in mod.tags]
 
+        # Get essence guarantees for regular mods (mod_id -> essence info)
+        from app.services.crafting.modifier_loader import ModifierLoader
+        all_essence_guarantees = ModifierLoader.get_essence_guarantees()
+
+        # Filter to only include guarantees for mods in this response
+        all_mod_ids = set()
+        for mod in regular_prefixes + regular_suffixes:
+            if mod.mod_id:
+                all_mod_ids.add(mod.mod_id)
+
+        relevant_guarantees = {
+            mod_id: info for mod_id, info in all_essence_guarantees.items()
+            if mod_id in all_mod_ids
+        }
+
         return {
             "prefixes": [filter_mod_tags(mod) for mod in regular_prefixes],
             "suffixes": [filter_mod_tags(mod) for mod in regular_suffixes],
@@ -421,6 +436,7 @@ async def get_available_mods(item: CraftableItem) -> dict:
             "essence_suffixes": [filter_mod_tags(mod) for mod in essence_suffixes],
             "desecrated_prefixes": [filter_mod_tags(mod) for mod in desecrated_prefixes],
             "desecrated_suffixes": [filter_mod_tags(mod) for mod in desecrated_suffixes],
+            "essence_guarantees": relevant_guarantees,  # Map of mod_id -> list of essence guarantee info
             "total_prefixes": len(regular_prefixes),
             "total_suffixes": len(regular_suffixes),
             "total_essence_prefixes": len(essence_prefixes),
@@ -545,14 +561,63 @@ async def get_currency_tooltip(currency_name: str) -> dict:
             elif essence_config.mechanic == "remove_add_rare":
                 description_parts.append("Removes random modifier and augments Rare with guaranteed modifier")
 
-            # Add effect details
-            mechanics_parts = []
+            # Add effect details - group by effect text and combine item types
+            effect_groups = {}  # effect_text -> list of item_types
             for effect in essence_config.item_effects:
                 if effect.value_min is not None and effect.value_max is not None:
                     value_range = f"({int(effect.value_min)}-{int(effect.value_max)})"
-                    mechanics_parts.append(f"• {effect.item_type}: {effect.effect_text.replace('()', value_range)}")
+                    effect_text = effect.effect_text.replace('()', value_range)
                 else:
-                    mechanics_parts.append(f"• {effect.item_type}: {effect.effect_text}")
+                    effect_text = effect.effect_text
+
+                if effect_text not in effect_groups:
+                    effect_groups[effect_text] = []
+                effect_groups[effect_text].append(effect.item_type)
+
+            # Map individual item types to categories
+            def categorize_items(item_types: list) -> str:
+                one_hand = {"One Hand Sword", "One Hand Axe", "One Hand Mace", "Dagger", "Claw", "Flail", "Spear", "Sceptre", "Wand"}
+                two_hand = {"Two Hand Sword", "Two Hand Axe", "Two Hand Mace", "Warstaff", "Staff", "Talisman", "Bow", "Crossbow"}
+                armour = {"Body Armour", "Helmet", "Gloves", "Boots", "Shield", "Buckler"}
+                jewellery = {"Ring", "Amulet", "Belt"}
+                offhand = {"Quiver", "Focus"}
+
+                item_set = set(item_types)
+                categories = []
+
+                # Check overlap with each category
+                one_hand_overlap = item_set & one_hand
+                two_hand_overlap = item_set & two_hand
+                armour_overlap = item_set & armour
+                jewellery_overlap = item_set & jewellery
+                offhand_overlap = item_set & offhand
+
+                # Use category name if majority of that category is present
+                if len(one_hand_overlap) >= 5:
+                    categories.append("1H Weapons")
+                    item_set -= one_hand
+                if len(two_hand_overlap) >= 5:
+                    categories.append("2H Weapons")
+                    item_set -= two_hand
+                if len(armour_overlap) >= 4:
+                    categories.append("Armour")
+                    item_set -= armour
+                if len(jewellery_overlap) >= 2:
+                    categories.append("Jewellery")
+                    item_set -= jewellery
+                if len(offhand_overlap) >= 1:
+                    categories.append("Offhand")
+                    item_set -= offhand
+
+                # Add remaining individual items
+                categories.extend(sorted(item_set))
+
+                return ", ".join(categories) if categories else ", ".join(item_types)
+
+            mechanics_parts = []
+            for effect_text, item_types in effect_groups.items():
+                category_str = categorize_items(item_types)
+                mechanics_parts.append(f"• {category_str}: {effect_text}")
 
             return {
                 "name": currency_name,

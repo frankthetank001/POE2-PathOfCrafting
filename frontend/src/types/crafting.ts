@@ -19,6 +19,7 @@ export interface StatRange {
 
 export interface ItemModifier {
   id?: number
+  mod_id?: string  // String ID from pob-data (e.g., "LocalAddedPhysicalDamageTwoHand5")
   name: string
   mod_type: ModType
   tier: number

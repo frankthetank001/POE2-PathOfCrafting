@@ -110,6 +110,12 @@ export const craftingApi = {
     essence_suffixes: ItemModifier[]
     desecrated_prefixes: ItemModifier[]
     desecrated_suffixes: ItemModifier[]
+    essence_guarantees: Record<string, Array<{
+      essence_name: string
+      essence_tier: string
+      item_type: string
+      applicable_items: string[]
+    }>>
     total_prefixes: number
     total_suffixes: number
     total_essence_prefixes: number

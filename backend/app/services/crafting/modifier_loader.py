@@ -16,6 +16,7 @@ class ModifierLoader:
     """POB-data based modifier loader with caching."""
 
     _modifiers: List[ItemModifier] = []
+    _essence_guarantees: dict = {}  # mod_id -> list of essence guarantee info
     _loaded = False
 
     @classmethod
@@ -60,6 +61,7 @@ class ModifierLoader:
         """Force reload modifiers from pob-data"""
         cls._loaded = False
         cls._modifiers = []
+        cls._essence_guarantees = {}
 
         # Also reload the pob-data loader
         from app.services.crafting.pob_data_loader import get_pob_data_loader
@@ -67,6 +69,22 @@ class ModifierLoader:
         loader.reload()
 
         return cls.load_modifiers()
+
+    @classmethod
+    def get_essence_guarantees(cls) -> dict:
+        """Get essence guarantee info for all mods.
+
+        Returns a dict of mod_id -> list of essence guarantee info:
+        {
+            "LocalAddedPhysicalDamageTwoHand5": [
+                {"essence_name": "Essence of Abrasion", "essence_tier": "normal", "item_type": "Talisman", ...},
+                ...
+            ]
+        }
+        """
+        if not cls._loaded:
+            cls.load_modifiers()
+        return cls._essence_guarantees
 
     @classmethod
     def get_modifiers_by_group(cls, mod_group: str) -> List[ItemModifier]:
@@ -88,144 +106,110 @@ class ModifierLoader:
 
     @classmethod
     def _add_essence_only_modifiers(cls, loader) -> None:
-        """Add Perfect/Corrupted essence-only modifiers to the pool.
+        """Add essence-only modifiers and mark regular mods with essence guarantees.
 
-        Uses mod_id to look up the actual mod data from pob-data.
-        Only creates essence-specific mods for effects that don't have a
-        matching regular modifier with weight > 0.
+        Two behaviors:
+        1. For effects with matching regular mods (by mod_id): record essence guarantee
+        2. For truly unique effects (mod has weight 0 or doesn't exist): create essence-only mod
         """
-        logger.info("Adding essence-only modifiers...")
+        logger.info("Adding essence-only modifiers and marking essence guarantees...")
 
         essences = loader.get_essences()
 
-        for essence in essences.values():
-            # Only process perfect and corrupted essences
-            if essence.essence_tier not in ["perfect", "corrupted"]:
-                continue
+        # Build a mapping of mod_id -> essence info for marking regular mods
+        essence_guarantees = {}  # mod_id -> list of (essence_name, essence_tier, item_types)
 
+        for essence in essences.values():
             for effect in essence.item_effects:
-                # Map item types to applicable items list
                 applicable_items = cls._map_essence_item_type_to_categories(effect.item_type)
 
-                # Try to find a matching regular modifier first (one with weight > 0)
-                matched_mod = cls._find_matching_modifier_for_essence(effect, applicable_items)
-
-                if matched_mod:
-                    # Matching regular modifier found - don't add to pool
-                    continue
-
-                # No matching modifier with weight > 0 - create essence-specific modifier
-                # Try to get mod data from the mod_id if available
-                base_mod = None
+                # Check if this mod_id exists and has weight > 0 (can roll naturally)
+                is_regular_mod = False
                 if effect.mod_id:
-                    base_mod = loader.get_modifier_by_id(effect.mod_id)
+                    # Find the mod in our loaded modifiers by mod_id
+                    matching_mod = None
+                    for mod in cls._modifiers:
+                        if mod.mod_id == effect.mod_id:
+                            matching_mod = mod
+                            break
 
-                if base_mod:
-                    # Use the actual mod data
-                    essence_mod = ItemModifier(
-                        name=base_mod.name,
-                        mod_type=base_mod.mod_type,
-                        tier=1,
-                        stat_text=effect.effect_text,
-                        stat_ranges=base_mod.stat_ranges,
-                        stat_min=effect.value_min,
-                        stat_max=effect.value_max,
-                        current_value=None,
-                        required_ilvl=base_mod.required_ilvl,
-                        mod_group=base_mod.mod_group,
-                        applicable_items=applicable_items,
-                        tags=["essence_only", f"essence_{essence.essence_type}"],
-                        is_exclusive=True,
-                        is_essence_only=True
-                    )
+                    if matching_mod:
+                        # Check if mod has weight > 0 for any item type
+                        if matching_mod.weight_conditions:
+                            weight_vals = matching_mod.weight_conditions.get("weightVal", [])
+                            if any(w > 0 for w in weight_vals):
+                                is_regular_mod = True
+                        else:
+                            # No weight conditions means it can roll normally
+                            is_regular_mod = True
+
+                if is_regular_mod:
+                    # Regular mod exists - record essence guarantee info
+                    if effect.mod_id not in essence_guarantees:
+                        essence_guarantees[effect.mod_id] = []
+                    essence_guarantees[effect.mod_id].append({
+                        "essence_name": essence.name,
+                        "essence_tier": essence.essence_tier,
+                        "item_type": effect.item_type,
+                        "applicable_items": applicable_items
+                    })
                 else:
-                    # Fallback: create synthetic modifier
-                    essence_name_parts = essence.name.split()
-                    essence_type = essence_name_parts[-1] if essence_name_parts else "Unknown"
-                    tier_name = essence_name_parts[0] if essence_name_parts else "Unknown"
+                    # No matching regular mod or weight is 0 - create essence-only mod
+                    base_mod = None
+                    if effect.mod_id:
+                        base_mod = loader.get_modifier_by_id(effect.mod_id)
 
-                    mod_name = f"{tier_name} {essence_type} Modifier"
-                    mod_type = ModType.PREFIX if effect.modifier_type == "prefix" else ModType.SUFFIX
-                    mod_group = cls._get_essence_mod_group(essence_type.lower())
+                    if base_mod:
+                        essence_mod = ItemModifier(
+                            mod_id=effect.mod_id,
+                            name=base_mod.name,
+                            mod_type=base_mod.mod_type,
+                            tier=1,
+                            stat_text=effect.effect_text,
+                            stat_ranges=base_mod.stat_ranges,
+                            stat_min=effect.value_min,
+                            stat_max=effect.value_max,
+                            current_value=None,
+                            required_ilvl=base_mod.required_ilvl,
+                            mod_group=base_mod.mod_group,
+                            applicable_items=applicable_items,
+                            tags=["essence_only", f"essence_{essence.essence_type}"],
+                            is_exclusive=True,
+                            is_essence_only=True
+                        )
+                    else:
+                        mod_type = ModType.PREFIX if effect.modifier_type == "prefix" else ModType.SUFFIX
+                        mod_group = cls._get_essence_mod_group(essence.essence_type)
 
-                    stat_ranges = []
-                    if effect.value_min is not None and effect.value_max is not None:
-                        stat_ranges = [StatRange(min=effect.value_min, max=effect.value_max)]
+                        stat_ranges = []
+                        if effect.value_min is not None and effect.value_max is not None:
+                            stat_ranges = [StatRange(min=effect.value_min, max=effect.value_max)]
 
-                    essence_mod = ItemModifier(
-                        name=mod_name,
-                        mod_type=mod_type,
-                        tier=1,
-                        stat_text=effect.effect_text,
-                        stat_ranges=stat_ranges,
-                        stat_min=effect.value_min,
-                        stat_max=effect.value_max,
-                        current_value=None,
-                        required_ilvl=0,
-                        mod_group=mod_group,
-                        applicable_items=applicable_items,
-                        tags=["essence_only", f"essence_{essence_type.lower()}", tier_name.lower()],
-                        is_exclusive=True,
-                        is_essence_only=True
-                    )
+                        essence_mod = ItemModifier(
+                            mod_id=effect.mod_id,
+                            name=f"Essence of {essence.essence_type.title()}",
+                            mod_type=mod_type,
+                            tier=1,
+                            stat_text=effect.effect_text,
+                            stat_ranges=stat_ranges,
+                            stat_min=effect.value_min,
+                            stat_max=effect.value_max,
+                            current_value=None,
+                            required_ilvl=0,
+                            mod_group=mod_group,
+                            applicable_items=applicable_items,
+                            tags=["essence_only", f"essence_{essence.essence_type}"],
+                            is_exclusive=True,
+                            is_essence_only=True
+                        )
 
-                cls._modifiers.append(essence_mod)
+                    cls._modifiers.append(essence_mod)
+
+        # Store essence guarantees for API to use when returning mods
+        cls._essence_guarantees = essence_guarantees
 
         essence_count = len([m for m in cls._modifiers if "essence_only" in m.tags])
-        logger.info(f"Added {essence_count} essence-only modifiers")
-
-    @classmethod
-    def _find_matching_modifier_for_essence(
-        cls,
-        effect: EssenceItemEffect,
-        applicable_items: List[str]
-    ) -> Optional[ItemModifier]:
-        """Try to find an existing modifier that matches the essence effect.
-
-        Only matches mods that can actually roll on items (have weight > 0).
-        Mods with weight 0 for all items are essence-only and need separate handling.
-        """
-        import re
-
-        # Normalize the effect text to match mod templates (replace specific values with {})
-        # First replace (min-max) patterns with {}, then replace remaining individual numbers
-        normalized_effect = re.sub(r'\(\d+(\.\d+)?-\d+(\.\d+)?\)', '{}', effect.effect_text)
-        normalized_effect = re.sub(r'\d+(\.\d+)?', '{}', normalized_effect)
-
-        # Look for stat_text match with matching values in already-loaded modifiers
-        for mod in cls._modifiers:
-            # Skip mods that have weight 0 for all items (essence-only mods)
-            # These mods can't naturally roll, so we need to create essence-specific versions
-            if mod.weight_conditions:
-                weight_vals = mod.weight_conditions.get("weightVal", [])
-                # If all weights are 0, this is an essence-only mod
-                if all(w == 0 for w in weight_vals):
-                    continue
-
-            # Check if any of the applicable items overlap
-            # Empty applicable_items means it applies to all items (treat as match)
-            if mod.applicable_items and not any(item in mod.applicable_items for item in applicable_items):
-                continue
-
-            # Check if stat_text matches (after normalization)
-            if mod.stat_text == normalized_effect or mod.stat_text == effect.effect_text:
-                # Check if the value ranges match
-                if effect.value_min is not None and effect.value_max is not None:
-                    # For modifiers with multiple stat_ranges (like "X to Y" patterns),
-                    # check if the first range's min and last range's max match the effect values
-                    if mod.stat_ranges and len(mod.stat_ranges) > 0:
-                        first_min = mod.stat_ranges[0].min
-                        last_max = mod.stat_ranges[-1].max
-                        if first_min == effect.value_min and last_max == effect.value_max:
-                            return mod
-                    # Fallback to simple stat_min/stat_max comparison for single-value mods
-                    elif mod.stat_min == effect.value_min and mod.stat_max == effect.value_max:
-                        return mod
-                else:
-                    # No value specified, just match by stat_text
-                    return mod
-
-        return None
+        logger.info(f"Added {essence_count} essence-only modifiers, {len(essence_guarantees)} mods have essence guarantees")
 
     @classmethod
     def _map_essence_item_type_to_categories(cls, item_type: str) -> List[str]:
@@ -266,7 +250,7 @@ class ModifierLoader:
             "Two Hand Mace": ["mace", "two_hand_weapon"],
             "Warstaff": ["staff", "two_hand_weapon"],
             "Staff": ["staff", "two_hand_weapon"],
-            "Talisman": ["talisman"],
+            "Talisman": ["talisman", "two_hand_weapon"],
 
             # Weapons - Ranged
             "Bow": ["bow", "two_hand_weapon"],

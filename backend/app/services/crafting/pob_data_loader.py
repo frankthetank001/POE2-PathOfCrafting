@@ -469,7 +469,15 @@ class POBDataLoader:
             else:
                 mod_type = ModType.PREFIX
 
-            stat_text = mod_info.get("1", "")
+            # Combine all stat lines (hybrid mods have multiple: "1", "2", "3", etc.)
+            stat_lines = []
+            for i in range(1, 10):  # Support up to 9 stats
+                stat = mod_info.get(str(i))
+                if stat:
+                    stat_lines.append(stat)
+                else:
+                    break
+            stat_text = "\n".join(stat_lines) if stat_lines else ""
             stat_ranges = self._parse_stat_ranges(stat_text)
 
             weight_key = mod_info.get("weightKey", [])
@@ -488,6 +496,7 @@ class POBDataLoader:
             stat_max = stat_ranges[0].max if stat_ranges else None
 
             return ItemModifier(
+                mod_id=mod_id,
                 name=mod_info.get("affix", mod_id),
                 mod_type=mod_type,
                 tier=tier,

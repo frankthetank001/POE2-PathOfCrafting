@@ -32,6 +32,7 @@ class StatRange(BaseModel):
 
 class ItemModifier(BaseModel):
     id: Optional[int] = None
+    mod_id: Optional[str] = None  # String ID from pob-data (e.g., "LocalAddedPhysicalDamageTwoHand5")
     name: str
     mod_type: ModType
     tier: int
