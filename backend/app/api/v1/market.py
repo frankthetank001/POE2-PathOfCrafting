@@ -253,6 +253,7 @@ class ItemPriceRequest(BaseModel):
     equipment_filters: Optional[Dict[str, float]] = Field(None, description="Custom min values for equipment stats (Armour, Evasion, EnergyShield)")
     equipment_enabled: Optional[Dict[str, bool]] = Field(None, description="Which equipment filters are enabled")
     rarity_enabled: Optional[bool] = Field(True, description="Whether to filter by item rarity")
+    ilvl_enabled: Optional[bool] = Field(False, description="Whether to filter by item level (min ilvl)")
     mod_min_values: Optional[Dict[str, float]] = Field(None, description="Custom min values for mods by index (0-based, prefixes first then suffixes, keys are string indices)")
 
 
@@ -336,6 +337,7 @@ async def estimate_item_price(request: ItemPriceRequest) -> ItemPriceResponse:
             equipment_filters=request.equipment_filters,
             equipment_enabled=request.equipment_enabled,
             rarity_enabled=request.rarity_enabled,
+            ilvl_enabled=request.ilvl_enabled,
             mod_min_values=request.mod_min_values
         )
 

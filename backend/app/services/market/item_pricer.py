@@ -11,6 +11,7 @@ from statistics import median, mean
 
 from app.core.logging import get_logger
 from app.schemas.crafting import CraftableItem, ItemModifier
+from app.schemas.item_bases import get_item_base_by_name
 from app.services.market.trade_client import TradeAPIClient, TradeListing, get_trade_client
 from app.services.market.service import get_market_service
 
@@ -56,12 +57,14 @@ _mod_data_cache: dict = {}
 # Mod groups that should use pseudo stats instead of explicit
 # These are stats where you typically want the total across all mods
 PSEUDO_MOD_GROUPS = {
-    # Resistances - use total elemental/fire/cold/lightning/chaos
-    "FireResistance": "pseudo.pseudo_total_fire_resistance",
-    "ColdResistance": "pseudo.pseudo_total_cold_resistance",
-    "LightningResistance": "pseudo.pseudo_total_lightning_resistance",
-    "ChaosResistance": "pseudo.pseudo_total_chaos_resistance",
+    # Elemental Resistances - combine fire/cold/lightning into total elemental resistance
+    # This searches for "+#% total Elemental Resistance" instead of individual elements
+    "FireResistance": "pseudo.pseudo_total_elemental_resistance",
+    "ColdResistance": "pseudo.pseudo_total_elemental_resistance",
+    "LightningResistance": "pseudo.pseudo_total_elemental_resistance",
     "AllResistances": "pseudo.pseudo_total_elemental_resistance",
+    # Chaos resistance is NOT elemental, so it stays separate
+    "ChaosResistance": "pseudo.pseudo_total_chaos_resistance",
     # Life - flat life goes to pseudo total
     "IncreasedLife": "pseudo.pseudo_total_life",
     # Mana - flat mana goes to pseudo total
@@ -87,6 +90,7 @@ CATEGORY_TO_TRADE = {
     "gloves": "armour.gloves",
     "helmet": "armour.helmet",
     "body_armour": "armour.chest",
+    "body": "armour.chest",  # Alias for body_armour
     "shield": "armour.shield",
     "ring": "accessory.ring",
     "amulet": "accessory.amulet",
@@ -154,6 +158,7 @@ class ItemPricer:
         equipment_filters: Optional[Dict[str, float]] = None,
         equipment_enabled: Optional[Dict[str, bool]] = None,
         rarity_enabled: Optional[bool] = True,
+        ilvl_enabled: Optional[bool] = False,
         mod_min_values: Optional[Dict[str, float]] = None,
     ) -> Optional[PriceEstimate]:
         """
@@ -165,6 +170,7 @@ class ItemPricer:
             equipment_filters: Custom min values for equipment stats
             equipment_enabled: Which equipment filters are enabled
             rarity_enabled: Whether to filter by item rarity
+            ilvl_enabled: Whether to filter by item level (min ilvl)
             mod_min_values: Custom min values for mods by string index (0-based, prefixes first then suffixes)
 
         Returns:
@@ -184,7 +190,7 @@ class ItemPricer:
 
         # Try progressively relaxed searches
         for strictness in [0.9, 0.8, 0.7, 0.5]:
-            query = self._build_query(item, mod_filters, strictness, equipment_filters, equipment_enabled, rarity_enabled, mod_min_values)
+            query = self._build_query(item, mod_filters, strictness, equipment_filters, equipment_enabled, rarity_enabled, ilvl_enabled, mod_min_values)
             listings, query_id = await self._trade_client.search_and_fetch(query, league, max_results=20)
 
             if len(listings) >= 5:
@@ -192,7 +198,7 @@ class ItemPricer:
                 return await self._calculate_price(listings, mod_filters, strictness, trade_url, item)
 
         # If we still don't have enough results, try one more with very relaxed criteria
-        query = self._build_query(item, mod_filters, 0.3, equipment_filters, equipment_enabled, rarity_enabled, mod_min_values)
+        query = self._build_query(item, mod_filters, 0.3, equipment_filters, equipment_enabled, rarity_enabled, ilvl_enabled, mod_min_values)
         listings, query_id = await self._trade_client.search_and_fetch(query, league, max_results=20)
 
         if listings:
@@ -320,6 +326,7 @@ class ItemPricer:
         equipment_filters: Optional[Dict[str, float]] = None,
         equipment_enabled: Optional[Dict[str, bool]] = None,
         rarity_enabled: Optional[bool] = True,
+        ilvl_enabled: Optional[bool] = False,
         mod_min_values: Optional[Dict[str, float]] = None,
     ) -> Dict[str, Any]:
         """
@@ -331,8 +338,9 @@ class ItemPricer:
             strictness: How strict to be (0.5 = 50% of value, 1.0 = exact)
             equipment_filters: Custom min values for equipment stats
             equipment_enabled: Which equipment filters are enabled
-            mod_min_values: Custom min values for mods by string index
             rarity_enabled: Whether to filter by item rarity
+            ilvl_enabled: Whether to filter by item level (min ilvl)
+            mod_min_values: Custom min values for mods by string index
         """
         filters = []
 
@@ -393,15 +401,20 @@ class ItemPricer:
         }
 
         # Add category filter if we can map it
-        category = item.base_category.lower()
-        if category in CATEGORY_TO_TRADE:
+        # Look up the slot from item base since base_category is attribute-based (int_armour, str_dex_armour, etc.)
+        # but trade API needs slot-based categories (boots, gloves, helmet, etc.)
+        item_base = get_item_base_by_name(item.base_name)
+        slot = item_base.slot if item_base else item.base_category.lower()
+
+        if slot in CATEGORY_TO_TRADE:
             query["query"]["filters"] = {
                 "type_filters": {
                     "filters": {
-                        "category": {"option": CATEGORY_TO_TRADE[category]}
+                        "category": {"option": CATEGORY_TO_TRADE[slot]}
                     }
                 }
             }
+            logger.info(f"Category filter: {slot} -> {CATEGORY_TO_TRADE[slot]}")
 
         # Add base stat filters from calculated_stats (keys match pob-data: Armour, Evasion, EnergyShield)
         # Use custom equipment_filters if provided, otherwise calculate from calculated_stats
@@ -445,6 +458,19 @@ class ItemPricer:
                 logger.info(f"Rarity filter: {rarity_option}")
         elif not rarity_enabled:
             logger.info("Rarity filter disabled by user")
+
+        # Add item level filter if enabled
+        if ilvl_enabled and item.item_level:
+            if "filters" not in query["query"]:
+                query["query"]["filters"] = {}
+            if "misc_filters" not in query["query"]["filters"]:
+                query["query"]["filters"]["misc_filters"] = {"filters": {}}
+            query["query"]["filters"]["misc_filters"]["filters"]["ilvl"] = {
+                "min": item.item_level
+            }
+            logger.info(f"Item level filter: min {item.item_level}")
+        elif not ilvl_enabled:
+            logger.info("Item level filter disabled by user")
 
         return query
 

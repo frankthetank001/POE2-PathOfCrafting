@@ -1128,11 +1128,57 @@
 .mod-content {
   flex: 1;
   min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 0.5rem;
+}
+
+/* Tier indicator badge on the left (P1, P2, S1, S2, etc.) */
+.mod-tier-indicator {
+  font-size: 0.7rem;
+  font-weight: 600;
+  padding: 0.15rem 0.35rem;
+  border-radius: 3px;
+  min-width: 1.8rem;
+  text-align: center;
+  flex-shrink: 0;
+  font-family: 'Fontin SmallCaps', 'Fontin', Georgia, serif;
+}
+
+/* Prefix tier - red color matching PoE2 */
+.mod-tier-indicator.prefix-tier {
+  color: #ff6666;
+  background: rgba(255, 102, 102, 0.15);
+  border: 1px solid rgba(255, 102, 102, 0.3);
+}
+
+/* Suffix tier - blue color matching PoE2 */
+.mod-tier-indicator.suffix-tier {
+  color: #6688ff;
+  background: rgba(102, 136, 255, 0.15);
+  border: 1px solid rgba(102, 136, 255, 0.3);
+}
+
+/* Unrevealed tier - green with question mark */
+.mod-tier-indicator.unrevealed-tier {
+  color: #44ff88;
+  background: rgba(68, 255, 136, 0.15);
+  border: 1px dashed rgba(68, 255, 136, 0.4);
+}
+
+/* Container for mod text and inline tags */
+.mod-text-container {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
 }
 
 .mod-stat {
   margin-bottom: 0.1rem;
   font-size: 0.7rem;
+  display: inline;
 }
 
 .mod-metadata {
@@ -1156,11 +1202,13 @@
   font-style: italic;
 }
 
+/* Inline tags that flow after mod text */
 .mod-tags-inline {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 0.25rem;
   flex-wrap: wrap;
+  margin-left: 0.4rem;
 }
 
 .mod-tag-badge {

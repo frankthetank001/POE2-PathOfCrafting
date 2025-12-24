@@ -189,6 +189,7 @@ export const marketApi = {
     equipmentFilters?: Record<string, number>,
     equipmentEnabled?: Record<string, boolean>,
     rarityEnabled?: boolean,
+    ilvlEnabled?: boolean,
     modMinValues?: Record<number, number>
   ): Promise<ItemPriceEstimate> => {
     const response = await api.post<ItemPriceEstimate>('/price-item', {
@@ -197,6 +198,7 @@ export const marketApi = {
       equipment_filters: equipmentFilters,
       equipment_enabled: equipmentEnabled,
       rarity_enabled: rarityEnabled,
+      ilvl_enabled: ilvlEnabled,
       mod_min_values: modMinValues,
     })
     return response.data

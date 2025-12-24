@@ -606,6 +606,8 @@ function GridCraftingSimulator() {
   const [priceEquipmentEnabled, setPriceEquipmentEnabled] = useState<Record<string, boolean>>({})
   // Rarity filter for price search (enabled by default)
   const [priceRarityEnabled, setPriceRarityEnabled] = useState(true)
+  // Item level filter for price search (disabled by default)
+  const [priceIlvlEnabled, setPriceIlvlEnabled] = useState(false)
   // Min values for mod filters (key = "prefix-0", "suffix-1", etc.)
   const [priceModMinValues, setPriceModMinValues] = useState<Record<string, number>>({})
 
@@ -1090,13 +1092,14 @@ function GridCraftingSimulator() {
         }
       })
 
-      // Pass filters - always pass rarity, equipment filters only when refreshing
+      // Pass filters - always pass rarity/ilvl, equipment filters only when refreshing
       const estimate = await marketApi.priceItem(
         filteredItem,
         undefined,
         useFilters ? priceEquipmentFilters : undefined,
         useFilters ? priceEquipmentEnabled : undefined,
         priceRarityEnabled,
+        priceIlvlEnabled,
         useFilters ? modMinValuesForApi : undefined
       )
       setItemPrice(estimate)
@@ -4031,7 +4034,14 @@ function GridCraftingSimulator() {
                         >
                           <PoE2Property label="Rarity" value={item.rarity} />
                         </div>
-                        <PoE2Property label="Item Level" value={item.item_level} />
+                        <div
+                          className={`price-filter-property ${priceModalOpen ? (priceIlvlEnabled ? 'filter-enabled' : 'filter-disabled') : ''}`}
+                          onClick={() => priceModalOpen && setPriceIlvlEnabled(prev => !prev)}
+                          style={{ cursor: priceModalOpen ? 'pointer' : 'default' }}
+                          title={priceModalOpen ? (priceIlvlEnabled ? 'Click to exclude item level from search' : 'Click to include item level in search (min ilvl)') : ''}
+                        >
+                          <PoE2Property label="Item Level" value={item.item_level} />
+                        </div>
                         {item.quality > 0 && (
                           <PoE2Property label="Quality" value={`+${item.quality}%`} augmented />
                         )}
@@ -4134,59 +4144,61 @@ function GridCraftingSimulator() {
                                 title={getModTitle()}
                               >
                                 <div className="mod-content">
-                                  <div className="mod-stat">
-                                    {renderModifier(mod)}
-                                    {unrevealedMetadata?.required_boss_tag && (
-                                      <span className="boss-tag-indicator">
-                                        {unrevealedMetadata.required_boss_tag === 'ulaman' && ' 🔱'}
-                                        {unrevealedMetadata.required_boss_tag === 'amanamu' && ' 👑'}
-                                        {unrevealedMetadata.required_boss_tag === 'kurgal' && ' 🩸'}
-                                      </span>
-                                    )}
-                                    {isUnrevealed && selectedOmens.some(omen => omen.includes('Abyssal Echoes')) && <span className="abyssal-indicator"> ✨</span>}
-                                  </div>
-                                  <div className="mod-metadata">
-                                    {isUnrevealed ? (
-                                      <span className="mod-tier">{unrevealedMetadata?.bone_type} {unrevealedMetadata?.bone_part}</span>
-                                    ) : (
-                                      <>
-                                        <span className="mod-tier">T{mod.tier}</span>
-                                        <span className="mod-name">{mod.name}</span>
-                                        {(() => {
-                                          const visibleTags = filterInternalTags(mod.tags)
-                                          return visibleTags.length > 0 && (
-                                            <div className="mod-tags-inline">
-                                              {visibleTags.map((tag, i) => {
-                                                const tagColor = getTagColor(tag)
-                                                return (
-                                                  <span
-                                                    key={i}
-                                                    className="mod-tag-badge"
-                                                    onClick={(e) => {
-                                                      e.stopPropagation();
-                                                      toggleTagFilter(tag);
-                                                    }}
-                                                    title={`Click to filter by "${tag}" tag`}
-                                                    style={{
-                                                      background: tagColor.bg,
-                                                      borderColor: tagColor.border,
-                                                      color: tagColor.text
-                                                    }}
-                                                    onMouseEnter={(e) => {
-                                                      e.currentTarget.style.background = tagColor.hover
-                                                    }}
-                                                    onMouseLeave={(e) => {
-                                                      e.currentTarget.style.background = tagColor.bg
-                                                    }}
-                                                  >
-                                                    {tag}
-                                                  </span>
-                                                )
-                                              })}
-                                            </div>
-                                          )
-                                        })()}
-                                      </>
+                                  {/* Tier indicator on the left - P for prefix */}
+                                  <span className={`mod-tier-indicator ${isUnrevealed ? 'unrevealed-tier' : 'prefix-tier'}`}>
+                                    {isUnrevealed ? '?' : `P${mod.tier}`}
+                                  </span>
+                                  <div className="mod-text-container">
+                                    <span className="mod-stat">
+                                      {renderModifier(mod)}
+                                      {unrevealedMetadata?.required_boss_tag && (
+                                        <span className="boss-tag-indicator">
+                                          {unrevealedMetadata.required_boss_tag === 'ulaman' && ' 🔱'}
+                                          {unrevealedMetadata.required_boss_tag === 'amanamu' && ' 👑'}
+                                          {unrevealedMetadata.required_boss_tag === 'kurgal' && ' 🩸'}
+                                        </span>
+                                      )}
+                                      {isUnrevealed && selectedOmens.some(omen => omen.includes('Abyssal Echoes')) && <span className="abyssal-indicator"> ✨</span>}
+                                      {/* Tags inline after mod text */}
+                                      {!isUnrevealed && (() => {
+                                        const visibleTags = filterInternalTags(mod.tags)
+                                        return visibleTags.length > 0 && (
+                                          <span className="mod-tags-inline">
+                                            {visibleTags.map((tag, i) => {
+                                              const tagColor = getTagColor(tag)
+                                              return (
+                                                <span
+                                                  key={i}
+                                                  className="mod-tag-badge"
+                                                  onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    toggleTagFilter(tag);
+                                                  }}
+                                                  title={`Click to filter by "${tag}" tag`}
+                                                  style={{
+                                                    background: tagColor.bg,
+                                                    borderColor: tagColor.border,
+                                                    color: tagColor.text
+                                                  }}
+                                                  onMouseEnter={(e) => {
+                                                    e.currentTarget.style.background = tagColor.hover
+                                                  }}
+                                                  onMouseLeave={(e) => {
+                                                    e.currentTarget.style.background = tagColor.bg
+                                                  }}
+                                                >
+                                                  {tag}
+                                                </span>
+                                              )
+                                            })}
+                                          </span>
+                                        )
+                                      })()}
+                                    </span>
+                                    {isUnrevealed && (
+                                      <div className="mod-metadata">
+                                        <span className="mod-tier">{unrevealedMetadata?.bone_type} {unrevealedMetadata?.bone_part}</span>
+                                      </div>
                                     )}
                                   </div>
                                 </div>
@@ -4291,59 +4303,61 @@ function GridCraftingSimulator() {
                                 title={getModTitle()}
                               >
                                 <div className="mod-content">
-                                  <div className="mod-stat">
-                                    {renderModifier(mod)}
-                                    {unrevealedMetadata?.required_boss_tag && (
-                                      <span className="boss-tag-indicator">
-                                        {unrevealedMetadata.required_boss_tag === 'ulaman' && ' 🔱'}
-                                        {unrevealedMetadata.required_boss_tag === 'amanamu' && ' 👑'}
-                                        {unrevealedMetadata.required_boss_tag === 'kurgal' && ' 🩸'}
-                                      </span>
-                                    )}
-                                    {isUnrevealed && selectedOmens.some(omen => omen.includes('Abyssal Echoes')) && <span className="abyssal-indicator"> ✨</span>}
-                                  </div>
-                                  <div className="mod-metadata">
-                                    {isUnrevealed ? (
-                                      <span className="mod-tier">{unrevealedMetadata?.bone_type} {unrevealedMetadata?.bone_part}</span>
-                                    ) : (
-                                      <>
-                                        <span className="mod-tier">T{mod.tier}</span>
-                                        <span className="mod-name">{mod.name}</span>
-                                        {(() => {
-                                          const visibleTags = filterInternalTags(mod.tags)
-                                          return visibleTags.length > 0 && (
-                                            <div className="mod-tags-inline">
-                                              {visibleTags.map((tag, i) => {
-                                                const tagColor = getTagColor(tag)
-                                                return (
-                                                  <span
-                                                    key={i}
-                                                    className="mod-tag-badge"
-                                                    onClick={(e) => {
-                                                      e.stopPropagation();
-                                                      toggleTagFilter(tag);
-                                                    }}
-                                                    title={`Click to filter by "${tag}" tag`}
-                                                    style={{
-                                                      background: tagColor.bg,
-                                                      borderColor: tagColor.border,
-                                                      color: tagColor.text
-                                                    }}
-                                                    onMouseEnter={(e) => {
-                                                      e.currentTarget.style.background = tagColor.hover
-                                                    }}
-                                                    onMouseLeave={(e) => {
-                                                      e.currentTarget.style.background = tagColor.bg
-                                                    }}
-                                                  >
-                                                    {tag}
-                                                  </span>
-                                                )
-                                              })}
-                                            </div>
-                                          )
-                                        })()}
-                                      </>
+                                  {/* Tier indicator on the left - S for suffix */}
+                                  <span className={`mod-tier-indicator ${isUnrevealed ? 'unrevealed-tier' : 'suffix-tier'}`}>
+                                    {isUnrevealed ? '?' : `S${mod.tier}`}
+                                  </span>
+                                  <div className="mod-text-container">
+                                    <span className="mod-stat">
+                                      {renderModifier(mod)}
+                                      {unrevealedMetadata?.required_boss_tag && (
+                                        <span className="boss-tag-indicator">
+                                          {unrevealedMetadata.required_boss_tag === 'ulaman' && ' 🔱'}
+                                          {unrevealedMetadata.required_boss_tag === 'amanamu' && ' 👑'}
+                                          {unrevealedMetadata.required_boss_tag === 'kurgal' && ' 🩸'}
+                                        </span>
+                                      )}
+                                      {isUnrevealed && selectedOmens.some(omen => omen.includes('Abyssal Echoes')) && <span className="abyssal-indicator"> ✨</span>}
+                                      {/* Tags inline after mod text */}
+                                      {!isUnrevealed && (() => {
+                                        const visibleTags = filterInternalTags(mod.tags)
+                                        return visibleTags.length > 0 && (
+                                          <span className="mod-tags-inline">
+                                            {visibleTags.map((tag, i) => {
+                                              const tagColor = getTagColor(tag)
+                                              return (
+                                                <span
+                                                  key={i}
+                                                  className="mod-tag-badge"
+                                                  onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    toggleTagFilter(tag);
+                                                  }}
+                                                  title={`Click to filter by "${tag}" tag`}
+                                                  style={{
+                                                    background: tagColor.bg,
+                                                    borderColor: tagColor.border,
+                                                    color: tagColor.text
+                                                  }}
+                                                  onMouseEnter={(e) => {
+                                                    e.currentTarget.style.background = tagColor.hover
+                                                  }}
+                                                  onMouseLeave={(e) => {
+                                                    e.currentTarget.style.background = tagColor.bg
+                                                  }}
+                                                >
+                                                  {tag}
+                                                </span>
+                                              )
+                                            })}
+                                          </span>
+                                        )
+                                      })()}
+                                    </span>
+                                    {isUnrevealed && (
+                                      <div className="mod-metadata">
+                                        <span className="mod-tier">{unrevealedMetadata?.bone_type} {unrevealedMetadata?.bone_part}</span>
+                                      </div>
                                     )}
                                   </div>
                                 </div>
