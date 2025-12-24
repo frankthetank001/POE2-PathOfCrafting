@@ -557,8 +557,7 @@ function GridCraftingSimulator() {
     return {
       prefix: calcTotal(availableMods.prefixes),
       suffix: calcTotal(availableMods.suffixes),
-      essence_prefix: calcTotal(availableMods.essence_prefixes),
-      essence_suffix: calcTotal(availableMods.essence_suffixes),
+      // No weights for essence mods - they're guaranteed outcomes
       desecrated_prefix: calcTotal(availableMods.desecrated_prefixes),
       desecrated_suffix: calcTotal(availableMods.desecrated_suffixes),
     }
@@ -2740,11 +2739,7 @@ function GridCraftingSimulator() {
                             })()}
                           </span>
                           <div className="compact-mod-info">
-                            {mod.weight !== undefined && totalWeights.essence_prefix > 0 && (
-                              <span className="mod-weight" title={`Weight: ${mod.weight} / ${totalWeights.essence_prefix} total`}>
-                                {((mod.weight / totalWeights.essence_prefix) * 100).toFixed(2)}%
-                              </span>
-                            )}
+                            {/* No weight display for essence mods - they're guaranteed outcomes */}
                             {mod.tags && mod.tags.length > 0 && (
                               <div className="mod-tags-line" title="Click individual tags to filter">
                                 <button
@@ -3142,11 +3137,7 @@ function GridCraftingSimulator() {
                             })()}
                           </span>
                           <div className="compact-mod-info">
-                            {mod.weight !== undefined && totalWeights.essence_suffix > 0 && (
-                              <span className="mod-weight" title={`Weight: ${mod.weight} / ${totalWeights.essence_suffix} total`}>
-                                {((mod.weight / totalWeights.essence_suffix) * 100).toFixed(2)}%
-                              </span>
-                            )}
+                            {/* No weight display for essence mods - they're guaranteed outcomes */}
                             {mod.tags && mod.tags.length > 0 && (
                               <div className="mod-tags-line" title="Click individual tags to filter">
                                 <button

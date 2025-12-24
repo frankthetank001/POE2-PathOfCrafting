@@ -701,8 +701,8 @@ class ModifierPool:
         """
         Get the effective weight of a modifier for a specific item.
 
-        Uses the mod's weight_conditions to calculate the actual weight
-        for the given item's category and slot.
+        Uses weights.csv (real game weights) if available, otherwise defaults to 100.
+        Note: pob-data weightVal is just 1/0 (can/can't spawn), not actual weights.
 
         Args:
             mod: The modifier to check
@@ -711,20 +711,24 @@ class ModifierPool:
         Returns:
             The effective weight for this mod on this item
         """
-        if not mod.weight_conditions:
-            # No weight conditions means use default weight
-            return mod.weight if mod.weight else 100
+        # Try to get weight from weights.csv (real game data)
+        from app.services.crafting.weights_loader import get_weights_loader
+        weights_loader = get_weights_loader()
 
-        item_slot = _get_item_slot(item.base_name) if item else None
-        if not item_slot:
-            return 0
-
-        return self._get_weight_for_item(
-            mod.weight_conditions,
-            item.base_category,
-            item_slot,
-            item
+        mod_type = "prefix" if mod.mod_type.value == "prefix" else "suffix"
+        csv_weight = weights_loader.get_weight(
+            item_category=item.base_category,
+            mod_type=mod_type,
+            stat_text=mod.stat_text,
+            tier=mod.tier,
+            item_tags=getattr(item, 'tags', None)
         )
+
+        if csv_weight is not None:
+            return csv_weight
+
+        # Default fallback - we don't have real weight data for this mod
+        return 100
 
     def _is_mod_applicable_to_category(self, mod: ItemModifier, item_category: str, item=None) -> bool:
         """Check if a mod is applicable to an item category"""

@@ -481,7 +481,7 @@ class POBDataLoader:
                     stat_lines.append(stat)
                 else:
                     break
-            raw_stat_text = "\n".join(stat_lines) if stat_lines else ""
+            raw_stat_text = ", ".join(stat_lines) if stat_lines else ""
             stat_ranges = self._parse_stat_ranges(raw_stat_text)
             # Normalize stat_text by replacing range patterns with {} placeholders
             # e.g., "+(85-123) to Accuracy Rating" -> "+{} to Accuracy Rating"
