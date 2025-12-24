@@ -713,12 +713,12 @@ class TestWellOfSouls:
         # Test reroll mechanic with omen
         pass
 
-    def test_revealed_modifiers_show_rolled_values_not_ranges(self):
-        """When revealing desecrated modifiers, choices should show rolled values instead of ranges.
+    def test_desecrated_modifiers_show_actual_ranges(self):
+        """Desecrated modifiers should show actual value ranges since they're guaranteed single-tier.
 
         This test verifies that:
-        1. Modifier names and stat_text use {} placeholders (not hardcoded ranges)
-        2. Desecrated modifiers have normalized stat_text for pattern matching
+        1. Desecrated modifier stat_text contains actual ranges like (9-15)
+        2. stat_ranges are properly populated for value extraction
         """
         import re
         from app.services.crafting.modifier_loader import ModifierLoader
@@ -734,22 +734,21 @@ class TestWellOfSouls:
         # Pattern matches ranges like (9-15), (9.5-15.2), etc.
         range_pattern = r'\([\d.]+\s*-\s*[\d.]+\)'
 
-        failed_mods = []
+        mods_with_ranges = []
 
         for mod in desecrated_mods:
-            # Check that stat_text doesn't have hardcoded ranges (should use {} placeholders)
+            # Check that stat_text has actual ranges (guaranteed mods show their ranges)
             stat_text_matches = re.findall(range_pattern, mod.stat_text)
             if stat_text_matches:
-                failed_mods.append(f"  ✗ stat_text has range: {mod.stat_text}")
+                mods_with_ranges.append(mod)
 
-        # If any modifiers failed, report them all
-        if failed_mods:
-            error_msg = "Desecrated modifiers should use {} placeholders, not hardcoded ranges:\n"
-            error_msg += "\n".join(failed_mods)
-            pytest.fail(error_msg)
+        # Desecrated mods should have ranges in their stat_text
+        # (some mods may not have ranges if they're flat values)
+        assert len(mods_with_ranges) > 0, "Desecrated mods should show actual value ranges"
 
-        # All modifiers passed - they use {} placeholders
-        # This ensures the frontend will display rolled values instead of ranges
+        # Verify stat_ranges are populated for mods with ranges
+        for mod in mods_with_ranges:
+            assert mod.stat_ranges, f"Mod '{mod.name}' should have stat_ranges populated"
 
 
 # ============================================================================

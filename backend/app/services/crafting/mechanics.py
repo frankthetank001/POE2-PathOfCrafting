@@ -1104,7 +1104,36 @@ class EssenceMechanic(CraftingMechanic):
         if item.rarity != ItemRarity.RARE:
             manager.upgrade_rarity(ItemRarity.RARE)
 
-        # Add guaranteed modifier
+        # Special handling for Essence of the Abyss - Mark should choose prefix/suffix dynamically
+        if self.essence_info.essence_type == "abyss":
+            # Check available slots on the manager's item (after removal)
+            can_add_prefix = manager.item.can_add_prefix
+            can_add_suffix = manager.item.can_add_suffix
+
+            if not can_add_prefix and not can_add_suffix:
+                return False, "No room to add Mark of the Abyssal Lord", item
+
+            # Choose prefix or suffix based on availability
+            if can_add_prefix and can_add_suffix:
+                # Random choice when both slots available
+                preferred_type = random.choice([ModType.PREFIX, ModType.SUFFIX])
+            elif can_add_prefix:
+                preferred_type = ModType.PREFIX
+            else:
+                preferred_type = ModType.SUFFIX
+
+            # Set the preferred type so _create_guaranteed_modifier picks the right variant
+            self._preferred_mod_type = preferred_type
+            guaranteed_mod = self._create_guaranteed_modifier(manager.item, modifier_pool)
+            self._preferred_mod_type = None  # Clear after use
+
+            if not guaranteed_mod:
+                return False, f"No suitable abyss modifiers found for {item.base_name}", item
+
+            manager.add_modifier(guaranteed_mod)
+            return True, f"Applied {self.essence_info.name}, removed {removed_mod_name}, added {guaranteed_mod.name} ({guaranteed_mod.mod_type.value})", manager.item
+
+        # Add guaranteed modifier for non-Abyss essences
         guaranteed_mod = self._create_guaranteed_modifier(item, modifier_pool)
         if not guaranteed_mod:
             return False, f"No suitable {self.essence_info.essence_type} modifiers found", item
@@ -1155,11 +1184,17 @@ class EssenceMechanic(CraftingMechanic):
         from app.services.crafting.pob_data_loader import get_pob_data_loader
 
         # Special handling for Essence of the Abyss - return Mark of the Abyssal Lord directly
+        # The preferred_mod_type is determined by the caller based on available slots
         if self.essence_info.essence_type == "abyss":
             mark_mods = [mod for mod in modifier_pool.modifiers if mod.mod_group == "AbyssTargetMod"]
             if mark_mods:
-                mark = mark_mods[0].model_copy(deep=True)
-                logger.info(f"Essence of the Abyss: Adding {mark.name}")
+                # If preferred_mod_type specified, find the matching variant
+                if hasattr(self, '_preferred_mod_type') and self._preferred_mod_type:
+                    matching = [m for m in mark_mods if m.mod_type == self._preferred_mod_type]
+                    mark = matching[0].model_copy(deep=True) if matching else mark_mods[0].model_copy(deep=True)
+                else:
+                    mark = mark_mods[0].model_copy(deep=True)
+                logger.info(f"Essence of the Abyss: Adding {mark.name} ({mark.mod_type.value})")
                 return mark
             else:
                 logger.error("Mark of the Abyssal Lord not found in modifier pool")
@@ -2088,11 +2123,6 @@ class OmenModifiedMechanic(CraftingMechanic):
         if item.rarity != ItemRarity.RARE:
             manager.upgrade_rarity(ItemRarity.RARE)
 
-        # Get the guaranteed modifier - this also validates that the essence applies to this item
-        guaranteed_mod = base._create_guaranteed_modifier(item, modifier_pool)
-        if not guaranteed_mod:
-            return False, f"No suitable {base.essence_info.essence_type} modifiers found for {item.base_name}", item
-
         # Special handling for Essence of the Abyss - Mark should choose prefix/suffix dynamically
         if base.essence_info.essence_type == "abyss":
             # Check available slots
@@ -2106,15 +2136,28 @@ class OmenModifiedMechanic(CraftingMechanic):
             # Crystallisation omens control what is REMOVED, not where Mark goes
             if can_add_prefix and can_add_suffix:
                 # Random choice when both slots available
-                guaranteed_mod.mod_type = random.choice([ModType.PREFIX, ModType.SUFFIX])
+                preferred_type = random.choice([ModType.PREFIX, ModType.SUFFIX])
             elif can_add_prefix:
-                guaranteed_mod.mod_type = ModType.PREFIX
+                preferred_type = ModType.PREFIX
             else:
-                guaranteed_mod.mod_type = ModType.SUFFIX
+                preferred_type = ModType.SUFFIX
+
+            # Set the preferred type so _create_guaranteed_modifier picks the right variant
+            base._preferred_mod_type = preferred_type
+            guaranteed_mod = base._create_guaranteed_modifier(item, modifier_pool)
+            base._preferred_mod_type = None  # Clear after use
+
+            if not guaranteed_mod:
+                return False, f"No suitable abyss modifiers found for {item.base_name}", item
 
             manager.add_modifier(guaranteed_mod)
             omen_text = f" with {', '.join([o.name for o in self.omen_chain])}" if self.omen_chain else ""
             return True, f"Applied {base.essence_info.name}, removed {removed_mod_name}, added {guaranteed_mod.name} ({guaranteed_mod.mod_type.value}){omen_text}", manager.item
+
+        # Get the guaranteed modifier - this also validates that the essence applies to this item
+        guaranteed_mod = base._create_guaranteed_modifier(item, modifier_pool)
+        if not guaranteed_mod:
+            return False, f"No suitable {base.essence_info.essence_type} modifiers found for {item.base_name}", item
 
         # For other essences, check if we can add the type specified by the modifier
         essence_mod_type = guaranteed_mod.mod_type.value  # "prefix" or "suffix"

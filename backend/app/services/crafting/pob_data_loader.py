@@ -352,7 +352,10 @@ class POBDataLoader:
 
             for mod_id, mod_info in mods_data.items():
                 self._mod_data[mod_id] = mod_info
-                modifier = self._convert_pob_mod_to_item_modifier(mod_id, mod_info)
+                # Preserve ranges for desecrated mods since they're guaranteed single-tier
+                modifier = self._convert_pob_mod_to_item_modifier(
+                    mod_id, mod_info, preserve_ranges=True
+                )
                 if modifier:
                     modifier.is_desecrated = True
                     modifier.tags = modifier.tags.copy()
@@ -453,7 +456,8 @@ class POBDataLoader:
         self,
         mod_id: str,
         mod_info: dict,
-        mod_type_override: Optional[ModType] = None
+        mod_type_override: Optional[ModType] = None,
+        preserve_ranges: bool = False
     ) -> Optional[ItemModifier]:
         """Convert a pob-data mod entry to ItemModifier schema."""
         try:
@@ -481,7 +485,11 @@ class POBDataLoader:
             stat_ranges = self._parse_stat_ranges(raw_stat_text)
             # Normalize stat_text by replacing range patterns with {} placeholders
             # e.g., "+(85-123) to Accuracy Rating" -> "+{} to Accuracy Rating"
-            stat_text = self._normalize_stat_text(raw_stat_text)
+            # For guaranteed mods (desecrated, essence-only), preserve the actual ranges
+            if preserve_ranges:
+                stat_text = raw_stat_text
+            else:
+                stat_text = self._normalize_stat_text(raw_stat_text)
 
             weight_key = mod_info.get("weightKey", [])
             weight_val = mod_info.get("weightVal", [])
@@ -498,6 +506,18 @@ class POBDataLoader:
             stat_min = stat_ranges[0].min if stat_ranges else None
             stat_max = stat_ranges[0].max if stat_ranges else None
 
+            # Get mod group and base tags
+            mod_group = mod_info.get("group")
+            tags = mod_info.get("modTags", []).copy()
+
+            # Special case: AbyssTargetMod (Mark of the Abyssal Lord) is essence-only
+            # It can only be obtained through Essence of the Abyss
+            if mod_group == "AbyssTargetMod":
+                if "essence_only" not in tags:
+                    tags.append("essence_only")
+                if "essence_abyss" not in tags:
+                    tags.append("essence_abyss")
+
             return ItemModifier(
                 mod_id=mod_id,
                 name=mod_info.get("affix", mod_id),
@@ -508,10 +528,11 @@ class POBDataLoader:
                 stat_min=stat_min,
                 stat_max=stat_max,
                 required_ilvl=mod_info.get("level", 1),
-                mod_group=mod_info.get("group"),
+                mod_group=mod_group,
                 applicable_items=applicable_items,
-                tags=mod_info.get("modTags", []).copy(),
+                tags=tags,
                 weight_conditions=weight_conditions,
+                is_essence_only=mod_group == "AbyssTargetMod",
             )
 
         except Exception as e:

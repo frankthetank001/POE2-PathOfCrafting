@@ -429,13 +429,23 @@ async def get_available_mods(item: CraftableItem) -> dict:
             if mod_id in all_mod_ids
         }
 
+        def filter_mod_with_weight(mod, db_item):
+            """Filter mod tags and compute effective weight for the item."""
+            # Calculate effective weight for this item
+            effective_weight = simulator.modifier_pool.get_effective_weight(mod, db_item)
+            # Get filtered mod dict
+            mod_dict = filter_mod_tags(mod)
+            # Set the computed weight
+            mod_dict['weight'] = effective_weight
+            return mod_dict
+
         return {
-            "prefixes": [filter_mod_tags(mod) for mod in regular_prefixes],
-            "suffixes": [filter_mod_tags(mod) for mod in regular_suffixes],
-            "essence_prefixes": [filter_mod_tags(mod) for mod in essence_prefixes],
-            "essence_suffixes": [filter_mod_tags(mod) for mod in essence_suffixes],
-            "desecrated_prefixes": [filter_mod_tags(mod) for mod in desecrated_prefixes],
-            "desecrated_suffixes": [filter_mod_tags(mod) for mod in desecrated_suffixes],
+            "prefixes": [filter_mod_with_weight(mod, db_item) for mod in regular_prefixes],
+            "suffixes": [filter_mod_with_weight(mod, db_item) for mod in regular_suffixes],
+            "essence_prefixes": [filter_mod_with_weight(mod, db_item) for mod in essence_prefixes],
+            "essence_suffixes": [filter_mod_with_weight(mod, db_item) for mod in essence_suffixes],
+            "desecrated_prefixes": [filter_mod_with_weight(mod, db_item) for mod in desecrated_prefixes],
+            "desecrated_suffixes": [filter_mod_with_weight(mod, db_item) for mod in desecrated_suffixes],
             "essence_guarantees": relevant_guarantees,  # Map of mod_id -> list of essence guarantee info
             "total_prefixes": len(regular_prefixes),
             "total_suffixes": len(regular_suffixes),
@@ -782,6 +792,7 @@ async def reveal_modifier(request: dict) -> dict:
         choices = random.sample(available_mods, num_choices)
 
         # Roll values for each choice so they show absolute numbers, not ranges
+        import re
         rolled_choices = []
         for choice in choices:
             rolled_choice = choice.model_copy(deep=True)
@@ -794,10 +805,37 @@ async def reveal_modifier(request: dict) -> dict:
                 ]
                 # Set legacy current_value to first value for backwards compatibility
                 rolled_choice.current_value = rolled_choice.current_values[0]
+
+                # Format stat_text with rolled values instead of ranges
+                formatted_text = rolled_choice.stat_text
+                for rolled_value in rolled_choice.current_values:
+                    # Replace first range pattern with the rolled value
+                    if rolled_value == int(rolled_value):
+                        value_str = str(int(rolled_value))
+                    else:
+                        value_str = f"{rolled_value:.1f}"
+                    formatted_text = re.sub(
+                        r'\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\)',
+                        value_str,
+                        formatted_text,
+                        count=1
+                    )
+                rolled_choice.stat_text = formatted_text
+
             # Fall back to legacy single value for older mods
             elif rolled_choice.stat_min is not None and rolled_choice.stat_max is not None:
                 rolled_choice.current_value = random.uniform(
                     rolled_choice.stat_min, rolled_choice.stat_max
+                )
+                # Format stat_text with rolled value
+                if rolled_choice.current_value == int(rolled_choice.current_value):
+                    value_str = str(int(rolled_choice.current_value))
+                else:
+                    value_str = f"{rolled_choice.current_value:.1f}"
+                rolled_choice.stat_text = re.sub(
+                    r'\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\)',
+                    value_str,
+                    rolled_choice.stat_text
                 )
 
             # Mark all desecration reveals with green tint (regardless of mod type)

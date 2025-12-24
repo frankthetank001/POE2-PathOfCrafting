@@ -1,0 +1,1161 @@
+BASE	TYPE	NAME	1	2	3	4	5	6	7	8	9	10	11	12	13		order
+BOOTS (INT)	PREFIX	#% increased Energy Shield	1000	1000	1000	1000	1000	1000	1000								1
+BOOTS (INT)	PREFIX	#% increased Energy Shield, # to Stun Threshold	1000	1000	1000	1000	1000	1000									2
+BOOTS (INT)	PREFIX	#% increased Movement Speed	1000	1000	1000	1000	1000	1000									3
+BOOTS (INT)	PREFIX	# to maximum Energy Shield	1000	1000	1000	1000	1000	1000	1000								4
+BOOTS (INT)	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000						5
+BOOTS (INT)	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000						6
+BOOTS (INT)	SUFFIX	# Life Regeneration per second	1000	1000	1000	1000	1000	1000	1000	1000							7
+BOOTS (INT)	SUFFIX	#% increased Rarity of Items found	1000	1000	1000												8
+BOOTS (INT)	SUFFIX	#% reduced Attribute Requirements	750	750	750	750	750										9
+BOOTS (INT)	SUFFIX	#% reduced Chill Duration on you	500	500	500	500	500										10
+BOOTS (INT)	SUFFIX	#% reduced Freeze Duration on you	500	500	500	500	500										11
+BOOTS (INT)	SUFFIX	#% reduced Shock duration on you	500	500	500	500	500										12
+BOOTS (INT)	SUFFIX	# to Intelligence	1000	1000	1000	1000	1000	1000	1000	1000							13
+BOOTS (INT)	SUFFIX	# to Stun Threshold	800	800	800	800	800	800	800	800	800	800	800				14
+BOOTS (INT)	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									15
+BOOTS (INT)	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							16
+BOOTS (INT)	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							17
+BOOTS (INT)	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							18
+BOOTS (INT)	SUFFIX	#% increased Energy Shield Recharge Rate	1000	1000	1000	1000											19
+BOOTS (DEX)	PREFIX	#% increased Evasion Rating	1000	1000	1000	1000	1000	1000	1000								20
+BOOTS (DEX)	PREFIX	#% increased Evasion Rating, # to Stun Threshold	1000	1000	1000	1000	1000	1000									21
+BOOTS (DEX)	PREFIX	#% increased Movement Speed	1000	1000	1000	1000	1000	1000									22
+BOOTS (DEX)	PREFIX	# to Evasion Rating	1000	1000	1000	1000	1000	1000	1000								23
+BOOTS (DEX)	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000						24
+BOOTS (DEX)	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000						25
+BOOTS (DEX)	SUFFIX	# Life Regeneration per second	1000	1000	1000	1000	1000	1000	1000	1000							26
+BOOTS (DEX)	SUFFIX	#% increased Rarity of Items found	1000	1000	1000												27
+BOOTS (DEX)	SUFFIX	#% reduced Attribute Requirements	750	750	750	750	750										28
+BOOTS (DEX)	SUFFIX	#% reduced Chill Duration on you	500	500	500	500	500										29
+BOOTS (DEX)	SUFFIX	#% reduced Freeze Duration on you	500	500	500	500	500										30
+BOOTS (DEX)	SUFFIX	#% reduced Shock duration on you	500	500	500	500	500										31
+BOOTS (DEX)	SUFFIX	# to Dexterity	1000	1000	1000	1000	1000	1000	1000	1000							32
+BOOTS (DEX)	SUFFIX	# to Stun Threshold	800	800	800	800	800	800	800	800	800	800	800				33
+BOOTS (DEX)	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									34
+BOOTS (DEX)	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							35
+BOOTS (DEX)	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							36
+BOOTS (DEX)	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							37
+BOOTS (DEX)	SUFFIX	Gain Deflection Rating equal to #% of Evasion Rating	1000	1000	1000	1000	1000										38
+BOOTS (STR)	PREFIX	#% increased Armour	1000	1000	1000	1000	1000	1000	1000								39
+BOOTS (STR)	PREFIX	#% increased Armour, # to Stun Threshold	1000	1000	1000	1000	1000	1000									40
+BOOTS (STR)	PREFIX	#% increased Movement Speed	1000	1000	1000	1000	1000	1000									41
+BOOTS (STR)	PREFIX	# to Armour	1000	1000	1000	1000	1000	1000	1000								42
+BOOTS (STR)	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000						43
+BOOTS (STR)	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000						44
+BOOTS (STR)	SUFFIX	# Life Regeneration per second	1000	1000	1000	1000	1000	1000	1000	1000							45
+BOOTS (STR)	SUFFIX	#% increased Rarity of Items found	1000	1000	1000												46
+BOOTS (STR)	SUFFIX	#% reduced Attribute Requirements	750	750	750	750	750										47
+BOOTS (STR)	SUFFIX	#% reduced Chill Duration on you	500	500	500	500	500										48
+BOOTS (STR)	SUFFIX	#% reduced Freeze Duration on you	500	500	500	500	500										49
+BOOTS (STR)	SUFFIX	#% reduced Shock duration on you	500	500	500	500	500										50
+BOOTS (STR)	SUFFIX	# to Strength	1000	1000	1000	1000	1000	1000	1000	1000							51
+BOOTS (STR)	SUFFIX	# to Stun Threshold	800	800	800	800	800	800	800	800	800	800	800				52
+BOOTS (STR)	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									53
+BOOTS (STR)	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							54
+BOOTS (STR)	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							55
+BOOTS (STR)	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							56
+BOOTS (STR)	SUFFIX	#% of Armour also applies to Elemental Damage	1000	1000	1000	1000	1000										57
+BOOTS (DEX/INT)	PREFIX	#% increased Evasion and Energy Shield	1000	1000	1000	1000	1000	1000	1000								58
+BOOTS (DEX/INT)	PREFIX	#% increased Evasion and Energy Shield, # to Stun Threshold	1000	1000	1000	1000	1000	1000									59
+BOOTS (DEX/INT)	PREFIX	#% increased Movement Speed	1000	1000	1000	1000	1000	1000									60
+BOOTS (DEX/INT)	PREFIX	# to Evasion Rating, # to maximum Energy Shield	1000	1000	1000	1000											61
+BOOTS (DEX/INT)	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000						62
+BOOTS (DEX/INT)	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000						63
+BOOTS (DEX/INT)	SUFFIX	# Life Regeneration per second	1000	1000	1000	1000	1000	1000	1000	1000							64
+BOOTS (DEX/INT)	SUFFIX	#% increased Rarity of Items found	1000	1000	1000												65
+BOOTS (DEX/INT)	SUFFIX	#% reduced Attribute Requirements	750	750	750	750	750										66
+BOOTS (DEX/INT)	SUFFIX	#% reduced Chill Duration on you	500	500	500	500	500										67
+BOOTS (DEX/INT)	SUFFIX	#% reduced Freeze Duration on you	500	500	500	500	500										68
+BOOTS (DEX/INT)	SUFFIX	#% reduced Shock duration on you	500	500	500	500	500										69
+BOOTS (DEX/INT)	SUFFIX	# to Dexterity	500	500	500	500	500	500	500	500							70
+BOOTS (DEX/INT)	SUFFIX	# to Intelligence	500	500	500	500	500	500	500	500							71
+BOOTS (DEX/INT)	SUFFIX	# to Stun Threshold	800	800	800	800	800	800	800	800	800	800	800				72
+BOOTS (DEX/INT)	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									73
+BOOTS (DEX/INT)	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							74
+BOOTS (DEX/INT)	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							75
+BOOTS (DEX/INT)	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							76
+BOOTS (DEX/INT)	SUFFIX	#% increased Energy Shield Recharge Rate	500	500	500	500											77
+BOOTS (DEX/INT)	SUFFIX	Gain Deflection Rating equal to #% of Evasion Rating	500	500	500	500	500										78
+BOOTS (STR/INT)	PREFIX	#% increased Armour and Energy Shield	1000	1000	1000	1000	1000	1000	1000								79
+BOOTS (STR/INT)	PREFIX	#% increased Armour and Energy Shield, # to Stun Threshold	1000	1000	1000	1000	1000	1000									80
+BOOTS (STR/INT)	PREFIX	#% increased Movement Speed	1000	1000	1000	1000	1000	1000									81
+BOOTS (STR/INT)	PREFIX	# to Armour, # to maximum Energy Shield	1000	1000	1000	1000											82
+BOOTS (STR/INT)	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000						83
+BOOTS (STR/INT)	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000						84
+BOOTS (STR/INT)	SUFFIX	# Life Regeneration per second	1000	1000	1000	1000	1000	1000	1000	1000							85
+BOOTS (STR/INT)	SUFFIX	#% increased Rarity of Items found	1000	1000	1000												86
+BOOTS (STR/INT)	SUFFIX	#% reduced Attribute Requirements	750	750	750	750	750										87
+BOOTS (STR/INT)	SUFFIX	#% reduced Chill Duration on you	500	500	500	500	500										88
+BOOTS (STR/INT)	SUFFIX	#% reduced Freeze Duration on you	500	500	500	500	500										89
+BOOTS (STR/INT)	SUFFIX	#% reduced Shock duration on you	500	500	500	500	500										90
+BOOTS (STR/INT)	SUFFIX	# to Intelligence	500	500	500	500	500	500	500	500							91
+BOOTS (STR/INT)	SUFFIX	# to Strength	500	500	500	500	500	500	500	500							92
+BOOTS (STR/INT)	SUFFIX	# to Stun Threshold	800	800	800	800	800	800	800	800	800	800	800				93
+BOOTS (STR/INT)	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									94
+BOOTS (STR/INT)	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							95
+BOOTS (STR/INT)	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							96
+BOOTS (STR/INT)	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							97
+BOOTS (STR/INT)	SUFFIX	#% increased Energy Shield Recharge Rate	500	500	500	500											98
+BOOTS (STR/INT)	SUFFIX	#% of Armour also applies to Elemental Damage	500	500	500	500	500										99
+BOOTS (STR/DEX)	PREFIX	#% increased Armour and Evasion	1000	1000	1000	1000	1000	1000	1000								100
+BOOTS (STR/DEX)	PREFIX	#% increased Armour and Evasion, # to Stun Threshold	1000	1000	1000	1000	1000	1000									101
+BOOTS (STR/DEX)	PREFIX	#% increased Movement Speed	1000	1000	1000	1000	1000	1000									102
+BOOTS (STR/DEX)	PREFIX	# to Armour, # to Evasion Rating	1000	1000	1000	1000											103
+BOOTS (STR/DEX)	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000						104
+BOOTS (STR/DEX)	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000						105
+BOOTS (STR/DEX)	SUFFIX	# Life Regeneration per second	1000	1000	1000	1000	1000	1000	1000	1000							106
+BOOTS (STR/DEX)	SUFFIX	#% increased Rarity of Items found	1000	1000	1000												107
+BOOTS (STR/DEX)	SUFFIX	#% reduced Attribute Requirements	750	750	750	750	750										108
+BOOTS (STR/DEX)	SUFFIX	#% reduced Chill Duration on you	500	500	500	500	500										109
+BOOTS (STR/DEX)	SUFFIX	#% reduced Freeze Duration on you	500	500	500	500	500										110
+BOOTS (STR/DEX)	SUFFIX	#% reduced Shock duration on you	500	500	500	500	500										111
+BOOTS (STR/DEX)	SUFFIX	# to Dexterity	500	500	500	500	500	500	500	500							112
+BOOTS (STR/DEX)	SUFFIX	# to Strength	500	500	500	500	500	500	500	500							113
+BOOTS (STR/DEX)	SUFFIX	# to Stun Threshold	800	800	800	800	800	800	800	800	800	800	800				114
+BOOTS (STR/DEX)	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									115
+BOOTS (STR/DEX)	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							116
+BOOTS (STR/DEX)	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							117
+BOOTS (STR/DEX)	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							118
+BOOTS (STR/DEX)	SUFFIX	#% of Armour also applies to Elemental Damage	500	500	500	500	500										119
+BOOTS (STR/DEX)	SUFFIX	Gain Deflection Rating equal to #% of Evasion Rating	500	500	500	500	500										120
+HELMET (INT)	PREFIX	#% increased Energy Shield	1000	1000	1000	1000	1000	1000	1000								121
+HELMET (INT)	PREFIX	#% increased Energy Shield, # to maximum Life	1000	1000	1000	1000	1000	1000									122
+HELMET (INT)	PREFIX	#% increased Energy Shield, # to maximum Mana	1000	1000	1000	1000	1000	1000									123
+HELMET (INT)	PREFIX	#% increased Rarity of Items found	1000	1000	1000												124
+HELMET (INT)	PREFIX	# to Accuracy Rating	200	400	800	800	800	800	800	800	800						125
+HELMET (INT)	PREFIX	# to maximum Energy Shield	1000	1000	1000	1000	1000	1000	1000	1000							126
+HELMET (INT)	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000					127
+HELMET (INT)	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000					128
+HELMET (INT)	SUFFIX	# Life Regeneration per second	1000	1000	1000	1000	1000	1000	1000	1000							129
+HELMET (INT)	SUFFIX	#% increased Critical Hit Chance	250	500	1000	1000	1000										130
+HELMET (INT)	SUFFIX	# to Accuracy Rating, #% increased Light Radius	1000	1000	1000												131
+HELMET (INT)	SUFFIX	#% increased Rarity of Items found	1000	1000	1000												132
+HELMET (INT)	SUFFIX	#% reduced Attribute Requirements	800	800	800	800	800										133
+HELMET (INT)	SUFFIX	# to Intelligence	1000	1000	1000	1000	1000	1000	1000	1000	1000						134
+HELMET (INT)	SUFFIX	# to Level of all Minion Skills	250	500													135
+HELMET (INT)	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									136
+HELMET (INT)	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							137
+HELMET (INT)	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							138
+HELMET (INT)	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							139
+HELMET (INT)	SUFFIX	#% increased Energy Shield Recharge Rate	1000	1000	1000	1000											140
+HELMET (DEX)	PREFIX	#% increased Evasion Rating	1000	1000	1000	1000	1000	1000	1000								141
+HELMET (DEX)	PREFIX	#% increased Evasion Rating, # to maximum Life	1000	1000	1000	1000	1000	1000									142
+HELMET (DEX)	PREFIX	#% increased Evasion Rating, # to maximum Mana	1000	1000	1000	1000	1000	1000									143
+HELMET (DEX)	PREFIX	#% increased Rarity of Items found	1000	1000	1000												144
+HELMET (DEX)	PREFIX	# to Accuracy Rating	200	400	800	800	800	800	800	800	800						145
+HELMET (DEX)	PREFIX	# to Evasion Rating	1000	1000	1000	1000	1000	1000	1000	1000							146
+HELMET (DEX)	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000					147
+HELMET (DEX)	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000					148
+HELMET (DEX)	SUFFIX	# Life Regeneration per second	1000	1000	1000	1000	1000	1000	1000	1000							149
+HELMET (DEX)	SUFFIX	#% increased Critical Hit Chance	250	500	1000	1000	1000										150
+HELMET (DEX)	SUFFIX	# to Accuracy Rating, #% increased Light Radius	1000	1000	1000												151
+HELMET (DEX)	SUFFIX	#% increased Rarity of Items found	1000	1000	1000												152
+HELMET (DEX)	SUFFIX	#% reduced Attribute Requirements	800	800	800	800	800										153
+HELMET (DEX)	SUFFIX	# to Dexterity	1000	1000	1000	1000	1000	1000	1000	1000							154
+HELMET (DEX)	SUFFIX	# to Intelligence	1000	1000	1000	1000	1000	1000	1000	1000	1000						155
+HELMET (DEX)	SUFFIX	# to Level of all Minion Skills	250	500													156
+HELMET (DEX)	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									157
+HELMET (DEX)	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							158
+HELMET (DEX)	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							159
+HELMET (DEX)	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							160
+HELMET (DEX)	SUFFIX	Gain Deflection Rating equal to #% of Evasion Rating	1000	1000	1000	1000	1000										161
+HELMET (STR)	PREFIX	#% increased Armour	1000	1000	1000	1000	1000	1000	1000								162
+HELMET (STR)	PREFIX	#% increased Armour, # to maximum Life	1000	1000	1000	1000	1000	1000									163
+HELMET (STR)	PREFIX	#% increased Armour, # to maximum Mana	1000	1000	1000	1000	1000	1000									164
+HELMET (STR)	PREFIX	#% increased Rarity of Items found	1000	1000	1000												165
+HELMET (STR)	PREFIX	# to Accuracy Rating	200	400	800	800	800	800	800	800	800						166
+HELMET (STR)	PREFIX	# to Armour	1000	1000	1000	1000	1000	1000	1000	1000							167
+HELMET (STR)	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000					168
+HELMET (STR)	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000					169
+HELMET (STR)	SUFFIX	# Life Regeneration per second	1000	1000	1000	1000	1000	1000	1000	1000							170
+HELMET (STR)	SUFFIX	#% increased Critical Hit Chance	250	500	1000	1000	1000										171
+HELMET (STR)	SUFFIX	# to Accuracy Rating, #% increased Light Radius	1000	1000	1000												172
+HELMET (STR)	SUFFIX	#% increased Rarity of Items found	1000	1000	1000												173
+HELMET (STR)	SUFFIX	#% reduced Attribute Requirements	800	800	800	800	800										174
+HELMET (STR)	SUFFIX	# to Intelligence	1000	1000	1000	1000	1000	1000	1000	1000	1000						175
+HELMET (STR)	SUFFIX	# to Level of all Minion Skills	250	500													176
+HELMET (STR)	SUFFIX	# to Strength	1000	1000	1000	1000	1000	1000	1000	1000							177
+HELMET (STR)	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									178
+HELMET (STR)	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							179
+HELMET (STR)	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							180
+HELMET (STR)	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							181
+HELMET (STR)	SUFFIX	#% of Armour also applies to Elemental Damage	1000	1000	1000	1000	1000										182
+HELMET (DEX/INT)	PREFIX	#% increased Evasion and Energy Shield	1000	1000	1000	1000	1000	1000	1000								183
+HELMET (DEX/INT)	PREFIX	#% increased Evasion and Energy Shield, # to maximum Life	1000	1000	1000	1000	1000	1000									184
+HELMET (DEX/INT)	PREFIX	#% increased Evasion and Energy Shield, # to maximum Mana	1000	1000	1000	1000	1000	1000									185
+HELMET (DEX/INT)	PREFIX	#% increased Rarity of Items found	1000	1000	1000												186
+HELMET (DEX/INT)	PREFIX	# to Accuracy Rating	200	400	800	800	800	800	800	800	800						187
+HELMET (DEX/INT)	PREFIX	# to Evasion Rating, # to maximum Energy Shield	1000	1000	1000	1000	1000										188
+HELMET (DEX/INT)	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000					189
+HELMET (DEX/INT)	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000					190
+HELMET (DEX/INT)	SUFFIX	# Life Regeneration per second	1000	1000	1000	1000	1000	1000	1000	1000							191
+HELMET (DEX/INT)	SUFFIX	#% increased Critical Hit Chance	250	500	1000	1000	1000										192
+HELMET (DEX/INT)	SUFFIX	# to Accuracy Rating, #% increased Light Radius	1000	1000	1000												193
+HELMET (DEX/INT)	SUFFIX	#% increased Rarity of Items found	1000	1000	1000												194
+HELMET (DEX/INT)	SUFFIX	#% reduced Attribute Requirements	800	800	800	800	800										195
+HELMET (DEX/INT)	SUFFIX	# to Dexterity	500	500	500	500	500	500	500	500							196
+HELMET (DEX/INT)	SUFFIX	# to Intelligence	1000	1000	1000	1000	1000	1000	1000	1000	1000						197
+HELMET (DEX/INT)	SUFFIX	# to Level of all Minion Skills	250	500													198
+HELMET (DEX/INT)	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									199
+HELMET (DEX/INT)	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							200
+HELMET (DEX/INT)	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							201
+HELMET (DEX/INT)	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							202
+HELMET (DEX/INT)	SUFFIX	#% increased Energy Shield Recharge Rate	500	500	500	500											203
+HELMET (DEX/INT)	SUFFIX	Gain Deflection Rating equal to #% of Evasion Rating	500	500	500	500	500										204
+HELMET (STR/INT)	PREFIX	#% increased Armour and Energy Shield	1000	1000	1000	1000	1000	1000	1000								205
+HELMET (STR/INT)	PREFIX	#% increased Armour and Energy Shield, # to maximum Life	1000	1000	1000	1000	1000	1000									206
+HELMET (STR/INT)	PREFIX	#% increased Armour and Energy Shield, # to maximum Mana	1000	1000	1000	1000	1000	1000									207
+HELMET (STR/INT)	PREFIX	#% increased Rarity of Items found	1000	1000	1000												208
+HELMET (STR/INT)	PREFIX	# to Accuracy Rating	200	400	800	800	800	800	800	800	800						209
+HELMET (STR/INT)	PREFIX	# to Armour, # to maximum Energy Shield	1000	1000	1000	1000	1000										210
+HELMET (STR/INT)	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000					211
+HELMET (STR/INT)	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000					212
+HELMET (STR/INT)	SUFFIX	# Life Regeneration per second	1000	1000	1000	1000	1000	1000	1000	1000							213
+HELMET (STR/INT)	SUFFIX	#% increased Critical Hit Chance	250	500	1000	1000	1000										214
+HELMET (STR/INT)	SUFFIX	# to Accuracy Rating, #% increased Light Radius	1000	1000	1000												215
+HELMET (STR/INT)	SUFFIX	#% increased Rarity of Items found	1000	1000	1000												216
+HELMET (STR/INT)	SUFFIX	#% reduced Attribute Requirements	800	800	800	800	800										217
+HELMET (STR/INT)	SUFFIX	# to Intelligence	1000	1000	1000	1000	1000	1000	1000	1000	1000						218
+HELMET (STR/INT)	SUFFIX	# to Level of all Minion Skills	250	500													219
+HELMET (STR/INT)	SUFFIX	# to Strength	500	500	500	500	500	500	500	500							220
+HELMET (STR/INT)	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									221
+HELMET (STR/INT)	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							222
+HELMET (STR/INT)	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							223
+HELMET (STR/INT)	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							224
+HELMET (STR/INT)	SUFFIX	#% increased Energy Shield Recharge Rate	500	500	500	500											225
+HELMET (STR/INT)	SUFFIX	#% of Armour also applies to Elemental Damage	500	500	500	500	500										226
+HELMET (STR/DEX)	PREFIX	#% increased Armour and Evasion	1000	1000	1000	1000	1000	1000	1000								227
+HELMET (STR/DEX)	PREFIX	#% increased Armour and Evasion, # to maximum Life	1000	1000	1000	1000	1000	1000									228
+HELMET (STR/DEX)	PREFIX	#% increased Armour and Evasion, # to maximum Mana	1000	1000	1000	1000	1000	1000									229
+HELMET (STR/DEX)	PREFIX	#% increased Rarity of Items found	1000	1000	1000												230
+HELMET (STR/DEX)	PREFIX	# to Accuracy Rating	200	400	800	800	800	800	800	800	800						231
+HELMET (STR/DEX)	PREFIX	# to Armour, # to Evasion Rating	1000	1000	1000	1000	1000										232
+HELMET (STR/DEX)	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000					233
+HELMET (STR/DEX)	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000					234
+HELMET (STR/DEX)	SUFFIX	# Life Regeneration per second	1000	1000	1000	1000	1000	1000	1000	1000							235
+HELMET (STR/DEX)	SUFFIX	#% increased Critical Hit Chance	250	500	1000	1000	1000										236
+HELMET (STR/DEX)	SUFFIX	# to Accuracy Rating, #% increased Light Radius	1000	1000	1000												237
+HELMET (STR/DEX)	SUFFIX	#% increased Rarity of Items found	1000	1000	1000												238
+HELMET (STR/DEX)	SUFFIX	#% reduced Attribute Requirements	800	800	800	800	800										239
+HELMET (STR/DEX)	SUFFIX	# to Dexterity	500	500	500	500	500	500	500	500							240
+HELMET (STR/DEX)	SUFFIX	# to Intelligence	1000	1000	1000	1000	1000	1000	1000	1000	1000						241
+HELMET (STR/DEX)	SUFFIX	# to Level of all Minion Skills	250	500													242
+HELMET (STR/DEX)	SUFFIX	# to Strength	500	500	500	500	500	500	500	500							243
+HELMET (STR/DEX)	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									244
+HELMET (STR/DEX)	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							245
+HELMET (STR/DEX)	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							246
+HELMET (STR/DEX)	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							247
+HELMET (STR/DEX)	SUFFIX	#% of Armour also applies to Elemental Damage	500	500	500	500	500										248
+HELMET (STR/DEX)	SUFFIX	Gain Deflection Rating equal to #% of Evasion Rating	500	500	500	500	500										249
+BODY ARMOUR (INT)	PREFIX	# to # Physical Thorns damage	1000	1000	1000	1000	1000	1000	1000								250
+BODY ARMOUR (INT)	PREFIX	#% increased Energy Shield	1000	1000	1000	1000	1000	1000	1000	1000							251
+BODY ARMOUR (INT)	PREFIX	# to maximum Energy Shield, #% increased Energy Shield	1000	1000	1000	1000	1000	1000									252
+BODY ARMOUR (INT)	PREFIX	#% increased Energy Shield, # to maximum Life	1000	1000	1000	1000	1000	1000									253
+BODY ARMOUR (INT)	PREFIX	# to maximum Energy Shield	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000				254
+BODY ARMOUR (INT)	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000		255
+BODY ARMOUR (INT)	PREFIX	# to Spirit	100	200	300	400	500	500	500	500							256
+BODY ARMOUR (INT)	SUFFIX	# Life Regeneration per second	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000				257
+BODY ARMOUR (INT)	SUFFIX	#% reduced Attribute Requirements	900	900	900	900	900										258
+BODY ARMOUR (INT)	SUFFIX	#% reduced Duration of Bleeding on You	500	500	500	500	500										259
+BODY ARMOUR (INT)	SUFFIX	#% reduced Ignite Duration on you	500	500	500	500	500										260
+BODY ARMOUR (INT)	SUFFIX	#% reduced Poison Duration on you	500	500	500	500	500										261
+BODY ARMOUR (INT)	SUFFIX	# to Intelligence	1000	1000	1000	1000	1000	1000	1000	1000							262
+BODY ARMOUR (INT)	SUFFIX	# to Stun Threshold	800	800	800	800	800	800	800	800	800	800					263
+BODY ARMOUR (INT)	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									264
+BODY ARMOUR (INT)	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							265
+BODY ARMOUR (INT)	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							266
+BODY ARMOUR (INT)	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							267
+BODY ARMOUR (INT)	SUFFIX	#% faster start of Energy Shield Recharge	1000	1000	1000	1000	1000	1000									268
+BODY ARMOUR (DEX)	PREFIX	# to # Physical Thorns damage	1000	1000	1000	1000	1000	1000	1000								269
+BODY ARMOUR (DEX)	PREFIX	#% increased Evasion Rating	1000	1000	1000	1000	1000	1000	1000	1000							270
+BODY ARMOUR (DEX)	PREFIX	# to Evasion Rating, #% increased Evasion Rating	1000	1000	1000	1000	1000	1000									271
+BODY ARMOUR (DEX)	PREFIX	#% increased Evasion Rating, # to maximum Life	1000	1000	1000	1000	1000	1000									272
+BODY ARMOUR (DEX)	PREFIX	# to Evasion Rating	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000				273
+BODY ARMOUR (DEX)	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000		274
+BODY ARMOUR (DEX)	PREFIX	# to Spirit	100	200	300	400	500	500	500	500							275
+BODY ARMOUR (DEX)	SUFFIX	# Life Regeneration per second	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000				276
+BODY ARMOUR (DEX)	SUFFIX	#% reduced Attribute Requirements	900	900	900	900	900										277
+BODY ARMOUR (DEX)	SUFFIX	#% reduced Duration of Bleeding on You	500	500	500	500	500										278
+BODY ARMOUR (DEX)	SUFFIX	#% reduced Ignite Duration on you	500	500	500	500	500										279
+BODY ARMOUR (DEX)	SUFFIX	#% reduced Poison Duration on you	500	500	500	500	500										280
+BODY ARMOUR (DEX)	SUFFIX	# to Dexterity	1000	1000	1000	1000	1000	1000	1000	1000							281
+BODY ARMOUR (DEX)	SUFFIX	# to Stun Threshold	800	800	800	800	800	800	800	800	800	800					282
+BODY ARMOUR (DEX)	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									283
+BODY ARMOUR (DEX)	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							284
+BODY ARMOUR (DEX)	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							285
+BODY ARMOUR (DEX)	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							286
+BODY ARMOUR (DEX)	SUFFIX	Gain Deflection Rating equal to #% of Evasion Rating	1000	1000	1000	1000	1000	1000									287
+BODY ARMOUR (STR)	PREFIX	# to # Physical Thorns damage	1000	1000	1000	1000	1000	1000	1000								288
+BODY ARMOUR (STR)	PREFIX	#% increased Armour	1000	1000	1000	1000	1000	1000	1000	1000							289
+BODY ARMOUR (STR)	PREFIX	# to Armour, #% increased Armour	1000	1000	1000	1000	1000	1000									290
+BODY ARMOUR (STR)	PREFIX	#% increased Armour, # to maximum Life	1000	1000	1000	1000	1000	1000									291
+BODY ARMOUR (STR)	PREFIX	# to Armour	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000				292
+BODY ARMOUR (STR)	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000		293
+BODY ARMOUR (STR)	PREFIX	# to Spirit	100	200	300	400	500	500	500	500							294
+BODY ARMOUR (STR)	SUFFIX	# Life Regeneration per second	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000				295
+BODY ARMOUR (STR)	SUFFIX	#% reduced Attribute Requirements	900	900	900	900	900										296
+BODY ARMOUR (STR)	SUFFIX	#% reduced Duration of Bleeding on You	500	500	500	500	500										297
+BODY ARMOUR (STR)	SUFFIX	#% reduced Ignite Duration on you	500	500	500	500	500										298
+BODY ARMOUR (STR)	SUFFIX	#% reduced Poison Duration on you	500	500	500	500	500										299
+BODY ARMOUR (STR)	SUFFIX	# to Strength	1000	1000	1000	1000	1000	1000	1000	1000							300
+BODY ARMOUR (STR)	SUFFIX	# to Stun Threshold	800	800	800	800	800	800	800	800	800	800					301
+BODY ARMOUR (STR)	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									302
+BODY ARMOUR (STR)	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							303
+BODY ARMOUR (STR)	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							304
+BODY ARMOUR (STR)	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							305
+BODY ARMOUR (STR)	SUFFIX	#% of Armour also applies to Elemental Damage	1000	1000	1000	1000	1000	1000									306
+BODY ARMOUR (DEX/INT)	PREFIX	# to # Physical Thorns damage	1000	1000	1000	1000	1000	1000	1000								307
+BODY ARMOUR (DEX/INT)	PREFIX	#% increased Evasion and Energy Shield	1000	1000	1000	1000	1000	1000	1000	1000							308
+BODY ARMOUR (DEX/INT)	PREFIX	# to Evasion Rating, # to maximum Energy Shield, #% increased Evasion and Energy Shield	1000	1000	1000	1000	1000	1000									309
+BODY ARMOUR (DEX/INT)	PREFIX	#% increased Evasion and Energy Shield, # to maximum Life	1000	1000	1000	1000	1000	1000									310
+BODY ARMOUR (DEX/INT)	PREFIX	# to Evasion Rating, # to maximum Energy Shield	1000	1000	1000	1000	1000	1000	1000	1000							311
+BODY ARMOUR (DEX/INT)	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000		312
+BODY ARMOUR (DEX/INT)	PREFIX	# to Spirit	100	200	300	400	500	500	500	500							313
+BODY ARMOUR (DEX/INT)	SUFFIX	# Life Regeneration per second	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000				314
+BODY ARMOUR (DEX/INT)	SUFFIX	#% reduced Attribute Requirements	900	900	900	900	900										315
+BODY ARMOUR (DEX/INT)	SUFFIX	#% reduced Duration of Bleeding on You	500	500	500	500	500										316
+BODY ARMOUR (DEX/INT)	SUFFIX	#% reduced Ignite Duration on you	500	500	500	500	500										317
+BODY ARMOUR (DEX/INT)	SUFFIX	#% reduced Poison Duration on you	500	500	500	500	500										318
+BODY ARMOUR (DEX/INT)	SUFFIX	# to Dexterity	500	500	500	500	500	500	500	500							319
+BODY ARMOUR (DEX/INT)	SUFFIX	# to Intelligence	500	500	500	500	500	500	500	500							320
+BODY ARMOUR (DEX/INT)	SUFFIX	# to Stun Threshold	800	800	800	800	800	800	800	800	800	800					321
+BODY ARMOUR (DEX/INT)	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									322
+BODY ARMOUR (DEX/INT)	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							323
+BODY ARMOUR (DEX/INT)	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							324
+BODY ARMOUR (DEX/INT)	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							325
+BODY ARMOUR (DEX/INT)	SUFFIX	#% faster start of Energy Shield Recharge	500	500	500	500	500	500									326
+BODY ARMOUR (DEX/INT)	SUFFIX	Gain Deflection Rating equal to #% of Evasion Rating	500	500	500	500	500	500									327
+BODY ARMOUR (STR/INT)	PREFIX	# to # Physical Thorns damage	1000	1000	1000	1000	1000	1000	1000								328
+BODY ARMOUR (STR/INT)	PREFIX	#% increased Armour and Energy Shield	1000	1000	1000	1000	1000	1000	1000	1000							329
+BODY ARMOUR (STR/INT)	PREFIX	# to Armour, # to maximum Energy Shield, #% increased Armour and Energy Shield	1000	1000	1000	1000	1000	1000									330
+BODY ARMOUR (STR/INT)	PREFIX	#% increased Armour and Energy Shield, # to maximum Life	1000	1000	1000	1000	1000	1000									331
+BODY ARMOUR (STR/INT)	PREFIX	# to Armour, # to maximum Energy Shield	1000	1000	1000	1000	1000	1000	1000	1000							332
+BODY ARMOUR (STR/INT)	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000		333
+BODY ARMOUR (STR/INT)	PREFIX	# to Spirit	100	200	300	400	500	500	500	500							334
+BODY ARMOUR (STR/INT)	SUFFIX	# Life Regeneration per second	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000				335
+BODY ARMOUR (STR/INT)	SUFFIX	#% reduced Attribute Requirements	900	900	900	900	900										336
+BODY ARMOUR (STR/INT)	SUFFIX	#% reduced Duration of Bleeding on You	500	500	500	500	500										337
+BODY ARMOUR (STR/INT)	SUFFIX	#% reduced Ignite Duration on you	500	500	500	500	500										338
+BODY ARMOUR (STR/INT)	SUFFIX	#% reduced Poison Duration on you	500	500	500	500	500										339
+BODY ARMOUR (STR/INT)	SUFFIX	# to Intelligence	500	500	500	500	500	500	500	500							340
+BODY ARMOUR (STR/INT)	SUFFIX	# to Strength	500	500	500	500	500	500	500	500							341
+BODY ARMOUR (STR/INT)	SUFFIX	# to Stun Threshold	800	800	800	800	800	800	800	800	800	800					342
+BODY ARMOUR (STR/INT)	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									343
+BODY ARMOUR (STR/INT)	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							344
+BODY ARMOUR (STR/INT)	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							345
+BODY ARMOUR (STR/INT)	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							346
+BODY ARMOUR (STR/INT)	SUFFIX	#% faster start of Energy Shield Recharge	500	500	500	500	500	500									347
+BODY ARMOUR (STR/INT)	SUFFIX	#% of Armour also applies to Elemental Damage	500	500	500	500	500	500									348
+BODY ARMOUR (STR/DEX)	PREFIX	# to # Physical Thorns damage	1000	1000	1000	1000	1000	1000	1000								349
+BODY ARMOUR (STR/DEX)	PREFIX	#% increased Armour and Evasion	1000	1000	1000	1000	1000	1000	1000	1000							350
+BODY ARMOUR (STR/DEX)	PREFIX	# to Armour, # to Evasion Rating, #% increased Armour and Evasion	1000	1000	1000	1000	1000	1000									351
+BODY ARMOUR (STR/DEX)	PREFIX	#% increased Armour and Evasion, # to maximum Life	1000	1000	1000	1000	1000	1000									352
+BODY ARMOUR (STR/DEX)	PREFIX	# to Armour, # to Evasion Rating	1000	1000	1000	1000	1000	1000	1000	1000							353
+BODY ARMOUR (STR/DEX)	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000		354
+BODY ARMOUR (STR/DEX)	PREFIX	# to Spirit	100	200	300	400	500	500	500	500							355
+BODY ARMOUR (STR/DEX)	SUFFIX	# Life Regeneration per second	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000				356
+BODY ARMOUR (STR/DEX)	SUFFIX	#% reduced Attribute Requirements	900	900	900	900	900										357
+BODY ARMOUR (STR/DEX)	SUFFIX	#% reduced Duration of Bleeding on You	500	500	500	500	500										358
+BODY ARMOUR (STR/DEX)	SUFFIX	#% reduced Ignite Duration on you	500	500	500	500	500										359
+BODY ARMOUR (STR/DEX)	SUFFIX	#% reduced Poison Duration on you	500	500	500	500	500										360
+BODY ARMOUR (STR/DEX)	SUFFIX	# to Dexterity	500	500	500	500	500	500	500	500							361
+BODY ARMOUR (STR/DEX)	SUFFIX	# to Strength	500	500	500	500	500	500	500	500							362
+BODY ARMOUR (STR/DEX)	SUFFIX	# to Stun Threshold	800	800	800	800	800	800	800	800	800	800					363
+BODY ARMOUR (STR/DEX)	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									364
+BODY ARMOUR (STR/DEX)	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							365
+BODY ARMOUR (STR/DEX)	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							366
+BODY ARMOUR (STR/DEX)	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							367
+BODY ARMOUR (STR/DEX)	SUFFIX	#% of Armour also applies to Elemental Damage	500	500	500	500	500	500									368
+BODY ARMOUR (STR/DEX)	SUFFIX	Gain Deflection Rating equal to #% of Evasion Rating	500	500	500	500	500	500									369
+SHIELD (STR)	PREFIX	# to # Physical Thorns damage	1000	1000	1000	1000	1000	1000	1000								370
+SHIELD (STR)	PREFIX	#% increased Armour	1000	1000	1000	1000	1000	1000	1000	1000							371
+SHIELD (STR)	PREFIX	#% increased Armour, # to Stun Threshold	1000	1000	1000	1000	1000	1000									372
+SHIELD (STR)	PREFIX	#% increased Block chance	1000	1000	1000												373
+SHIELD (STR)	PREFIX	# to Armour	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000					374
+SHIELD (STR)	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000				375
+SHIELD (STR)	SUFFIX	#% additional Physical Damage Reduction	800	800	800	800	800										376
+SHIELD (STR)	SUFFIX	#% reduced Attribute Requirements	800	800	800	800	800										377
+SHIELD (STR)	SUFFIX	# to Strength	1000	1000	1000	1000	1000	1000	1000	1000							378
+SHIELD (STR)	SUFFIX	# to Stun Threshold	800	800	800	800	800	800	800	800	800	800					379
+SHIELD (STR)	SUFFIX	#% to all Maximum Elemental Resistances	125	125													380
+SHIELD (STR)	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									381
+SHIELD (STR)	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							382
+SHIELD (STR)	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							383
+SHIELD (STR)	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							384
+SHIELD (STR)	SUFFIX	#% to Maximum Chaos Resistance	125	125	125												385
+SHIELD (STR)	SUFFIX	#% to Maximum Cold Resistance	250	250	250												386
+SHIELD (STR)	SUFFIX	#% to Maximum Fire Resistance	250	250	250												387
+SHIELD (STR)	SUFFIX	#% to Maximum Lightning Resistance	250	250	250												388
+SHIELD (STR)	SUFFIX	#% of Armour also applies to Elemental Damage	1000	1000	1000	1000	1000	1000									389
+BUCKLER	PREFIX	# to # Physical Thorns damage	1000	1000	1000	1000	1000	1000	1000								390
+BUCKLER	PREFIX	#% increased Block chance	1000	1000	1000												391
+BUCKLER	PREFIX	#% increased Evasion Rating	1000	1000	1000	1000	1000	1000	1000	1000							392
+BUCKLER	PREFIX	#% increased Evasion Rating, # to Stun Threshold	1000	1000	1000	1000	1000	1000									393
+BUCKLER	PREFIX	# to Evasion Rating	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000					394
+BUCKLER	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000				395
+BUCKLER	SUFFIX	#% reduced Attribute Requirements	800	800	800	800	800										396
+BUCKLER	SUFFIX	# to Dexterity	1000	1000	1000	1000	1000	1000	1000	1000							397
+BUCKLER	SUFFIX	# to Stun Threshold	800	800	800	800	800	800	800	800	800	800					398
+BUCKLER	SUFFIX	#% to all Maximum Elemental Resistances	125	125													399
+BUCKLER	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									400
+BUCKLER	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							401
+BUCKLER	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							402
+BUCKLER	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							403
+BUCKLER	SUFFIX	#% to Maximum Chaos Resistance	125	125	125												404
+BUCKLER	SUFFIX	#% to Maximum Cold Resistance	250	250	250												405
+BUCKLER	SUFFIX	#% to Maximum Fire Resistance	250	250	250												406
+BUCKLER	SUFFIX	#% to Maximum Lightning Resistance	250	250	250												407
+BUCKLER	SUFFIX	Gain Deflection Rating equal to #% of Evasion Rating	1000	1000	1000	1000	1000	1000									408
+SHIELD (STR/INT)	PREFIX	# to # Physical Thorns damage	1000	1000	1000	1000	1000	1000	1000								409
+SHIELD (STR/INT)	PREFIX	#% increased Armour and Energy Shield	1000	1000	1000	1000	1000	1000	1000	1000							410
+SHIELD (STR/INT)	PREFIX	#% increased Armour and Energy Shield, # to Stun Threshold	1000	1000	1000	1000	1000	1000									411
+SHIELD (STR/INT)	PREFIX	#% increased Block chance	1000	1000	1000												412
+SHIELD (STR/INT)	PREFIX	# to Armour, # to maximum Energy Shield	1000	1000	1000	1000	1000	1000	1000								413
+SHIELD (STR/INT)	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000				414
+SHIELD (STR/INT)	SUFFIX	#% reduced Attribute Requirements	800	800	800	800	800										415
+SHIELD (STR/INT)	SUFFIX	# to Intelligence	500	500	500	500	500	500	500	500							416
+SHIELD (STR/INT)	SUFFIX	# to Strength	500	500	500	500	500	500	500	500							417
+SHIELD (STR/INT)	SUFFIX	# to Stun Threshold	800	800	800	800	800	800	800	800	800	800					418
+SHIELD (STR/INT)	SUFFIX	#% to all Elemental Resistances	800	800	800	800	800	800									419
+SHIELD (STR/INT)	SUFFIX	#% to all Maximum Elemental Resistances	125	125													420
+SHIELD (STR/INT)	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									421
+SHIELD (STR/INT)	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							422
+SHIELD (STR/INT)	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							423
+SHIELD (STR/INT)	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							424
+SHIELD (STR/INT)	SUFFIX	#% to Maximum Chaos Resistance	125	125	125												425
+SHIELD (STR/INT)	SUFFIX	#% to Maximum Cold Resistance	250	250	250												426
+SHIELD (STR/INT)	SUFFIX	#% to Maximum Fire Resistance	250	250	250												427
+SHIELD (STR/INT)	SUFFIX	#% to Maximum Lightning Resistance	250	250	250												428
+SHIELD (STR/INT)	SUFFIX	#% increased Energy Shield Recharge Rate	500	500	500	500	500	500									429
+SHIELD (STR/INT)	SUFFIX	#% of Armour also applies to Elemental Damage	500	500	500	500	500	500									430
+SHIELD (STR/DEX)	PREFIX	# to # Physical Thorns damage	1000	1000	1000	1000	1000	1000	1000								431
+SHIELD (STR/DEX)	PREFIX	#% increased Armour and Evasion	1000	1000	1000	1000	1000	1000	1000	1000							432
+SHIELD (STR/DEX)	PREFIX	#% increased Armour and Evasion, # to Stun Threshold	1000	1000	1000	1000	1000	1000									433
+SHIELD (STR/DEX)	PREFIX	#% increased Block chance	1000	1000	1000												434
+SHIELD (STR/DEX)	PREFIX	# to Armour, # to Evasion Rating	1000	1000	1000	1000	1000	1000	1000								435
+SHIELD (STR/DEX)	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000				436
+SHIELD (STR/DEX)	SUFFIX	#% reduced Attribute Requirements	800	800	800	800	800										437
+SHIELD (STR/DEX)	SUFFIX	# to Dexterity	500	500	500	500	500	500	500	500							438
+SHIELD (STR/DEX)	SUFFIX	# to Strength	500	500	500	500	500	500	500	500							439
+SHIELD (STR/DEX)	SUFFIX	# to Stun Threshold	800	800	800	800	800	800	800	800	800	800					440
+SHIELD (STR/DEX)	SUFFIX	#% to all Maximum Elemental Resistances	125	125													441
+SHIELD (STR/DEX)	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									442
+SHIELD (STR/DEX)	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							443
+SHIELD (STR/DEX)	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							444
+SHIELD (STR/DEX)	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							445
+SHIELD (STR/DEX)	SUFFIX	#% to Maximum Chaos Resistance	125	125	125												446
+SHIELD (STR/DEX)	SUFFIX	#% to Maximum Cold Resistance	250	250	250												447
+SHIELD (STR/DEX)	SUFFIX	#% to Maximum Fire Resistance	250	250	250												448
+SHIELD (STR/DEX)	SUFFIX	#% to Maximum Lightning Resistance	250	250	250												449
+SHIELD (STR/DEX)	SUFFIX	Hits against you have #% reduced Critical Damage Bonus	800	800	800	800	800										450
+SHIELD (STR/DEX)	SUFFIX	#% of Armour also applies to Elemental Damage	500	500	500	500	500	500									451
+SHIELD (STR/DEX)	SUFFIX	Gain Deflection Rating equal to #% of Evasion Rating	500	500	500	500	500	500									452
+BELT	PREFIX	# to # Physical Thorns damage	1000	1000	1000	1000	1000	1000	1000								453
+BELT	PREFIX	#% increased Charm Effect Duration	800	800	800	800	800										454
+BELT	PREFIX	#% increased Flask Life Recovery rate	800	800	800	800	800	800									455
+BELT	PREFIX	#% increased Flask Mana Recovery rate	800	800	800	800	800	800									456
+BELT	PREFIX	# to Armour	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000					457
+BELT	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000					458
+BELT	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000						459
+BELT	SUFFIX	# Life Regeneration per second	1000	1000	1000	1000	1000	1000	1000	1000	1000						460
+BELT	SUFFIX	#% increased Charm Charges gained	800	800	800	800	800	800									461
+BELT	SUFFIX	#% increased Flask Charges gained	800	800	800	800	800	800									462
+BELT	SUFFIX	#% reduced Charm Charges used	800	800	800	800	800	800									463
+BELT	SUFFIX	#% reduced Flask Charges used	800	800	800	800	800	800									464
+BELT	SUFFIX	# to Strength	1000	1000	1000	1000	1000	1000	1000	1000	1000						465
+BELT	SUFFIX	# to Stun Threshold	800	800	800	800	800	800	800	800	800	800					466
+BELT	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									467
+BELT	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							468
+BELT	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							469
+BELT	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							470
+RING	PREFIX	#% increased Chaos Damage	500	500	500	500	500	500									471
+RING	PREFIX	#% increased Cold Damage	500	500	500	500	500	500									472
+RING	PREFIX	#% increased Fire Damage	500	500	500	500	500	500									473
+RING	PREFIX	#% increased Lightning Damage	500	500	500	500	500	500									474
+RING	PREFIX	#% increased Rarity of Items found	1000	1000	1000												475
+RING	PREFIX	# to Accuracy Rating	400	800	800	800	800	800	800	800							476
+RING	PREFIX	# to Evasion Rating	1000	1000	1000	1000	1000	1000	1000	1000	1000						477
+RING	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000							478
+RING	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000			479
+RING	PREFIX	Adds # to # Cold damage to Attacks	200	300	400	500	500	500	500	500	500						480
+RING	PREFIX	Adds # to # Fire damage to Attacks	200	300	400	500	500	500	500	500	500						481
+RING	PREFIX	Adds # to # Lightning damage to Attacks	200	300	400	500	500	500	500	500	500						482
+RING	PREFIX	Adds # to # Physical Damage to Attacks	400	600	800	1000	1000	1000	1000	1000	1000						483
+RING	SUFFIX	# Life Regeneration per second	1000	1000	1000	1000	1000	1000	1000								484
+RING	SUFFIX	#% increased Cast Speed	1000	1000	1000	1000											485
+RING	SUFFIX	#% increased Mana Regeneration Rate, #% increased Light Radius	1000	1000	1000												486
+RING	SUFFIX	#% increased Mana Regeneration Rate	1000	1000	1000	1000	1000	1000									487
+RING	SUFFIX	#% increased Rarity of Items found	1000	1000	1000												488
+RING	SUFFIX	# to all Attributes	400	400	400	400											489
+RING	SUFFIX	# to Dexterity	1000	1000	1000	1000	1000	1000	1000	1000							490
+RING	SUFFIX	# to Intelligence	1000	1000	1000	1000	1000	1000	1000	1000							491
+RING	SUFFIX	# to Strength	1000	1000	1000	1000	1000	1000	1000	1000							492
+RING	SUFFIX	#% to all Elemental Resistances	800	800	800	800	800										493
+RING	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									494
+RING	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							495
+RING	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							496
+RING	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							497
+RING	SUFFIX	Gain # Life per Enemy Killed	750	750	750	750	750	750									498
+RING	SUFFIX	Gain # Mana per Enemy Killed	750	750	750	750	750	750									499
+RING	SUFFIX	Leech #% of Physical Attack Damage as Life	1000	1000	1000												500
+RING	SUFFIX	Leech #% of Physical Attack Damage as Mana	1000	1000	1000												501
+SPEAR	PREFIX	#% increased Elemental Damage with Attacks	500	500	500	500	500	500									502
+SPEAR	PREFIX	#% increased Physical Damage	25	50	100	200	400	1000	1000	1000							503
+SPEAR	PREFIX	#% increased Physical Damage, # to Accuracy Rating	100	200	400	600	1000	1000	1000	1000							504
+SPEAR	PREFIX	# to Accuracy Rating	200	300	600	600	800	800	800	800	800						505
+SPEAR	PREFIX	Adds # to # Cold Damage	80	200	320	480	800	800	800	800	800	800					506
+SPEAR	PREFIX	Adds # to # Fire Damage	90	225	360	540	900	900	900	900	900	900					507
+SPEAR	PREFIX	Adds # to # Lightning Damage	110	275	440	660	1100	1100	1100	1100	1100	1100					508
+SPEAR	PREFIX	Adds # to # Physical Damage	100	200	400	600	1000	1000	1000	1000	1000						509
+SPEAR	SUFFIX	#% increased Attack Speed	100	200	500	500	1000	1000	1000	1000							510
+SPEAR	SUFFIX	# to Accuracy Rating, #% increased Light Radius	1000	1000	1000												511
+SPEAR	SUFFIX	#% increased Stun Duration	1000	1000	1000	1000	1000	1000									512
+SPEAR	SUFFIX	#% reduced Attribute Requirements	1000	1000	1000	1000	1000										513
+SPEAR	SUFFIX	# to Dexterity	750	750	750	750	750	750	750	750							514
+SPEAR	SUFFIX	# to Level of all Melee Skills	50	125	250	375	500										515
+SPEAR	SUFFIX	# to Level of all Projectile Skills	50	125	250	375	500										516
+SPEAR	SUFFIX	# to Strength	250	250	250	250	250	250	250	250							517
+SPEAR	SUFFIX	#% to Critical Damage Bonus	125	250	500	1000	1000	1000									518
+SPEAR	SUFFIX	#% to Critical Hit Chance	125	250	500	1000	1000	1000									519
+SPEAR	SUFFIX	Causes #% increased Stun Buildup	1000	1000	1000	1000	1000	1000									520
+SPEAR	SUFFIX	Gain # Life per Enemy Killed	750	750	750	750	750	750	750	750							521
+SPEAR	SUFFIX	Gain # Mana per Enemy Killed	750	750	750	750	750	750	750	750							522
+SPEAR	SUFFIX	Grants # Life per Enemy Hit	1000	1000	1000	1000											523
+SPEAR	SUFFIX	Leeches #% of Physical Damage as Life	1000	1000	1000	1000	1000										524
+SPEAR	SUFFIX	Leeches #% of Physical Damage as Mana	1000	1000	1000	1000	1000										525
+CROSSBOW	PREFIX	#% increased Elemental Damage with Attacks	500	500	500	500	500	500									526
+CROSSBOW	PREFIX	#% increased Physical Damage	25	50	100	200	400	1000	1000	1000							527
+CROSSBOW	PREFIX	#% increased Physical Damage, # to Accuracy Rating	100	200	400	600	1000	1000	1000	1000							528
+CROSSBOW	PREFIX	# to Accuracy Rating	100	200	300	600	600	800	800	800	800	800					529
+CROSSBOW	PREFIX	Adds # to # Cold Damage	80	200	320	480	800	800	800	800	800	800					530
+CROSSBOW	PREFIX	Adds # to # Fire Damage	100	250	400	600	1000	1000	1000	1000	1000	1000					531
+CROSSBOW	PREFIX	Adds # to # Lightning Damage	100	250	400	600	1000	1000	1000	1000	1000	1000					532
+CROSSBOW	PREFIX	Adds # to # Physical Damage	100	200	400	600	1000	1000	1000	1000	1000						533
+CROSSBOW	SUFFIX	#% increased Attack Speed	400	500	1000	1000	1000										534
+CROSSBOW	SUFFIX	# to Accuracy Rating, #% increased Light Radius	1000	1000	1000												535
+CROSSBOW	SUFFIX	#% reduced Attribute Requirements	1000	1000	1000	1000	1000										536
+CROSSBOW	SUFFIX	# to Dexterity	500	500	500	500	500	500	500	500							537
+CROSSBOW	SUFFIX	# to Level of all Projectile Skills	100	250	500	750	1000										538
+CROSSBOW	SUFFIX	# to Strength	500	500	500	500	500	500	500	500							539
+CROSSBOW	SUFFIX	#% to Critical Damage Bonus	125	250	500	1000	1000	1000									540
+CROSSBOW	SUFFIX	#% to Critical Hit Chance	125	250	500	1000	1000	1000									541
+CROSSBOW	SUFFIX	Gain # Life per Enemy Killed	750	750	750	750	750	750	750	750							542
+CROSSBOW	SUFFIX	Gain # Mana per Enemy Killed	750	750	750	750	750	750	750	750							543
+CROSSBOW	SUFFIX	Grants # Life per Enemy Hit	1000	1000	1000	1000											544
+CROSSBOW	SUFFIX	Leeches #% of Physical Damage as Life	1000	1000	1000	1000											545
+CROSSBOW	SUFFIX	Leeches #% of Physical Damage as Mana	1000	1000	1000	1000											546
+CROSSBOW	SUFFIX	Loads # additional bolts	125	250													547
+BOW	PREFIX	#% increased Elemental Damage with Attacks	500	500	500	500	500	500									548
+BOW	PREFIX	#% increased Physical Damage	25	50	100	200	400	1000	1000	1000							549
+BOW	PREFIX	#% increased Physical Damage, # to Accuracy Rating	100	200	400	600	1000	1000	1000	1000							550
+BOW	PREFIX	# to Accuracy Rating	100	200	300	600	600	800	800	800	800	800					551
+BOW	PREFIX	Adds # to # Cold Damage	80	200	320	480	800	800	800	800	800	800					552
+BOW	PREFIX	Adds # to # Fire Damage	80	200	320	480	800	800	800	800	800	800					553
+BOW	PREFIX	Adds # to # Lightning Damage	120	300	480	720	1200	1200	1200	1200	1200	1200					554
+BOW	PREFIX	Adds # to # Physical Damage	100	200	400	600	1000	1000	1000	1000	1000						555
+BOW	SUFFIX	#% increased Attack Speed	400	500	1000	1000	1000										556
+BOW	SUFFIX	# to Accuracy Rating, #% increased Light Radius	1000	1000	1000												557
+BOW	SUFFIX	#% reduced Attribute Requirements	1000	1000	1000	1000	1000										558
+BOW	SUFFIX	# to Dexterity	1000	1000	1000	1000	1000	1000	1000	1000							559
+BOW	SUFFIX	# to Level of all Projectile Skills	100	250	500	750	1000										560
+BOW	SUFFIX	#% to Critical Damage Bonus	125	250	500	1000	1000	1000									561
+BOW	SUFFIX	#% to Critical Hit Chance	125	250	500	1000	1000	1000									562
+BOW	SUFFIX	#% Surpassing chance to fire an additional Arrow	125	200	300	400											563
+BOW	SUFFIX	Gain # Life per Enemy Killed	750	750	750	750	750	750	750	750							564
+BOW	SUFFIX	Gain # Mana per Enemy Killed	750	750	750	750	750	750	750	750							565
+BOW	SUFFIX	Grants # Life per Enemy Hit	1000	1000	1000	1000											566
+BOW	SUFFIX	Leeches #% of Physical Damage as Life	1000	1000	1000	1000											567
+BOW	SUFFIX	Leeches #% of Physical Damage as Mana	1000	1000	1000	1000											568
+WARSTAFF	PREFIX	#% increased Elemental Damage with Attacks	500	500	500	500	500	500									569
+WARSTAFF	PREFIX	#% increased Physical Damage	25	50	100	200	400	1000	1000	1000							570
+WARSTAFF	PREFIX	#% increased Physical Damage, # to Accuracy Rating	100	200	400	600	1000	1000	1000	1000							571
+WARSTAFF	PREFIX	# to Accuracy Rating	200	300	600	600	800	800	800	800	800						572
+WARSTAFF	PREFIX	Adds # to # Cold Damage	90	225	360	540	900	900	900	900	900	900					573
+WARSTAFF	PREFIX	Adds # to # Fire Damage	80	200	320	480	800	800	800	800	800	800					574
+WARSTAFF	PREFIX	Adds # to # Lightning Damage	110	275	440	660	1100	1100	1100	1100	1100	1100					575
+WARSTAFF	PREFIX	Adds # to # Physical Damage	100	200	400	600	1000	1000	1000	1000	1000						576
+WARSTAFF	SUFFIX	#% increased Attack Speed	100	200	500	500	1000	1000	1000	1000							577
+WARSTAFF	SUFFIX	# to Accuracy Rating, #% increased Light Radius	1000	1000	1000												578
+WARSTAFF	SUFFIX	#% increased Stun Duration	1000	1000	1000	1000	1000	1000									579
+WARSTAFF	SUFFIX	#% reduced Attribute Requirements	1000	1000	1000	1000	1000										580
+WARSTAFF	SUFFIX	# to Dexterity	750	750	750	750	750	750	750	750							581
+WARSTAFF	SUFFIX	# to Intelligence	250	250	250	250	250	250	250	250							582
+WARSTAFF	SUFFIX	# to Level of all Melee Skills	100	250	500	750	1000										583
+WARSTAFF	SUFFIX	#% to Critical Damage Bonus	125	250	500	1000	1000	1000									584
+WARSTAFF	SUFFIX	#% to Critical Hit Chance	125	250	500	1000	1000	1000									585
+WARSTAFF	SUFFIX	Causes #% increased Stun Buildup	1000	1000	1000	1000	1000	1000									586
+WARSTAFF	SUFFIX	Gain # Life per Enemy Killed	750	750	750	750	750	750	750	750							587
+WARSTAFF	SUFFIX	Gain # Mana per Enemy Killed	750	750	750	750	750	750	750	750							588
+WARSTAFF	SUFFIX	Grants # Life per Enemy Hit	1000	1000	1000	1000											589
+WARSTAFF	SUFFIX	Leeches #% of Physical Damage as Life	1000	1000	1000	1000	1000										590
+WARSTAFF	SUFFIX	Leeches #% of Physical Damage as Mana	1000	1000	1000	1000	1000										591
+TWO HAND MACE	PREFIX	#% increased Elemental Damage with Attacks	500	500	500	500	500	500									592
+TWO HAND MACE	PREFIX	#% increased Physical Damage	25	50	100	200	400	1000	1000	1000							593
+TWO HAND MACE	PREFIX	#% increased Physical Damage, # to Accuracy Rating	100	200	400	600	1000	1000	1000	1000							594
+TWO HAND MACE	PREFIX	# to Accuracy Rating	200	300	600	600	800	800	800	800	800						595
+TWO HAND MACE	PREFIX	Adds # to # Cold Damage	80	200	320	480	800	800	800	800	800	800					596
+TWO HAND MACE	PREFIX	Adds # to # Fire Damage	120	300	480	720	1200	1200	1200	1200	1200	1200					597
+TWO HAND MACE	PREFIX	Adds # to # Lightning Damage	80	200	320	480	800	800	800	800	800	800					598
+TWO HAND MACE	PREFIX	Adds # to # Physical Damage	100	200	400	600	1000	1000	1000	1000	1000						599
+TWO HAND MACE	SUFFIX	#% increased Attack Speed	100	200	500	500	1000	1000	1000	1000							600
+TWO HAND MACE	SUFFIX	# to Accuracy Rating, #% increased Light Radius	1000	1000	1000												601
+TWO HAND MACE	SUFFIX	#% increased Stun Duration	1000	1000	1000	1000	1000	1000									602
+TWO HAND MACE	SUFFIX	#% reduced Attribute Requirements	1000	1000	1000	1000	1000										603
+TWO HAND MACE	SUFFIX	# to Level of all Melee Skills	100	250	500	750	1000										604
+TWO HAND MACE	SUFFIX	# to Strength	1000	1000	1000	1000	1000	1000	1000	1000							605
+TWO HAND MACE	SUFFIX	#% to Critical Damage Bonus	125	250	500	1000	1000	1000									606
+TWO HAND MACE	SUFFIX	#% to Critical Hit Chance	125	250	500	1000	1000	1000									607
+TWO HAND MACE	SUFFIX	Causes #% increased Stun Buildup	1000	1000	1000	1000	1000	1000									608
+TWO HAND MACE	SUFFIX	Gain # Life per Enemy Killed	750	750	750	750	750	750	750	750							609
+TWO HAND MACE	SUFFIX	Gain # Mana per Enemy Killed	750	750	750	750	750	750	750	750							610
+TWO HAND MACE	SUFFIX	Grants # Life per Enemy Hit	1000	1000	1000	1000											611
+TWO HAND MACE	SUFFIX	Leeches #% of Physical Damage as Life	1000	1000	1000	1000	1000										612
+TWO HAND MACE	SUFFIX	Leeches #% of Physical Damage as Mana	1000	1000	1000	1000	1000										613
+ONE HAND MACE	PREFIX	#% increased Elemental Damage with Attacks	500	500	500	500	500	500									614
+ONE HAND MACE	PREFIX	#% increased Physical Damage	25	50	100	200	400	1000	1000	1000							615
+ONE HAND MACE	PREFIX	#% increased Physical Damage, # to Accuracy Rating	100	200	400	600	1000	1000	1000	1000							616
+ONE HAND MACE	PREFIX	# to Accuracy Rating	200	300	600	600	800	800	800	800	800						617
+ONE HAND MACE	PREFIX	Adds # to # Cold Damage	80	200	320	480	800	800	800	800	800	800					618
+ONE HAND MACE	PREFIX	Adds # to # Fire Damage	120	300	480	720	1200	1200	1200	1200	1200	1200					619
+ONE HAND MACE	PREFIX	Adds # to # Lightning Damage	80	200	320	480	800	800	800	800	800	800					620
+ONE HAND MACE	PREFIX	Adds # to # Physical Damage	100	200	400	600	1000	1000	1000	1000	1000						621
+ONE HAND MACE	SUFFIX	#% increased Attack Speed	100	200	500	500	1000	1000	1000	1000							622
+ONE HAND MACE	SUFFIX	# to Accuracy Rating, #% increased Light Radius	1000	1000	1000												623
+ONE HAND MACE	SUFFIX	#% increased Stun Duration	1000	1000	1000	1000	1000	1000									624
+ONE HAND MACE	SUFFIX	#% reduced Attribute Requirements	1000	1000	1000	1000	1000										625
+ONE HAND MACE	SUFFIX	# to Level of all Melee Skills	100	250	500	750	1000										626
+ONE HAND MACE	SUFFIX	# to Strength	1000	1000	1000	1000	1000	1000	1000	1000							627
+ONE HAND MACE	SUFFIX	#% to Critical Damage Bonus	125	250	500	1000	1000	1000									628
+ONE HAND MACE	SUFFIX	#% to Critical Hit Chance	125	250	500	1000	1000	1000									629
+ONE HAND MACE	SUFFIX	Causes #% increased Stun Buildup	1000	1000	1000	1000	1000	1000									630
+ONE HAND MACE	SUFFIX	Gain # Life per Enemy Killed	750	750	750	750	750	750	750	750							631
+ONE HAND MACE	SUFFIX	Gain # Mana per Enemy Killed	750	750	750	750	750	750	750	750							632
+ONE HAND MACE	SUFFIX	Grants # Life per Enemy Hit	1000	1000	1000	1000											633
+ONE HAND MACE	SUFFIX	Leeches #% of Physical Damage as Life	1000	1000	1000	1000	1000										634
+ONE HAND MACE	SUFFIX	Leeches #% of Physical Damage as Mana	1000	1000	1000	1000	1000										635
+WAND	PREFIX	#% increased Chaos Damage	50	100	200	300	400	500	500	500							636
+WAND	PREFIX	#% increased Cold Damage	50	100	200	300	400	500	500	500							637
+WAND	PREFIX	#% increased Fire Damage	50	100	200	300	400	500	500	500							638
+WAND	PREFIX	#% increased Lightning Damage	50	100	200	300	400	500	500	500							639
+WAND	PREFIX	#% increased Spell Damage	50	100	200	400	600	1000	1000	1000							640
+WAND	PREFIX	#% increased Spell Damage, # to maximum Mana	100	200	400	600	1000	1000	1000								641
+WAND	PREFIX	#% increased Spell Physical Damage	50	100	200	300	400	500	500	500							642
+WAND	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000				643
+WAND	PREFIX	Gain #% of Damage as Extra Cold Damage	500	500	500	500	500	500									644
+WAND	PREFIX	Gain #% of Damage as Extra Fire Damage	500	500	500	500	500	500									645
+WAND	PREFIX	Gain #% of Damage as Extra Lightning Damage	500	500	500	500	500	500									646
+WAND	SUFFIX	#% increased Cast Speed	250	500	1000	1000	1000	1000	1000								647
+WAND	SUFFIX	#% increased Flammability Magnitude	500	500	1000	1000	1000										648
+WAND	SUFFIX	#% increased chance to Shock	500	500	1000	1000	1000										649
+WAND	SUFFIX	#% increased Critical Hit Chance for Spells	125	250	500	1000	1000	1000									650
+WAND	SUFFIX	#% increased Critical Spell Damage Bonus	125	250	500	1000	1000	1000									651
+WAND	SUFFIX	#% increased Freeze Buildup	500	500	1000	1000	1000										652
+WAND	SUFFIX	#% increased Mana Regeneration Rate, #% increased Light Radius	1000	1000	1000												653
+WAND	SUFFIX	#% increased Mana Regeneration Rate	1000	1000	1000	1000	1000	1000									654
+WAND	SUFFIX	#% reduced Attribute Requirements	1000	1000	1000	1000	1000										655
+WAND	SUFFIX	# to Intelligence	1000	1000	1000	1000	1000	1000	1000	1000							656
+WAND	SUFFIX	# to Level of all Chaos Spell Skills	100	250	500	750	1000										657
+WAND	SUFFIX	# to Level of all Cold Spell Skills	100	250	500	750	1000										658
+WAND	SUFFIX	# to Level of all Fire Spell Skills	100	250	500	750	1000										659
+WAND	SUFFIX	# to Level of all Lightning Spell Skills	100	250	500	750	1000										660
+WAND	SUFFIX	# to Level of all Physical Spell Skills	100	250	500	750	1000										661
+WAND	SUFFIX	# to Level of all Spell Skills	50	100	150	200											662
+WAND	SUFFIX	Gain # Life per Enemy Killed	750	750	750	750	750	750	750	750							663
+WAND	SUFFIX	Gain # Mana per Enemy Killed	750	750	750	750	750	750	750	750							664
+FIRE WAND	PREFIX	#% increased Fire Damage	50	100	200	300	400	500	500	500							665
+FIRE WAND	PREFIX	#% increased Spell Damage	50	100	200	400	600	1000	1000	1000							666
+FIRE WAND	PREFIX	#% increased Spell Damage, # to maximum Mana	100	200	400	600	1000	1000	1000								667
+FIRE WAND	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000				668
+FIRE WAND	PREFIX	Gain #% of Damage as Extra Cold Damage	500	500	500	500	500	500									669
+FIRE WAND	PREFIX	Gain #% of Damage as Extra Fire Damage	500	500	500	500	500	500									670
+FIRE WAND	PREFIX	Gain #% of Damage as Extra Lightning Damage	500	500	500	500	500	500									671
+FIRE WAND	SUFFIX	#% increased Cast Speed	250	500	1000	1000	1000	1000	1000								672
+FIRE WAND	SUFFIX	#% increased Flammability Magnitude	500	500	1000	1000	1000										673
+FIRE WAND	SUFFIX	#% increased Critical Hit Chance for Spells	125	250	500	1000	1000	1000									674
+FIRE WAND	SUFFIX	#% increased Critical Spell Damage Bonus	125	250	500	1000	1000	1000									675
+FIRE WAND	SUFFIX	#% increased Mana Regeneration Rate, #% increased Light Radius	1000	1000	1000												676
+FIRE WAND	SUFFIX	#% increased Mana Regeneration Rate	1000	1000	1000	1000	1000	1000									677
+FIRE WAND	SUFFIX	#% reduced Attribute Requirements	1000	1000	1000	1000	1000										678
+FIRE WAND	SUFFIX	# to Intelligence	1000	1000	1000	1000	1000	1000	1000	1000							679
+FIRE WAND	SUFFIX	# to Level of all Fire Spell Skills	100	250	500	750	1000										680
+FIRE WAND	SUFFIX	# to Level of all Spell Skills	50	100	150	200											681
+FIRE WAND	SUFFIX	Gain # Life per Enemy Killed	750	750	750	750	750	750	750	750							682
+FIRE WAND	SUFFIX	Gain # Mana per Enemy Killed	750	750	750	750	750	750	750	750							683
+ICE WAND	PREFIX	#% increased Cold Damage	50	100	200	300	400	500	500	500							684
+ICE WAND	PREFIX	#% increased Spell Damage	50	100	200	400	600	1000	1000	1000							685
+ICE WAND	PREFIX	#% increased Spell Damage, # to maximum Mana	100	200	400	600	1000	1000	1000								686
+ICE WAND	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000				687
+ICE WAND	PREFIX	Gain #% of Damage as Extra Cold Damage	500	500	500	500	500	500									688
+ICE WAND	PREFIX	Gain #% of Damage as Extra Fire Damage	500	500	500	500	500	500									689
+ICE WAND	PREFIX	Gain #% of Damage as Extra Lightning Damage	500	500	500	500	500	500									690
+ICE WAND	SUFFIX	#% increased Cast Speed	250	500	1000	1000	1000	1000	1000								691
+ICE WAND	SUFFIX	#% increased Freeze Buildup	500	500	1000	1000	1000										692
+ICE WAND	SUFFIX	#% increased Critical Hit Chance for Spells	125	250	500	1000	1000	1000									693
+ICE WAND	SUFFIX	#% increased Critical Spell Damage Bonus	125	250	500	1000	1000	1000									694
+ICE WAND	SUFFIX	#% increased Mana Regeneration Rate, #% increased Light Radius	1000	1000	1000												695
+ICE WAND	SUFFIX	#% increased Mana Regeneration Rate	1000	1000	1000	1000	1000	1000									696
+ICE WAND	SUFFIX	#% reduced Attribute Requirements	1000	1000	1000	1000	1000										697
+ICE WAND	SUFFIX	# to Intelligence	1000	1000	1000	1000	1000	1000	1000	1000							698
+ICE WAND	SUFFIX	# to Level of all Cold Spell Skills	100	250	500	750	1000										699
+ICE WAND	SUFFIX	# to Level of all Spell Skills	50	100	150	200											700
+ICE WAND	SUFFIX	Gain # Life per Enemy Killed	750	750	750	750	750	750	750	750							701
+ICE WAND	SUFFIX	Gain # Mana per Enemy Killed	750	750	750	750	750	750	750	750							702
+LIGHTNING WAND	PREFIX	#% increased Lightning Damage	50	100	200	300	400	500	500	500							703
+LIGHTNING WAND	PREFIX	#% increased Spell Damage	50	100	200	400	600	1000	1000	1000							704
+LIGHTNING WAND	PREFIX	#% increased Spell Damage, # to maximum Mana	100	200	400	600	1000	1000	1000								705
+LIGHTNING WAND	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000				706
+LIGHTNING WAND	PREFIX	Gain #% of Damage as Extra Cold Damage	500	500	500	500	500	500									707
+LIGHTNING WAND	PREFIX	Gain #% of Damage as Extra Fire Damage	500	500	500	500	500	500									708
+LIGHTNING WAND	PREFIX	Gain #% of Damage as Extra Lightning Damage	500	500	500	500	500	500									709
+LIGHTNING WAND	SUFFIX	#% increased Cast Speed	250	500	1000	1000	1000	1000	1000								710
+LIGHTNING WAND	SUFFIX	#% increased chance to Shock	500	500	1000	1000	1000										711
+LIGHTNING WAND	SUFFIX	#% increased Critical Hit Chance for Spells	125	250	500	1000	1000	1000									712
+LIGHTNING WAND	SUFFIX	#% increased Critical Spell Damage Bonus	125	250	500	1000	1000	1000									713
+LIGHTNING WAND	SUFFIX	#% increased Mana Regeneration Rate, #% increased Light Radius	1000	1000	1000												714
+LIGHTNING WAND	SUFFIX	#% increased Mana Regeneration Rate	1000	1000	1000	1000	1000	1000									715
+LIGHTNING WAND	SUFFIX	#% reduced Attribute Requirements	1000	1000	1000	1000	1000										716
+LIGHTNING WAND	SUFFIX	# to Intelligence	1000	1000	1000	1000	1000	1000	1000	1000							717
+LIGHTNING WAND	SUFFIX	# to Level of all Lightning Spell Skills	100	250	500	750	1000										718
+LIGHTNING WAND	SUFFIX	# to Level of all Spell Skills	50	100	150	200											719
+LIGHTNING WAND	SUFFIX	Gain # Life per Enemy Killed	750	750	750	750	750	750	750	750							720
+LIGHTNING WAND	SUFFIX	Gain # Mana per Enemy Killed	750	750	750	750	750	750	750	750							721
+PHYSICAL WAND	PREFIX	#% increased Spell Physical Damage	50	100	200	300	400	500	500	500							722
+PHYSICAL WAND	PREFIX	#% increased Spell Damage	50	100	200	400	600	1000	1000	1000							723
+PHYSICAL WAND	PREFIX	#% increased Spell Damage, # to maximum Mana	100	200	400	600	1000	1000	1000								724
+PHYSICAL WAND	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000				725
+PHYSICAL WAND	PREFIX	Gain #% of Damage as Extra Cold Damage	500	500	500	500	500	500									726
+PHYSICAL WAND	PREFIX	Gain #% of Damage as Extra Fire Damage	500	500	500	500	500	500									727
+PHYSICAL WAND	PREFIX	Gain #% of Damage as Extra Lightning Damage	500	500	500	500	500	500									728
+PHYSICAL WAND	SUFFIX	#% increased Cast Speed	250	500	1000	1000	1000	1000	1000								729
+PHYSICAL WAND	SUFFIX	#% increased Critical Hit Chance for Spells	125	250	500	1000	1000	1000									730
+PHYSICAL WAND	SUFFIX	#% increased Critical Spell Damage Bonus	125	250	500	1000	1000	1000									731
+PHYSICAL WAND	SUFFIX	#% increased Mana Regeneration Rate, #% increased Light Radius	1000	1000	1000												732
+PHYSICAL WAND	SUFFIX	#% increased Mana Regeneration Rate	1000	1000	1000	1000	1000	1000									733
+PHYSICAL WAND	SUFFIX	#% reduced Attribute Requirements	1000	1000	1000	1000	1000										734
+PHYSICAL WAND	SUFFIX	# to Intelligence	1000	1000	1000	1000	1000	1000	1000	1000							735
+PHYSICAL WAND	SUFFIX	# to Level of all Physical Spell Skills	100	250	500	750	1000										736
+PHYSICAL WAND	SUFFIX	# to Level of all Spell Skills	50	100	150	200											737
+PHYSICAL WAND	SUFFIX	Gain # Life per Enemy Killed	750	750	750	750	750	750	750	750							738
+PHYSICAL WAND	SUFFIX	Gain # Mana per Enemy Killed	750	750	750	750	750	750	750	750							739
+CHAOS WAND	PREFIX	#% increased Chaos Damage	50	100	200	300	400	500	500	500							740
+CHAOS WAND	PREFIX	#% increased Spell Damage	50	100	200	400	600	1000	1000	1000							741
+CHAOS WAND	PREFIX	#% increased Spell Damage, # to maximum Mana	100	200	400	600	1000	1000	1000								742
+CHAOS WAND	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000				743
+CHAOS WAND	PREFIX	Gain #% of Damage as Extra Cold Damage	500	500	500	500	500	500									744
+CHAOS WAND	PREFIX	Gain #% of Damage as Extra Fire Damage	500	500	500	500	500	500									745
+CHAOS WAND	PREFIX	Gain #% of Damage as Extra Lightning Damage	500	500	500	500	500	500									746
+CHAOS WAND	SUFFIX	#% increased Cast Speed	250	500	1000	1000	1000	1000	1000								747
+CHAOS WAND	SUFFIX	#% increased Critical Hit Chance for Spells	125	250	500	1000	1000	1000									748
+CHAOS WAND	SUFFIX	#% increased Critical Spell Damage Bonus	125	250	500	1000	1000	1000									749
+CHAOS WAND	SUFFIX	#% increased Mana Regeneration Rate, #% increased Light Radius	1000	1000	1000												750
+CHAOS WAND	SUFFIX	#% increased Mana Regeneration Rate	1000	1000	1000	1000	1000	1000									751
+CHAOS WAND	SUFFIX	#% reduced Attribute Requirements	1000	1000	1000	1000	1000										752
+CHAOS WAND	SUFFIX	# to Intelligence	1000	1000	1000	1000	1000	1000	1000	1000							753
+CHAOS WAND	SUFFIX	# to Level of all Chaos Spell Skills	100	250	500	750	1000										754
+CHAOS WAND	SUFFIX	# to Level of all Spell Skills	50	100	150	200											755
+CHAOS WAND	SUFFIX	Gain # Life per Enemy Killed	750	750	750	750	750	750	750	750							756
+CHAOS WAND	SUFFIX	Gain # Mana per Enemy Killed	750	750	750	750	750	750	750	750							757
+STAFF	PREFIX	#% increased Chaos Damage	50	100	200	300	400	500	500	500							758
+STAFF	PREFIX	#% increased Cold Damage	50	100	200	300	400	500	500	500							759
+STAFF	PREFIX	#% increased Fire Damage	50	100	200	300	400	500	500	500							760
+STAFF	PREFIX	#% increased Lightning Damage	50	100	200	300	400	500	500	500							761
+STAFF	PREFIX	#% increased Spell Damage	50	100	200	400	600	1000	1000	1000							762
+STAFF	PREFIX	#% increased Spell Damage, # to maximum Mana	100	200	400	600	1000	1000	1000								763
+STAFF	PREFIX	#% increased Spell Physical Damage	50	100	200	300	400	500	500	500							764
+STAFF	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000				765
+STAFF	PREFIX	Gain #% of Damage as Extra Cold Damage	500	500	500	500	500	500									766
+STAFF	PREFIX	Gain #% of Damage as Extra Fire Damage	500	500	500	500	500	500									767
+STAFF	PREFIX	Gain #% of Damage as Extra Lightning Damage	500	500	500	500	500	500									768
+STAFF	SUFFIX	#% increased Cast Speed	250	500	1000	1000	1000	1000	1000								769
+STAFF	SUFFIX	#% increased Flammability Magnitude	500	500	1000	1000	1000										770
+STAFF	SUFFIX	#% increased chance to Shock	500	500	1000	1000	1000										771
+STAFF	SUFFIX	#% increased Critical Hit Chance for Spells	125	250	500	1000	1000	1000									772
+STAFF	SUFFIX	#% increased Critical Spell Damage Bonus	125	250	500	1000	1000	1000									773
+STAFF	SUFFIX	#% increased Freeze Buildup	500	500	1000	1000	1000										774
+STAFF	SUFFIX	#% increased Mana Regeneration Rate, #% increased Light Radius	1000	1000	1000												775
+STAFF	SUFFIX	#% increased Mana Regeneration Rate	1000	1000	1000	1000	1000	1000									776
+STAFF	SUFFIX	#% reduced Attribute Requirements	1000	1000	1000	1000	1000										777
+STAFF	SUFFIX	# to Intelligence	1000	1000	1000	1000	1000	1000	1000	1000							778
+STAFF	SUFFIX	# to Level of all Chaos Spell Skills	100	250	500	750	1000										779
+STAFF	SUFFIX	# to Level of all Cold Spell Skills	100	250	500	750	1000										780
+STAFF	SUFFIX	# to Level of all Fire Spell Skills	100	250	500	750	1000										781
+STAFF	SUFFIX	# to Level of all Lightning Spell Skills	100	250	500	750	1000										782
+STAFF	SUFFIX	# to Level of all Physical Spell Skills	100	250	500	750	1000										783
+STAFF	SUFFIX	# to Level of all Spell Skills	50	100	150	200											784
+STAFF	SUFFIX	Gain # Life per Enemy Killed	750	750	750	750	750	750	750	750							785
+STAFF	SUFFIX	Gain # Mana per Enemy Killed	750	750	750	750	750	750	750	750							786
+FIRE STAFF	PREFIX	#% increased Fire Damage	50	100	200	300	400	500	500	500							787
+FIRE STAFF	PREFIX	#% increased Spell Damage	50	100	200	400	600	1000	1000	1000							788
+FIRE STAFF	PREFIX	#% increased Spell Damage, # to maximum Mana	100	200	400	600	1000	1000	1000								789
+FIRE STAFF	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000				790
+FIRE STAFF	PREFIX	Gain #% of Damage as Extra Cold Damage	500	500	500	500	500	500									791
+FIRE STAFF	PREFIX	Gain #% of Damage as Extra Fire Damage	500	500	500	500	500	500									792
+FIRE STAFF	PREFIX	Gain #% of Damage as Extra Lightning Damage	500	500	500	500	500	500									793
+FIRE STAFF	SUFFIX	#% increased Cast Speed	250	500	1000	1000	1000	1000	1000								794
+FIRE STAFF	SUFFIX	#% increased Flammability Magnitude	500	500	1000	1000	1000										795
+FIRE STAFF	SUFFIX	#% increased Critical Hit Chance for Spells	125	250	500	1000	1000	1000									796
+FIRE STAFF	SUFFIX	#% increased Critical Spell Damage Bonus	125	250	500	1000	1000	1000									797
+FIRE STAFF	SUFFIX	#% increased Mana Regeneration Rate, #% increased Light Radius	1000	1000	1000												798
+FIRE STAFF	SUFFIX	#% increased Mana Regeneration Rate	1000	1000	1000	1000	1000	1000									799
+FIRE STAFF	SUFFIX	#% reduced Attribute Requirements	1000	1000	1000	1000	1000										800
+FIRE STAFF	SUFFIX	# to Intelligence	1000	1000	1000	1000	1000	1000	1000	1000							801
+FIRE STAFF	SUFFIX	# to Level of all Fire Spell Skills	100	250	500	750	1000										802
+FIRE STAFF	SUFFIX	# to Level of all Spell Skills	50	100	150	200											803
+FIRE STAFF	SUFFIX	Gain # Life per Enemy Killed	750	750	750	750	750	750	750	750							804
+FIRE STAFF	SUFFIX	Gain # Mana per Enemy Killed	750	750	750	750	750	750	750	750							805
+ICE STAFF	PREFIX	#% increased Cold Damage	50	100	200	300	400	500	500	500							806
+ICE STAFF	PREFIX	#% increased Spell Damage	50	100	200	400	600	1000	1000	1000							807
+ICE STAFF	PREFIX	#% increased Spell Damage, # to maximum Mana	100	200	400	600	1000	1000	1000								808
+ICE STAFF	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000				809
+ICE STAFF	PREFIX	Gain #% of Damage as Extra Cold Damage	500	500	500	500	500	500									810
+ICE STAFF	PREFIX	Gain #% of Damage as Extra Fire Damage	500	500	500	500	500	500									811
+ICE STAFF	PREFIX	Gain #% of Damage as Extra Lightning Damage	500	500	500	500	500	500									812
+ICE STAFF	SUFFIX	#% increased Cast Speed	250	500	1000	1000	1000	1000	1000								813
+ICE STAFF	SUFFIX	#% increased Freeze Buildup	500	500	1000	1000	1000										814
+ICE STAFF	SUFFIX	#% increased Critical Hit Chance for Spells	125	250	500	1000	1000	1000									815
+ICE STAFF	SUFFIX	#% increased Critical Spell Damage Bonus	125	250	500	1000	1000	1000									816
+ICE STAFF	SUFFIX	#% increased Mana Regeneration Rate, #% increased Light Radius	1000	1000	1000												817
+ICE STAFF	SUFFIX	#% increased Mana Regeneration Rate	1000	1000	1000	1000	1000	1000									818
+ICE STAFF	SUFFIX	#% reduced Attribute Requirements	1000	1000	1000	1000	1000										819
+ICE STAFF	SUFFIX	# to Intelligence	1000	1000	1000	1000	1000	1000	1000	1000							820
+ICE STAFF	SUFFIX	# to Level of all Cold Spell Skills	100	250	500	750	1000										821
+ICE STAFF	SUFFIX	# to Level of all Spell Skills	50	100	150	200											822
+ICE STAFF	SUFFIX	Gain # Life per Enemy Killed	750	750	750	750	750	750	750	750							823
+ICE STAFF	SUFFIX	Gain # Mana per Enemy Killed	750	750	750	750	750	750	750	750							824
+LIGHTNING STAFF	PREFIX	#% increased Lightning Damage	50	100	200	300	400	500	500	500							825
+LIGHTNING STAFF	PREFIX	#% increased Spell Damage	50	100	200	400	600	1000	1000	1000							826
+LIGHTNING STAFF	PREFIX	#% increased Spell Damage, # to maximum Mana	100	200	400	600	1000	1000	1000								827
+LIGHTNING STAFF	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000				828
+LIGHTNING STAFF	PREFIX	Gain #% of Damage as Extra Cold Damage	500	500	500	500	500	500									829
+LIGHTNING STAFF	PREFIX	Gain #% of Damage as Extra Fire Damage	500	500	500	500	500	500									830
+LIGHTNING STAFF	PREFIX	Gain #% of Damage as Extra Lightning Damage	500	500	500	500	500	500									831
+LIGHTNING STAFF	SUFFIX	#% increased Cast Speed	250	500	1000	1000	1000	1000	1000								832
+LIGHTNING STAFF	SUFFIX	#% increased chance to Shock	500	500	1000	1000	1000										833
+LIGHTNING STAFF	SUFFIX	#% increased Critical Hit Chance for Spells	125	250	500	1000	1000	1000									834
+LIGHTNING STAFF	SUFFIX	#% increased Critical Spell Damage Bonus	125	250	500	1000	1000	1000									835
+LIGHTNING STAFF	SUFFIX	#% increased Mana Regeneration Rate, #% increased Light Radius	1000	1000	1000												836
+LIGHTNING STAFF	SUFFIX	#% increased Mana Regeneration Rate	1000	1000	1000	1000	1000	1000									837
+LIGHTNING STAFF	SUFFIX	#% reduced Attribute Requirements	1000	1000	1000	1000	1000										838
+LIGHTNING STAFF	SUFFIX	# to Intelligence	1000	1000	1000	1000	1000	1000	1000	1000							839
+LIGHTNING STAFF	SUFFIX	# to Level of all Lightning Spell Skills	100	250	500	750	1000										840
+LIGHTNING STAFF	SUFFIX	# to Level of all Spell Skills	50	100	150	200											841
+LIGHTNING STAFF	SUFFIX	Gain # Life per Enemy Killed	750	750	750	750	750	750	750	750							842
+LIGHTNING STAFF	SUFFIX	Gain # Mana per Enemy Killed	750	750	750	750	750	750	750	750							843
+PHYSICAL STAFF	PREFIX	#% increased Spell Physical Damage	50	100	200	300	400	500	500	500							844
+PHYSICAL STAFF	PREFIX	#% increased Spell Damage	50	100	200	400	600	1000	1000	1000							845
+PHYSICAL STAFF	PREFIX	#% increased Spell Damage, # to maximum Mana	100	200	400	600	1000	1000	1000								846
+PHYSICAL STAFF	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000				847
+PHYSICAL STAFF	PREFIX	Gain #% of Damage as Extra Cold Damage	500	500	500	500	500	500									848
+PHYSICAL STAFF	PREFIX	Gain #% of Damage as Extra Fire Damage	500	500	500	500	500	500									849
+PHYSICAL STAFF	PREFIX	Gain #% of Damage as Extra Lightning Damage	500	500	500	500	500	500									850
+PHYSICAL STAFF	SUFFIX	#% increased Cast Speed	250	500	1000	1000	1000	1000	1000								851
+PHYSICAL STAFF	SUFFIX	#% increased Critical Hit Chance for Spells	125	250	500	1000	1000	1000									852
+PHYSICAL STAFF	SUFFIX	#% increased Critical Spell Damage Bonus	125	250	500	1000	1000	1000									853
+PHYSICAL STAFF	SUFFIX	#% increased Mana Regeneration Rate, #% increased Light Radius	1000	1000	1000												854
+PHYSICAL STAFF	SUFFIX	#% increased Mana Regeneration Rate	1000	1000	1000	1000	1000	1000									855
+PHYSICAL STAFF	SUFFIX	#% reduced Attribute Requirements	1000	1000	1000	1000	1000										856
+PHYSICAL STAFF	SUFFIX	# to Intelligence	1000	1000	1000	1000	1000	1000	1000	1000							857
+PHYSICAL STAFF	SUFFIX	# to Level of all Physical Spell Skills	100	250	500	750	1000										858
+PHYSICAL STAFF	SUFFIX	# to Level of all Spell Skills	50	100	150	200											859
+PHYSICAL STAFF	SUFFIX	Gain # Life per Enemy Killed	750	750	750	750	750	750	750	750							860
+PHYSICAL STAFF	SUFFIX	Gain # Mana per Enemy Killed	750	750	750	750	750	750	750	750							861
+CHAOS STAFF	PREFIX	#% increased Chaos Damage	50	100	200	300	400	500	500	500							862
+CHAOS STAFF	PREFIX	#% increased Spell Damage	50	100	200	400	600	1000	1000	1000							863
+CHAOS STAFF	PREFIX	#% increased Spell Damage, # to maximum Mana	100	200	400	600	1000	1000	1000								864
+CHAOS STAFF	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000				865
+CHAOS STAFF	PREFIX	Gain #% of Damage as Extra Cold Damage	500	500	500	500	500	500									866
+CHAOS STAFF	PREFIX	Gain #% of Damage as Extra Fire Damage	500	500	500	500	500	500									867
+CHAOS STAFF	PREFIX	Gain #% of Damage as Extra Lightning Damage	500	500	500	500	500	500									868
+CHAOS STAFF	SUFFIX	#% increased Cast Speed	250	500	1000	1000	1000	1000	1000								869
+CHAOS STAFF	SUFFIX	#% increased Critical Hit Chance for Spells	125	250	500	1000	1000	1000									870
+CHAOS STAFF	SUFFIX	#% increased Critical Spell Damage Bonus	125	250	500	1000	1000	1000									871
+CHAOS STAFF	SUFFIX	#% increased Mana Regeneration Rate, #% increased Light Radius	1000	1000	1000												872
+CHAOS STAFF	SUFFIX	#% increased Mana Regeneration Rate	1000	1000	1000	1000	1000	1000									873
+CHAOS STAFF	SUFFIX	#% reduced Attribute Requirements	1000	1000	1000	1000	1000										874
+CHAOS STAFF	SUFFIX	# to Intelligence	1000	1000	1000	1000	1000	1000	1000	1000							875
+CHAOS STAFF	SUFFIX	# to Level of all Chaos Spell Skills	100	250	500	750	1000										876
+CHAOS STAFF	SUFFIX	# to Level of all Spell Skills	50	100	150	200											877
+CHAOS STAFF	SUFFIX	Gain # Life per Enemy Killed	750	750	750	750	750	750	750	750							878
+CHAOS STAFF	SUFFIX	Gain # Mana per Enemy Killed	750	750	750	750	750	750	750	750							879
+FOCUS	PREFIX	#% increased Chaos Damage	200	300	400	500	500	500									880
+FOCUS	PREFIX	#% increased Cold Damage	200	300	400	500	500	500									881
+FOCUS	PREFIX	#% increased Energy Shield	1000	1000	1000	1000	1000	1000	1000								882
+FOCUS	PREFIX	#% increased Energy Shield, # to maximum Mana	1000	1000	1000	1000	1000	1000									883
+FOCUS	PREFIX	#% increased Fire Damage	200	300	400	500	500	500									884
+FOCUS	PREFIX	#% increased Lightning Damage	200	300	400	500	500	500									885
+FOCUS	PREFIX	#% increased Spell Damage	200	400	600	1000	1000	1000									886
+FOCUS	PREFIX	#% increased Spell Physical Damage	200	300	400	500	500	500									887
+FOCUS	PREFIX	# to maximum Energy Shield	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000					888
+FOCUS	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000				889
+FOCUS	SUFFIX	#% increased Cast Speed	500	1000	1000	1000	1000	1000									890
+FOCUS	SUFFIX	#% increased Critical Hit Chance for Spells	250	500	1000	1000	1000										891
+FOCUS	SUFFIX	#% increased Critical Spell Damage Bonus	250	500	1000	1000	1000										892
+FOCUS	SUFFIX	#% increased Energy Shield Recharge Rate	1000	1000	1000	1000	1000	1000									893
+FOCUS	SUFFIX	#% increased Mana Regeneration Rate	1000	1000	1000	1000	1000	1000									894
+FOCUS	SUFFIX	#% reduced Attribute Requirements	800	800	800	800	800										895
+FOCUS	SUFFIX	# to Intelligence	1000	1000	1000	1000	1000	1000	1000	1000							896
+FOCUS	SUFFIX	# to Level of all Spell Skills	250	500													897
+FOCUS	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									898
+FOCUS	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							899
+FOCUS	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							900
+FOCUS	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							901
+FOCUS	SUFFIX	#% faster start of Energy Shield Recharge	1000	1000	1000	1000	1000	1000									902
+SCEPTRE	PREFIX	#% increased Spirit	50	100	200	400	600	1000	1000	1000							903
+SCEPTRE	PREFIX	#% increased Spirit, # to maximum Mana	100	200	400	600	1000	1000	1000								904
+SCEPTRE	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000				905
+SCEPTRE	PREFIX	Allies in your Presence deal # to # added Attack Cold Damage	200	300	400	500	500	500	500	500	500						906
+SCEPTRE	PREFIX	Allies in your Presence deal # to # added Attack Fire Damage	200	300	400	500	500	500	500	500	500						907
+SCEPTRE	PREFIX	Allies in your Presence deal # to # added Attack Lightning Damage	200	300	400	500	500	500	500	500	500						908
+SCEPTRE	PREFIX	Allies in your Presence deal # to # added Attack Physical Damage	200	300	400	500	500	500	500	500	500						909
+SCEPTRE	PREFIX	Allies in your Presence deal #% increased Damage	50	100	200	400	600	1000	1000	1000							910
+SCEPTRE	SUFFIX	#% increased Mana Regeneration Rate, #% increased Light Radius	1000	1000	1000												911
+SCEPTRE	SUFFIX	#% increased Mana Regeneration Rate	1000	1000	1000	1000	1000	1000									912
+SCEPTRE	SUFFIX	#% increased Presence Area of Effect	500	500	500	500											913
+SCEPTRE	SUFFIX	#% reduced Attribute Requirements	1000	1000	1000	1000	1000										914
+SCEPTRE	SUFFIX	# to Intelligence	750	750	750	750	750	750	750	750							915
+SCEPTRE	SUFFIX	# to Level of all Minion Skills	100	250	500	750											916
+SCEPTRE	SUFFIX	# to Strength	250	250	250	250	250	250	250	250							917
+SCEPTRE	SUFFIX	Allies in your Presence have #% increased Attack Speed	1000	1000	1000	1000											918
+SCEPTRE	SUFFIX	Allies in your Presence have #% increased Cast Speed	1000	1000	1000	1000											919
+SCEPTRE	SUFFIX	Allies in your Presence have #% increased Critical Damage Bonus	125	250	500	1000	1000	1000									920
+SCEPTRE	SUFFIX	Allies in your Presence have #% increased Critical Hit Chance	125	250	500	1000	1000	1000									921
+SCEPTRE	SUFFIX	Allies in your Presence have #% to all Elemental Resistances	800	800	800	800	800	800									922
+SCEPTRE	SUFFIX	Allies in your Presence Regenerate # Life per second	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000					923
+SCEPTRE	SUFFIX	Minions have #% increased maximum Life	1000	1000	1000	1000	1000	1000									924
+QUIVER	PREFIX	#% increased Damage with Bow Skills	500	500	500	500	500	500									925
+QUIVER	PREFIX	#% increased Projectile Speed	1000	1000	1000												926
+QUIVER	PREFIX	# to Accuracy Rating	200	400	800	800	800	800	800	800	800						927
+QUIVER	PREFIX	Adds # to # Cold damage to Attacks	200	300	400	500	500	500	500	500	500						928
+QUIVER	PREFIX	Adds # to # Fire damage to Attacks	200	300	400	500	500	500	500	500	500						929
+QUIVER	PREFIX	Adds # to # Lightning damage to Attacks	200	300	400	500	500	500	500	500	500						930
+QUIVER	PREFIX	Adds # to # Physical Damage to Attacks	400	600	800	1000	1000	1000	1000	1000	1000						931
+QUIVER	SUFFIX	#% chance to Pierce an Enemy	500	500	500	500	500										932
+QUIVER	SUFFIX	#% increased Attack Speed	500	500	500	500											933
+QUIVER	SUFFIX	#% increased Critical Damage Bonus for Attack Damage	125	250	500	1000	1000	1000									934
+QUIVER	SUFFIX	#% increased Critical Hit Chance for Attacks	125	250	500	1000	1000	1000									935
+QUIVER	SUFFIX	# to Dexterity	1000	1000	1000	1000	1000	1000	1000	1000							936
+QUIVER	SUFFIX	# to Level of all Projectile Skills	250	500													937
+QUIVER	SUFFIX	Gain # Life per Enemy Killed	750	750	750	750	750	750									938
+QUIVER	SUFFIX	Gain # Mana per Enemy Killed	750	750	750	750	750	750									939
+GLOVES (INT)	PREFIX	#% increased Energy Shield	1000	1000	1000	1000	1000	1000	1000								940
+GLOVES (INT)	PREFIX	#% increased Energy Shield, # to maximum Life	1000	1000	1000	1000	1000	1000									941
+GLOVES (INT)	PREFIX	# to Accuracy Rating	200	400	800	800	800	800	800	800	800						942
+GLOVES (INT)	PREFIX	# to maximum Energy Shield	1000	1000	1000	1000	1000	1000	1000								943
+GLOVES (INT)	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000						944
+GLOVES (INT)	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000						945
+GLOVES (INT)	PREFIX	Adds # to # Cold damage to Attacks	200	300	400	500	500	500	500	500	500						946
+GLOVES (INT)	PREFIX	Adds # to # Fire damage to Attacks	200	300	400	500	500	500	500	500	500						947
+GLOVES (INT)	PREFIX	Adds # to # Lightning damage to Attacks	200	300	400	500	500	500	500	500	500						948
+GLOVES (INT)	PREFIX	Adds # to # Physical Damage to Attacks	400	600	800	1000	1000	1000	1000	1000	1000						949
+GLOVES (INT)	SUFFIX	#% increased Attack Speed	500	500	500	500											950
+GLOVES (INT)	SUFFIX	#% increased Critical Damage Bonus	250	500	1000	1000	1000										951
+GLOVES (INT)	SUFFIX	#% increased Rarity of Items found	1000	1000	1000												952
+GLOVES (INT)	SUFFIX	#% reduced Attribute Requirements	700	700	700	700	700										953
+GLOVES (INT)	SUFFIX	# to Dexterity	1000	1000	1000	1000	1000	1000	1000	1000	1000						954
+GLOVES (INT)	SUFFIX	# to Intelligence	1000	1000	1000	1000	1000	1000	1000	1000							955
+GLOVES (INT)	SUFFIX	# to Level of all Melee Skills	250	500													956
+GLOVES (INT)	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									957
+GLOVES (INT)	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							958
+GLOVES (INT)	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							959
+GLOVES (INT)	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							960
+GLOVES (INT)	SUFFIX	Gain # Life per Enemy Hit with Attacks	1000	1000	1000	1000											961
+GLOVES (INT)	SUFFIX	Gain # Life per Enemy Killed	750	750	750	750	750	750	750	750							962
+GLOVES (INT)	SUFFIX	Gain # Mana per Enemy Killed	750	750	750	750	750	750	750	750							963
+GLOVES (INT)	SUFFIX	Leech #% of Physical Attack Damage as Life	1000	1000	1000	1000	1000										964
+GLOVES (INT)	SUFFIX	Leech #% of Physical Attack Damage as Mana	1000	1000	1000	1000	1000										965
+GLOVES (INT)	SUFFIX	#% increased Energy Shield Recharge Rate	1000	1000	1000	1000											966
+GLOVES (DEX)	PREFIX	#% increased Evasion Rating	1000	1000	1000	1000	1000	1000	1000								967
+GLOVES (DEX)	PREFIX	#% increased Evasion Rating, # to maximum Life	1000	1000	1000	1000	1000	1000									968
+GLOVES (DEX)	PREFIX	# to Accuracy Rating	200	400	800	800	800	800	800	800	800						969
+GLOVES (DEX)	PREFIX	# to Evasion Rating	1000	1000	1000	1000	1000	1000	1000								970
+GLOVES (DEX)	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000						971
+GLOVES (DEX)	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000						972
+GLOVES (DEX)	PREFIX	Adds # to # Cold damage to Attacks	200	300	400	500	500	500	500	500	500						973
+GLOVES (DEX)	PREFIX	Adds # to # Fire damage to Attacks	200	300	400	500	500	500	500	500	500						974
+GLOVES (DEX)	PREFIX	Adds # to # Lightning damage to Attacks	200	300	400	500	500	500	500	500	500						975
+GLOVES (DEX)	PREFIX	Adds # to # Physical Damage to Attacks	400	600	800	1000	1000	1000	1000	1000	1000						976
+GLOVES (DEX)	SUFFIX	#% increased Attack Speed	500	500	500	500											977
+GLOVES (DEX)	SUFFIX	#% increased Critical Damage Bonus	250	500	1000	1000	1000										978
+GLOVES (DEX)	SUFFIX	#% increased Rarity of Items found	1000	1000	1000												979
+GLOVES (DEX)	SUFFIX	#% reduced Attribute Requirements	700	700	700	700	700										980
+GLOVES (DEX)	SUFFIX	# to Dexterity	1000	1000	1000	1000	1000	1000	1000	1000	1000						981
+GLOVES (DEX)	SUFFIX	# to Level of all Melee Skills	250	500													982
+GLOVES (DEX)	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									983
+GLOVES (DEX)	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							984
+GLOVES (DEX)	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							985
+GLOVES (DEX)	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							986
+GLOVES (DEX)	SUFFIX	Gain # Life per Enemy Hit with Attacks	1000	1000	1000	1000											987
+GLOVES (DEX)	SUFFIX	Gain # Life per Enemy Killed	750	750	750	750	750	750	750	750							988
+GLOVES (DEX)	SUFFIX	Gain # Mana per Enemy Killed	750	750	750	750	750	750	750	750							989
+GLOVES (DEX)	SUFFIX	Leech #% of Physical Attack Damage as Life	1000	1000	1000	1000	1000										990
+GLOVES (DEX)	SUFFIX	Leech #% of Physical Attack Damage as Mana	1000	1000	1000	1000	1000										991
+GLOVES (DEX)	SUFFIX	Gain Deflection Rating equal to #% of Evasion Rating	1000	1000	1000	1000	1000										992
+GLOVES (STR)	PREFIX	#% increased Armour	1000	1000	1000	1000	1000	1000	1000								993
+GLOVES (STR)	PREFIX	#% increased Armour, # to maximum Life	1000	1000	1000	1000	1000	1000									994
+GLOVES (STR)	PREFIX	# to Accuracy Rating	200	400	800	800	800	800	800	800	800						995
+GLOVES (STR)	PREFIX	# to Armour	1000	1000	1000	1000	1000	1000	1000								996
+GLOVES (STR)	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000						997
+GLOVES (STR)	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000						998
+GLOVES (STR)	PREFIX	Adds # to # Cold damage to Attacks	200	300	400	500	500	500	500	500	500						999
+GLOVES (STR)	PREFIX	Adds # to # Fire damage to Attacks	200	300	400	500	500	500	500	500	500						1000
+GLOVES (STR)	PREFIX	Adds # to # Lightning damage to Attacks	200	300	400	500	500	500	500	500	500						1001
+GLOVES (STR)	PREFIX	Adds # to # Physical Damage to Attacks	400	600	800	1000	1000	1000	1000	1000	1000						1002
+GLOVES (STR)	SUFFIX	#% increased Attack Speed	500	500	500	500											1003
+GLOVES (STR)	SUFFIX	#% increased Critical Damage Bonus	250	500	1000	1000	1000										1004
+GLOVES (STR)	SUFFIX	#% increased Rarity of Items found	1000	1000	1000												1005
+GLOVES (STR)	SUFFIX	#% reduced Attribute Requirements	700	700	700	700	700										1006
+GLOVES (STR)	SUFFIX	# to Dexterity	1000	1000	1000	1000	1000	1000	1000	1000	1000						1007
+GLOVES (STR)	SUFFIX	# to Level of all Melee Skills	250	500													1008
+GLOVES (STR)	SUFFIX	# to Strength	1000	1000	1000	1000	1000	1000	1000	1000							1009
+GLOVES (STR)	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									1010
+GLOVES (STR)	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							1011
+GLOVES (STR)	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							1012
+GLOVES (STR)	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							1013
+GLOVES (STR)	SUFFIX	Gain # Life per Enemy Hit with Attacks	1000	1000	1000	1000											1014
+GLOVES (STR)	SUFFIX	Gain # Life per Enemy Killed	750	750	750	750	750	750	750	750							1015
+GLOVES (STR)	SUFFIX	Gain # Mana per Enemy Killed	750	750	750	750	750	750	750	750							1016
+GLOVES (STR)	SUFFIX	Leech #% of Physical Attack Damage as Life	1000	1000	1000	1000	1000										1017
+GLOVES (STR)	SUFFIX	Leech #% of Physical Attack Damage as Mana	1000	1000	1000	1000	1000										1018
+GLOVES (STR)	SUFFIX	#% of Armour also applies to Elemental Damage	1000	1000	1000	1000	1000										1019
+GLOVES (DEX/INT)	PREFIX	#% increased Evasion and Energy Shield	1000	1000	1000	1000	1000	1000	1000								1020
+GLOVES (DEX/INT)	PREFIX	#% increased Evasion and Energy Shield, # to maximum Life	1000	1000	1000	1000	1000	1000									1021
+GLOVES (DEX/INT)	PREFIX	# to Accuracy Rating	200	400	800	800	800	800	800	800	800						1022
+GLOVES (DEX/INT)	PREFIX	# to Evasion Rating, # to maximum Energy Shield	1000	1000	1000	1000											1023
+GLOVES (DEX/INT)	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000						1024
+GLOVES (DEX/INT)	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000						1025
+GLOVES (DEX/INT)	PREFIX	Adds # to # Cold damage to Attacks	200	300	400	500	500	500	500	500	500						1026
+GLOVES (DEX/INT)	PREFIX	Adds # to # Fire damage to Attacks	200	300	400	500	500	500	500	500	500						1027
+GLOVES (DEX/INT)	PREFIX	Adds # to # Lightning damage to Attacks	200	300	400	500	500	500	500	500	500						1028
+GLOVES (DEX/INT)	PREFIX	Adds # to # Physical Damage to Attacks	400	600	800	1000	1000	1000	1000	1000	1000						1029
+GLOVES (DEX/INT)	SUFFIX	#% increased Attack Speed	500	500	500	500											1030
+GLOVES (DEX/INT)	SUFFIX	#% increased Critical Damage Bonus	250	500	1000	1000	1000										1031
+GLOVES (DEX/INT)	SUFFIX	#% increased Rarity of Items found	1000	1000	1000												1032
+GLOVES (DEX/INT)	SUFFIX	#% reduced Attribute Requirements	700	700	700	700	700										1033
+GLOVES (DEX/INT)	SUFFIX	# to Dexterity	1000	1000	1000	1000	1000	1000	1000	1000	1000						1034
+GLOVES (DEX/INT)	SUFFIX	# to Intelligence	500	500	500	500	500	500	500	500							1035
+GLOVES (DEX/INT)	SUFFIX	# to Level of all Melee Skills	250	500													1036
+GLOVES (DEX/INT)	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									1037
+GLOVES (DEX/INT)	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							1038
+GLOVES (DEX/INT)	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							1039
+GLOVES (DEX/INT)	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							1040
+GLOVES (DEX/INT)	SUFFIX	Gain # Life per Enemy Hit with Attacks	1000	1000	1000	1000											1041
+GLOVES (DEX/INT)	SUFFIX	Gain # Life per Enemy Killed	750	750	750	750	750	750	750	750							1042
+GLOVES (DEX/INT)	SUFFIX	Gain # Mana per Enemy Killed	750	750	750	750	750	750	750	750							1043
+GLOVES (DEX/INT)	SUFFIX	Leech #% of Physical Attack Damage as Life	1000	1000	1000	1000	1000										1044
+GLOVES (DEX/INT)	SUFFIX	Leech #% of Physical Attack Damage as Mana	1000	1000	1000	1000	1000										1045
+GLOVES (DEX/INT)	SUFFIX	#% increased Energy Shield Recharge Rate	500	500	500	500											1046
+GLOVES (DEX/INT)	SUFFIX	Gain Deflection Rating equal to #% of Evasion Rating	500	500	500	500	500										1047
+GLOVES (STR/INT)	PREFIX	#% increased Armour and Energy Shield	1000	1000	1000	1000	1000	1000	1000								1048
+GLOVES (STR/INT)	PREFIX	#% increased Armour and Energy Shield, # to maximum Life	1000	1000	1000	1000	1000	1000									1049
+GLOVES (STR/INT)	PREFIX	# to Accuracy Rating	200	400	800	800	800	800	800	800	800						1050
+GLOVES (STR/INT)	PREFIX	# to Armour, # to maximum Energy Shield	1000	1000	1000	1000											1051
+GLOVES (STR/INT)	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000						1052
+GLOVES (STR/INT)	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000						1053
+GLOVES (STR/INT)	PREFIX	Adds # to # Cold damage to Attacks	200	300	400	500	500	500	500	500	500						1054
+GLOVES (STR/INT)	PREFIX	Adds # to # Fire damage to Attacks	200	300	400	500	500	500	500	500	500						1055
+GLOVES (STR/INT)	PREFIX	Adds # to # Lightning damage to Attacks	200	300	400	500	500	500	500	500	500						1056
+GLOVES (STR/INT)	PREFIX	Adds # to # Physical Damage to Attacks	400	600	800	1000	1000	1000	1000	1000	1000						1057
+GLOVES (STR/INT)	SUFFIX	#% increased Attack Speed	500	500	500	500											1058
+GLOVES (STR/INT)	SUFFIX	#% increased Critical Damage Bonus	250	500	1000	1000	1000										1059
+GLOVES (STR/INT)	SUFFIX	#% increased Rarity of Items found	1000	1000	1000												1060
+GLOVES (STR/INT)	SUFFIX	#% reduced Attribute Requirements	700	700	700	700	700										1061
+GLOVES (STR/INT)	SUFFIX	# to Dexterity	1000	1000	1000	1000	1000	1000	1000	1000	1000						1062
+GLOVES (STR/INT)	SUFFIX	# to Intelligence	500	500	500	500	500	500	500	500							1063
+GLOVES (STR/INT)	SUFFIX	# to Level of all Melee Skills	250	500													1064
+GLOVES (STR/INT)	SUFFIX	# to Strength	500	500	500	500	500	500	500	500							1065
+GLOVES (STR/INT)	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									1066
+GLOVES (STR/INT)	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							1067
+GLOVES (STR/INT)	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							1068
+GLOVES (STR/INT)	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							1069
+GLOVES (STR/INT)	SUFFIX	Gain # Life per Enemy Hit with Attacks	1000	1000	1000	1000											1070
+GLOVES (STR/INT)	SUFFIX	Gain # Life per Enemy Killed	750	750	750	750	750	750	750	750							1071
+GLOVES (STR/INT)	SUFFIX	Gain # Mana per Enemy Killed	750	750	750	750	750	750	750	750							1072
+GLOVES (STR/INT)	SUFFIX	Leech #% of Physical Attack Damage as Life	1000	1000	1000	1000	1000										1073
+GLOVES (STR/INT)	SUFFIX	Leech #% of Physical Attack Damage as Mana	1000	1000	1000	1000	1000										1074
+GLOVES (STR/INT)	SUFFIX	#% increased Energy Shield Recharge Rate	500	500	500	500											1075
+GLOVES (STR/INT)	SUFFIX	#% of Armour also applies to Elemental Damage	500	500	500	500	500										1076
+GLOVES (STR/DEX)	PREFIX	#% increased Armour and Evasion	1000	1000	1000	1000	1000	1000	1000								1077
+GLOVES (STR/DEX)	PREFIX	#% increased Armour and Evasion, # to maximum Life	1000	1000	1000	1000	1000	1000									1078
+GLOVES (STR/DEX)	PREFIX	# to Accuracy Rating	200	400	800	800	800	800	800	800	800						1079
+GLOVES (STR/DEX)	PREFIX	# to Armour, # to Evasion Rating	1000	1000	1000	1000											1080
+GLOVES (STR/DEX)	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000						1081
+GLOVES (STR/DEX)	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000						1082
+GLOVES (STR/DEX)	PREFIX	Adds # to # Cold damage to Attacks	200	300	400	500	500	500	500	500	500						1083
+GLOVES (STR/DEX)	PREFIX	Adds # to # Fire damage to Attacks	200	300	400	500	500	500	500	500	500						1084
+GLOVES (STR/DEX)	PREFIX	Adds # to # Lightning damage to Attacks	200	300	400	500	500	500	500	500	500						1085
+GLOVES (STR/DEX)	PREFIX	Adds # to # Physical Damage to Attacks	400	600	800	1000	1000	1000	1000	1000	1000						1086
+GLOVES (STR/DEX)	SUFFIX	#% increased Attack Speed	500	500	500	500											1087
+GLOVES (STR/DEX)	SUFFIX	#% increased Critical Damage Bonus	250	500	1000	1000	1000										1088
+GLOVES (STR/DEX)	SUFFIX	#% increased Rarity of Items found	1000	1000	1000												1089
+GLOVES (STR/DEX)	SUFFIX	#% reduced Attribute Requirements	700	700	700	700	700										1090
+GLOVES (STR/DEX)	SUFFIX	# to Dexterity	1000	1000	1000	1000	1000	1000	1000	1000	1000						1091
+GLOVES (STR/DEX)	SUFFIX	# to Level of all Melee Skills	250	500													1092
+GLOVES (STR/DEX)	SUFFIX	# to Strength	500	500	500	500	500	500	500	500							1093
+GLOVES (STR/DEX)	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									1094
+GLOVES (STR/DEX)	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							1095
+GLOVES (STR/DEX)	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							1096
+GLOVES (STR/DEX)	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							1097
+GLOVES (STR/DEX)	SUFFIX	Gain # Life per Enemy Hit with Attacks	1000	1000	1000	1000											1098
+GLOVES (STR/DEX)	SUFFIX	Gain # Life per Enemy Killed	750	750	750	750	750	750	750	750							1099
+GLOVES (STR/DEX)	SUFFIX	Gain # Mana per Enemy Killed	750	750	750	750	750	750	750	750							1100
+GLOVES (STR/DEX)	SUFFIX	Leech #% of Physical Attack Damage as Life	1000	1000	1000	1000	1000										1101
+GLOVES (STR/DEX)	SUFFIX	Leech #% of Physical Attack Damage as Mana	1000	1000	1000	1000	1000										1102
+GLOVES (STR/DEX)	SUFFIX	#% of Armour also applies to Elemental Damage	500	500	500	500	500										1103
+GLOVES (STR/DEX)	SUFFIX	Gain Deflection Rating equal to #% of Evasion Rating	500	500	500	500	500										1104
+AMULET	PREFIX	#% increased Armour	1000	1000	1000	1000	1000	1000	1000								1105
+AMULET	PREFIX	#% increased Evasion Rating	1000	1000	1000	1000	1000	1000	1000								1106
+AMULET	PREFIX	#% increased maximum Energy Shield	1000	1000	1000	1000	1000	1000	1000								1107
+AMULET	PREFIX	#% increased maximum Life	300	300	300												1108
+AMULET	PREFIX	#% increased maximum Mana	300	300	300												1109
+AMULET	PREFIX	#% increased Rarity of Items found	1000	1000	1000												1110
+AMULET	PREFIX	#% increased Spell Damage	1000	1000	1000	1000	1000	1000									1111
+AMULET	PREFIX	# to Accuracy Rating	400	800	800	800	800	800	800	800							1112
+AMULET	PREFIX	# to maximum Energy Shield	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000					1113
+AMULET	PREFIX	# to maximum Life	1000	1000	1000	1000	1000	1000	1000	1000	1000						1114
+AMULET	PREFIX	# to maximum Mana	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000		1115
+AMULET	PREFIX	# to Spirit	400	500	500	500	500										1116
+AMULET	SUFFIX	# Life Regeneration per second	1000	1000	1000	1000	1000	1000	1000	1000	1000	1000					1117
+AMULET	SUFFIX	#% increased Cast Speed	800	800	800	800	800										1118
+AMULET	SUFFIX	#% increased Critical Damage Bonus	125	250	500	1000	1000	1000									1119
+AMULET	SUFFIX	#% increased Critical Hit Chance	125	250	500	1000	1000	1000									1120
+AMULET	SUFFIX	#% increased Mana Regeneration Rate	1000	1000	1000	1000	1000	1000									1121
+AMULET	SUFFIX	#% increased Rarity of Items found	1000	1000	1000												1122
+AMULET	SUFFIX	#% of Damage taken Recouped as Life	500	500	500	500	500										1123
+AMULET	SUFFIX	#% of Damage taken Recouped as Mana	500	500	500	500	500										1124
+AMULET	SUFFIX	# to all Attributes	800	800	800	800	800	800	800	800	800						1125
+AMULET	SUFFIX	# to Dexterity	1000	1000	1000	1000	1000	1000	1000	1000							1126
+AMULET	SUFFIX	# to Intelligence	1000	1000	1000	1000	1000	1000	1000	1000							1127
+AMULET	SUFFIX	# to Level of all Melee Skills	100	250	500												1128
+AMULET	SUFFIX	# to Level of all Minion Skills	100	250	500												1129
+AMULET	SUFFIX	# to Level of all Projectile Skills	100	250	500												1130
+AMULET	SUFFIX	# to Level of all Spell Skills	100	250	500												1131
+AMULET	SUFFIX	# to Strength	1000	1000	1000	1000	1000	1000	1000	1000							1132
+AMULET	SUFFIX	#% to all Elemental Resistances	800	800	800	800	800	800									1133
+AMULET	SUFFIX	#% to Chaos Resistance	250	250	250	250	250	250									1134
+AMULET	SUFFIX	#% to Cold Resistance	1000	1000	1000	1000	1000	1000	1000	1000							1135
+AMULET	SUFFIX	#% to Fire Resistance	1000	1000	1000	1000	1000	1000	1000	1000							1136
+AMULET	SUFFIX	#% to Lightning Resistance	1000	1000	1000	1000	1000	1000	1000	1000							1137
+TALISMAN	PREFIX	#% increased Elemental Damage with Attacks	500	500	500	500	500	500									1138
+TALISMAN	PREFIX	#% increased Physical Damage	25	50	100	200	400	1000	1000	1000							1139
+TALISMAN	PREFIX	#% increased Physical Damage, # to Accuracy Rating	100	200	400	600	1000	1000	1000	1000							1140
+TALISMAN	PREFIX	# to Accuracy Rating	200	300	600	600	800	800	800	800	800						1141
+TALISMAN	PREFIX	Adds # to # Cold Damage	100	250	400	600	1000	1000	1000	1000	1000	1000					1142
+TALISMAN	PREFIX	Adds # to # Fire Damage	110	275	440	660	1100	1100	1100	1100	1100	1100					1143
+TALISMAN	PREFIX	Adds # to # Lightning Damage	80	200	360	480	800	800	800	800	800	800					1144
+TALISMAN	PREFIX	Adds # to # Physical Damage	100	200	400	600	1000	1000	1000	1000	1000						1145
+TALISMAN	SUFFIX	#% increased Attack Speed	100	200	500	500	1000	1000	1000	1000							1146
+TALISMAN	SUFFIX	# to Accuracy Rating, #% increased Light Radius	1000	1000	1000												1147
+TALISMAN	SUFFIX	#% increased Stun Duration	1000	1000	1000	1000	1000	1000									1148
+TALISMAN	SUFFIX	#% reduced Attribute Requirements	1000	1000	1000	1000	1000										1149
+TALISMAN	SUFFIX	# to Level of all Melee Skills	100	250	500	750	1000										1150
+TALISMAN	SUFFIX	# to Strength	600	600	600	600	600	600	600	600							1151
+TALISMAN	SUFFIX	# to Intelligence	400	400	400	400	400	400	400	400							1152
+TALISMAN	SUFFIX	#% to Critical Damage Bonus	125	250	500	1000	1000	1000									1153
+TALISMAN	SUFFIX	#% to Critical Hit Chance	125	250	500	1000	1000	1000									1154
+TALISMAN	SUFFIX	Causes #% increased Stun Buildup	1000	1000	1000	1000	1000	1000									1155
+TALISMAN	SUFFIX	Gain # Life per Enemy Killed	750	750	750	750	750	750	750	750							1156
+TALISMAN	SUFFIX	Gain # Mana per Enemy Killed	750	750	750	750	750	750	750	750							1157
+TALISMAN	SUFFIX	Grants # Life per Enemy Hit	1000	1000	1000	1000											1158
+TALISMAN	SUFFIX	Leeches #% of Physical Damage as Life	1000	1000	1000	1000	1000										1159
+TALISMAN	SUFFIX	Leeches #% of Physical Damage as Mana	1000	1000	1000	1000	1000										1160

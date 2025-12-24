@@ -139,12 +139,14 @@ def test_abyss_with_sinistral_adds_mark_as_prefix_when_suffixes_full(
     # Check that NO suffixes were removed
     assert len(result_item.suffix_mods) == 3, f"Expected 3 suffixes (none removed), got {len(result_item.suffix_mods)}"
 
-    # Check that the prefix is the Mark (modifier named "Abyssal" with stat_text "Bears the Mark of the Abyssal Lord")
-    mark_in_prefixes = [m for m in result_item.prefix_mods if m.name == "Abyssal"]
-    mark_in_suffixes = [m for m in result_item.suffix_mods if m.name == "Abyssal"]
+    # Check that the prefix is the Mark
+    # Prefix version is named "Abyssal", suffix version is named "of the Abyss"
+    mark_in_prefixes = [m for m in result_item.prefix_mods if m.mod_group == "AbyssTargetMod"]
+    mark_in_suffixes = [m for m in result_item.suffix_mods if m.mod_group == "AbyssTargetMod"]
 
-    assert len(mark_in_prefixes) == 1, f"Expected Mark (Abyssal) as PREFIX, found {len(mark_in_prefixes)} in prefixes"
+    assert len(mark_in_prefixes) == 1, f"Expected Mark as PREFIX, found {len(mark_in_prefixes)} in prefixes"
     assert len(mark_in_suffixes) == 0, f"Expected no Mark in suffixes, found {len(mark_in_suffixes)}"
+    assert mark_in_prefixes[0].name == "Abyssal", f"Expected prefix name 'Abyssal', got '{mark_in_prefixes[0].name}'"
 
     print(f"✓ Test PASSED: Mark correctly added as PREFIX when suffixes are full")
 
@@ -249,12 +251,14 @@ def test_abyss_with_dextral_adds_mark_as_suffix_when_prefixes_full(
     # Expected result: Removed 1 suffix, added Mark as suffix (so 1S total with Mark)
     assert len(result_item.suffix_mods) == 1, f"Expected 1 suffix (Mark replaced removed suffix), got {len(result_item.suffix_mods)}"
 
-    # Check that the suffix is the Mark (modifier named "Abyssal" with stat_text "Bears the Mark of the Abyssal Lord")
-    mark_in_prefixes = [m for m in result_item.prefix_mods if m.name == "Abyssal"]
-    mark_in_suffixes = [m for m in result_item.suffix_mods if m.name == "Abyssal"]
+    # Check that the suffix is the Mark
+    # Prefix version is named "Abyssal", suffix version is named "of the Abyss"
+    mark_in_prefixes = [m for m in result_item.prefix_mods if m.mod_group == "AbyssTargetMod"]
+    mark_in_suffixes = [m for m in result_item.suffix_mods if m.mod_group == "AbyssTargetMod"]
 
-    assert len(mark_in_suffixes) == 1, f"Expected Mark (Abyssal) as SUFFIX, found {len(mark_in_suffixes)} in suffixes"
+    assert len(mark_in_suffixes) == 1, f"Expected Mark as SUFFIX, found {len(mark_in_suffixes)} in suffixes"
     assert len(mark_in_prefixes) == 0, f"Expected no Mark in prefixes, found {len(mark_in_prefixes)}"
+    assert mark_in_suffixes[0].name == "of the Abyss", f"Expected suffix name 'of the Abyss', got '{mark_in_suffixes[0].name}'"
 
     print(f"✓ Test PASSED: Mark correctly added as SUFFIX when prefixes are full")
 

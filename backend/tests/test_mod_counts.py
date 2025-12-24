@@ -49,42 +49,43 @@ CATEGORY_TO_BASE_NAME: Dict[str, str] = {
 
 # Format: item_category -> (desecrated_prefix, desecrated_suffix, essence_prefix, essence_suffix)
 # These counts are from the pob-data JSON source, using the specific base names in the tests
+# Note: Each category includes +1 essence prefix and +1 essence suffix for Mark of the Abyssal Lord
 EXPECTED_MOD_COUNTS: Dict[str, Tuple[int, int, int, int]] = {
     # Armor
-    "helmet": (0, 11, 0, 1),
-    "gloves": (0, 12, 0, 3),
-    "body_armour": (0, 13, 2, 1),
-    "boots": (0, 9, 0, 1),
+    "helmet": (0, 11, 1, 2),
+    "gloves": (0, 12, 1, 4),
+    "body_armour": (0, 13, 3, 2),
+    "boots": (0, 9, 1, 2),
 
     # Jewelry
-    "amulet": (11, 20, 1, 0),
-    "ring": (7, 15, 1, 0),
-    "belt": (9, 12, 0, 2),
+    "amulet": (11, 20, 2, 1),
+    "ring": (7, 15, 2, 1),
+    "belt": (9, 12, 1, 3),
 
     # Offhand
-    "quiver": (3, 5, 0, 0),
-    "focus": (6, 6, 0, 1),
-    "shield": (0, 15, 0, 0),
+    "quiver": (3, 5, 1, 1),
+    "focus": (6, 6, 1, 2),
+    "shield": (0, 15, 1, 1),
 
     # 1H Weapons
-    "wand": (6, 9, 0, 2),
-    "spear": (5, 6, 4, 2),
-    "sceptre": (0, 0, 0, 1),
-    "one_hand_sword": (0, 0, 8, 3),
-    "one_hand_mace": (8, 11, 8, 3),
-    "one_hand_axe": (0, 0, 8, 3),
-    "flail": (0, 0, 4, 2),
-    "dagger": (0, 0, 4, 2),
-    "claw": (0, 0, 0, 0),  # No essence or desecrated mods in pob-data
+    "wand": (6, 9, 1, 3),
+    "spear": (5, 6, 5, 3),
+    "sceptre": (0, 0, 1, 2),
+    "one_hand_sword": (0, 0, 9, 4),
+    "one_hand_mace": (8, 11, 9, 4),
+    "one_hand_axe": (0, 0, 9, 4),
+    "flail": (0, 0, 5, 3),
+    "dagger": (0, 0, 5, 3),
+    "claw": (0, 0, 1, 1),  # Only Abyssal mark (prefix + suffix)
 
     # 2H Weapons
-    "bow": (8, 9, 8, 5),
-    "crossbow": (4, 5, 4, 2),
-    "staff": (6, 6, 4, 4),
-    "two_hand_axe": (0, 0, 8, 3),
-    "two_hand_mace": (8, 11, 8, 3),
-    "two_hand_sword": (0, 0, 8, 3),
-    "warstaff": (3, 3, 0, 0),
+    "bow": (8, 9, 9, 6),
+    "crossbow": (4, 5, 5, 3),
+    "staff": (6, 6, 5, 5),
+    "two_hand_axe": (0, 0, 9, 4),
+    "two_hand_mace": (8, 11, 9, 4),
+    "two_hand_sword": (0, 0, 9, 4),
+    "warstaff": (3, 3, 1, 1),
 }
 
 

@@ -283,10 +283,10 @@ def test_retry_essence_of_the_abyss():
     result_item = result.result_item
     assert result_item.rarity == "Rare"
 
-    # Verify that the Abyssal mod was added
+    # Verify that the Abyssal mod was added (can be prefix "Abyssal" or suffix "of the Abyss")
     all_mods = result_item.prefix_mods + result_item.suffix_mods
-    abyssal_mods = [m for m in all_mods if m.name == "Abyssal"]
-    assert len(abyssal_mods) == 1, "Expected 1 Abyssal modifier to be added"
+    abyssal_mods = [m for m in all_mods if m.mod_group == "AbyssTargetMod"]
+    assert len(abyssal_mods) == 1, "Expected 1 Abyssal modifier (Mark of the Abyssal Lord) to be added"
 
 
 def test_retry_preserves_omens(magic_amulet):

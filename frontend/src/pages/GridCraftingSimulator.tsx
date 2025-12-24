@@ -961,15 +961,30 @@ function GridCraftingSimulator() {
       const rolledValues = draggedMod.stat_ranges.map(range =>
         Math.random() * (range.max - range.min) + range.min
       )
+
+      // Format stat_text with rolled values instead of ranges
+      let formattedStatText = draggedMod.stat_text
+      for (const rolledValue of rolledValues) {
+        // Replace first range pattern with the rolled value
+        const valueStr = Number.isInteger(rolledValue) ? String(Math.round(rolledValue)) : rolledValue.toFixed(1)
+        formattedStatText = formattedStatText.replace(/\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\)/, valueStr)
+      }
+
       modWithValue = {
         ...draggedMod,
+        stat_text: formattedStatText,
         current_values: rolledValues,
         current_value: rolledValues[0] // Legacy compatibility
       }
     } else if (draggedMod.stat_min !== undefined && draggedMod.stat_max !== undefined) {
       // Legacy single value rolling
       const randomValue = Math.floor(Math.random() * (draggedMod.stat_max - draggedMod.stat_min + 1)) + draggedMod.stat_min
-      modWithValue = { ...draggedMod, current_value: randomValue }
+
+      // Format stat_text with rolled value
+      const valueStr = String(randomValue)
+      const formattedStatText = draggedMod.stat_text.replace(/\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\)/g, valueStr)
+
+      modWithValue = { ...draggedMod, stat_text: formattedStatText, current_value: randomValue }
     } else {
       // No ranges available, use mod as-is
       modWithValue = { ...draggedMod }
@@ -2485,18 +2500,19 @@ function GridCraftingSimulator() {
                 <div className="mods-pool-list">
                   {/* Normal Prefixes */}
                   {Object.entries(getGroupedMods('prefix')).map(([groupKey, groupMods]) => {
-                    const bestTier = groupMods[0] // T1 (best tier) for display
                     const maxIlvl = Math.max(...groupMods.map(m => m.required_ilvl || 1))
                     const unavailableCount = groupMods.filter(m => m.required_ilvl && m.required_ilvl > item.item_level).length
                     const allUnavailable = unavailableCount === groupMods.length
                     const isGroupGreyedOut = shouldGreyOutModGroup(groupMods, 'prefix')
                     const isExpanded = expandedModGroups.has(`prefix-${groupKey}`)
 
-                    // Calculate available tier range
+                    // Calculate available tiers (filtered by ilvl)
                     const availableModsInGroup = groupMods.filter(m => !m.required_ilvl || m.required_ilvl <= item.item_level)
-                    const bestAvailableTier = availableModsInGroup.length > 0 ? Math.min(...availableModsInGroup.map(m => m.tier)) : null
+                    // Use best available tier for display, fallback to T1 if none available
+                    const displayTier = availableModsInGroup.length > 0 ? availableModsInGroup[0] : groupMods[0]
+                    const bestAvailableTierNum = availableModsInGroup.length > 0 ? Math.min(...availableModsInGroup.map(m => m.tier)) : null
                     const worstTier = Math.max(...groupMods.map(m => m.tier))
-                    const tierRangeText = bestAvailableTier ? `T${bestAvailableTier}-T${worstTier}` : `T1-T${worstTier}`
+                    const tierRangeText = bestAvailableTierNum ? `T${bestAvailableTierNum}-T${worstTier}` : `T1-T${worstTier}`
 
                     // Check if any tier in this group has essence guarantees
                     const essenceGuaranteeTiers = groupMods.filter(m =>
@@ -2509,18 +2525,18 @@ function GridCraftingSimulator() {
                         <div
                           className={`pool-mod-group-header prefix compact-single-line ${allUnavailable ? 'all-unavailable' : ''} mod-group-clickable`}
                           onClick={() => toggleModGroup(`prefix-${groupKey}`)}
-                          onDoubleClick={() => applyAllModTags(bestTier)}
+                          onDoubleClick={() => applyAllModTags(displayTier)}
                           draggable={!allUnavailable && itemCreated}
-                          onDragStart={() => handleDragStart(bestTier, 'prefix')}
+                          onDragStart={() => handleDragStart(displayTier, 'prefix')}
                           onDragEnd={handleDragEnd}
                           title="Click to expand/collapse, double-click to filter by all tags, drag to add to item"
                         >
                           <span className="pool-mod-stat-main">
-                            {formatStatTextWithRanges(bestTier)}
-                            {bestTier.exclusion_group_id && (() => {
-                              const groupInfo = getModExclusionGroupInfo(bestTier)
-                              const groupColor = getExclusionGroupColor(bestTier.exclusion_group_id)
-                              const groupNum = exclusionGroupDisplayMap[bestTier.exclusion_group_id] || '?'
+                            {formatStatTextWithRanges(displayTier)}
+                            {displayTier.exclusion_group_id && (() => {
+                              const groupInfo = getModExclusionGroupInfo(displayTier)
+                              const groupColor = getExclusionGroupColor(displayTier.exclusion_group_id)
+                              const groupNum = exclusionGroupDisplayMap[displayTier.exclusion_group_id] || '?'
                               return (
                                 <span
                                   className="exclusion-group-badge"
@@ -2564,24 +2580,28 @@ function GridCraftingSimulator() {
                             )}
                             <span className="group-tier-range">{tierRangeText}</span>
                             <span className="group-max-ilvl">ilvl {maxIlvl}</span>
-                            {bestTier.weight !== undefined && totalWeights.prefix > 0 && (
-                              <span className="mod-weight" title={`Weight: ${bestTier.weight} / ${totalWeights.prefix} total`}>
-                                {((bestTier.weight / totalWeights.prefix) * 100).toFixed(2)}%
-                              </span>
-                            )}
-                            {bestTier.tags && bestTier.tags.length > 0 && (
+                            {(() => {
+                              // Calculate combined weight of available tiers only (filtered by ilvl)
+                              const combinedWeight = availableModsInGroup.reduce((sum, mod) => sum + (mod.weight || 0), 0)
+                              return combinedWeight > 0 && totalWeights.prefix > 0 && (
+                                <span className="mod-weight" title={`Combined weight: ${combinedWeight} / ${totalWeights.prefix} total (${availableModsInGroup.length} available tiers)`}>
+                                  {((combinedWeight / totalWeights.prefix) * 100).toFixed(2)}%
+                                </span>
+                              )
+                            })()}
+                            {displayTier.tags && displayTier.tags.length > 0 && (
                               <div className="mod-tags-line" title="Click individual tags to filter">
                                 <button
                                   className="apply-all-tags-btn"
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    applyAllModTags(bestTier);
+                                    applyAllModTags(displayTier);
                                   }}
                                   title="Apply all tags as filters"
                                 >
                                   ✓✓
                                 </button>
-                                {bestTier.tags.map((tag, i) => {
+                                {displayTier.tags.map((tag, i) => {
                                   const tagColor = getTagColor(tag)
                                   return (
                                     <span
@@ -2882,18 +2902,19 @@ function GridCraftingSimulator() {
                 <div className="mods-pool-list">
                   {/* Normal Suffixes */}
                   {Object.entries(getGroupedMods('suffix')).map(([groupKey, groupMods]) => {
-                    const bestTier = groupMods[0] // T1 (best tier) for display
                     const maxIlvl = Math.max(...groupMods.map(m => m.required_ilvl || 1))
                     const unavailableCount = groupMods.filter(m => m.required_ilvl && m.required_ilvl > item.item_level).length
                     const allUnavailable = unavailableCount === groupMods.length
                     const isGroupGreyedOut = shouldGreyOutModGroup(groupMods, 'suffix')
                     const isExpanded = expandedModGroups.has(`suffix-${groupKey}`)
 
-                    // Calculate available tier range
+                    // Calculate available tiers (filtered by ilvl)
                     const availableModsInGroup = groupMods.filter(m => !m.required_ilvl || m.required_ilvl <= item.item_level)
-                    const bestAvailableTier = availableModsInGroup.length > 0 ? Math.min(...availableModsInGroup.map(m => m.tier)) : null
+                    // Use best available tier for display, fallback to T1 if none available
+                    const displayTier = availableModsInGroup.length > 0 ? availableModsInGroup[0] : groupMods[0]
+                    const bestAvailableTierNum = availableModsInGroup.length > 0 ? Math.min(...availableModsInGroup.map(m => m.tier)) : null
                     const worstTier = Math.max(...groupMods.map(m => m.tier))
-                    const tierRangeText = bestAvailableTier ? `T${bestAvailableTier}-T${worstTier}` : `T1-T${worstTier}`
+                    const tierRangeText = bestAvailableTierNum ? `T${bestAvailableTierNum}-T${worstTier}` : `T1-T${worstTier}`
 
                     // Check if any tier in this group has essence guarantees
                     const essenceGuaranteeTiers = groupMods.filter(m =>
@@ -2906,18 +2927,18 @@ function GridCraftingSimulator() {
                         <div
                           className={`pool-mod-group-header suffix compact-single-line ${allUnavailable ? 'all-unavailable' : ''} mod-group-clickable`}
                           onClick={() => toggleModGroup(`suffix-${groupKey}`)}
-                          onDoubleClick={() => applyAllModTags(bestTier)}
+                          onDoubleClick={() => applyAllModTags(displayTier)}
                           draggable={!allUnavailable && itemCreated}
-                          onDragStart={() => handleDragStart(bestTier, 'suffix')}
+                          onDragStart={() => handleDragStart(displayTier, 'suffix')}
                           onDragEnd={handleDragEnd}
                           title="Click to expand/collapse, double-click to filter by all tags, drag to add to item"
                         >
                           <span className="pool-mod-stat-main">
-                            {formatStatTextWithRanges(bestTier)}
-                            {bestTier.exclusion_group_id && (() => {
-                              const groupInfo = getModExclusionGroupInfo(bestTier)
-                              const groupColor = getExclusionGroupColor(bestTier.exclusion_group_id)
-                              const groupNum = exclusionGroupDisplayMap[bestTier.exclusion_group_id] || '?'
+                            {formatStatTextWithRanges(displayTier)}
+                            {displayTier.exclusion_group_id && (() => {
+                              const groupInfo = getModExclusionGroupInfo(displayTier)
+                              const groupColor = getExclusionGroupColor(displayTier.exclusion_group_id)
+                              const groupNum = exclusionGroupDisplayMap[displayTier.exclusion_group_id] || '?'
                               return (
                                 <span
                                   className="exclusion-group-badge"
@@ -2961,24 +2982,28 @@ function GridCraftingSimulator() {
                             )}
                             <span className="group-tier-range">{tierRangeText}</span>
                             <span className="group-max-ilvl">ilvl {maxIlvl}</span>
-                            {bestTier.weight !== undefined && totalWeights.suffix > 0 && (
-                              <span className="mod-weight" title={`Weight: ${bestTier.weight} / ${totalWeights.suffix} total`}>
-                                {((bestTier.weight / totalWeights.suffix) * 100).toFixed(2)}%
-                              </span>
-                            )}
-                            {bestTier.tags && bestTier.tags.length > 0 && (
+                            {(() => {
+                              // Calculate combined weight of available tiers only (filtered by ilvl)
+                              const combinedWeight = availableModsInGroup.reduce((sum, mod) => sum + (mod.weight || 0), 0)
+                              return combinedWeight > 0 && totalWeights.suffix > 0 && (
+                                <span className="mod-weight" title={`Combined weight: ${combinedWeight} / ${totalWeights.suffix} total (${availableModsInGroup.length} available tiers)`}>
+                                  {((combinedWeight / totalWeights.suffix) * 100).toFixed(2)}%
+                                </span>
+                              )
+                            })()}
+                            {displayTier.tags && displayTier.tags.length > 0 && (
                               <div className="mod-tags-line" title="Click individual tags to filter">
                                 <button
                                   className="apply-all-tags-btn"
                                   onClick={(e) => {
                                     e.stopPropagation();
-                                    applyAllModTags(bestTier);
+                                    applyAllModTags(displayTier);
                                   }}
                                   title="Apply all tags as filters"
                                 >
                                   ✓✓
                                 </button>
-                                {bestTier.tags.map((tag, i) => {
+                                {displayTier.tags.map((tag, i) => {
                                   const tagColor = getTagColor(tag)
                                   return (
                                     <span

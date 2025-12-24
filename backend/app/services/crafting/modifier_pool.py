@@ -425,7 +425,8 @@ class ModifierPool:
                 if has_excluded_pattern:
                     continue
 
-            if not mod.applicable_items:
+            # Skip mods with empty applicable_items unless they're special essence-only mods
+            if not mod.applicable_items and mod.mod_group != "AbyssTargetMod":
                 continue
 
             if exclude_exclusive and mod.is_exclusive and "essence_only" not in mod.tags and "desecrated_only" not in mod.tags:
@@ -661,21 +662,69 @@ class ModifierPool:
         Returns:
             True if mod can spawn (weight > 0), False otherwise
         """
+        return self._get_weight_for_item(weight_conditions, item_category, item_slot, item) > 0
+
+    def _get_weight_for_item(self, weight_conditions: dict, item_category: str, item_slot: str, item=None) -> int:
+        """
+        Get the effective weight of a mod for a specific item.
+
+        Algorithm (FIRST MATCH WINS):
+        1. Iterate through weightKey array in order
+        2. Check if item matches each weight key
+        3. On FIRST match, return corresponding weightVal
+
+        Args:
+            weight_conditions: Dict with "weightKey" and "weightVal" arrays
+            item_category: The item's category
+            item_slot: The item's slot
+            item: Optional item instance for elemental exclusion checks
+
+        Returns:
+            The weight value for this item, or 0 if no match
+        """
         weight_keys = weight_conditions.get("weightKey", [])
         weight_vals = weight_conditions.get("weightVal", [])
 
         if not weight_keys or not weight_vals:
-            return False
+            return 0
 
         # Iterate in order - FIRST MATCH WINS
         for i, weight_key in enumerate(weight_keys):
             if self._item_matches_weight_key(weight_key, item_category, item_slot, item):
                 # First match found - use this weight
-                weight = weight_vals[i] if i < len(weight_vals) else 0
-                return weight > 0
+                return weight_vals[i] if i < len(weight_vals) else 0
 
         # No match (shouldn't happen if "default" is always in weightKey)
-        return False
+        return 0
+
+    def get_effective_weight(self, mod: ItemModifier, item) -> int:
+        """
+        Get the effective weight of a modifier for a specific item.
+
+        Uses the mod's weight_conditions to calculate the actual weight
+        for the given item's category and slot.
+
+        Args:
+            mod: The modifier to check
+            item: The item to check against
+
+        Returns:
+            The effective weight for this mod on this item
+        """
+        if not mod.weight_conditions:
+            # No weight conditions means use default weight
+            return mod.weight if mod.weight else 100
+
+        item_slot = _get_item_slot(item.base_name) if item else None
+        if not item_slot:
+            return 0
+
+        return self._get_weight_for_item(
+            mod.weight_conditions,
+            item.base_category,
+            item_slot,
+            item
+        )
 
     def _is_mod_applicable_to_category(self, mod: ItemModifier, item_category: str, item=None) -> bool:
         """Check if a mod is applicable to an item category"""
@@ -685,6 +734,11 @@ class ModifierPool:
         if item:
             # Determine slot from base_name if we have the item
             item_slot = _get_item_slot(item.base_name)
+
+        # Special case: AbyssTargetMod (Mark of the Abyssal Lord) applies to any item
+        # It has weight 0 and empty applicable_items but can be added via Essence of the Abyss
+        if mod.mod_group == "AbyssTargetMod":
+            return True
 
         # === Use weight system if available ===
         # If mod has weight_conditions, use PoB2's exact weight evaluation

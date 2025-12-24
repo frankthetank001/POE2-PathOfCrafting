@@ -281,6 +281,7 @@ class BaseAbyssalBone(CraftingCurrency, ABC):
 
     def _create_desecrated_modifier(self, base_modifier: ItemModifier) -> ItemModifier:
         """Create a desecrated version of a base modifier."""
+        import re
 
         # Create a copy with desecrated type
         desecrated_mod = ItemModifier(
@@ -309,10 +310,38 @@ class BaseAbyssalBone(CraftingCurrency, ABC):
             ]
             # Set legacy current_value to first value for backwards compatibility
             desecrated_mod.current_value = desecrated_mod.current_values[0]
+
+            # Format stat_text with rolled values instead of ranges
+            formatted_text = desecrated_mod.stat_text
+            for rolled_value in desecrated_mod.current_values:
+                # Replace first range pattern with the rolled value
+                # Handle both integer and decimal display
+                if rolled_value == int(rolled_value):
+                    value_str = str(int(rolled_value))
+                else:
+                    value_str = f"{rolled_value:.1f}"
+                formatted_text = re.sub(
+                    r'\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\)',
+                    value_str,
+                    formatted_text,
+                    count=1
+                )
+            desecrated_mod.stat_text = formatted_text
+
         # Fall back to legacy single value for older mods
         elif desecrated_mod.stat_min is not None and desecrated_mod.stat_max is not None:
             desecrated_mod.current_value = random.uniform(
                 desecrated_mod.stat_min, desecrated_mod.stat_max
+            )
+            # Format stat_text with rolled value
+            if desecrated_mod.current_value == int(desecrated_mod.current_value):
+                value_str = str(int(desecrated_mod.current_value))
+            else:
+                value_str = f"{desecrated_mod.current_value:.1f}"
+            desecrated_mod.stat_text = re.sub(
+                r'\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\)',
+                value_str,
+                desecrated_mod.stat_text
             )
 
         return desecrated_mod
