@@ -532,6 +532,7 @@ class POBDataLoader:
                 applicable_items=applicable_items,
                 tags=tags,
                 weight_conditions=weight_conditions,
+                trade_hash=mod_info.get("tradeHash"),
                 is_essence_only=mod_group == "AbyssTargetMod",
             )
 

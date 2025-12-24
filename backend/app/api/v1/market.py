@@ -250,6 +250,22 @@ class ItemPriceRequest(BaseModel):
     """Request to estimate item price."""
     item: CraftableItem = Field(..., description="The item to price")
     league: Optional[str] = Field(None, description="League name (uses default if not specified)")
+    equipment_filters: Optional[Dict[str, float]] = Field(None, description="Custom min values for equipment stats (Armour, Evasion, EnergyShield)")
+    equipment_enabled: Optional[Dict[str, bool]] = Field(None, description="Which equipment filters are enabled")
+
+
+class PriceListingResponse(BaseModel):
+    """A single listing in price results."""
+    price_amount: float = Field(..., description="Price amount")
+    price_currency: str = Field(..., description="Price currency")
+    price_chaos: float = Field(..., description="Price in chaos")
+    item_name: str = Field(..., description="Item name")
+    item_base: str = Field(..., description="Item base type")
+    item_level: int = Field(..., description="Item level")
+    explicit_mods: List[str] = Field(default_factory=list, description="Explicit mods")
+    implicit_mods: List[str] = Field(default_factory=list, description="Implicit mods")
+    account_name: str = Field(..., description="Seller account name")
+    indexed_time: Optional[str] = Field(None, description="When the item was listed (ISO timestamp)")
 
 
 class ItemPriceResponse(BaseModel):
@@ -269,11 +285,17 @@ class ItemPriceResponse(BaseModel):
     # Search info
     search_criteria: Dict[str, Any] = Field(
         default_factory=dict,
-        description="Pseudo stats used for search"
+        description="Stats used for search"
     )
 
     # Trade URL
     trade_url: Optional[str] = Field(None, description="URL to view search on trade site")
+
+    # Individual listings
+    listings: List[PriceListingResponse] = Field(
+        default_factory=list,
+        description="Individual item listings"
+    )
 
 
 @router.post("/price-item", response_model=ItemPriceResponse)
@@ -288,13 +310,35 @@ async def estimate_item_price(request: ItemPriceRequest) -> ItemPriceResponse:
     """
     try:
         pricer = await get_item_pricer()
-        estimate = await pricer.estimate_price(request.item, request.league)
+        estimate = await pricer.estimate_price(
+            request.item,
+            request.league,
+            equipment_filters=request.equipment_filters,
+            equipment_enabled=request.equipment_enabled
+        )
 
         if estimate is None:
             raise HTTPException(
                 status_code=404,
                 detail="Unable to estimate price. No comparable items found or item has no priceable mods."
             )
+
+        # Convert listings to response format
+        listings_response = []
+        if estimate.listings:
+            for listing in estimate.listings:
+                listings_response.append(PriceListingResponse(
+                    price_amount=listing.price_amount,
+                    price_currency=listing.price_currency,
+                    price_chaos=listing.price_chaos,
+                    item_name=listing.item_name,
+                    item_base=listing.item_base,
+                    item_level=listing.item_level,
+                    explicit_mods=listing.explicit_mods,
+                    implicit_mods=listing.implicit_mods,
+                    account_name=listing.account_name,
+                    indexed_time=listing.indexed_time,
+                ))
 
         return ItemPriceResponse(
             min_price=estimate.min_price,
@@ -308,6 +352,7 @@ async def estimate_item_price(request: ItemPriceRequest) -> ItemPriceResponse:
             divine_value=estimate.divine_value,
             search_criteria=estimate.search_criteria,
             trade_url=estimate.trade_url,
+            listings=listings_response,
         )
     except HTTPException:
         raise

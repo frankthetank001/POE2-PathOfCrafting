@@ -2,12 +2,11 @@
 Item Price Estimation Service
 
 Estimates item value by searching the POE2 trade site for comparable items.
-Uses pseudo mod normalization for better search results.
+Uses trade_hash from mods for explicit searches and pseudo stats for combined values.
 """
 
-import re
 from dataclasses import dataclass
-from typing import Any, Dict, List, Optional, Tuple
+from typing import Any, Dict, List, Optional
 from statistics import median, mean
 
 from app.core.logging import get_logger
@@ -15,52 +14,53 @@ from app.schemas.crafting import CraftableItem, ItemModifier
 from app.services.market.trade_client import TradeAPIClient, TradeListing, get_trade_client
 from app.services.market.service import get_market_service
 
+
+@dataclass
+class PriceListing:
+    """A single listing for the price results."""
+    price_amount: float
+    price_currency: str
+    price_chaos: float  # Normalized to chaos
+    item_name: str
+    item_base: str
+    item_level: int
+    explicit_mods: List[str]
+    implicit_mods: List[str]
+    account_name: str
+    indexed_time: Optional[str] = None
+
 logger = get_logger(__name__)
 
+# Cache for mod data lookups
+_mod_data_cache: dict = {}
 
-# Mapping of mod patterns to pseudo stat IDs
-# Format: (regex pattern, pseudo_id, value_extractor)
-PSEUDO_MAPPINGS = [
-    # Resistances - combine into total elemental
-    (r"\+(\d+)%? to Fire Resistance", "fire_res", lambda m: int(m.group(1))),
-    (r"\+(\d+)%? to Cold Resistance", "cold_res", lambda m: int(m.group(1))),
-    (r"\+(\d+)%? to Lightning Resistance", "lightning_res", lambda m: int(m.group(1))),
-    (r"\+(\d+)%? to Chaos Resistance", "chaos_res", lambda m: int(m.group(1))),
-    (r"\+(\d+)%? to all Elemental Resistances", "all_ele_res", lambda m: int(m.group(1)) * 3),
 
-    # Life/Mana/ES
-    (r"\+(\d+) to maximum Life", "life", lambda m: int(m.group(1))),
-    (r"\+(\d+) to maximum Mana", "mana", lambda m: int(m.group(1))),
-    (r"\+(\d+) to maximum Energy Shield", "energy_shield", lambda m: int(m.group(1))),
-    (r"(\d+)%? increased maximum Life", "life_percent", lambda m: int(m.group(1))),
-    (r"(\d+)%? increased maximum Energy Shield", "es_percent", lambda m: int(m.group(1))),
+# Mod groups that should use pseudo stats instead of explicit
+# These are stats where you typically want the total across all mods
+PSEUDO_MOD_GROUPS = {
+    # Resistances - use total elemental/fire/cold/lightning/chaos
+    "FireResistance": "pseudo.pseudo_total_fire_resistance",
+    "ColdResistance": "pseudo.pseudo_total_cold_resistance",
+    "LightningResistance": "pseudo.pseudo_total_lightning_resistance",
+    "ChaosResistance": "pseudo.pseudo_total_chaos_resistance",
+    "AllResistances": "pseudo.pseudo_total_elemental_resistance",
+    # Life - flat life goes to pseudo total
+    "IncreasedLife": "pseudo.pseudo_total_life",
+    # Mana - flat mana goes to pseudo total
+    "IncreasedMana": "pseudo.pseudo_total_mana",
+    # Attributes - use totals
+    "Strength": "pseudo.pseudo_total_strength",
+    "Dexterity": "pseudo.pseudo_total_dexterity",
+    "Intelligence": "pseudo.pseudo_total_intelligence",
+    "AllAttributes": "pseudo.pseudo_total_attributes",
+}
 
-    # Attributes
-    (r"\+(\d+) to Strength", "strength", lambda m: int(m.group(1))),
-    (r"\+(\d+) to Dexterity", "dexterity", lambda m: int(m.group(1))),
-    (r"\+(\d+) to Intelligence", "intelligence", lambda m: int(m.group(1))),
-    (r"\+(\d+) to all Attributes", "all_attributes", lambda m: int(m.group(1)) * 3),
-
-    # Movement speed
-    (r"(\d+)%? increased Movement Speed", "movement_speed", lambda m: int(m.group(1))),
-]
-
-# Pseudo stat ID to trade API stat ID
-PSEUDO_TO_TRADE_ID = {
-    "total_ele_res": "pseudo.pseudo_total_elemental_resistance",
-    "fire_res": "pseudo.pseudo_total_fire_resistance",
-    "cold_res": "pseudo.pseudo_total_cold_resistance",
-    "lightning_res": "pseudo.pseudo_total_lightning_resistance",
-    "chaos_res": "pseudo.pseudo_total_chaos_resistance",
-    "life": "pseudo.pseudo_total_life",
-    "mana": "pseudo.pseudo_total_mana",
-    "energy_shield": "pseudo.pseudo_total_energy_shield",
-    "es_percent": "pseudo.pseudo_increased_energy_shield",
-    "strength": "pseudo.pseudo_total_strength",
-    "dexterity": "pseudo.pseudo_total_dexterity",
-    "intelligence": "pseudo.pseudo_total_intelligence",
-    "total_attributes": "pseudo.pseudo_total_attributes",
-    "movement_speed": "pseudo.pseudo_increased_movement_speed",
+# Base stat names to trade API filter keys (keys match pob-data)
+BASE_STAT_TO_TRADE = {
+    "Armour": "ar",
+    "Evasion": "ev",
+    "EnergyShield": "es",
+    "Ward": "ward",
 }
 
 # Category mappings for trade API
@@ -103,13 +103,16 @@ class PriceEstimate:
     # Trade site URL
     trade_url: Optional[str] = None
 
+    # Individual listings
+    listings: List[PriceListing] = None
+
 
 class ItemPricer:
     """
     Estimates item prices using the trade API.
 
-    Uses pseudo mod normalization and progressive relaxation
-    to find comparable items.
+    Uses trade_hash from mods for explicit searches and pseudo stats
+    for combined values like total resistances.
     """
 
     def __init__(self, trade_client: Optional[TradeAPIClient] = None):
@@ -130,6 +133,8 @@ class ItemPricer:
         self,
         item: CraftableItem,
         league: Optional[str] = None,
+        equipment_filters: Optional[Dict[str, float]] = None,
+        equipment_enabled: Optional[Dict[str, bool]] = None,
     ) -> Optional[PriceEstimate]:
         """
         Estimate the price of an item.
@@ -137,16 +142,18 @@ class ItemPricer:
         Args:
             item: The item to price
             league: League to search in
+            equipment_filters: Custom min values for equipment stats
+            equipment_enabled: Which equipment filters are enabled
 
         Returns:
             PriceEstimate or None if unable to price
         """
         await self.initialize()
 
-        # Extract and normalize mods
-        pseudo_values = self._extract_pseudo_values(item)
+        # Extract mod filters using trade_hash
+        mod_filters = self._extract_mod_filters(item)
 
-        if not pseudo_values:
+        if not mod_filters:
             logger.info(f"No priceable mods found on {item.base_name}")
             return None
 
@@ -155,30 +162,31 @@ class ItemPricer:
 
         # Try progressively relaxed searches
         for strictness in [0.9, 0.8, 0.7, 0.5]:
-            query = self._build_query(item, pseudo_values, strictness)
+            query = self._build_query(item, mod_filters, strictness, equipment_filters, equipment_enabled)
             listings, query_id = await self._trade_client.search_and_fetch(query, league, max_results=20)
 
             if len(listings) >= 5:
                 trade_url = self._trade_client.build_trade_url(query_id, search_league) if query_id else None
-                return await self._calculate_price(listings, pseudo_values, strictness, trade_url)
+                return await self._calculate_price(listings, mod_filters, strictness, trade_url, item)
 
         # If we still don't have enough results, try one more with very relaxed criteria
-        query = self._build_query(item, pseudo_values, 0.3)
+        query = self._build_query(item, mod_filters, 0.3, equipment_filters, equipment_enabled)
         listings, query_id = await self._trade_client.search_and_fetch(query, league, max_results=20)
 
         if listings:
             trade_url = self._trade_client.build_trade_url(query_id, search_league) if query_id else None
-            return await self._calculate_price(listings, pseudo_values, 0.3, trade_url)
+            return await self._calculate_price(listings, mod_filters, 0.3, trade_url, item)
 
         return None
 
-    def _extract_pseudo_values(self, item: CraftableItem) -> Dict[str, float]:
+    def _extract_mod_filters(self, item: CraftableItem) -> Dict[str, Dict[str, Any]]:
         """
-        Extract pseudo stat values from an item.
+        Extract mod filters from an item using trade_hash.
 
-        Groups related mods (e.g., all resistances) into pseudo categories.
+        Returns a dict of stat_id -> {value, name, is_pseudo}
         """
-        pseudo_values: Dict[str, float] = {}
+        filters: Dict[str, Dict[str, Any]] = {}
+        pseudo_totals: Dict[str, float] = {}
 
         # Collect all mods
         all_mods = (
@@ -187,83 +195,140 @@ class ItemPricer:
             item.implicit_mods
         )
 
+        logger.info(f"Extracting filters from {len(all_mods)} mods")
+
         for mod in all_mods:
-            stat_text = mod.stat_text
+            # Get the rolled value
+            value = self._get_mod_value(mod)
+            if value is None or value == 0:
+                continue
 
-            for pattern, category, extractor in PSEUDO_MAPPINGS:
-                match = re.search(pattern, stat_text, re.IGNORECASE)
-                if match:
-                    try:
-                        value = extractor(match)
-                        pseudo_values[category] = pseudo_values.get(category, 0) + value
-                    except (ValueError, IndexError):
+            # Check if this mod group should use pseudo stats
+            if mod.mod_group and mod.mod_group in PSEUDO_MOD_GROUPS:
+                pseudo_id = PSEUDO_MOD_GROUPS[mod.mod_group]
+                pseudo_totals[pseudo_id] = pseudo_totals.get(pseudo_id, 0) + value
+                logger.info(f"Mod '{mod.name}' (group={mod.mod_group}) -> pseudo {pseudo_id} += {value}")
+            else:
+                # Try to get trade_hash (from mod or lookup)
+                trade_hash = self._get_trade_hash(mod)
+                if trade_hash:
+                    # Use explicit stat with trade_hash
+                    stat_id = f"explicit.stat_{trade_hash}"
+                    # If we already have this stat, take the higher value
+                    if stat_id not in filters or value > filters[stat_id]["value"]:
+                        filters[stat_id] = {
+                            "value": value,
+                            "name": mod.name,
+                            "stat_text": mod.stat_text,
+                            "is_pseudo": False,
+                        }
+                    logger.info(f"Mod '{mod.name}' (hash={trade_hash}) -> {stat_id} = {value}")
+                else:
+                    logger.warning(f"Mod '{mod.name}' (id={mod.mod_id}, group={mod.mod_group}) has no trade_hash, skipping")
+
+        # Add pseudo totals to filters
+        for pseudo_id, total in pseudo_totals.items():
+            filters[pseudo_id] = {
+                "value": total,
+                "name": pseudo_id.split(".")[-1],
+                "is_pseudo": True,
+            }
+            logger.info(f"Pseudo total: {pseudo_id} = {total}")
+
+        logger.info(f"Extracted {len(filters)} filters: {list(filters.keys())}")
+        return filters
+
+    def _get_mod_value(self, mod: ItemModifier) -> Optional[float]:
+        """Get the rolled value from a mod."""
+        # First check current_values (for multi-stat mods)
+        if mod.current_values and len(mod.current_values) > 0:
+            # For multi-stat, return the first (main) value
+            return mod.current_values[0]
+        # Then check current_value (legacy)
+        if mod.current_value is not None:
+            return mod.current_value
+        # Fall back to stat_min if no rolled value
+        if mod.stat_min is not None:
+            return mod.stat_min
+        return None
+
+    def _get_trade_hash(self, mod: ItemModifier) -> Optional[int]:
+        """Get trade_hash for a mod, looking it up from data if needed."""
+        # First check if mod already has trade_hash
+        if mod.trade_hash:
+            return mod.trade_hash
+
+        # Try to look it up from pob data by mod_id
+        if mod.mod_id:
+            global _mod_data_cache
+            if not _mod_data_cache:
+                try:
+                    from app.services.crafting.pob_data_loader import get_pob_data_loader
+                    loader = get_pob_data_loader()
+                    # Build cache of mod_id -> trade_hash
+                    for mod_data in loader._mod_data.values() if hasattr(loader, '_mod_data') else []:
                         pass
-                    break
+                    # Actually just look it up directly
+                    mod_data = loader.get_mod_data(mod.mod_id)
+                    if mod_data and "tradeHash" in mod_data:
+                        return mod_data["tradeHash"]
+                except Exception as e:
+                    logger.debug(f"Could not look up trade_hash for {mod.mod_id}: {e}")
 
-        # Combine elemental resistances into total
-        ele_res = (
-            pseudo_values.get("fire_res", 0) +
-            pseudo_values.get("cold_res", 0) +
-            pseudo_values.get("lightning_res", 0) +
-            pseudo_values.get("all_ele_res", 0)
-        )
-        if ele_res > 0:
-            pseudo_values["total_ele_res"] = ele_res
-
-        # Combine attributes
-        total_attr = (
-            pseudo_values.get("strength", 0) +
-            pseudo_values.get("dexterity", 0) +
-            pseudo_values.get("intelligence", 0) +
-            pseudo_values.get("all_attributes", 0)
-        )
-        if total_attr > 0:
-            pseudo_values["total_attributes"] = total_attr
-
-        return pseudo_values
+        return None
 
     def _build_query(
         self,
         item: CraftableItem,
-        pseudo_values: Dict[str, float],
+        mod_filters: Dict[str, Dict[str, Any]],
         strictness: float = 0.85,
+        equipment_filters: Optional[Dict[str, float]] = None,
+        equipment_enabled: Optional[Dict[str, bool]] = None,
     ) -> Dict[str, Any]:
         """
-        Build a trade API query from pseudo values.
+        Build a trade API query from mod filters.
 
         Args:
             item: The item being priced
-            pseudo_values: Extracted pseudo stat values
+            mod_filters: Extracted mod filters
             strictness: How strict to be (0.5 = 50% of value, 1.0 = exact)
+            equipment_filters: Custom min values for equipment stats
+            equipment_enabled: Which equipment filters are enabled
         """
         filters = []
 
-        # Add pseudo filters for significant stats
-        for stat_key, value in pseudo_values.items():
-            if stat_key not in PSEUDO_TO_TRADE_ID:
-                continue
+        # Add mod filters
+        for stat_id, filter_info in mod_filters.items():
+            value = filter_info["value"]
 
-            # Only include if value is significant
-            if value < 10:
+            # Skip very low values
+            if value < 5:
                 continue
 
             min_value = int(value * strictness)
 
             filters.append({
-                "id": PSEUDO_TO_TRADE_ID[stat_key],
-                "value": {"min": min_value}
+                "id": stat_id,
+                "value": {"min": min_value},
+                "_value": value,  # For sorting
             })
 
         # Limit to most important stats to avoid over-filtering
-        # Sort by value descending and take top 4
-        if len(filters) > 4:
-            filters.sort(key=lambda f: f["value"]["min"], reverse=True)
-            filters = filters[:4]
+        # Sort by value descending and take top 6
+        if len(filters) > 6:
+            filters.sort(key=lambda f: f["_value"], reverse=True)
+            filters = filters[:6]
+
+        # Clean up internal keys
+        for f in filters:
+            f.pop("_value", None)
+
+        logger.info(f"Query filters (strictness={strictness}): {filters}")
 
         # Build the query
         query: Dict[str, Any] = {
             "query": {
-                "status": {"option": "online"},
+                "status": {"option": "any"},
                 "stats": [{
                     "type": "and",
                     "filters": filters
@@ -283,6 +348,34 @@ class ItemPricer:
                 }
             }
 
+        # Add base stat filters from calculated_stats (keys match pob-data: Armour, Evasion, EnergyShield)
+        # Use custom equipment_filters if provided, otherwise calculate from calculated_stats
+        if item.calculated_stats:
+            equip_filters = {}
+            for stat_name, stat_value in item.calculated_stats.items():
+                if stat_name in BASE_STAT_TO_TRADE and stat_value > 0:
+                    # Check if this stat is enabled (default to True if not specified)
+                    is_enabled = equipment_enabled.get(stat_name, True) if equipment_enabled else True
+                    if not is_enabled:
+                        logger.info(f"Base stat filter: {stat_name} disabled by user")
+                        continue
+
+                    # Use custom filter value if provided, otherwise use strictness
+                    if equipment_filters and stat_name in equipment_filters:
+                        min_val = int(equipment_filters[stat_name])
+                    else:
+                        min_val = int(stat_value * strictness)
+
+                    equip_filters[BASE_STAT_TO_TRADE[stat_name]] = {"min": min_val}
+                    logger.info(f"Base stat filter: {stat_name}={stat_value} -> min={min_val}")
+
+            if equip_filters:
+                if "filters" not in query["query"]:
+                    query["query"]["filters"] = {}
+                query["query"]["filters"]["equipment_filters"] = {
+                    "filters": equip_filters
+                }
+
         # Add rarity filter for rare items
         if item.rarity == "Rare":
             if "filters" not in query["query"]:
@@ -298,14 +391,17 @@ class ItemPricer:
     async def _calculate_price(
         self,
         listings: List[TradeListing],
-        pseudo_values: Dict[str, float],
+        mod_filters: Dict[str, Dict[str, Any]],
         strictness: float,
         trade_url: Optional[str] = None,
+        item: Optional[CraftableItem] = None,
     ) -> PriceEstimate:
         """Calculate price statistics from listings."""
 
-        # Normalize all prices to chaos for comparison
+        # Normalize all prices to chaos and build listing objects
         chaos_prices = []
+        price_listings = []
+
         for listing in listings:
             chaos_value = await self._normalize_to_chaos(
                 listing.price_amount,
@@ -313,9 +409,24 @@ class ItemPricer:
             )
             if chaos_value is not None:
                 chaos_prices.append(chaos_value)
+                price_listings.append(PriceListing(
+                    price_amount=listing.price_amount,
+                    price_currency=listing.price_currency,
+                    price_chaos=chaos_value,
+                    item_name=listing.item_name,
+                    item_base=listing.item_base,
+                    item_level=listing.item_level,
+                    explicit_mods=listing.explicit_mods,
+                    implicit_mods=listing.implicit_mods,
+                    account_name=listing.account_name,
+                    indexed_time=listing.indexed_time,
+                ))
 
         if not chaos_prices:
             return None
+
+        # Sort listings by chaos price
+        price_listings.sort(key=lambda x: x.price_chaos)
 
         # Calculate statistics
         min_price = min(chaos_prices)
@@ -331,6 +442,18 @@ class ItemPricer:
         else:
             confidence = "low"
 
+        # Build search criteria for display
+        search_criteria = {}
+        for stat_id, filter_info in mod_filters.items():
+            display_name = filter_info.get("name", stat_id)
+            search_criteria[display_name] = filter_info["value"]
+
+        # Add base stats (keys match pob-data: Armour, Evasion, EnergyShield)
+        if item and item.calculated_stats:
+            for stat_name, stat_value in item.calculated_stats.items():
+                if stat_name in BASE_STAT_TO_TRADE and stat_value > 0:
+                    search_criteria[f"base_{stat_name}"] = stat_value
+
         estimate = PriceEstimate(
             min_price=min_price,
             max_price=max_price,
@@ -339,7 +462,8 @@ class ItemPricer:
             currency="chaos",
             num_listings=len(chaos_prices),
             confidence=confidence,
-            search_criteria=pseudo_values,
+            search_criteria=search_criteria,
+            listings=price_listings,
             trade_url=trade_url,
         )
 

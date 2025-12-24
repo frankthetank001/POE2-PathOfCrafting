@@ -61,6 +61,19 @@ export interface ConvertResult {
   result: number
 }
 
+export interface PriceListing {
+  price_amount: number
+  price_currency: string
+  price_chaos: number
+  item_name: string
+  item_base: string
+  item_level: number
+  explicit_mods: string[]
+  implicit_mods: string[]
+  account_name: string
+  indexed_time: string | null
+}
+
 export interface ItemPriceEstimate {
   min_price: number
   max_price: number
@@ -73,6 +86,7 @@ export interface ItemPriceEstimate {
   divine_value: number | null
   search_criteria: Record<string, number>
   trade_url: string | null
+  listings: PriceListing[]
 }
 
 // API client
@@ -146,11 +160,15 @@ export const marketApi = {
    */
   priceItem: async (
     item: CraftableItem,
-    league?: string
+    league?: string,
+    equipmentFilters?: Record<string, number>,
+    equipmentEnabled?: Record<string, boolean>
   ): Promise<ItemPriceEstimate> => {
     const response = await api.post<ItemPriceEstimate>('/price-item', {
       item,
       league,
+      equipment_filters: equipmentFilters,
+      equipment_enabled: equipmentEnabled,
     })
     return response.data
   },

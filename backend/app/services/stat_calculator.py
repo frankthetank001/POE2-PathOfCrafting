@@ -19,7 +19,7 @@ class StatCalculator:
 
         # Apply quality bonuses (PoE2 quality gives 1% per quality point)
         for stat_name in calculated_stats:
-            if stat_name in ['armour', 'evasion', 'energy_shield']:
+            if stat_name in ['Armour', 'Evasion', 'EnergyShield']:
                 base_value = calculated_stats[stat_name]
                 quality_bonus = base_value * (item.quality / 100.0)
                 calculated_stats[stat_name] = int(base_value + quality_bonus)
@@ -53,13 +53,13 @@ class StatCalculator:
 
             # Flat armour bonuses: "+50 to Armour"
             if '+{} to armour' in stat_text:
-                flat_bonuses['armour'] = flat_bonuses.get('armour', 0) + int(value)
+                flat_bonuses['Armour'] = flat_bonuses.get('Armour', 0) + int(value)
             elif '+{} to evasion' in stat_text:
-                flat_bonuses['evasion'] = flat_bonuses.get('evasion', 0) + int(value)
+                flat_bonuses['Evasion'] = flat_bonuses.get('Evasion', 0) + int(value)
             elif '+{} to energy shield' in stat_text:
-                flat_bonuses['energy_shield'] = flat_bonuses.get('energy_shield', 0) + int(value)
+                flat_bonuses['EnergyShield'] = flat_bonuses.get('EnergyShield', 0) + int(value)
             elif '+{} to maximum energy shield' in stat_text:
-                flat_bonuses['energy_shield'] = flat_bonuses.get('energy_shield', 0) + int(value)
+                flat_bonuses['EnergyShield'] = flat_bonuses.get('EnergyShield', 0) + int(value)
 
         return flat_bonuses
 
@@ -74,20 +74,20 @@ class StatCalculator:
 
             # Percentage bonuses: "15% increased Armour"
             if '{}% increased armour' in stat_text:
-                percentage_bonuses['armour'] = percentage_bonuses.get('armour', 0) + value
+                percentage_bonuses['Armour'] = percentage_bonuses.get('Armour', 0) + value
             elif '{}% increased evasion' in stat_text:
-                percentage_bonuses['evasion'] = percentage_bonuses.get('evasion', 0) + value
+                percentage_bonuses['Evasion'] = percentage_bonuses.get('Evasion', 0) + value
             elif '{}% increased energy shield' in stat_text:
-                percentage_bonuses['energy_shield'] = percentage_bonuses.get('energy_shield', 0) + value
+                percentage_bonuses['EnergyShield'] = percentage_bonuses.get('EnergyShield', 0) + value
             elif '{}% increased armour and evasion' in stat_text:
-                percentage_bonuses['armour'] = percentage_bonuses.get('armour', 0) + value
-                percentage_bonuses['evasion'] = percentage_bonuses.get('evasion', 0) + value
+                percentage_bonuses['Armour'] = percentage_bonuses.get('Armour', 0) + value
+                percentage_bonuses['Evasion'] = percentage_bonuses.get('Evasion', 0) + value
             elif '{}% increased armour and energy shield' in stat_text:
-                percentage_bonuses['armour'] = percentage_bonuses.get('armour', 0) + value
-                percentage_bonuses['energy_shield'] = percentage_bonuses.get('energy_shield', 0) + value
+                percentage_bonuses['Armour'] = percentage_bonuses.get('Armour', 0) + value
+                percentage_bonuses['EnergyShield'] = percentage_bonuses.get('EnergyShield', 0) + value
             elif '{}% increased evasion and energy shield' in stat_text:
-                percentage_bonuses['evasion'] = percentage_bonuses.get('evasion', 0) + value
-                percentage_bonuses['energy_shield'] = percentage_bonuses.get('energy_shield', 0) + value
+                percentage_bonuses['Evasion'] = percentage_bonuses.get('Evasion', 0) + value
+                percentage_bonuses['EnergyShield'] = percentage_bonuses.get('EnergyShield', 0) + value
 
         return percentage_bonuses
 

@@ -218,9 +218,10 @@ function ItemTab({ setItem, onHistoryReset, setMessage, onItemCreated }: TabCont
 
     try {
       // Calculate initial stats with quality (no mods yet)
+      // Keys match pob-data source of truth: Armour, Evasion, EnergyShield
       const initialStats = { ...baseData.base_stats }
       for (const [stat, value] of Object.entries(initialStats)) {
-        if (['armour', 'evasion', 'energy_shield'].includes(stat)) {
+        if (['Armour', 'Evasion', 'EnergyShield'].includes(stat)) {
           initialStats[stat] = Math.floor(value * 1.2) // 20% quality
         }
       }
@@ -595,6 +596,12 @@ function GridCraftingSimulator() {
   const [exchangeRates, setExchangeRates] = useState<ExchangeRates | null>(null)
   const [itemPrice, setItemPrice] = useState<ItemPriceEstimate | null>(null)
   const [priceCheckLoading, setPriceCheckLoading] = useState(false)
+  const [priceModalOpen, setPriceModalOpen] = useState(false)
+  // Track which mods are included in price search (by index and type)
+  const [priceSearchMods, setPriceSearchMods] = useState<Set<string>>(new Set())
+  // Equipment stat filters for price search (min values)
+  const [priceEquipmentFilters, setPriceEquipmentFilters] = useState<Record<string, number>>({})
+  const [priceEquipmentEnabled, setPriceEquipmentEnabled] = useState<Record<string, boolean>>({})
 
   // Redo stacks for Ctrl+R and Ctrl+Y
   const [redoItemStack, setRedoItemStack] = useState<CraftableItem[]>([])
@@ -953,19 +960,61 @@ function GridCraftingSimulator() {
     fetchExchangeRates()
   }, [])
 
-  // Clear price estimate when item changes
+  // Clear price estimate when item changes and reset mod selection
   useEffect(() => {
     setItemPrice(null)
+    // Initialize all mods as selected for price search
+    const allMods = new Set<string>()
+    item.prefix_mods.forEach((_, idx) => allMods.add(`prefix-${idx}`))
+    item.suffix_mods.forEach((_, idx) => allMods.add(`suffix-${idx}`))
+    setPriceSearchMods(allMods)
+
+    // Initialize equipment filters from calculated stats
+    const equipFilters: Record<string, number> = {}
+    const equipEnabled: Record<string, boolean> = {}
+    if (item.calculated_stats) {
+      for (const [stat, value] of Object.entries(item.calculated_stats)) {
+        if (['Armour', 'Evasion', 'EnergyShield'].includes(stat) && value > 0) {
+          // Default to ~50% of the value as minimum
+          equipFilters[stat] = Math.floor(value * 0.5)
+          equipEnabled[stat] = true
+        }
+      }
+    }
+    setPriceEquipmentFilters(equipFilters)
+    setPriceEquipmentEnabled(equipEnabled)
   }, [item])
 
-  // Handle price check
-  const handlePriceCheck = async () => {
+  // Toggle a mod's inclusion in price search
+  const togglePriceSearchMod = (modType: 'prefix' | 'suffix', idx: number) => {
+    const key = `${modType}-${idx}`
+    setPriceSearchMods(prev => {
+      const next = new Set(prev)
+      if (next.has(key)) {
+        next.delete(key)
+      } else {
+        next.add(key)
+      }
+      return next
+    })
+  }
+
+  // Check if a mod is selected for price search
+  const isModSelectedForPriceSearch = (modType: 'prefix' | 'suffix', idx: number) => {
+    return priceSearchMods.has(`${modType}-${idx}`)
+  }
+
+  // Handle price check (with optional equipment filter overrides)
+  const handlePriceCheck = async (useFilters = false) => {
     if (priceCheckLoading) return
 
-    // Need at least one mod to price
-    const hasMods = item.prefix_mods.length > 0 || item.suffix_mods.length > 0
-    if (!hasMods) {
-      setMessage('Item needs mods to estimate price')
+    // Filter mods based on selection
+    const selectedPrefixes = item.prefix_mods.filter((_, idx) => priceSearchMods.has(`prefix-${idx}`))
+    const selectedSuffixes = item.suffix_mods.filter((_, idx) => priceSearchMods.has(`suffix-${idx}`))
+
+    // Need at least one selected mod to price
+    if (selectedPrefixes.length === 0 && selectedSuffixes.length === 0) {
+      setMessage('Select at least one mod to price')
       return
     }
 
@@ -973,9 +1022,22 @@ function GridCraftingSimulator() {
     setItemPrice(null)
 
     try {
-      const estimate = await marketApi.priceItem(item)
+      // Create a filtered copy of the item with only selected mods
+      const filteredItem = {
+        ...item,
+        prefix_mods: selectedPrefixes,
+        suffix_mods: selectedSuffixes,
+      }
+
+      // Pass equipment filters if we're refreshing with custom values
+      const estimate = await marketApi.priceItem(
+        filteredItem,
+        undefined,
+        useFilters ? priceEquipmentFilters : undefined,
+        useFilters ? priceEquipmentEnabled : undefined
+      )
       setItemPrice(estimate)
-      setMessage(`Price check complete: ~${estimate.median_price.toFixed(1)} chaos (${estimate.confidence} confidence)`)
+      setPriceModalOpen(true)
     } catch (error: any) {
       console.error('Price check failed:', error)
       if (error.response?.status === 404) {
@@ -986,6 +1048,40 @@ function GridCraftingSimulator() {
     } finally {
       setPriceCheckLoading(false)
     }
+  }
+
+  // Open price modal without refetching (when clicking on existing price)
+  const openPriceModal = () => {
+    if (itemPrice) {
+      setPriceModalOpen(true)
+    }
+  }
+
+  // Format price in best currency (exalted -> divine -> mirror)
+  const formatPriceDisplay = (chaosValue: number): string => {
+    if (!exchangeRates) return `${chaosValue.toFixed(0)}c`
+
+    // Get how much 1 of each currency is worth in exalted
+    const chaosInExalt = exchangeRates.rates['chaos']?.exalted_value || 0.003
+    const divineInExalt = exchangeRates.rates['divine']?.exalted_value || 2
+    const mirrorInExalt = exchangeRates.rates['mirror']?.exalted_value || 100
+
+    // Convert chaos to exalted
+    const exaltedValue = chaosValue * chaosInExalt
+    // Convert exalted to divine and mirror
+    const divineValue = exaltedValue / divineInExalt
+    const mirrorValue = exaltedValue / mirrorInExalt
+
+    // If worth more than 1 mirror, show mirrors
+    if (mirrorValue >= 1) {
+      return `${mirrorValue.toFixed(1)} mir`
+    }
+    // If worth more than 1 divine, show divines
+    if (divineValue >= 1) {
+      return `${divineValue.toFixed(1)} div`
+    }
+    // Otherwise show exalted
+    return `${exaltedValue.toFixed(1)} ex`
   }
 
 
@@ -1459,14 +1555,15 @@ function GridCraftingSimulator() {
     }
 
     // Step 3: Apply formula: (Base + Flat) × (1 + Quality% + Increased%)
-    if (calculated.armour !== undefined) {
-      calculated.armour = Math.floor((baseStats.armour + flatArmour) * (1 + armourIncrease / 100))
+    // Keys match pob-data source of truth: Armour, Evasion, EnergyShield
+    if (calculated.Armour !== undefined) {
+      calculated.Armour = Math.floor((baseStats.Armour + flatArmour) * (1 + armourIncrease / 100))
     }
-    if (calculated.evasion !== undefined) {
-      calculated.evasion = Math.floor((baseStats.evasion + flatEvasion) * (1 + evasionIncrease / 100))
+    if (calculated.Evasion !== undefined) {
+      calculated.Evasion = Math.floor((baseStats.Evasion + flatEvasion) * (1 + evasionIncrease / 100))
     }
-    if (calculated.energy_shield !== undefined) {
-      calculated.energy_shield = Math.floor((baseStats.energy_shield + flatEnergyShield) * (1 + energyShieldIncrease / 100))
+    if (calculated.EnergyShield !== undefined) {
+      calculated.EnergyShield = Math.floor((baseStats.EnergyShield + flatEnergyShield) * (1 + energyShieldIncrease / 100))
     }
 
     return calculated
@@ -3747,14 +3844,17 @@ function GridCraftingSimulator() {
                         <div className="value-section price-section">
                           <span className="value-label">Worth:</span>
                           {itemPrice ? (
-                            <span className={`value-amount ${itemPrice.confidence}`}>
-                              {itemPrice.median_price.toFixed(0)}c
-                              {itemPrice.exalted_value && ` (${itemPrice.exalted_value.toFixed(2)} ex)`}
+                            <span
+                              className={`value-amount clickable ${itemPrice.confidence}`}
+                              onClick={openPriceModal}
+                              title="Click to view price details"
+                            >
+                              {formatPriceDisplay(itemPrice.median_price)}
                             </span>
                           ) : (
                             <button
                               className="mini-price-btn"
-                              onClick={handlePriceCheck}
+                              onClick={() => handlePriceCheck(false)}
                               disabled={priceCheckLoading || (item.prefix_mods.length === 0 && item.suffix_mods.length === 0)}
                               title="Check market value"
                             >
@@ -3765,22 +3865,20 @@ function GridCraftingSimulator() {
                             <>
                               <button
                                 className="mini-price-btn refresh"
-                                onClick={handlePriceCheck}
+                                onClick={() => handlePriceCheck(false)}
                                 disabled={priceCheckLoading}
                                 title="Refresh price"
                               >
                                 {priceCheckLoading ? '...' : '↻'}
                               </button>
-                              {itemPrice.trade_url && (
-                                <a
-                                  href={itemPrice.trade_url}
-                                  target="_blank"
-                                  rel="noopener noreferrer"
-                                  className="mini-trade-link"
-                                  title="View on trade site"
+                              {itemPrice.num_listings > 0 && (
+                                <button
+                                  className="mini-price-btn view"
+                                  onClick={openPriceModal}
+                                  title="View price results"
                                 >
-                                  ↗
-                                </a>
+                                  📋
+                                </button>
                               )}
                             </>
                           )}
@@ -3824,7 +3922,7 @@ function GridCraftingSimulator() {
                             {Object.entries(item.calculated_stats || {}).map(([statName, value]) => (
                               <PoE2Property
                                 key={statName}
-                                label={statName.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+                                label={statName.replace(/([A-Z])/g, ' $1').trim()}
                                 value={value}
                               />
                             ))}
@@ -3843,20 +3941,39 @@ function GridCraftingSimulator() {
                             const isDesecrated = mod.is_desecrated === true
                             const isUnrevealed = mod.is_unrevealed === true
                             const isFractured = mod.is_fractured === true
-                            const modClasses = `mod-line prefix ${isTagFiltered ? 'tag-filtered' : ''} ${isDesecrated ? 'desecrated' : ''} ${isUnrevealed ? 'unrevealed' : ''} ${isFractured ? 'fractured' : ''}`
+                            const isPriceSelected = isModSelectedForPriceSearch('prefix', idx)
+                            // Only show price selection styling when price panel is open
+                            const priceClass = priceModalOpen ? (isPriceSelected ? 'price-selected' : 'price-excluded') : ''
+                            const modClasses = `mod-line prefix ${isTagFiltered ? 'tag-filtered' : ''} ${isDesecrated ? 'desecrated' : ''} ${isUnrevealed ? 'unrevealed' : ''} ${isFractured ? 'fractured' : ''} ${priceClass}`
 
                             // Get unrevealed metadata if this is an unrevealed mod
                             const unrevealedMetadata = isUnrevealed && mod.unrevealed_id
                               ? item.unrevealed_mods.find(um => um.id === mod.unrevealed_id)
                               : null
 
+                            const handleModClick = () => {
+                              if (isUnrevealed && mod.unrevealed_id) {
+                                handleClickUnrevealedMod(mod.unrevealed_id!)
+                              } else if (priceModalOpen) {
+                                // Only toggle price selection when panel is open
+                                togglePriceSearchMod('prefix', idx)
+                              }
+                            }
+
+                            // Only show price tooltip when panel is open
+                            const getModTitle = () => {
+                              if (isUnrevealed) return 'Click to reveal this modifier'
+                              if (priceModalOpen) return isPriceSelected ? 'Click to exclude from price search' : 'Click to include in price search'
+                              return ''
+                            }
+
                             return (
                               <div
                                 key={idx}
                                 className={modClasses}
-                                onClick={isUnrevealed && mod.unrevealed_id ? () => handleClickUnrevealedMod(mod.unrevealed_id!) : undefined}
-                                style={isUnrevealed ? { cursor: 'pointer' } : undefined}
-                                title={isUnrevealed ? 'Click to reveal this modifier' : undefined}
+                                onClick={handleModClick}
+                                style={{ cursor: priceModalOpen || isUnrevealed ? 'pointer' : 'default' }}
+                                title={getModTitle()}
                               >
                                 <div className="mod-content">
                                   <div className="mod-stat">
@@ -3943,20 +4060,39 @@ function GridCraftingSimulator() {
                             const isDesecrated = mod.is_desecrated === true
                             const isUnrevealed = mod.is_unrevealed === true
                             const isFractured = mod.is_fractured === true
-                            const modClasses = `mod-line suffix ${isTagFiltered ? 'tag-filtered' : ''} ${isDesecrated ? 'desecrated' : ''} ${isUnrevealed ? 'unrevealed' : ''} ${isFractured ? 'fractured' : ''}`
+                            const isPriceSelected = isModSelectedForPriceSearch('suffix', idx)
+                            // Only show price selection styling when price panel is open
+                            const priceClass = priceModalOpen ? (isPriceSelected ? 'price-selected' : 'price-excluded') : ''
+                            const modClasses = `mod-line suffix ${isTagFiltered ? 'tag-filtered' : ''} ${isDesecrated ? 'desecrated' : ''} ${isUnrevealed ? 'unrevealed' : ''} ${isFractured ? 'fractured' : ''} ${priceClass}`
 
                             // Get unrevealed metadata if this is an unrevealed mod
                             const unrevealedMetadata = isUnrevealed && mod.unrevealed_id
                               ? item.unrevealed_mods.find(um => um.id === mod.unrevealed_id)
                               : null
 
+                            const handleModClick = () => {
+                              if (isUnrevealed && mod.unrevealed_id) {
+                                handleClickUnrevealedMod(mod.unrevealed_id!)
+                              } else if (priceModalOpen) {
+                                // Only toggle price selection when panel is open
+                                togglePriceSearchMod('suffix', idx)
+                              }
+                            }
+
+                            // Only show price tooltip when panel is open
+                            const getModTitle = () => {
+                              if (isUnrevealed) return 'Click to reveal this modifier'
+                              if (priceModalOpen) return isPriceSelected ? 'Click to exclude from price search' : 'Click to include in price search'
+                              return ''
+                            }
+
                             return (
                               <div
                                 key={idx}
                                 className={modClasses}
-                                onClick={isUnrevealed && mod.unrevealed_id ? () => handleClickUnrevealedMod(mod.unrevealed_id!) : undefined}
-                                style={isUnrevealed ? { cursor: 'pointer' } : undefined}
-                                title={isUnrevealed ? 'Click to reveal this modifier' : undefined}
+                                onClick={handleModClick}
+                                style={{ cursor: priceModalOpen || isUnrevealed ? 'pointer' : 'default' }}
+                                title={getModTitle()}
                               >
                                 <div className="mod-content">
                                   <div className="mod-stat">
@@ -4217,6 +4353,202 @@ function GridCraftingSimulator() {
           </div>
         </div>
       )}
+
+      {/* Price Results Fly-out Panel */}
+      {priceModalOpen && itemPrice && (() => {
+        // Helper to calculate age from indexed_time
+        const formatAge = (indexedTime: string | null): string => {
+          if (!indexedTime) return '?'
+          const indexed = new Date(indexedTime)
+          const now = new Date()
+          const diffMs = now.getTime() - indexed.getTime()
+          const diffMins = Math.floor(diffMs / 60000)
+          const diffHours = Math.floor(diffMins / 60)
+          const diffDays = Math.floor(diffHours / 24)
+
+          if (diffDays > 0) return `${diffDays}d`
+          if (diffHours > 0) return `${diffHours}h`
+          return `${diffMins}m`
+        }
+
+        return (
+          <div className="price-panel">
+              <div className="price-panel-header">
+                <h3>Price Check</h3>
+                <button className="price-panel-close" onClick={() => setPriceModalOpen(false)}>✕</button>
+              </div>
+
+              <div className="price-panel-content">
+                {/* Price Summary */}
+                <div className="price-summary">
+                  <div className="price-summary-main">
+                    <span className="price-summary-value">{formatPriceDisplay(itemPrice.median_price)}</span>
+                  </div>
+                  <span className={`price-confidence ${itemPrice.confidence}`}>{itemPrice.confidence}</span>
+                </div>
+
+                {/* Equipment Stat Filters */}
+                {Object.keys(priceEquipmentFilters).length > 0 && (
+                  <div className="price-equipment-filters">
+                    <div className="price-filters-header">
+                      <span>Equipment Filters</span>
+                      <button
+                        className="price-refresh-btn"
+                        onClick={() => handlePriceCheck(true)}
+                        disabled={priceCheckLoading}
+                        title="Refresh search with current filters"
+                      >
+                        {priceCheckLoading ? '...' : '↻'}
+                      </button>
+                    </div>
+                    {Object.entries(priceEquipmentFilters).map(([stat, minValue]) => {
+                      const maxValue = item.calculated_stats?.[stat] || minValue
+                      const displayName = stat.replace(/([A-Z])/g, ' $1').trim()
+                      const isEnabled = priceEquipmentEnabled[stat] ?? true
+
+                      return (
+                        <div key={stat} className={`price-filter-row ${!isEnabled ? 'disabled' : ''}`}>
+                          <label className="price-filter-checkbox">
+                            <input
+                              type="checkbox"
+                              checked={isEnabled}
+                              onChange={(e) => setPriceEquipmentEnabled(prev => ({
+                                ...prev,
+                                [stat]: e.target.checked
+                              }))}
+                            />
+                            <span className="price-filter-label">{displayName}</span>
+                          </label>
+                          <div className="price-filter-slider">
+                            <input
+                              type="range"
+                              min={0}
+                              max={maxValue}
+                              value={minValue}
+                              disabled={!isEnabled}
+                              onChange={(e) => setPriceEquipmentFilters(prev => ({
+                                ...prev,
+                                [stat]: parseInt(e.target.value)
+                              }))}
+                            />
+                            <span className="price-filter-value">{minValue}</span>
+                          </div>
+                        </div>
+                      )
+                    })}
+                  </div>
+                )}
+
+                {/* Listings Table */}
+                {itemPrice.listings && itemPrice.listings.length > 0 ? (
+                  <table className="listings-table">
+                    <thead>
+                      <tr>
+                        <th></th>
+                        <th>Price</th>
+                        <th>iLvl</th>
+                        <th>Account</th>
+                        <th>Age</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {itemPrice.listings.slice(0, 15).map((listing, idx) => (
+                        <tr key={idx}>
+                          <td>
+                            <button
+                              className="listing-preview-btn"
+                              title="Preview item"
+                              onMouseEnter={(e) => {
+                                const tooltip = document.getElementById(`listing-tooltip-${idx}`)
+                                if (tooltip) {
+                                  tooltip.style.display = 'block'
+                                  tooltip.style.left = `${e.clientX - 360}px`
+                                  tooltip.style.top = `${Math.min(e.clientY - 10, window.innerHeight - 400)}px`
+                                }
+                              }}
+                              onMouseLeave={() => {
+                                const tooltip = document.getElementById(`listing-tooltip-${idx}`)
+                                if (tooltip) tooltip.style.display = 'none'
+                              }}
+                            >
+                              👁
+                            </button>
+                            <div
+                              id={`listing-tooltip-${idx}`}
+                              className="item-preview-tooltip"
+                              style={{ display: 'none' }}
+                            >
+                              <div className="poe2-frame rarity-rare">
+                                <div className="poe2-frame-header">
+                                  <div className="poe2-frame-header-content">
+                                    <h2 className="poe2-frame-name rarity-rare">{listing.item_name || 'Rare Item'}</h2>
+                                    <div className="poe2-frame-base">{listing.item_base}</div>
+                                  </div>
+                                </div>
+                                <div className="poe2-frame-content">
+                                  <div className="poe2-item-properties">
+                                    <div className="poe2-property-line">
+                                      <span className="poe2-property-name">Item Level:</span>
+                                      <span className="poe2-property-value">{listing.item_level}</span>
+                                    </div>
+                                  </div>
+                                  {listing.implicit_mods && listing.implicit_mods.length > 0 && (
+                                    <>
+                                      <div className="poe2-separator-simple" />
+                                      <div className="poe2-mods-section">
+                                        {listing.implicit_mods.map((mod, i) => (
+                                          <div key={i} className="poe2-mod-line implicit">{mod}</div>
+                                        ))}
+                                      </div>
+                                    </>
+                                  )}
+                                  {listing.explicit_mods.length > 0 && (
+                                    <>
+                                      <div className="poe2-separator-simple" />
+                                      <div className="poe2-mods-section">
+                                        {listing.explicit_mods.map((mod, i) => (
+                                          <div key={i} className="poe2-mod-line explicit">{mod}</div>
+                                        ))}
+                                      </div>
+                                    </>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="listing-price-cell">
+                            <span className="listing-price-amount">{listing.price_amount}</span>
+                            <span className="listing-price-currency">
+                              {listing.price_currency === 'chaos' ? 'c' : listing.price_currency === 'divine' ? ' div' : ` ${listing.price_currency}`}
+                            </span>
+                          </td>
+                          <td className="listing-ilvl">{listing.item_level}</td>
+                          <td className="listing-account">{listing.account_name}</td>
+                          <td className="listing-age">{formatAge(listing.indexed_time)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                ) : (
+                  <div className="no-listings">No comparable listings found</div>
+                )}
+              </div>
+
+              {itemPrice.trade_url && (
+                <div className="price-panel-footer">
+                  <a
+                    href={itemPrice.trade_url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="trade-site-link"
+                  >
+                    View on Trade Site ↗
+                  </a>
+                </div>
+              )}
+            </div>
+        )
+      })()}
 
       {/* Reveal Modifier Modal */}
       {revealModalOpen && (() => {

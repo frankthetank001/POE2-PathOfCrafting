@@ -55,6 +55,7 @@ class ItemModifier(BaseModel):
     is_desecrated: bool = False  # True if this mod was added via desecration (for green tint)
     is_fractured: bool = False  # True if this mod is fractured (cannot be removed, displayed in orange)
     exclusion_group: Optional[int] = None  # Mods in the same exclusion group cannot coexist
+    trade_hash: Optional[int] = None  # Trade API stat hash for searching (from pob-data tradeHash)
 
 
 class UnrevealedModifier(BaseModel):

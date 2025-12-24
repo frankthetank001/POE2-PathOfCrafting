@@ -3656,3 +3656,517 @@
   background: #3a6ab8;
   color: white;
 }
+
+/* Clickable price value */
+.item-value-bar .value-amount.clickable {
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.item-value-bar .value-amount.clickable:hover {
+  color: #fff;
+  text-shadow: 0 0 5px currentColor;
+}
+
+/* View button */
+.mini-price-btn.view {
+  background: #4a6a98;
+  padding: 0.15rem 0.35rem;
+  margin-left: 0.25rem;
+}
+
+.mini-price-btn.view:hover:not(:disabled) {
+  background: #5a7ab8;
+}
+
+/* Mod price selection highlighting */
+.mod-line.price-selected {
+  border-left: 3px solid rgba(100, 180, 255, 0.6);
+  margin-left: -3px;
+  padding-left: 0;
+}
+
+.mod-line.price-excluded {
+  border-left: 3px solid transparent;
+  margin-left: -3px;
+  padding-left: 0;
+  opacity: 0.5;
+}
+
+.mod-line.price-excluded .mod-stat {
+  text-decoration: line-through;
+  text-decoration-color: rgba(255, 100, 100, 0.4);
+}
+
+/* Price Results Fly-out Panel */
+.price-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 420px;
+  max-width: 95vw;
+  background: linear-gradient(180deg, #1a1814 0%, #0c0a08 100%);
+  border-left: 1px solid var(--poe2-border-dark, #27211f);
+  font-family: var(--poe2-font-main, 'Fontin', Georgia, serif);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  box-shadow: -5px 0 30px rgba(0, 0, 0, 0.8);
+  animation: slideInRight 0.2s ease-out;
+}
+
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.price-panel-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: linear-gradient(180deg, rgba(136, 136, 255, 0.1) 0%, transparent 100%);
+  border-bottom: 1px solid var(--poe2-border-light, #433c38);
+}
+
+.price-panel-header h3 {
+  font-family: var(--poe2-font-header, 'FontinSmallCaps', Georgia, serif);
+  color: var(--poe2-magic, #8888ff);
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: normal;
+  letter-spacing: 0.5px;
+}
+
+.price-panel-close {
+  background: transparent;
+  border: 1px solid var(--poe2-border-light, #433c38);
+  color: var(--poe2-text-default, #7f7f7f);
+  width: 28px;
+  height: 28px;
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.price-panel-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: #666;
+}
+
+.price-panel-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 0;
+}
+
+.price-panel-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.price-panel-content::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.price-panel-content::-webkit-scrollbar-thumb {
+  background: var(--poe2-border-light, #433c38);
+  border-radius: 3px;
+}
+
+/* Price Summary */
+.price-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  margin: 0 0 8px;
+  background: rgba(136, 136, 255, 0.05);
+  border-top: 1px solid var(--poe2-border-light, #433c38);
+  border-bottom: 1px solid var(--poe2-border-light, #433c38);
+}
+
+.price-summary-main {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.price-summary-value {
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+  font-size: 1.5rem;
+  color: var(--poe2-currency, #aa9e82);
+  font-weight: 600;
+}
+
+.price-summary-unit {
+  color: var(--poe2-text-default, #7f7f7f);
+  font-size: 0.85rem;
+}
+
+.price-summary-range {
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+  font-size: 0.8rem;
+  color: var(--poe2-text-default, #7f7f7f);
+}
+
+.price-confidence {
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 2px;
+  text-transform: uppercase;
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+}
+
+.price-confidence.high {
+  background: rgba(100, 200, 100, 0.15);
+  color: #6c6;
+  border: 1px solid rgba(100, 200, 100, 0.3);
+}
+
+.price-confidence.medium {
+  background: rgba(255, 200, 100, 0.15);
+  color: #fc8;
+  border: 1px solid rgba(255, 200, 100, 0.3);
+}
+
+.price-confidence.low {
+  background: rgba(255, 100, 100, 0.15);
+  color: #f88;
+  border: 1px solid rgba(255, 100, 100, 0.3);
+}
+
+/* Equipment Filters */
+.price-equipment-filters {
+  margin: 12px 0;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(100, 80, 60, 0.3);
+  border-radius: 3px;
+}
+
+.price-filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--poe2-text-default, #7f7f7f);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.price-refresh-btn {
+  background: rgba(100, 80, 60, 0.3);
+  border: 1px solid rgba(100, 80, 60, 0.5);
+  color: var(--poe2-currency, #aa9e82);
+  padding: 2px 8px;
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.15s ease;
+}
+
+.price-refresh-btn:hover:not(:disabled) {
+  background: rgba(100, 80, 60, 0.5);
+  border-color: var(--poe2-currency, #aa9e82);
+}
+
+.price-refresh-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.price-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.price-filter-row.disabled {
+  opacity: 0.5;
+}
+
+.price-filter-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 100px;
+  cursor: pointer;
+}
+
+.price-filter-checkbox input[type="checkbox"] {
+  accent-color: var(--poe2-currency, #aa9e82);
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+}
+
+.price-filter-label {
+  font-size: 0.8rem;
+  color: var(--poe2-text-light, #c8c8c8);
+}
+
+.price-filter-slider {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.price-filter-slider input[type="range"] {
+  flex: 1;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(100, 80, 60, 0.4);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.price-filter-slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  background: var(--poe2-currency, #aa9e82);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.price-filter-slider input[type="range"]:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.price-filter-slider input[type="range"]:disabled::-webkit-slider-thumb {
+  cursor: not-allowed;
+}
+
+.price-filter-value {
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+  font-size: 0.75rem;
+  color: var(--poe2-currency, #aa9e82);
+  min-width: 35px;
+  text-align: right;
+}
+
+/* Listings Table */
+.listings-table {
+  width: 100%;
+  font-size: 0.8rem;
+  border-collapse: collapse;
+}
+
+.listings-table th {
+  text-align: left;
+  padding: 6px 8px;
+  color: var(--poe2-text-default, #7f7f7f);
+  font-weight: normal;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--poe2-border-dark, #27211f);
+  background: rgba(0, 0, 0, 0.3);
+  position: sticky;
+  top: 0;
+}
+
+.listings-table th:first-child {
+  padding-left: 16px;
+}
+
+.listings-table th:last-child {
+  padding-right: 16px;
+}
+
+.listings-table td {
+  padding: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  vertical-align: middle;
+}
+
+.listings-table td:first-child {
+  padding-left: 16px;
+}
+
+.listings-table td:last-child {
+  padding-right: 16px;
+}
+
+.listings-table tr:hover td {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.listing-price-cell {
+  white-space: nowrap;
+}
+
+.listing-price-amount {
+  color: var(--poe2-currency, #aa9e82);
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+  font-weight: 600;
+}
+
+.listing-price-currency {
+  margin-left: 2px;
+}
+
+.listing-price-currency img {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  opacity: 0.8;
+}
+
+/* Eye icon for preview */
+.listing-preview-btn {
+  background: transparent;
+  border: none;
+  color: var(--poe2-text-default, #7f7f7f);
+  cursor: pointer;
+  padding: 4px;
+  font-size: 1rem;
+  opacity: 0.6;
+  transition: all 0.15s;
+}
+
+.listing-preview-btn:hover {
+  opacity: 1;
+  color: var(--poe2-magic, #8888ff);
+}
+
+.listing-ilvl {
+  color: var(--poe2-text-value, #fff);
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+}
+
+.listing-quality {
+  color: var(--poe2-magic, #8888ff);
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+}
+
+.listing-account {
+  color: var(--poe2-text-default, #7f7f7f);
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.listing-age {
+  color: var(--poe2-text-default, #7f7f7f);
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+/* Item Preview Tooltip */
+.item-preview-tooltip {
+  position: fixed;
+  z-index: 1100;
+  pointer-events: none;
+  min-width: 280px;
+  max-width: 380px;
+}
+
+.item-preview-tooltip .poe2-frame {
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.9);
+}
+
+.item-preview-tooltip .poe2-item-properties {
+  padding: 8px 12px;
+}
+
+.item-preview-tooltip .poe2-property-line {
+  display: flex;
+  justify-content: space-between;
+  margin: 2px 0;
+}
+
+.item-preview-tooltip .poe2-property-name {
+  color: var(--poe2-text-default, #7f7f7f);
+}
+
+.item-preview-tooltip .poe2-property-value {
+  color: var(--poe2-text-value, #fff);
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+}
+
+.item-preview-tooltip .poe2-separator-simple {
+  height: 1px;
+  background: linear-gradient(
+    to right,
+    transparent 0%,
+    var(--poe2-border-light, #433c38) 20%,
+    var(--poe2-border-light, #433c38) 80%,
+    transparent 100%
+  );
+  margin: 6px 12px;
+}
+
+.item-preview-tooltip .poe2-mods-section {
+  padding: 6px 12px;
+}
+
+.item-preview-tooltip .poe2-mod-line {
+  margin: 3px 0;
+  line-height: 1.4;
+  font-size: 0.85rem;
+}
+
+.item-preview-tooltip .poe2-mod-line.implicit {
+  color: var(--poe2-mod-implicit, #9999cc);
+}
+
+.item-preview-tooltip .poe2-mod-line.explicit {
+  color: var(--poe2-magic, #8888ff);
+}
+
+/* Price Panel Footer */
+.price-panel-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--poe2-border-light, #433c38);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.trade-site-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 10px;
+  background: rgba(136, 136, 255, 0.1);
+  border: 1px solid rgba(136, 136, 255, 0.3);
+  border-radius: 2px;
+  color: var(--poe2-magic, #8888ff);
+  font-family: var(--poe2-font-main, 'Fontin', Georgia, serif);
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+.trade-site-link:hover {
+  background: rgba(136, 136, 255, 0.2);
+  border-color: rgba(136, 136, 255, 0.5);
+  color: #aaf;
+}
+
+/* No listings message */
+.no-listings {
+  text-align: center;
+  padding: 24px 16px;
+  color: var(--poe2-text-default, #7f7f7f);
+  font-style: italic;
+}
