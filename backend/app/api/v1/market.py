@@ -277,6 +277,14 @@ class PriceListingResponse(BaseModel):
     energy_shield: Optional[int] = Field(None, description="Energy shield")
     quality: Optional[int] = Field(None, description="Quality percentage")
 
+    # Weapon stats
+    physical_damage: Optional[str] = Field(None, description="Physical damage range (e.g., '45-89')")
+    attacks_per_second: Optional[float] = Field(None, description="Attacks per second")
+    crit_chance: Optional[float] = Field(None, description="Critical hit chance")
+    physical_dps: Optional[float] = Field(None, description="Physical DPS")
+    elemental_dps: Optional[float] = Field(None, description="Elemental DPS")
+    total_dps: Optional[float] = Field(None, description="Total DPS")
+
     # Parsed mods with tier info and values
     prefix_mods: Optional[List[Dict[str, Any]]] = Field(None, description="Prefix mods with tier info and values")
     suffix_mods: Optional[List[Dict[str, Any]]] = Field(None, description="Suffix mods with tier info and values")
@@ -403,6 +411,13 @@ async def estimate_item_price(request: ItemPriceRequest) -> ItemPriceResponse:
                     evasion=listing.evasion,
                     energy_shield=listing.energy_shield,
                     quality=listing.quality,
+                    # Weapon stats
+                    physical_damage=listing.physical_damage,
+                    attacks_per_second=listing.attacks_per_second,
+                    crit_chance=listing.crit_chance,
+                    physical_dps=listing.physical_dps,
+                    elemental_dps=listing.elemental_dps,
+                    total_dps=listing.total_dps,
                     prefix_mods=listing.prefix_mods,
                     suffix_mods=listing.suffix_mods,
                     rune_mods=listing.rune_mods,

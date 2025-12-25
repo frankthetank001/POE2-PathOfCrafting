@@ -10,6 +10,8 @@ from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 from statistics import median, mean
 
+import re
+
 from app.core.logging import get_logger
 from app.schemas.crafting import CraftableItem, ItemModifier
 from app.schemas.item_bases import get_item_base_by_name
@@ -36,6 +38,14 @@ class PriceListing:
     evasion: Optional[int] = None
     energy_shield: Optional[int] = None
     quality: Optional[int] = None
+
+    # Weapon stats
+    physical_damage: Optional[str] = None  # "min-max" format
+    attacks_per_second: Optional[float] = None
+    crit_chance: Optional[float] = None
+    physical_dps: Optional[float] = None
+    elemental_dps: Optional[float] = None
+    total_dps: Optional[float] = None
 
     # Parsed mods with tier info and values
     prefix_mods: Optional[List[Dict[str, Any]]] = None
@@ -68,6 +78,9 @@ logger = get_logger(__name__)
 
 # Cache for mod data lookups
 _mod_data_cache: dict = {}
+
+# Cache for PoE2 trade API stat IDs (text pattern -> stat_id)
+_trade_stats_cache: Dict[str, str] = {}
 
 
 # Mod groups that should use pseudo stats instead of explicit
@@ -117,23 +130,33 @@ BASE_STAT_TO_TRADE = {
 
 # Category mappings for trade API
 CATEGORY_TO_TRADE = {
+    # Armour slots
     "boots": "armour.boots",
     "gloves": "armour.gloves",
     "helmet": "armour.helmet",
     "body_armour": "armour.chest",
     "body": "armour.chest",  # Alias for body_armour
     "shield": "armour.shield",
+    "quiver": "armour.quiver",
+    "focus": "armour.focus",
+    # Accessories
     "ring": "accessory.ring",
     "amulet": "accessory.amulet",
     "belt": "accessory.belt",
+    # Weapons
     "wand": "weapon.wand",
     "staff": "weapon.staff",
     "bow": "weapon.bow",
     "crossbow": "weapon.crossbow",
     "mace": "weapon.mace",
     "sceptre": "weapon.sceptre",
-    "quiver": "armour.quiver",
-    "focus": "armour.focus",
+    "sword": "weapon.sword",
+    "axe": "weapon.axe",
+    "dagger": "weapon.dagger",
+    "claw": "weapon.claw",
+    "flail": "weapon.flail",
+    "spear": "weapon.spear",
+    "talisman": "weapon.talisman",
 }
 
 
@@ -169,6 +192,9 @@ class PriceEstimate:
     # Individual listings
     listings: List[PriceListing] = None
 
+    # Mods that couldn't be matched to trade API stats
+    unmatched_mods: List[Dict[str, Any]] = None
+
     # Pseudo stats used in search
     pseudo_stats: List[PseudoStatInfo] = None
 
@@ -198,7 +224,113 @@ class ItemPricer:
         if self._trade_client is None:
             self._trade_client = await get_trade_client()
 
+        # Load trade stats from API for stat text matching
+        await self._load_trade_stats()
+
         self._initialized = True
+
+    async def _load_trade_stats(self) -> None:
+        """Load and cache stat IDs from the PoE2 trade API."""
+        global _trade_stats_cache
+        if _trade_stats_cache:
+            return  # Already loaded
+
+        try:
+            stats_data = await self._trade_client.get_stats()
+            for group in stats_data.get("result", []):
+                for entry in group.get("entries", []):
+                    stat_id = entry.get("id", "")
+                    text = entry.get("text", "")
+                    if stat_id and text:
+                        # Normalize text for matching: replace # with {} and lowercase
+                        normalized = text.replace("#", "{}").lower()
+                        _trade_stats_cache[normalized] = stat_id
+            logger.info(f"Loaded {len(_trade_stats_cache)} trade stats from API")
+        except Exception as e:
+            logger.warning(f"Failed to load trade stats from API: {e}")
+
+    def _match_stat_to_trade_ids(self, stat_text: str, mod_type: str = "explicit") -> List[str]:
+        """
+        Match a mod's stat_text to PoE2 trade API stat ID(s).
+        Returns both global and local variants when available.
+
+        Args:
+            stat_text: The mod's stat text pattern like "{}% increased Physical Damage"
+            mod_type: The mod type prefix ("explicit", "implicit", etc.)
+
+        Returns:
+            List of matching trade stat IDs. May contain both global and local variants.
+        """
+        if not _trade_stats_cache:
+            logger.warning("Trade stats cache is empty")
+            return []
+
+        # Normalize the stat text for comparison
+        normalized = stat_text.lower().strip()
+        results = []
+
+        # Check for both global and local variants
+        # Global: "{}% increased attack speed"
+        # Local: "{}% increased attack speed (local)"
+        local_text = normalized + " (local)"
+
+        def add_stat_id(cache_key: str) -> bool:
+            """Try to add a stat ID from the cache key."""
+            if cache_key in _trade_stats_cache:
+                full_id = _trade_stats_cache[cache_key]
+                stat_hash = full_id.split(".")[-1]
+                stat_id = f"{mod_type}.{stat_hash}"
+                if stat_id not in results:
+                    results.append(stat_id)
+                return True
+            return False
+
+        # Try exact matches first (both global and local)
+        add_stat_id(normalized)
+        add_stat_id(local_text)
+
+        # If we found matches, return them
+        if results:
+            return results
+
+        # Try without leading + (pob-data uses "+{}%" but trade API uses "{}%")
+        if normalized.startswith("+"):
+            no_plus = normalized[1:]
+            add_stat_id(no_plus)
+            add_stat_id(no_plus + " (local)")
+
+        if results:
+            return results
+
+        # Try fuzzy match - handle variations like (min-max) ranges
+        # e.g., "Gain (25-33)% of Damage" -> "Gain {}% of Damage"
+        fuzzy_text = re.sub(r'\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\)', '{}', normalized)
+        if fuzzy_text != normalized:
+            add_stat_id(fuzzy_text)
+            add_stat_id(fuzzy_text + " (local)")
+
+        if results:
+            return results
+
+        # Try even more relaxed matching - strip the placeholder values and + prefix
+        # e.g., "+{} to Maximum Life" should match "# to Maximum Life"
+        text_core = normalized.replace("{}", "").replace("  ", " ").strip()
+        text_core_no_plus = text_core.lstrip("+").strip()
+        for cache_key, cache_id in _trade_stats_cache.items():
+            if cache_id.startswith(f"{mod_type}.") or cache_id.startswith("explicit."):
+                cache_core = cache_key.replace("{}", "").replace("  ", " ").strip()
+                # Match both with and without "(local)" suffix
+                cache_core_no_local = cache_core.replace(" (local)", "").strip()
+                if cache_core in (text_core, text_core_no_plus) or cache_core_no_local in (text_core, text_core_no_plus):
+                    stat_hash = cache_id.split(".")[-1]
+                    stat_id = f"{mod_type}.{stat_hash}"
+                    if stat_id not in results:
+                        results.append(stat_id)
+
+        if not results:
+            logger.debug(f"No trade stat match for: {stat_text}")
+
+        return results
 
     async def estimate_price(
         self,
@@ -254,8 +386,10 @@ class ItemPricer:
                     "mod_min_values": mod_min_values,
                 }, f, indent=2, default=str)
             logger.info(f"Dumped trade request to trade_request_debug.json (strictness={strictness})")
+            logger.info(f"Calling search_and_fetch with league={league}...")
 
             listings, query_id = await self._trade_client.search_and_fetch(query, league, max_results=20)
+            logger.info(f"search_and_fetch returned {len(listings)} listings, query_id={query_id}")
 
             if len(listings) >= 5:
                 trade_url = self._trade_client.build_trade_url(query_id, search_league) if query_id else None
@@ -273,7 +407,7 @@ class ItemPricer:
 
     def _extract_mod_filters(self, item: CraftableItem) -> tuple[Dict[str, Dict[str, Any]], List[PseudoStatInfo]]:
         """
-        Extract mod filters from an item using trade_hash.
+        Extract mod filters from an item by matching stat text to trade API stat IDs.
 
         Returns a tuple of:
         - filters: dict of stat_id -> {value, name, is_pseudo, mod_index}
@@ -288,18 +422,18 @@ class ItemPricer:
         # Process prefix and suffix mods with indices (for user-controlled min values)
         explicit_mods_with_idx = []
         for idx, mod in enumerate(item.prefix_mods):
-            explicit_mods_with_idx.append((mod, idx))
+            explicit_mods_with_idx.append((mod, idx, "explicit"))
         for idx, mod in enumerate(item.suffix_mods):
-            explicit_mods_with_idx.append((mod, len(item.prefix_mods) + idx))
+            explicit_mods_with_idx.append((mod, len(item.prefix_mods) + idx, "explicit"))
 
         # Implicit mods don't get indices (not user-controllable)
-        implicit_mods = [(mod, None) for mod in item.implicit_mods]
+        implicit_mods = [(mod, None, "implicit") for mod in item.implicit_mods]
 
         all_mods_with_idx = explicit_mods_with_idx + implicit_mods
 
         logger.info(f"Extracting filters from {len(all_mods_with_idx)} mods")
 
-        for mod, mod_index in all_mods_with_idx:
+        for mod, mod_index, mod_type in all_mods_with_idx:
             # Get the rolled value
             value = self._get_mod_value(mod)
             if value is None or value == 0:
@@ -315,13 +449,12 @@ class ItemPricer:
                     pseudo_indices[pseudo_id].append(mod_index)
 
                 # Also store individual mod info for when pseudo is disabled
-                trade_hash = self._get_trade_hash(mod)
-                if trade_hash:
-                    individual_stat_id = f"explicit.stat_{trade_hash}"
+                stat_ids = self._match_stat_to_trade_ids(mod.stat_text, mod_type)
+                if stat_ids:
                     if pseudo_id not in pseudo_individual_mods:
                         pseudo_individual_mods[pseudo_id] = []
                     pseudo_individual_mods[pseudo_id].append({
-                        "stat_id": individual_stat_id,
+                        "stat_ids": stat_ids,  # List of stat IDs (global + local variants)
                         "value": value,
                         "name": mod.name,
                         "stat_text": mod.stat_text,
@@ -330,23 +463,24 @@ class ItemPricer:
 
                 logger.info(f"Mod '{mod.name}' (group={mod.mod_group}, idx={mod_index}) -> pseudo {pseudo_id} += {value}")
             else:
-                # Try to get trade_hash (from mod or lookup)
-                trade_hash = self._get_trade_hash(mod)
-                if trade_hash:
-                    # Use explicit stat with trade_hash
-                    stat_id = f"explicit.stat_{trade_hash}"
+                # Match stat text to trade API stat ID(s) - may return both global and local variants
+                stat_ids = self._match_stat_to_trade_ids(mod.stat_text, mod_type)
+                if stat_ids:
+                    # Use the first stat_id as the key, but store all variants
+                    primary_stat_id = stat_ids[0]
                     # If we already have this stat, take the higher value
-                    if stat_id not in filters or value > filters[stat_id]["value"]:
-                        filters[stat_id] = {
+                    if primary_stat_id not in filters or value > filters[primary_stat_id]["value"]:
+                        filters[primary_stat_id] = {
                             "value": value,
                             "name": mod.name,
                             "stat_text": mod.stat_text,
                             "is_pseudo": False,
                             "mod_index": mod_index,
+                            "stat_ids": stat_ids,  # All matching stat IDs (for count filter)
                         }
-                    logger.info(f"Mod '{mod.name}' (hash={trade_hash}, idx={mod_index}) -> {stat_id} = {value}")
+                    logger.info(f"Mod '{mod.name}' (idx={mod_index}) -> {stat_ids} = {value}")
                 else:
-                    logger.warning(f"Mod '{mod.name}' (id={mod.mod_id}, group={mod.mod_group}) has no trade_hash, skipping")
+                    logger.warning(f"Mod '{mod.name}' (stat_text={mod.stat_text}) has no matching trade stat, skipping")
 
         # Add pseudo totals to filters and build pseudo_stats list
         pseudo_stats: List[PseudoStatInfo] = []
@@ -401,31 +535,6 @@ class ItemPricer:
             return mod.stat_min
         return None
 
-    def _get_trade_hash(self, mod: ItemModifier) -> Optional[int]:
-        """Get trade_hash for a mod, looking it up from data if needed."""
-        # First check if mod already has trade_hash
-        if mod.trade_hash:
-            return mod.trade_hash
-
-        # Try to look it up from pob data by mod_id
-        if mod.mod_id:
-            global _mod_data_cache
-            if not _mod_data_cache:
-                try:
-                    from app.services.crafting.pob_data_loader import get_pob_data_loader
-                    loader = get_pob_data_loader()
-                    # Build cache of mod_id -> trade_hash
-                    for mod_data in loader._mod_data.values() if hasattr(loader, '_mod_data') else []:
-                        pass
-                    # Actually just look it up directly
-                    mod_data = loader.get_mod_data(mod.mod_id)
-                    if mod_data and "tradeHash" in mod_data:
-                        return mod_data["tradeHash"]
-                except Exception as e:
-                    logger.debug(f"Could not look up trade_hash for {mod.mod_id}: {e}")
-
-        return None
-
     def _build_query(
         self,
         item: CraftableItem,
@@ -453,14 +562,15 @@ class ItemPricer:
             use_pseudo_stats: Which pseudo stats to use (stat_id -> bool)
         """
         filters = []
+        count_filters = []  # For stats with multiple variants (global + local)
 
         # Add mod filters
         for stat_id, filter_info in mod_filters.items():
             value = filter_info["value"]
             is_pseudo = filter_info.get("is_pseudo", False)
 
-            # Skip very low values
-            if value < 5:
+            # Skip very low values (but allow small crit chance values)
+            if value < 1:
                 continue
 
             # Check if this is a pseudo stat
@@ -472,7 +582,7 @@ class ItemPricer:
                     individual_mods = filter_info.get("individual_mods", [])
                     for ind_mod in individual_mods:
                         ind_value = ind_mod["value"]
-                        if ind_value < 5:
+                        if ind_value < 1:
                             continue
                         # Check if user set a custom min value for this individual mod
                         ind_mod_index = ind_mod.get("mod_index")
@@ -540,51 +650,98 @@ class ItemPricer:
             if min_value is None:
                 min_value = int(value * strictness)
 
-            filters.append({
-                "id": stat_id,
-                "value": {"min": min_value},
-                "_value": value,  # For sorting
-            })
+            # Check if this filter has multiple stat_ids (global + local variants)
+            stat_ids = filter_info.get("stat_ids", [stat_id])
+            if len(stat_ids) > 1:
+                # Multiple variants - use a "count" group with min=1
+                count_filters.append({
+                    "stat_ids": stat_ids,
+                    "min_value": min_value,
+                    "_value": value,
+                })
+                logger.info(f"  Multi-stat filter: {stat_ids} min={min_value} (count=1)")
+            else:
+                # Single stat - add to normal filters
+                filters.append({
+                    "id": stat_id,
+                    "value": {"min": min_value},
+                    "_value": value,  # For sorting
+                })
 
         # Limit to most important stats to avoid over-filtering
         # Sort by value descending and take top 6
-        if len(filters) > 6:
-            filters.sort(key=lambda f: f["_value"], reverse=True)
-            filters = filters[:6]
+        all_filters = filters + count_filters
+        if len(all_filters) > 6:
+            all_filters.sort(key=lambda f: f["_value"], reverse=True)
+            all_filters = all_filters[:6]
+            # Separate back into filters and count_filters
+            filters = [f for f in all_filters if "id" in f]
+            count_filters = [f for f in all_filters if "stat_ids" in f]
 
         # Clean up internal keys
         for f in filters:
             f.pop("_value", None)
+        for f in count_filters:
+            f.pop("_value", None)
 
         logger.info(f"Query filters (strictness={strictness}): {filters}")
+        if count_filters:
+            logger.info(f"Query count filters: {count_filters}")
+
+        # Build the stats array
+        stats_groups = []
+
+        # Add "and" group for single-stat filters
+        if filters:
+            stats_groups.append({
+                "type": "and",
+                "filters": filters
+            })
+
+        # Add "count" groups for multi-stat filters (global/local variants)
+        for cf in count_filters:
+            stats_groups.append({
+                "type": "count",
+                "value": {"min": 1},  # Match at least one variant
+                "filters": [
+                    {"id": sid, "value": {"min": cf["min_value"]}}
+                    for sid in cf["stat_ids"]
+                ]
+            })
 
         # Build the query
         query: Dict[str, Any] = {
             "query": {
                 "status": {"option": "any"},
-                "stats": [{
-                    "type": "and",
-                    "filters": filters
-                }] if filters else []
+                "stats": stats_groups
             },
             "sort": {"price": "asc"}
         }
 
         # Add category filter if we can map it
-        # Look up the slot from item base since base_category is attribute-based (int_armour, str_dex_armour, etc.)
-        # but trade API needs slot-based categories (boots, gloves, helmet, etc.)
+        # For armour: base_category is attribute-based (int_armour, str_dex_armour, etc.) but slot is specific (boots, helmet)
+        # For weapons: slot is generic (weapons - 2 hand) but category is specific (talisman, sword, mace)
         item_base = get_item_base_by_name(item.base_name)
-        slot = item_base.slot if item_base else item.base_category.lower()
+        trade_category = None
+        if item_base:
+            # For weapons, use the specific category (talisman, sword, etc.)
+            # For armour, use the slot (boots, helmet, etc.)
+            if item_base.slot in ("weapons - 1 hand", "weapons - 2 hand"):
+                trade_category = item_base.category
+            else:
+                trade_category = item_base.slot
+        else:
+            trade_category = item.base_category.lower()
 
-        if slot in CATEGORY_TO_TRADE:
+        if trade_category in CATEGORY_TO_TRADE:
             query["query"]["filters"] = {
                 "type_filters": {
                     "filters": {
-                        "category": {"option": CATEGORY_TO_TRADE[slot]}
+                        "category": {"option": CATEGORY_TO_TRADE[trade_category]}
                     }
                 }
             }
-            logger.info(f"Category filter: {slot} -> {CATEGORY_TO_TRADE[slot]}")
+            logger.info(f"Category filter: {trade_category} -> {CATEGORY_TO_TRADE[trade_category]}")
 
         # Add base stat filters from calculated_stats (keys match pob-data: Armour, Evasion, EnergyShield)
         # Use custom equipment_filters if provided, otherwise calculate from calculated_stats
@@ -700,6 +857,13 @@ class ItemPricer:
                     evasion=listing.evasion,
                     energy_shield=listing.energy_shield,
                     quality=listing.quality,
+                    # Weapon stats
+                    physical_damage=listing.physical_damage,
+                    attacks_per_second=listing.attacks_per_second,
+                    crit_chance=listing.crit_chance,
+                    physical_dps=listing.physical_dps,
+                    elemental_dps=listing.elemental_dps,
+                    total_dps=listing.total_dps,
                     prefix_mods=listing.prefix_mods,
                     suffix_mods=listing.suffix_mods,
                     rune_mods=listing.rune_mods,
@@ -790,6 +954,13 @@ class ItemPricer:
                 "armour": pl.armour,
                 "evasion": pl.evasion,
                 "energy_shield": pl.energy_shield,
+                # Weapon stats
+                "physical_damage": pl.physical_damage,
+                "attacks_per_second": pl.attacks_per_second,
+                "crit_chance": pl.crit_chance,
+                "physical_dps": pl.physical_dps,
+                "elemental_dps": pl.elemental_dps,
+                "total_dps": pl.total_dps,
                 "prefix_mods": pl.prefix_mods,
                 "suffix_mods": pl.suffix_mods,
             })

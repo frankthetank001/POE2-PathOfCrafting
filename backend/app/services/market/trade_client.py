@@ -139,6 +139,15 @@ class TradeListing:
     energy_shield: Optional[int] = None
     quality: Optional[int] = None
 
+    # Weapon stats
+    physical_damage: Optional[str] = None  # "min-max" format like "45-89"
+    elemental_damage: Optional[str] = None  # Combined elemental damage
+    attacks_per_second: Optional[float] = None
+    crit_chance: Optional[float] = None
+    physical_dps: Optional[float] = None
+    elemental_dps: Optional[float] = None
+    total_dps: Optional[float] = None
+
     # Parsed mods with actual values
     prefix_mods: Optional[List[Dict[str, Any]]] = None  # Serialized TradeMod dicts
     suffix_mods: Optional[List[Dict[str, Any]]] = None
@@ -293,9 +302,11 @@ class TradeAPIClient:
             league = self._default_league
 
         url = f"{TRADE_API_BASE}/search/poe2/{league}"
+        logger.info(f"Searching trade API: POST {url}")
 
         try:
             response = await self._make_request("POST", url, json=query)
+            logger.info(f"Trade API response status: {response.status_code}")
 
             if response.status_code == 400:
                 error_data = response.json()
@@ -305,9 +316,13 @@ class TradeAPIClient:
             response.raise_for_status()
             data = response.json()
 
+            total = data.get("total", 0)
+            result_count = len(data.get("result", []))
+            logger.info(f"Trade search returned {total} total results, {result_count} IDs")
+
             return TradeSearchResult(
                 query_id=data.get("id", ""),
-                total=data.get("total", 0),
+                total=total,
                 item_hashes=data.get("result", []),
             )
 
@@ -382,6 +397,45 @@ class TradeAPIClient:
             armour = extended_data.get("ar")
             evasion = extended_data.get("ev")
             energy_shield = extended_data.get("es")
+
+            # Extract weapon stats from extended data
+            physical_dps = extended_data.get("pdps")
+            elemental_dps = extended_data.get("edps")
+            total_dps = extended_data.get("dps")
+
+            # Parse weapon properties for damage and attack speed
+            physical_damage = None
+            elemental_damage = None
+            attacks_per_second = None
+            crit_chance = None
+
+            for prop in item_data.get("properties", []):
+                prop_name = prop.get("name", "")
+                values = prop.get("values", [])
+
+                if "Physical Damage" in prop_name and values:
+                    # Format: [["{min}-{max}", 1]] where 1 indicates augmented
+                    try:
+                        physical_damage = values[0][0] if isinstance(values[0], list) else values[0]
+                    except (IndexError, TypeError):
+                        pass
+                elif "Elemental Damage" in prop_name and values:
+                    try:
+                        elemental_damage = values[0][0] if isinstance(values[0], list) else values[0]
+                    except (IndexError, TypeError):
+                        pass
+                elif "Attacks per Second" in prop_name and values:
+                    try:
+                        val_str = values[0][0] if isinstance(values[0], list) else values[0]
+                        attacks_per_second = float(val_str)
+                    except (ValueError, IndexError, TypeError):
+                        pass
+                elif "Critical Hit Chance" in prop_name and values:
+                    try:
+                        val_str = values[0][0] if isinstance(values[0], list) else values[0]
+                        crit_chance = float(val_str.replace("%", ""))
+                    except (ValueError, IndexError, TypeError):
+                        pass
 
             # Extract quality from properties (format: "[Quality]" with value "+20%")
             quality = None
@@ -526,6 +580,13 @@ class TradeAPIClient:
                 evasion=evasion,
                 energy_shield=energy_shield,
                 quality=quality,
+                physical_damage=physical_damage,
+                elemental_damage=elemental_damage,
+                attacks_per_second=attacks_per_second,
+                crit_chance=crit_chance,
+                physical_dps=physical_dps,
+                elemental_dps=elemental_dps,
+                total_dps=total_dps,
                 prefix_mods=prefix_mods if prefix_mods else None,
                 suffix_mods=suffix_mods if suffix_mods else None,
                 rune_mods=rune_mod_texts,
@@ -556,7 +617,9 @@ class TradeAPIClient:
         Returns:
             Tuple of (List of TradeListing objects, query_id for trade URL)
         """
+        logger.info(f"search_and_fetch: starting search...")
         search_result = await self.search(query, league)
+        logger.info(f"search_and_fetch: search returned {search_result}")
 
         if not search_result or not search_result.item_hashes:
             return [], None

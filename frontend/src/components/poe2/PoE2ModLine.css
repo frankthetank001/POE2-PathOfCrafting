@@ -206,6 +206,11 @@
   color: #8888ff;
 }
 
+.poe2-property-value.highlight {
+  color: #e8c873;
+  font-weight: 600;
+}
+
 /* ==================== Status Text ==================== */
 
 .poe2-status-text {

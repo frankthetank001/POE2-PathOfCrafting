@@ -137,7 +137,7 @@ function getSlotFromCategory(baseCategory: string, baseName?: string): string {
 
   // Weapon categories
   if (lowerCat.includes('weapon') || ['wand', 'staff', 'bow', 'crossbow', 'mace', 'sceptre',
-      'sword', 'axe', 'dagger', 'claw', 'flail', 'spear'].includes(lowerCat)) {
+      'sword', 'axe', 'dagger', 'claw', 'flail', 'spear', 'talisman'].includes(lowerCat)) {
     return 'weapon';
   }
 
@@ -174,11 +174,13 @@ function getListingColumns(slot: string): Array<{ key: string; label: string; wi
     ];
   }
 
-  // Weapons - TODO: Add DPS columns when weapon support is added
-  if (slot === 'weapon' || ['wand', 'staff', 'bow', 'crossbow', 'mace', 'sceptre', 'sword', 'axe', 'dagger', 'claw'].includes(slot)) {
+  // Weapons - show DPS columns
+  if (slot === 'weapon' || ['wand', 'staff', 'bow', 'crossbow', 'mace', 'sceptre', 'sword', 'axe', 'dagger', 'claw', 'flail', 'spear', 'talisman'].includes(slot)) {
     return [
       ...baseColumns,
-      { key: 'ilvl', label: 'iLvl', width: '40px' },
+      { key: 'pDps', label: 'pDPS', width: '55px' },
+      { key: 'tDps', label: 'tDPS', width: '55px' },
+      { key: 'aps', label: 'APS', width: '45px' },
       { key: 'age', label: 'Age', width: '50px' },
     ];
   }
@@ -1719,178 +1721,8 @@ function GridCraftingSimulator() {
     }
   }, [categorizedCurrencies])
 
-  // Recalculate stats whenever mods change
-  useEffect(() => {
-    if (item.base_stats && Object.keys(item.base_stats).length > 0) {
-      const allMods = [...item.prefix_mods, ...item.suffix_mods]
-      const newCalculatedStats = calculateItemStats(item.base_stats, item.quality, allMods, item.socketed_runes)
-
-      // Only update if stats actually changed to avoid infinite loop
-      if (JSON.stringify(newCalculatedStats) !== JSON.stringify(item.calculated_stats)) {
-        setItem(prev => ({
-          ...prev,
-          calculated_stats: newCalculatedStats
-        }))
-      }
-    }
-  }, [item.prefix_mods, item.suffix_mods, item.quality, item.base_stats, item.socketed_runes])
-
-  const calculateItemStats = (baseStats: Record<string, number>, quality: number, mods: ItemModifier[] = [], socketedRunes: SocketedRune[] = []): Record<string, number> => {
-    const calculated = { ...baseStats }
-
-    // Step 1: Collect flat modifiers
-    let flatArmour = 0
-    let flatEvasion = 0
-    let flatEnergyShield = 0
-
-    for (const mod of mods) {
-      const statText = mod.stat_text.toLowerCase()
-
-      // For multi-stat mods, current_values[0] is the flat component
-      const flatValue = (mod.current_values && mod.current_values.length > 0)
-        ? mod.current_values[0]
-        : (mod.current_value || 0)
-
-      // Hybrid mods with flat + % (e.g., "+X to ES, X% increased ES")
-      if (statText.includes('to maximum energy shield') && statText.includes('% increased energy shield')) {
-        flatEnergyShield += flatValue
-        // The % part is handled in step 2
-      }
-      else if (statText.includes('to armour') && statText.includes('% increased armour') && !statText.includes('energy shield') && !statText.includes('evasion')) {
-        flatArmour += flatValue
-      }
-      else if (statText.includes('to evasion') && statText.includes('% increased evasion') && !statText.includes('armour') && !statText.includes('energy shield')) {
-        flatEvasion += flatValue
-      }
-      // Pure flat modifiers
-      else if (statText.includes('to maximum energy shield') && !statText.includes('%')) {
-        flatEnergyShield += flatValue
-      }
-      else if (statText.includes('to armour') && !statText.includes('%') && !statText.includes('energy shield')) {
-        flatArmour += flatValue
-      }
-      else if (statText.includes('to evasion') && !statText.includes('%')) {
-        flatEvasion += flatValue
-      }
-    }
-
-    // Step 2: Collect percentage modifiers (these apply to base+flat)
-    let armourIncrease = 0
-    let evasionIncrease = 0
-    let energyShieldIncrease = 0
-
-    for (const mod of mods) {
-      const statText = mod.stat_text.toLowerCase()
-
-      // For hybrid mods with flat + %, current_values[1] is the % component
-      const percentValue = (mod.current_values && mod.current_values.length > 1)
-        ? mod.current_values[1]
-        : (mod.current_value || 0)
-
-      // Hybrid flat + % mods (e.g., "+X to ES, X% increased ES")
-      if (statText.includes('to maximum energy shield') && statText.includes('% increased energy shield')) {
-        energyShieldIncrease += percentValue
-      }
-      else if (statText.includes('to armour') && statText.includes('% increased armour') && !statText.includes('energy shield') && !statText.includes('evasion')) {
-        armourIncrease += percentValue
-      }
-      else if (statText.includes('to evasion') && statText.includes('% increased evasion') && !statText.includes('armour') && !statText.includes('energy shield')) {
-        evasionIncrease += percentValue
-      }
-      // Pure % increased mods (use first value since they only have one stat)
-      else if (statText.includes('% increased energy shield') &&
-          !statText.includes('armour') && !statText.includes('evasion') && !statText.includes('to maximum')) {
-        energyShieldIncrease += percentValue
-      }
-      else if (statText.includes('% increased armour') &&
-               !statText.includes('energy shield') && !statText.includes('evasion') && !statText.includes('to ')) {
-        armourIncrease += percentValue
-      }
-      else if (statText.includes('% increased evasion') &&
-               !statText.includes('armour') && !statText.includes('energy shield') && !statText.includes('to ')) {
-        evasionIncrease += percentValue
-      }
-      // Dual defence % mods (e.g., "% increased Armour and Energy Shield")
-      else if (statText.includes('% increased armour and energy shield')) {
-        armourIncrease += percentValue
-        energyShieldIncrease += percentValue
-      }
-      else if (statText.includes('% increased armour and evasion')) {
-        armourIncrease += percentValue
-        evasionIncrease += percentValue
-      }
-      else if (statText.includes('% increased evasion and energy shield')) {
-        evasionIncrease += percentValue
-        energyShieldIncrease += percentValue
-      }
-    }
-
-    // Step 2b: Process socketed rune mods
-    for (const rune of socketedRunes) {
-      const allRuneMods = [...rune.mods, ...(rune.bonded_mods || [])]
-      for (const modText of allRuneMods) {
-        const textLower = modText.toLowerCase()
-
-        // Extract percentage value (e.g., "18% increased")
-        const percentMatch = modText.match(/(\d+)%/)
-        if (percentMatch) {
-          const value = parseFloat(percentMatch[1])
-
-          // Check for defence percentage mods
-          if (textLower.includes('increased armour, evasion and energy shield')) {
-            armourIncrease += value
-            evasionIncrease += value
-            energyShieldIncrease += value
-          } else if (textLower.includes('increased armour and evasion')) {
-            armourIncrease += value
-            evasionIncrease += value
-          } else if (textLower.includes('increased armour and energy shield')) {
-            armourIncrease += value
-            energyShieldIncrease += value
-          } else if (textLower.includes('increased evasion and energy shield')) {
-            evasionIncrease += value
-            energyShieldIncrease += value
-          } else if (textLower.includes('increased armour')) {
-            armourIncrease += value
-          } else if (textLower.includes('increased evasion')) {
-            evasionIncrease += value
-          } else if (textLower.includes('increased energy shield')) {
-            energyShieldIncrease += value
-          }
-        }
-
-        // Extract flat value (e.g., "+30 to maximum Energy Shield")
-        const flatMatch = modText.match(/\+(\d+)/)
-        if (flatMatch && modText.includes('+')) {
-          const value = parseInt(flatMatch[1])
-
-          if (textLower.includes('to armour')) {
-            flatArmour += value
-          } else if (textLower.includes('to evasion')) {
-            flatEvasion += value
-          } else if (textLower.includes('to energy shield') || textLower.includes('to maximum energy shield')) {
-            flatEnergyShield += value
-          }
-        }
-      }
-    }
-
-    // Step 3: Apply formula: (Base + Flat) × (1 + Quality%) × (1 + Increased%)
-    // In PoE2, quality acts as a separate "more" multiplier, not additive with "increased"
-    // Keys match pob-data source of truth: Armour, Evasion, EnergyShield
-    const qualityMultiplier = 1 + quality / 100
-    if (calculated.Armour !== undefined) {
-      calculated.Armour = Math.floor((baseStats.Armour + flatArmour) * qualityMultiplier * (1 + armourIncrease / 100))
-    }
-    if (calculated.Evasion !== undefined) {
-      calculated.Evasion = Math.floor((baseStats.Evasion + flatEvasion) * qualityMultiplier * (1 + evasionIncrease / 100))
-    }
-    if (calculated.EnergyShield !== undefined) {
-      calculated.EnergyShield = Math.floor((baseStats.EnergyShield + flatEnergyShield) * qualityMultiplier * (1 + energyShieldIncrease / 100))
-    }
-
-    return calculated
-  }
+  // Stats are calculated by the backend's StatCalculator - no need to recalculate locally
+  // The backend returns calculated_stats with all stats including weapon DPS and defense stats
 
   const loadAvailableMods = async () => {
     try {
@@ -4252,18 +4084,68 @@ function GridCraftingSimulator() {
                         )}
                       </PoE2Section>
 
-                      {/* Base Stats */}
-                      {Object.keys(item.calculated_stats || {}).length > 0 && (
+                      {/* Weapon Stats */}
+                      {item.calculated_stats?.PhysicalDPS != null && (
+                        <>
+                          <PoE2Separator />
+                          <PoE2Section title="Weapon">
+                            {item.calculated_stats.PhysicalMin != null && item.calculated_stats.PhysicalMax != null && (
+                              <PoE2Property
+                                label="Physical Damage"
+                                value={`${item.calculated_stats.PhysicalMin}-${item.calculated_stats.PhysicalMax}`}
+                                augmented
+                              />
+                            )}
+                            {item.calculated_stats.CritChance != null && (
+                              <PoE2Property
+                                label="Critical Hit Chance"
+                                value={`${item.calculated_stats.CritChance}%`}
+                              />
+                            )}
+                            {item.calculated_stats.AttackRate != null && (
+                              <PoE2Property
+                                label="Attacks per Second"
+                                value={item.calculated_stats.AttackRate}
+                                augmented
+                              />
+                            )}
+                            <PoE2Property
+                              label="Physical DPS"
+                              value={item.calculated_stats.PhysicalDPS}
+                            />
+                            {item.calculated_stats.ElementalDPS != null && item.calculated_stats.ElementalDPS > 0 && (
+                              <PoE2Property
+                                label="Elemental DPS"
+                                value={item.calculated_stats.ElementalDPS}
+                              />
+                            )}
+                            {item.calculated_stats.TotalDPS != null &&
+                             (item.calculated_stats.ElementalDPS > 0 || item.calculated_stats.ChaosDPS > 0) && (
+                              <PoE2Property
+                                label="Total DPS"
+                                value={item.calculated_stats.TotalDPS}
+                              />
+                            )}
+                          </PoE2Section>
+                        </>
+                      )}
+
+                      {/* Defense Stats */}
+                      {(item.calculated_stats?.Armour > 0 ||
+                        item.calculated_stats?.Evasion > 0 ||
+                        item.calculated_stats?.EnergyShield > 0) && (
                         <>
                           <PoE2Separator />
                           <PoE2Section title="Defense">
-                            {Object.entries(item.calculated_stats || {}).map(([statName, value]) => (
-                              <PoE2Property
-                                key={statName}
-                                label={statName.replace(/([A-Z])/g, ' $1').trim()}
-                                value={value}
-                              />
-                            ))}
+                            {item.calculated_stats?.Armour > 0 && (
+                              <PoE2Property label="Armour" value={item.calculated_stats.Armour} />
+                            )}
+                            {item.calculated_stats?.Evasion > 0 && (
+                              <PoE2Property label="Evasion Rating" value={item.calculated_stats.Evasion} />
+                            )}
+                            {item.calculated_stats?.EnergyShield > 0 && (
+                              <PoE2Property label="Energy Shield" value={item.calculated_stats.EnergyShield} />
+                            )}
                           </PoE2Section>
                         </>
                       )}
@@ -5269,6 +5151,12 @@ function GridCraftingSimulator() {
                                     return <td key={col.key} className="listing-ilvl">{listing.item_level}</td>;
                                   case 'account':
                                     return <td key={col.key} className="listing-account">{listing.account_name}</td>;
+                                  case 'pDps':
+                                    return <td key={col.key} className="listing-dps">{listing.physical_dps ? Math.round(listing.physical_dps) : '-'}</td>;
+                                  case 'tDps':
+                                    return <td key={col.key} className="listing-dps">{listing.total_dps ? Math.round(listing.total_dps) : '-'}</td>;
+                                  case 'aps':
+                                    return <td key={col.key} className="listing-aps">{listing.attacks_per_second?.toFixed(2) ?? '-'}</td>;
                                   case 'age':
                                     return <td key={col.key} className="listing-age">{formatAge(listing.indexed_time)}</td>;
                                   default:

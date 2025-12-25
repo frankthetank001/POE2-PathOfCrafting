@@ -76,6 +76,33 @@ export function PoE2TradeListingPreview({ listing, className = '' }: PoE2TradeLi
         <PoE2Property label="Item Level" value={listing.item_level} />
       </PoE2Section>
 
+      {/* Weapon stats section */}
+      {(listing.physical_dps || listing.total_dps || listing.attacks_per_second) && (
+        <>
+          <PoE2Separator />
+          <PoE2Section>
+            {listing.physical_damage && (
+              <PoE2Property label="Physical Damage" value={listing.physical_damage} augmented />
+            )}
+            {listing.attacks_per_second != null && (
+              <PoE2Property label="Attacks per Second" value={listing.attacks_per_second.toFixed(2)} augmented />
+            )}
+            {listing.crit_chance != null && (
+              <PoE2Property label="Critical Hit Chance" value={`${listing.crit_chance.toFixed(2)}%`} />
+            )}
+            {listing.physical_dps != null && listing.physical_dps > 0 && (
+              <PoE2Property label="Physical DPS" value={Math.round(listing.physical_dps)} highlight />
+            )}
+            {listing.elemental_dps != null && listing.elemental_dps > 0 && (
+              <PoE2Property label="Elemental DPS" value={Math.round(listing.elemental_dps)} highlight />
+            )}
+            {listing.total_dps != null && listing.total_dps > 0 && listing.total_dps !== listing.physical_dps && (
+              <PoE2Property label="Total DPS" value={Math.round(listing.total_dps)} highlight />
+            )}
+          </PoE2Section>
+        </>
+      )}
+
       {/* Implicit mods */}
       {listing.implicit_mods && listing.implicit_mods.length > 0 && (
         <>

@@ -89,6 +89,14 @@ export interface PriceListing {
   energy_shield?: number | null
   quality?: number | null
 
+  // Weapon stats
+  physical_damage?: string | null  // "min-max" format
+  attacks_per_second?: number | null
+  crit_chance?: number | null
+  physical_dps?: number | null
+  elemental_dps?: number | null
+  total_dps?: number | null
+
   // Parsed mods with tier info and values
   prefix_mods?: TradeMod[] | null
   suffix_mods?: TradeMod[] | null

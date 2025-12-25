@@ -106,13 +106,15 @@ interface PoE2PropertyProps {
   label: string
   value: string | number
   augmented?: boolean
+  highlight?: boolean  // For DPS stats - golden color
 }
 
-export function PoE2Property({ label, value, augmented = false }: PoE2PropertyProps) {
+export function PoE2Property({ label, value, augmented = false, highlight = false }: PoE2PropertyProps) {
+  const valueClass = highlight ? 'highlight' : augmented ? 'augmented' : ''
   return (
     <div className="poe2-property">
       <span className="poe2-property-label">{label}:</span>
-      <span className={`poe2-property-value ${augmented ? 'augmented' : ''}`}>{value}</span>
+      <span className={`poe2-property-value ${valueClass}`}>{value}</span>
     </div>
   )
 }
