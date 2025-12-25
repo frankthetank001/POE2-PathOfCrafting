@@ -362,7 +362,7 @@ class ItemPricer:
         await self.initialize()
 
         # Extract mod filters using trade_hash
-        mod_filters, pseudo_stats = self._extract_mod_filters(item)
+        mod_filters, pseudo_stats, unmatched_mods = self._extract_mod_filters(item)
 
         if not mod_filters:
             logger.info(f"No priceable mods found on {item.base_name}")
@@ -393,7 +393,10 @@ class ItemPricer:
 
             if len(listings) >= 5:
                 trade_url = self._trade_client.build_trade_url(query_id, search_league) if query_id else None
-                return await self._calculate_price(listings, mod_filters, strictness, trade_url, item, pseudo_stats)
+                result = await self._calculate_price(listings, mod_filters, strictness, trade_url, item, pseudo_stats)
+                if result:
+                    result.unmatched_mods = unmatched_mods
+                return result
 
         # If we still don't have enough results, try one more with very relaxed criteria
         query = self._build_query(item, mod_filters, 0.3, equipment_filters, equipment_enabled, rarity_enabled, ilvl_enabled, mod_min_values, use_pseudo_stats)
@@ -401,11 +404,14 @@ class ItemPricer:
 
         if listings:
             trade_url = self._trade_client.build_trade_url(query_id, search_league) if query_id else None
-            return await self._calculate_price(listings, mod_filters, 0.3, trade_url, item, pseudo_stats)
+            result = await self._calculate_price(listings, mod_filters, 0.3, trade_url, item, pseudo_stats)
+            if result:
+                result.unmatched_mods = unmatched_mods
+            return result
 
         return None
 
-    def _extract_mod_filters(self, item: CraftableItem) -> tuple[Dict[str, Dict[str, Any]], List[PseudoStatInfo]]:
+    def _extract_mod_filters(self, item: CraftableItem) -> tuple[Dict[str, Dict[str, Any]], List[PseudoStatInfo], List[Dict[str, Any]]]:
         """
         Extract mod filters from an item by matching stat text to trade API stat IDs.
 
@@ -413,11 +419,13 @@ class ItemPricer:
         - filters: dict of stat_id -> {value, name, is_pseudo, mod_index}
           mod_index is 0-based with prefixes first, then suffixes (implicits not indexed for user control)
         - pseudo_stats: list of PseudoStatInfo for aggregated mods
+        - unmatched_mods: list of mods that couldn't be matched to trade API stats
         """
         filters: Dict[str, Dict[str, Any]] = {}
         pseudo_totals: Dict[str, float] = {}
         pseudo_indices: Dict[str, List[int]] = {}  # Track indices that contribute to each pseudo
         pseudo_individual_mods: Dict[str, List[Dict[str, Any]]] = {}  # Individual mod info for each pseudo
+        unmatched_mods: List[Dict[str, Any]] = []  # Track mods that couldn't be matched
 
         # Process prefix and suffix mods with indices (for user-controlled min values)
         explicit_mods_with_idx = []
@@ -481,6 +489,13 @@ class ItemPricer:
                     logger.info(f"Mod '{mod.name}' (idx={mod_index}) -> {stat_ids} = {value}")
                 else:
                     logger.warning(f"Mod '{mod.name}' (stat_text={mod.stat_text}) has no matching trade stat, skipping")
+                    unmatched_mods.append({
+                        "name": mod.name,
+                        "stat_text": mod.stat_text,
+                        "mod_index": mod_index,
+                        "mod_type": "prefix" if mod_index is not None and mod_index < len(item.prefix_mods) else "suffix" if mod_index is not None else "implicit",
+                        "value": value,
+                    })
 
         # Add pseudo totals to filters and build pseudo_stats list
         pseudo_stats: List[PseudoStatInfo] = []
@@ -519,7 +534,9 @@ class ItemPricer:
             logger.info(f"Pseudo total: {pseudo_id} = {total} (indices={indices}, type={mod_type})")
 
         logger.info(f"Extracted {len(filters)} filters: {list(filters.keys())}")
-        return filters, pseudo_stats
+        if unmatched_mods:
+            logger.warning(f"Unmatched mods: {[m['name'] for m in unmatched_mods]}")
+        return filters, pseudo_stats, unmatched_mods
 
     def _get_mod_value(self, mod: ItemModifier) -> Optional[float]:
         """Get the rolled value from a mod."""

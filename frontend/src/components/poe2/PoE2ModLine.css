@@ -287,3 +287,45 @@
   color: #ccc;
   font-family: 'Exo2', sans-serif;
 }
+
+/* ==================== Two Column Layout ==================== */
+
+.poe2-two-column {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 4px 8px;
+}
+
+.poe2-two-column-gap-small {
+  gap: 8px;
+}
+
+.poe2-two-column-gap-medium {
+  gap: 16px;
+}
+
+.poe2-two-column-gap-large {
+  gap: 24px;
+}
+
+.poe2-column {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.poe2-column-left {
+  align-items: flex-start;
+}
+
+.poe2-column-right {
+  align-items: flex-end;
+}
+
+/* Compact properties inside columns */
+.poe2-column .poe2-property {
+  padding: 1px 4px;
+  font-size: 0.8rem;
+  gap: 6px;
+}
+

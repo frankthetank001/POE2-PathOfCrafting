@@ -118,3 +118,31 @@ export function PoE2Property({ label, value, augmented = false, highlight = fals
     </div>
   )
 }
+
+// Two-column layout (for weapon stats, etc.)
+interface PoE2TwoColumnProps {
+  children: React.ReactNode
+  gap?: 'small' | 'medium' | 'large'
+}
+
+export function PoE2TwoColumn({ children, gap = 'medium' }: PoE2TwoColumnProps) {
+  return (
+    <div className={`poe2-two-column poe2-two-column-gap-${gap}`}>
+      {children}
+    </div>
+  )
+}
+
+// Column wrapper for PoE2TwoColumn
+interface PoE2ColumnProps {
+  children: React.ReactNode
+  align?: 'left' | 'right'
+}
+
+export function PoE2Column({ children, align = 'left' }: PoE2ColumnProps) {
+  return (
+    <div className={`poe2-column poe2-column-${align}`}>
+      {children}
+    </div>
+  )
+}

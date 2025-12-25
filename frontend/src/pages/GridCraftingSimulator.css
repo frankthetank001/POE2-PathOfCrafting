@@ -1204,11 +1204,31 @@
 
 /* Inline tags that flow after mod text */
 .mod-tags-inline {
-  display: inline-flex;
+  display: none;
   align-items: center;
   gap: 0.25rem;
   flex-wrap: wrap;
   margin-left: 0.4rem;
+}
+
+/* Show tags on mod line hover */
+.mod-line:hover .mod-tags-inline,
+.item-mod:hover .mod-tags-inline {
+  display: inline-flex;
+}
+
+/* Collapsed indicator (shows when tags are hidden) */
+.mod-tags-collapsed {
+  display: inline;
+  margin-left: 0.3rem;
+  color: rgba(136, 136, 255, 0.4);
+  font-size: 0.7rem;
+  cursor: help;
+}
+
+.mod-line:hover .mod-tags-collapsed,
+.item-mod:hover .mod-tags-collapsed {
+  display: none;
 }
 
 .mod-tag-badge {
@@ -4249,6 +4269,44 @@
 
 .enhanced-stat.outliers {
   opacity: 0.8;
+}
+
+/* Unmatched Mods Warning */
+.unmatched-mods-warning {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  margin: 8px 0;
+  background: rgba(180, 100, 40, 0.15);
+  border: 1px solid rgba(180, 100, 40, 0.4);
+  border-radius: 3px;
+  font-size: 0.8rem;
+}
+
+.unmatched-mods-warning .warning-icon {
+  color: #e8a040;
+}
+
+.unmatched-mods-warning .warning-text {
+  color: #ccc;
+}
+
+.unmatched-mods-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-left: 4px;
+}
+
+.unmatched-mod {
+  padding: 2px 6px;
+  background: rgba(180, 100, 40, 0.3);
+  border-radius: 2px;
+  color: #e8a040;
+  font-size: 0.75rem;
+  cursor: help;
 }
 
 /* Equipment Filters */

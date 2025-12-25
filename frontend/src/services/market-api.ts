@@ -151,6 +151,15 @@ export interface ItemPriceEstimate {
   outliers_removed: number  // Number of price fixers/outliers filtered
   avg_similarity: number | null  // Average similarity score (0-1)
   price_spread: number | null  // IQR as % of median (lower = tighter prices)
+
+  // Mods that couldn't be matched to trade API
+  unmatched_mods: Array<{
+    name: string
+    stat_text: string
+    mod_index: number | null
+    mod_type: 'prefix' | 'suffix' | 'implicit'
+    value: number
+  }>
 }
 
 // API client

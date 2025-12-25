@@ -2,7 +2,7 @@ import { useState, useEffect, useMemo, useCallback } from 'react'
 import { craftingApi, HiddenTagsConfig } from '@/services/crafting-api'
 import { marketApi, ExchangeRates, ItemPriceEstimate, PseudoStatInfo } from '@/services/market-api'
 import { UnifiedCurrencyStash } from '@/components/UnifiedCurrencyStash'
-import { PoE2ItemFrame, PoE2Separator, PoE2Section, PoE2Property, PoE2TradeListingPreview } from '@/components/poe2'
+import { PoE2ItemFrame, PoE2Separator, PoE2Section, PoE2Property, PoE2TwoColumn, PoE2Column, PoE2TradeListingPreview } from '@/components/poe2'
 import type { CraftableItem, ItemModifier, ItemRarity, ItemBasesBySlot, SocketedRune } from '@/types/crafting'
 import { CURRENCY_DESCRIPTIONS } from '@/data/currency-descriptions'
 import './GridCraftingSimulator.css'
@@ -4084,48 +4084,57 @@ function GridCraftingSimulator() {
                         )}
                       </PoE2Section>
 
-                      {/* Weapon Stats */}
+                      {/* Weapon Stats - Two Column Layout */}
                       {item.calculated_stats?.PhysicalDPS != null && (
                         <>
                           <PoE2Separator />
                           <PoE2Section title="Weapon">
-                            {item.calculated_stats.PhysicalMin != null && item.calculated_stats.PhysicalMax != null && (
-                              <PoE2Property
-                                label="Physical Damage"
-                                value={`${item.calculated_stats.PhysicalMin}-${item.calculated_stats.PhysicalMax}`}
-                                augmented
-                              />
-                            )}
-                            {item.calculated_stats.CritChance != null && (
-                              <PoE2Property
-                                label="Critical Hit Chance"
-                                value={`${item.calculated_stats.CritChance}%`}
-                              />
-                            )}
-                            {item.calculated_stats.AttackRate != null && (
-                              <PoE2Property
-                                label="Attacks per Second"
-                                value={item.calculated_stats.AttackRate}
-                                augmented
-                              />
-                            )}
-                            <PoE2Property
-                              label="Physical DPS"
-                              value={item.calculated_stats.PhysicalDPS}
-                            />
-                            {item.calculated_stats.ElementalDPS != null && item.calculated_stats.ElementalDPS > 0 && (
-                              <PoE2Property
-                                label="Elemental DPS"
-                                value={item.calculated_stats.ElementalDPS}
-                              />
-                            )}
-                            {item.calculated_stats.TotalDPS != null &&
-                             (item.calculated_stats.ElementalDPS > 0 || item.calculated_stats.ChaosDPS > 0) && (
-                              <PoE2Property
-                                label="Total DPS"
-                                value={item.calculated_stats.TotalDPS}
-                              />
-                            )}
+                            <PoE2TwoColumn gap="small">
+                              <PoE2Column>
+                                {item.calculated_stats.PhysicalMin != null && item.calculated_stats.PhysicalMax != null && (
+                                  <PoE2Property
+                                    label="Phys"
+                                    value={`${item.calculated_stats.PhysicalMin}-${item.calculated_stats.PhysicalMax}`}
+                                    augmented
+                                  />
+                                )}
+                                {item.calculated_stats.CritChance != null && (
+                                  <PoE2Property
+                                    label="Crit"
+                                    value={`${item.calculated_stats.CritChance}%`}
+                                  />
+                                )}
+                                {item.calculated_stats.AttackRate != null && (
+                                  <PoE2Property
+                                    label="APS"
+                                    value={item.calculated_stats.AttackRate}
+                                    augmented
+                                  />
+                                )}
+                              </PoE2Column>
+                              <PoE2Column align="right">
+                                <PoE2Property
+                                  label="pDPS"
+                                  value={item.calculated_stats.PhysicalDPS}
+                                  highlight
+                                />
+                                {item.calculated_stats.ElementalDPS != null && item.calculated_stats.ElementalDPS > 0 && (
+                                  <PoE2Property
+                                    label="eDPS"
+                                    value={item.calculated_stats.ElementalDPS}
+                                    highlight
+                                  />
+                                )}
+                                {item.calculated_stats.TotalDPS != null &&
+                                 (item.calculated_stats.ElementalDPS > 0 || item.calculated_stats.ChaosDPS > 0) && (
+                                  <PoE2Property
+                                    label="Total"
+                                    value={item.calculated_stats.TotalDPS}
+                                    highlight
+                                  />
+                                )}
+                              </PoE2Column>
+                            </PoE2TwoColumn>
                           </PoE2Section>
                         </>
                       )}
@@ -4255,39 +4264,44 @@ function GridCraftingSimulator() {
                                         </span>
                                       )}
                                       {isUnrevealed && selectedOmens.some(omen => omen.includes('Abyssal Echoes')) && <span className="abyssal-indicator"> ✨</span>}
-                                      {/* Tags inline after mod text */}
+                                      {/* Tags inline after mod text - hidden by default, show on hover */}
                                       {!isUnrevealed && (() => {
                                         const visibleTags = filterInternalTags(mod.tags)
                                         return visibleTags.length > 0 && (
-                                          <span className="mod-tags-inline">
-                                            {visibleTags.map((tag, i) => {
-                                              const tagColor = getTagColor(tag)
-                                              return (
-                                                <span
-                                                  key={i}
-                                                  className="mod-tag-badge"
-                                                  onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    toggleTagFilter(tag);
-                                                  }}
-                                                  title={`Click to filter by "${tag}" tag`}
-                                                  style={{
-                                                    background: tagColor.bg,
-                                                    borderColor: tagColor.border,
-                                                    color: tagColor.text
-                                                  }}
-                                                  onMouseEnter={(e) => {
-                                                    e.currentTarget.style.background = tagColor.hover
-                                                  }}
-                                                  onMouseLeave={(e) => {
-                                                    e.currentTarget.style.background = tagColor.bg
-                                                  }}
-                                                >
-                                                  {tag}
-                                                </span>
-                                              )
-                                            })}
-                                          </span>
+                                          <>
+                                            <span className="mod-tags-collapsed" title={`Tags: ${visibleTags.join(', ')}`}>
+                                              [{visibleTags.length}]
+                                            </span>
+                                            <span className="mod-tags-inline">
+                                              {visibleTags.map((tag, i) => {
+                                                const tagColor = getTagColor(tag)
+                                                return (
+                                                  <span
+                                                    key={i}
+                                                    className="mod-tag-badge"
+                                                    onClick={(e) => {
+                                                      e.stopPropagation();
+                                                      toggleTagFilter(tag);
+                                                    }}
+                                                    title={`Click to filter by "${tag}" tag`}
+                                                    style={{
+                                                      background: tagColor.bg,
+                                                      borderColor: tagColor.border,
+                                                      color: tagColor.text
+                                                    }}
+                                                    onMouseEnter={(e) => {
+                                                      e.currentTarget.style.background = tagColor.hover
+                                                    }}
+                                                    onMouseLeave={(e) => {
+                                                      e.currentTarget.style.background = tagColor.bg
+                                                    }}
+                                                  >
+                                                    {tag}
+                                                  </span>
+                                                )
+                                              })}
+                                            </span>
+                                          </>
                                         )
                                       })()}
                                     </span>
@@ -4554,39 +4568,44 @@ function GridCraftingSimulator() {
                                         </span>
                                       )}
                                       {isUnrevealed && selectedOmens.some(omen => omen.includes('Abyssal Echoes')) && <span className="abyssal-indicator"> ✨</span>}
-                                      {/* Tags inline after mod text */}
+                                      {/* Tags inline after mod text - hidden by default, show on hover */}
                                       {!isUnrevealed && (() => {
                                         const visibleTags = filterInternalTags(mod.tags)
                                         return visibleTags.length > 0 && (
-                                          <span className="mod-tags-inline">
-                                            {visibleTags.map((tag, i) => {
-                                              const tagColor = getTagColor(tag)
-                                              return (
-                                                <span
-                                                  key={i}
-                                                  className="mod-tag-badge"
-                                                  onClick={(e) => {
-                                                    e.stopPropagation();
-                                                    toggleTagFilter(tag);
-                                                  }}
-                                                  title={`Click to filter by "${tag}" tag`}
-                                                  style={{
-                                                    background: tagColor.bg,
-                                                    borderColor: tagColor.border,
-                                                    color: tagColor.text
-                                                  }}
-                                                  onMouseEnter={(e) => {
-                                                    e.currentTarget.style.background = tagColor.hover
-                                                  }}
-                                                  onMouseLeave={(e) => {
-                                                    e.currentTarget.style.background = tagColor.bg
-                                                  }}
-                                                >
-                                                  {tag}
-                                                </span>
-                                              )
-                                            })}
-                                          </span>
+                                          <>
+                                            <span className="mod-tags-collapsed" title={`Tags: ${visibleTags.join(', ')}`}>
+                                              [{visibleTags.length}]
+                                            </span>
+                                            <span className="mod-tags-inline">
+                                              {visibleTags.map((tag, i) => {
+                                                const tagColor = getTagColor(tag)
+                                                return (
+                                                  <span
+                                                    key={i}
+                                                    className="mod-tag-badge"
+                                                    onClick={(e) => {
+                                                      e.stopPropagation();
+                                                      toggleTagFilter(tag);
+                                                    }}
+                                                    title={`Click to filter by "${tag}" tag`}
+                                                    style={{
+                                                      background: tagColor.bg,
+                                                      borderColor: tagColor.border,
+                                                      color: tagColor.text
+                                                    }}
+                                                    onMouseEnter={(e) => {
+                                                      e.currentTarget.style.background = tagColor.hover
+                                                    }}
+                                                    onMouseLeave={(e) => {
+                                                      e.currentTarget.style.background = tagColor.bg
+                                                    }}
+                                                  >
+                                                    {tag}
+                                                  </span>
+                                                )
+                                              })}
+                                            </span>
+                                          </>
                                         )
                                       })()}
                                     </span>
@@ -4906,6 +4925,23 @@ function GridCraftingSimulator() {
                     </div>
                   )}
                 </div>
+
+                {/* Unmatched mods warning */}
+                {itemPrice.unmatched_mods && itemPrice.unmatched_mods.length > 0 && (
+                  <div className="unmatched-mods-warning">
+                    <span className="warning-icon">⚠</span>
+                    <span className="warning-text">
+                      {itemPrice.unmatched_mods.length} mod{itemPrice.unmatched_mods.length > 1 ? 's' : ''} not searchable:
+                    </span>
+                    <div className="unmatched-mods-list">
+                      {itemPrice.unmatched_mods.map((mod, i) => (
+                        <div key={i} className="unmatched-mod" title={mod.stat_text}>
+                          {mod.name}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
 
                 {/* Equipment Stat Filters */}
                 {Object.keys(priceEquipmentFilters).length > 0 && (

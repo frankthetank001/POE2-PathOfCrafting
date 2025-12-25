@@ -362,6 +362,12 @@ class ItemPriceResponse(BaseModel):
     avg_similarity: Optional[float] = Field(None, description="Average similarity score of listings (0-1)")
     price_spread: Optional[float] = Field(None, description="Price spread as IQR % of median (lower = tighter)")
 
+    # Mods that couldn't be matched to trade API (won't be searched)
+    unmatched_mods: List[Dict[str, Any]] = Field(
+        default_factory=list,
+        description="Mods that couldn't be matched to trade API stats"
+    )
+
 
 @router.post("/price-item", response_model=ItemPriceResponse)
 async def estimate_item_price(request: ItemPriceRequest) -> ItemPriceResponse:
@@ -468,6 +474,7 @@ async def estimate_item_price(request: ItemPriceRequest) -> ItemPriceResponse:
             outliers_removed=estimate.outliers_removed,
             avg_similarity=estimate.avg_similarity,
             price_spread=estimate.price_spread,
+            unmatched_mods=estimate.unmatched_mods or [],
         )
     except HTTPException:
         raise
