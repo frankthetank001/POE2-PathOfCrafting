@@ -80,3 +80,7 @@ Desktop.ini
 
 # POB data cache (fetched from GitHub at runtime)
 backend/source_data/pob-data/
+
+nul
+backend/listings_debug.json
+backend/trade_request_debug.json
