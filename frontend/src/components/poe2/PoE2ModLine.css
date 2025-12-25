@@ -227,3 +227,58 @@
   color: #44ff88;
   text-shadow: 0 0 8px rgba(68, 255, 136, 0.4);
 }
+
+/* ==================== Inline Comparison Badges ==================== */
+
+.mod-comparison-badge {
+  font-size: 0.7rem;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-weight: 500;
+  margin-left: 6px;
+  font-family: 'Exo2', sans-serif;
+}
+
+.mod-comparison-badge.better {
+  color: #7dcea0;
+  background: rgba(125, 206, 160, 0.15);
+}
+
+.mod-comparison-badge.worse {
+  color: #e57373;
+  background: rgba(229, 115, 115, 0.15);
+}
+
+.mod-comparison-badge.similar {
+  color: #90a4ae;
+  background: rgba(144, 164, 174, 0.15);
+}
+
+.poe2-property-with-comparison {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.poe2-property-with-comparison .poe2-property {
+  flex: 1;
+}
+
+/* Pseudo stat rows (totals like ele res, chaos res) */
+.poe2-pseudo-stat-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 2px 8px;
+  font-size: 0.85rem;
+}
+
+.poe2-pseudo-stat-name {
+  color: #8888ff;
+  flex: 1;
+}
+
+.poe2-pseudo-stat-value {
+  color: #ccc;
+  font-family: 'Exo2', sans-serif;
+}

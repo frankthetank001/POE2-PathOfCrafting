@@ -1,6 +1,6 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
 import { craftingApi, HiddenTagsConfig } from '@/services/crafting-api'
-import { marketApi, ExchangeRates, ItemPriceEstimate } from '@/services/market-api'
+import { marketApi, ExchangeRates, ItemPriceEstimate, PseudoStatInfo } from '@/services/market-api'
 import { UnifiedCurrencyStash } from '@/components/UnifiedCurrencyStash'
 import { PoE2ItemFrame, PoE2Separator, PoE2Section, PoE2Property, PoE2TradeListingPreview } from '@/components/poe2'
 import type { CraftableItem, ItemModifier, ItemRarity, ItemBasesBySlot, SocketedRune } from '@/types/crafting'
@@ -93,6 +93,103 @@ function getExclusionGroupColor(groupId: string): { bg: string; border: string; 
     border: `hsla(${hue}, 70%, 60%, 0.5)`,
     text: `hsl(${hue}, 70%, 70%)`
   }
+}
+
+// Get defence display string from listing
+function getDefenceDisplay(listing: { armour?: number | null; evasion?: number | null; energy_shield?: number | null }): string {
+  const parts: string[] = [];
+  if (listing.armour && listing.armour > 0) parts.push(`${listing.armour} AR`);
+  if (listing.evasion && listing.evasion > 0) parts.push(`${listing.evasion} EV`);
+  if (listing.energy_shield && listing.energy_shield > 0) parts.push(`${listing.energy_shield} ES`);
+  return parts.join(' / ') || '-';
+}
+
+// Determine slot type from base_category or item base name
+function getSlotFromCategory(baseCategory: string, baseName?: string): string {
+  // Direct slot categories
+  const directSlots = ['boots', 'helmet', 'gloves', 'shield', 'ring', 'amulet', 'belt', 'quiver', 'focus'];
+  const lowerCat = baseCategory.toLowerCase();
+
+  for (const slot of directSlots) {
+    if (lowerCat === slot) return slot;
+  }
+
+  // Attribute-based armour categories (e.g., int_armour, str_dex_armour)
+  if (lowerCat.includes('armour') || lowerCat === 'body' || lowerCat === 'body_armour') {
+    // Try to determine from base name if available
+    if (baseName) {
+      const nameL = baseName.toLowerCase();
+      if (nameL.includes('sandal') || nameL.includes('slipper') || nameL.includes('boot') ||
+          nameL.includes('greave') || nameL.includes('sole') || nameL.includes('tread')) {
+        return 'boots';
+      }
+      if (nameL.includes('helm') || nameL.includes('mask') || nameL.includes('hood') ||
+          nameL.includes('crown') || nameL.includes('circlet') || nameL.includes('cap')) {
+        return 'helmet';
+      }
+      if (nameL.includes('glove') || nameL.includes('gauntlet') || nameL.includes('mitt') ||
+          nameL.includes('hand') || nameL.includes('wrap')) {
+        return 'gloves';
+      }
+    }
+    return 'body_armour';
+  }
+
+  // Weapon categories
+  if (lowerCat.includes('weapon') || ['wand', 'staff', 'bow', 'crossbow', 'mace', 'sceptre',
+      'sword', 'axe', 'dagger', 'claw', 'flail', 'spear'].includes(lowerCat)) {
+    return 'weapon';
+  }
+
+  return lowerCat;
+}
+
+// Determine which columns to show based on item slot
+function getListingColumns(slot: string): Array<{ key: string; label: string; width?: string }> {
+  const baseColumns = [
+    { key: 'preview', label: '', width: '24px' },
+    { key: 'price', label: 'Price', width: '70px' },
+  ];
+
+  // Common columns for armor pieces
+  if (['boots', 'helmet', 'gloves', 'body', 'body_armour', 'shield'].includes(slot)) {
+    return [
+      ...baseColumns,
+      { key: 'defence', label: 'Defence' },
+      ...(slot === 'boots' ? [{ key: 'ms', label: 'MS', width: '40px' }] : []),
+      { key: 'eleRes', label: 'Ele', width: '40px' },
+      { key: 'chaosRes', label: 'Chaos', width: '45px' },
+      { key: 'age', label: 'Age', width: '50px' },
+    ];
+  }
+
+  // Jewelry
+  if (['ring', 'amulet', 'belt'].includes(slot)) {
+    return [
+      ...baseColumns,
+      { key: 'life', label: 'Life', width: '45px' },
+      { key: 'eleRes', label: 'Ele', width: '40px' },
+      { key: 'chaosRes', label: 'Chaos', width: '45px' },
+      { key: 'age', label: 'Age', width: '50px' },
+    ];
+  }
+
+  // Weapons - TODO: Add DPS columns when weapon support is added
+  if (slot === 'weapon' || ['wand', 'staff', 'bow', 'crossbow', 'mace', 'sceptre', 'sword', 'axe', 'dagger', 'claw'].includes(slot)) {
+    return [
+      ...baseColumns,
+      { key: 'ilvl', label: 'iLvl', width: '40px' },
+      { key: 'age', label: 'Age', width: '50px' },
+    ];
+  }
+
+  // Fallback - simple columns
+  return [
+    ...baseColumns,
+    { key: 'ilvl', label: 'iLvl', width: '40px' },
+    { key: 'account', label: 'Account' },
+    { key: 'age', label: 'Age', width: '50px' },
+  ];
 }
 
 interface TabContentProps {
@@ -599,6 +696,7 @@ function GridCraftingSimulator() {
   const [itemPrice, setItemPrice] = useState<ItemPriceEstimate | null>(null)
   const [priceCheckLoading, setPriceCheckLoading] = useState(false)
   const [priceModalOpen, setPriceModalOpen] = useState(false)
+  const [pinnedListingTooltip, setPinnedListingTooltip] = useState<number | null>(null)
   // Track which mods are included in price search (by index and type)
   const [priceSearchMods, setPriceSearchMods] = useState<Set<string>>(new Set())
   // Equipment stat filters for price search (min values)
@@ -610,6 +708,15 @@ function GridCraftingSimulator() {
   const [priceIlvlEnabled, setPriceIlvlEnabled] = useState(false)
   // Min values for mod filters (key = "prefix-0", "suffix-1", etc.)
   const [priceModMinValues, setPriceModMinValues] = useState<Record<string, number>>({})
+  // Pseudo stats expanded state - when true, shows individual mods instead of aggregated
+  const [pseudoStatsExpanded, setPseudoStatsExpanded] = useState(false)
+  // Whether to use pseudo stats (aggregated) or individual mods for search
+  // Maps stat_id -> boolean (true = use pseudo, false = use individual mods)
+  const [usePseudoStats, setUsePseudoStats] = useState<Record<string, boolean>>({})
+  // Track which hidden mods user has explicitly enabled (to search alongside pseudo)
+  const [enabledHiddenMods, setEnabledHiddenMods] = useState<Set<string>>(new Set())
+  // Global strictness percentage for all mods (default 80%)
+  const [priceStrictness, setPriceStrictness] = useState(80)
 
   // Redo stacks for Ctrl+R and Ctrl+Y
   const [redoItemStack, setRedoItemStack] = useState<CraftableItem[]>([])
@@ -1023,6 +1130,7 @@ function GridCraftingSimulator() {
     setPriceEquipmentEnabled(equipEnabled)
   }, [item])
 
+
   // Toggle a mod's inclusion in price search
   const togglePriceSearchMod = (modType: 'prefix' | 'suffix', idx: number) => {
     const key = `${modType}-${idx}`
@@ -1058,6 +1166,7 @@ function GridCraftingSimulator() {
 
     setPriceCheckLoading(true)
     setItemPrice(null)
+    setPinnedListingTooltip(null)
 
     try {
       // Create a filtered copy of the item with only selected mods
@@ -1067,32 +1176,104 @@ function GridCraftingSimulator() {
         suffix_mods: selectedSuffixes,
       }
 
+      // Compute which mod indices are hidden (contribute to enabled pseudo stats)
+      // These mods should NOT have min values sent unless explicitly enabled by user
+      const hiddenModIndices = new Set<string>()
+      if (itemPrice?.pseudo_stats) {
+        itemPrice.pseudo_stats.forEach(ps => {
+          const isEnabled = usePseudoStats[ps.stat_id] ?? true
+          if (isEnabled) {
+            ps.contributing_mod_indices.forEach(i => {
+              if (i < item.prefix_mods.length) {
+                hiddenModIndices.add(`prefix-${i}`)
+              } else {
+                hiddenModIndices.add(`suffix-${i - item.prefix_mods.length}`)
+              }
+            })
+          }
+        })
+      }
+
       // Build mod min values indexed by position in filtered item
-      // Map from original indices to new indices in filtered arrays
-      const modMinValuesForApi: Record<number, number> = {}
-      let newPrefixIdx = 0
-      item.prefix_mods.forEach((_, origIdx) => {
-        if (priceSearchMods.has(`prefix-${origIdx}`)) {
-          const minVal = priceModMinValues[`prefix-${origIdx}`]
-          if (minVal !== undefined) {
-            modMinValuesForApi[newPrefixIdx] = minVal
+      // Only include min values for:
+      // - Regular mods (not hidden)
+      // - Hidden mods that user explicitly enabled to search alongside pseudo
+      const modMinValuesForApi: Record<string, number> = {}
+      selectedPrefixes.forEach((_, newIdx) => {
+        // Find original index
+        let origIdx = -1
+        let count = 0
+        for (let i = 0; i < item.prefix_mods.length; i++) {
+          if (priceSearchMods.has(`prefix-${i}`)) {
+            if (count === newIdx) {
+              origIdx = i
+              break
+            }
+            count++
           }
-          newPrefixIdx++
         }
-      })
-      let newSuffixIdx = 0
-      item.suffix_mods.forEach((_, origIdx) => {
-        if (priceSearchMods.has(`suffix-${origIdx}`)) {
-          const minVal = priceModMinValues[`suffix-${origIdx}`]
-          if (minVal !== undefined) {
-            // Suffix indices come after prefix indices in the combined list
-            modMinValuesForApi[selectedPrefixes.length + newSuffixIdx] = minVal
+        if (origIdx === -1) return
+
+        const modKey = `prefix-${origIdx}`
+        const isHidden = hiddenModIndices.has(modKey)
+        const isExplicitlyEnabled = enabledHiddenMods.has(modKey)
+
+        const minVal = priceModMinValues[modKey]
+        if (minVal !== undefined) {
+          if (isHidden && isExplicitlyEnabled) {
+            // Explicitly enabled hidden mod - use "hidden-{combinedIndex}" key
+            // For prefixes, combined index = origIdx
+            modMinValuesForApi[`hidden-${origIdx}`] = minVal
+          } else if (!isHidden) {
+            // Regular mod - use numeric index
+            modMinValuesForApi[String(newIdx)] = minVal
           }
-          newSuffixIdx++
+          // If hidden but not explicitly enabled, don't include min value
         }
       })
 
-      // Pass filters - always pass rarity/ilvl, equipment filters only when refreshing
+      selectedSuffixes.forEach((_, newIdx) => {
+        // Find original index
+        let origIdx = -1
+        let count = 0
+        for (let i = 0; i < item.suffix_mods.length; i++) {
+          if (priceSearchMods.has(`suffix-${i}`)) {
+            if (count === newIdx) {
+              origIdx = i
+              break
+            }
+            count++
+          }
+        }
+        if (origIdx === -1) return
+
+        const modKey = `suffix-${origIdx}`
+        const isHidden = hiddenModIndices.has(modKey)
+        const isExplicitlyEnabled = enabledHiddenMods.has(modKey)
+
+        const minVal = priceModMinValues[modKey]
+        if (minVal !== undefined) {
+          if (isHidden && isExplicitlyEnabled) {
+            // Explicitly enabled hidden mod - use "hidden-{combinedIndex}" key
+            // Backend uses combined indices: prefixes 0..prefixLen-1, suffixes prefixLen..total-1
+            const combinedIdx = item.prefix_mods.length + origIdx
+            modMinValuesForApi[`hidden-${combinedIdx}`] = minVal
+          } else if (!isHidden) {
+            // Regular mod - use numeric index
+            modMinValuesForApi[String(selectedPrefixes.length + newIdx)] = minVal
+          }
+          // If hidden but not explicitly enabled, don't include min value
+        }
+      })
+
+      // Also add pseudo stat min values (keys like "pseudo-pseudo.pseudo_total_chaos_resistance")
+      Object.entries(priceModMinValues).forEach(([key, value]) => {
+        if (key.startsWith('pseudo-')) {
+          modMinValuesForApi[key] = value
+        }
+      })
+
+      // Pass filters - always pass mod min values and pseudo stats, equipment filters only when refreshing
       const estimate = await marketApi.priceItem(
         filteredItem,
         undefined,
@@ -1100,9 +1281,29 @@ function GridCraftingSimulator() {
         useFilters ? priceEquipmentEnabled : undefined,
         priceRarityEnabled,
         priceIlvlEnabled,
-        useFilters ? modMinValuesForApi : undefined
+        modMinValuesForApi,  // Always pass mod min values
+        usePseudoStats       // Always pass pseudo stats toggle
       )
-      setItemPrice(estimate)
+      // On refresh, preserve original pseudo_stats (based on full item, not filtered)
+      if (priceModalOpen && itemPrice?.pseudo_stats) {
+        setItemPrice({
+          ...estimate,
+          pseudo_stats: itemPrice.pseudo_stats,  // Keep original pseudo stats
+        })
+      } else {
+        setItemPrice(estimate)
+        // First search - initialize usePseudoStats to all enabled, reset hidden mods
+        if (estimate.pseudo_stats && estimate.pseudo_stats.length > 0) {
+          const initialPseudoState: Record<string, boolean> = {}
+          estimate.pseudo_stats.forEach(ps => {
+            initialPseudoState[ps.stat_id] = true
+          })
+          setUsePseudoStats(initialPseudoState)
+        }
+        // Reset explicitly enabled hidden mods on first search
+        setEnabledHiddenMods(new Set())
+      }
+      setFiltersChanged(false)
       setPriceModalOpen(true)
     } catch (error: any) {
       console.error('Price check failed:', error)
@@ -1115,6 +1316,10 @@ function GridCraftingSimulator() {
       setPriceCheckLoading(false)
     }
   }
+
+  // Track if we need to refresh prices due to pseudo stat toggle
+  // Track if filters have been changed since last search (to show "search needed" indicator)
+  const [filtersChanged, setFiltersChanged] = useState(false)
 
   // Open price modal without refetching (when clicking on existing price)
   const openPriceModal = () => {
@@ -4112,7 +4317,11 @@ function GridCraftingSimulator() {
                             const isPriceSelected = isModSelectedForPriceSearch('prefix', idx)
                             // Only show price selection styling when price panel is open
                             const priceClass = priceModalOpen ? (isPriceSelected ? 'price-selected' : 'price-excluded') : ''
-                            const modClasses = `mod-line prefix ${isTagFiltered ? 'tag-filtered' : ''} ${isDesecrated ? 'desecrated' : ''} ${isUnrevealed ? 'unrevealed' : ''} ${isFractured ? 'fractured' : ''} ${priceClass}`
+                            // Check if this mod is part of a pseudo stat (prefix index = idx in combined array)
+                            const isPseudoContributing = priceModalOpen && itemPrice?.pseudo_stats?.some(
+                              ps => ps.contributing_mod_indices.includes(idx)
+                            )
+                            const modClasses = `mod-line prefix ${isTagFiltered ? 'tag-filtered' : ''} ${isDesecrated ? 'desecrated' : ''} ${isUnrevealed ? 'unrevealed' : ''} ${isFractured ? 'fractured' : ''} ${priceClass} ${isPseudoContributing ? 'pseudo-contributing' : ''}`
 
                             // Get unrevealed metadata if this is an unrevealed mod
                             const unrevealedMetadata = isUnrevealed && mod.unrevealed_id
@@ -4131,7 +4340,12 @@ function GridCraftingSimulator() {
                             // Only show price tooltip when panel is open
                             const getModTitle = () => {
                               if (isUnrevealed) return 'Click to reveal this modifier'
-                              if (priceModalOpen) return isPriceSelected ? 'Click to exclude from price search' : 'Click to include in price search'
+                              if (priceModalOpen) {
+                                const minVal = priceModMinValues[`prefix-${idx}`] ?? 0
+                                const currentVal = mod.current_values?.[0] ?? mod.current_value ?? 0
+                                const minInfo = currentVal > 0 ? ` (searching min: ${minVal})` : ''
+                                return isPriceSelected ? `Click to exclude${minInfo}` : 'Click to include in price search'
+                              }
                               return ''
                             }
 
@@ -4263,15 +4477,130 @@ function GridCraftingSimulator() {
                         <PoE2Separator />
                         <div className="mods-section">
                           <h4 className="mods-title">Suffixes ({item.suffix_mods.length}/3)</h4>
-                          {item.suffix_mods.map((mod, idx) => {
-                            const isTagFiltered = activeTagFilters.size > 0 && !isModMatchingTagFilters(mod)
-                            const isDesecrated = mod.is_desecrated === true
-                            const isUnrevealed = mod.is_unrevealed === true
-                            const isFractured = mod.is_fractured === true
-                            const isPriceSelected = isModSelectedForPriceSearch('suffix', idx)
-                            // Only show price selection styling when price panel is open
-                            const priceClass = priceModalOpen ? (isPriceSelected ? 'price-selected' : 'price-excluded') : ''
-                            const modClasses = `mod-line suffix ${isTagFiltered ? 'tag-filtered' : ''} ${isDesecrated ? 'desecrated' : ''} ${isUnrevealed ? 'unrevealed' : ''} ${isFractured ? 'fractured' : ''} ${priceClass}`
+
+                          {/* Compute which suffix mods contribute to pseudo stats (for visual indication) */}
+                          {(() => {
+                            const suffixPseudoStats: typeof itemPrice.pseudo_stats = []
+
+                            if (priceModalOpen && itemPrice?.pseudo_stats) {
+                              itemPrice.pseudo_stats.forEach(ps => {
+                                // Check if this pseudo has suffix contributors
+                                const suffixContributors = ps.contributing_mod_indices.filter(
+                                  i => i >= item.prefix_mods.length
+                                )
+                                if (suffixContributors.length > 0) {
+                                  suffixPseudoStats.push(ps)
+                                }
+                              })
+                            }
+
+                            return (
+                              <>
+                                {/* Show pseudo stats that replace hidden mods */}
+                                {suffixPseudoStats.map((ps, psIdx) => {
+                                  const isEnabled = usePseudoStats[ps.stat_id] ?? true
+                                  const pseudoKey = `pseudo-${ps.stat_id}`
+                                  const currentMinValue = priceModMinValues[pseudoKey] ?? Math.floor(ps.total_value * 0.8)
+                                  return (
+                                    <div
+                                      key={`pseudo-${psIdx}`}
+                                      className={`mod-line suffix pseudo-stat-row ${isEnabled ? 'price-selected' : 'price-excluded'}`}
+                                    >
+                                      <div
+                                        className="mod-content"
+                                        onClick={() => {
+                                          setUsePseudoStats(prev => ({
+                                            ...prev,
+                                            [ps.stat_id]: !(prev[ps.stat_id] ?? true)
+                                          }))
+                                          setFiltersChanged(true)
+                                        }}
+                                        style={{ cursor: 'pointer' }}
+                                        title={isEnabled ? 'Using aggregated total - click to use individual mods' : 'Using individual mods - click to use aggregated total'}
+                                      >
+                                        <span className={`mod-tier-indicator pseudo-tier`}>
+                                          Σ
+                                        </span>
+                                        <div className="mod-text-container">
+                                          <span className="mod-stat pseudo-stat-text">
+                                            {Math.floor(ps.total_value)}% {ps.display_name}
+                                          </span>
+                                        </div>
+                                      </div>
+                                      {/* Min value slider for pseudo stat */}
+                                      {isEnabled && (
+                                        <div className="mod-min-slider" onClick={(e) => e.stopPropagation()}>
+                                          <span className="slider-label">Min:</span>
+                                          <input
+                                            type="range"
+                                            min={0}
+                                            max={Math.floor(ps.total_value)}
+                                            value={currentMinValue}
+                                            onChange={(e) => {
+                                              setPriceModMinValues(prev => ({
+                                                ...prev,
+                                                [pseudoKey]: parseInt(e.target.value)
+                                              }))
+                                            }}
+                                            className="min-value-slider"
+                                          />
+                                          <span className="slider-value">{currentMinValue}</span>
+                                        </div>
+                                      )}
+                                    </div>
+                                  )
+                                })}
+
+                                {/* Compute hidden suffix indices (contributing to enabled pseudo stats) */}
+                                {(() => {
+                                  const hiddenSuffixIndices = new Set<number>()
+                                  if (priceModalOpen && suffixPseudoStats.length > 0) {
+                                    suffixPseudoStats.forEach(ps => {
+                                      const isEnabled = usePseudoStats[ps.stat_id] ?? true
+                                      if (isEnabled) {
+                                        ps.contributing_mod_indices.forEach(i => {
+                                          const suffixIdx = i - item.prefix_mods.length
+                                          if (suffixIdx >= 0) {
+                                            hiddenSuffixIndices.add(suffixIdx)
+                                          }
+                                        })
+                                      }
+                                    })
+                                  }
+                                  const hiddenModsCount = hiddenSuffixIndices.size
+
+                                  return (
+                                    <>
+                                      {/* Show/Hide Hidden Mods toggle */}
+                                      {hiddenModsCount > 0 && (
+                                        <div
+                                          className="hidden-mods-toggle"
+                                          onClick={() => setPseudoStatsExpanded(!pseudoStatsExpanded)}
+                                        >
+                                          <span className="toggle-icon">{pseudoStatsExpanded ? '▼' : '▶'}</span>
+                                          <span className="toggle-text">
+                                            {pseudoStatsExpanded ? 'Hide' : 'Show'} {hiddenModsCount} hidden mod{hiddenModsCount > 1 ? 's' : ''}
+                                          </span>
+                                        </div>
+                                      )}
+
+                                      {/* Render suffix mods - hide those covered by enabled pseudo stats unless expanded */}
+                                      {item.suffix_mods.map((mod, idx) => {
+                                        const isHiddenMod = hiddenSuffixIndices.has(idx)
+                                        const isHidden = isHiddenMod && !pseudoStatsExpanded
+                                        if (isHidden) return null
+
+                                        const isTagFiltered = activeTagFilters.size > 0 && !isModMatchingTagFilters(mod)
+                                        const isDesecrated = mod.is_desecrated === true
+                                        const isUnrevealed = mod.is_unrevealed === true
+                                        const isFractured = mod.is_fractured === true
+                                        const isPriceSelected = isModSelectedForPriceSearch('suffix', idx)
+                                        // Hidden mods: show as crossed out unless user explicitly enabled them
+                                        const modKey = `suffix-${idx}`
+                                        const isHiddenModEnabled = enabledHiddenMods.has(modKey)
+                                        const effectivelySelected = isHiddenMod ? isHiddenModEnabled : isPriceSelected
+                                        const priceClass = priceModalOpen ? (effectivelySelected ? 'price-selected' : 'price-excluded') : ''
+                                        const modClasses = `mod-line suffix ${isTagFiltered ? 'tag-filtered' : ''} ${isDesecrated ? 'desecrated' : ''} ${isUnrevealed ? 'unrevealed' : ''} ${isFractured ? 'fractured' : ''} ${priceClass} ${isHiddenMod ? 'hidden-mod-revealed' : ''}`
 
                             // Get unrevealed metadata if this is an unrevealed mod
                             const unrevealedMetadata = isUnrevealed && mod.unrevealed_id
@@ -4282,15 +4611,40 @@ function GridCraftingSimulator() {
                               if (isUnrevealed && mod.unrevealed_id) {
                                 handleClickUnrevealedMod(mod.unrevealed_id!)
                               } else if (priceModalOpen) {
-                                // Only toggle price selection when panel is open
-                                togglePriceSearchMod('suffix', idx)
+                                if (isHiddenMod) {
+                                  // Toggle in/out of enabledHiddenMods
+                                  setEnabledHiddenMods(prev => {
+                                    const newSet = new Set(prev)
+                                    if (newSet.has(modKey)) {
+                                      newSet.delete(modKey)
+                                    } else {
+                                      newSet.add(modKey)
+                                    }
+                                    return newSet
+                                  })
+                                  setFiltersChanged(true)
+                                } else {
+                                  // Regular mod - toggle price selection
+                                  togglePriceSearchMod('suffix', idx)
+                                }
                               }
                             }
 
                             // Only show price tooltip when panel is open
                             const getModTitle = () => {
                               if (isUnrevealed) return 'Click to reveal this modifier'
-                              if (priceModalOpen) return isPriceSelected ? 'Click to exclude from price search' : 'Click to include in price search'
+                              if (priceModalOpen) {
+                                const minVal = priceModMinValues[modKey] ?? 0
+                                const currentVal = mod.current_values?.[0] ?? mod.current_value ?? 0
+                                const minInfo = currentVal > 0 ? ` (searching min: ${minVal})` : ''
+                                if (isHiddenMod) {
+                                  // Hidden mod - explain it's alongside pseudo
+                                  return isHiddenModEnabled
+                                    ? `Click to disable - currently searching WITH pseudo${minInfo}`
+                                    : 'Click to also require this mod (in addition to pseudo total)'
+                                }
+                                return isPriceSelected ? `Click to exclude${minInfo}` : 'Click to include in price search'
+                              }
                               return ''
                             }
 
@@ -4361,8 +4715,8 @@ function GridCraftingSimulator() {
                                     )}
                                   </div>
                                 </div>
-                                {/* Min value slider for price search */}
-                                {priceModalOpen && isPriceSelected && !isUnrevealed && (
+                                {/* Min value slider for price search - show when mod is effectively selected (for hidden mods, only when explicitly enabled) */}
+                                {priceModalOpen && effectivelySelected && !isUnrevealed && (
                                   <div className="mod-min-slider" onClick={(e) => e.stopPropagation()}>
                                     <span className="slider-label">Min:</span>
                                     <input
@@ -4387,16 +4741,16 @@ function GridCraftingSimulator() {
                                           : null
                                         return t1Mod?.stat_max ?? mod.stat_max ?? 100
                                       })()}
-                                      value={priceModMinValues[`suffix-${idx}`] ?? 0}
+                                      value={priceModMinValues[modKey] ?? 0}
                                       onChange={(e) => {
                                         setPriceModMinValues(prev => ({
                                           ...prev,
-                                          [`suffix-${idx}`]: parseInt(e.target.value)
+                                          [modKey]: parseInt(e.target.value)
                                         }))
                                       }}
                                       className="min-value-slider"
                                     />
-                                    <span className="slider-value">{priceModMinValues[`suffix-${idx}`] ?? 0}</span>
+                                    <span className="slider-value">{priceModMinValues[modKey] ?? 0}</span>
                                   </div>
                                 )}
                                 <button
@@ -4412,6 +4766,12 @@ function GridCraftingSimulator() {
                               </div>
                             )
                           })}
+                                    </>
+                                  )
+                                })()}
+                              </>
+                            )
+                          })()}
                         </div>
                         </>
                       )}
@@ -4623,7 +4983,7 @@ function GridCraftingSimulator() {
           <div className="price-panel">
               <div className="price-panel-header">
                 <h3>Price Check</h3>
-                <button className="price-panel-close" onClick={() => setPriceModalOpen(false)}>✕</button>
+                <button className="price-panel-close" onClick={() => { setPriceModalOpen(false); setPinnedListingTooltip(null); }}>✕</button>
               </div>
 
               <div className="price-panel-content">
@@ -4633,6 +4993,36 @@ function GridCraftingSimulator() {
                     <span className="price-summary-value">{formatPriceDisplay(itemPrice.median_price)}</span>
                   </div>
                   <span className={`price-confidence ${itemPrice.confidence}`}>{itemPrice.confidence}</span>
+                </div>
+
+                {/* Enhanced Stats */}
+                <div className="price-enhanced-stats">
+                  <div className="enhanced-stat">
+                    <span className="enhanced-stat-label">Listings</span>
+                    <span className="enhanced-stat-value">{itemPrice.num_listings}</span>
+                  </div>
+                  {itemPrice.avg_similarity !== null && (
+                    <div className="enhanced-stat">
+                      <span className="enhanced-stat-label">Similarity</span>
+                      <span className={`enhanced-stat-value ${itemPrice.avg_similarity >= 0.7 ? 'good' : itemPrice.avg_similarity >= 0.5 ? 'medium' : 'low'}`}>
+                        {Math.round(itemPrice.avg_similarity * 100)}%
+                      </span>
+                    </div>
+                  )}
+                  {itemPrice.price_spread !== null && (
+                    <div className="enhanced-stat">
+                      <span className="enhanced-stat-label">Spread</span>
+                      <span className={`enhanced-stat-value ${itemPrice.price_spread < 30 ? 'good' : itemPrice.price_spread < 60 ? 'medium' : 'low'}`}>
+                        ±{itemPrice.price_spread}%
+                      </span>
+                    </div>
+                  )}
+                  {itemPrice.outliers_removed > 0 && (
+                    <div className="enhanced-stat outliers">
+                      <span className="enhanced-stat-label">Outliers</span>
+                      <span className="enhanced-stat-value warning">-{itemPrice.outliers_removed}</span>
+                    </div>
+                  )}
                 </div>
 
                 {/* Equipment Stat Filters */}
@@ -4687,62 +5077,211 @@ function GridCraftingSimulator() {
                   </div>
                 )}
 
+                {/* Global Strictness Slider - compact inline */}
+                <div className="price-strictness-compact">
+                  <span className="strictness-label">Min %</span>
+                  <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    value={priceStrictness}
+                    onChange={(e) => {
+                      const newStrictness = parseInt(e.target.value)
+                      setPriceStrictness(newStrictness)
+
+                      // Calculate new min values for all mods based on strictness
+                      const newMinValues: Record<string, number> = {}
+
+                      // Update prefix mods
+                      item.prefix_mods.forEach((mod, idx) => {
+                        const value = mod.current_values?.[0] ?? mod.current_value ?? mod.stat_min ?? 0
+                        newMinValues[`prefix-${idx}`] = Math.floor(value * newStrictness / 100)
+                      })
+
+                      // Update suffix mods
+                      item.suffix_mods.forEach((mod, idx) => {
+                        const value = mod.current_values?.[0] ?? mod.current_value ?? mod.stat_min ?? 0
+                        newMinValues[`suffix-${idx}`] = Math.floor(value * newStrictness / 100)
+                      })
+
+                      // Update pseudo stats
+                      if (itemPrice?.pseudo_stats) {
+                        itemPrice.pseudo_stats.forEach(ps => {
+                          newMinValues[`pseudo-${ps.stat_id}`] = Math.floor(ps.total_value * newStrictness / 100)
+                        })
+                      }
+
+                      setPriceModMinValues(newMinValues)
+                    }}
+                    onMouseUp={() => handlePriceCheck(true)}
+                    onTouchEnd={() => handlePriceCheck(true)}
+                    className="strictness-slider-compact"
+                  />
+                  <span className="strictness-value">{priceStrictness}%</span>
+                </div>
+
                 {/* Listings Table */}
-                {itemPrice.listings && itemPrice.listings.length > 0 ? (
-                  <table className="listings-table">
-                    <thead>
-                      <tr>
-                        <th></th>
-                        <th>Price</th>
-                        <th>iLvl</th>
-                        <th>Account</th>
-                        <th>Age</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {itemPrice.listings.slice(0, 15).map((listing, idx) => (
-                        <tr key={idx}>
-                          <td>
-                            <button
-                              className="listing-preview-btn"
-                              title="Preview item"
-                              onMouseEnter={(e) => {
-                                const tooltip = document.getElementById(`listing-tooltip-${idx}`)
-                                if (tooltip) {
-                                  tooltip.style.display = 'block'
-                                  tooltip.style.left = `${e.clientX - 360}px`
-                                  tooltip.style.top = `${Math.min(e.clientY - 10, window.innerHeight - 400)}px`
-                                }
-                              }}
-                              onMouseLeave={() => {
-                                const tooltip = document.getElementById(`listing-tooltip-${idx}`)
-                                if (tooltip) tooltip.style.display = 'none'
-                              }}
-                            >
-                              👁
-                            </button>
-                            <div
-                              id={`listing-tooltip-${idx}`}
-                              className="item-preview-tooltip"
-                              style={{ display: 'none' }}
-                            >
-                              <PoE2TradeListingPreview listing={listing} />
-                            </div>
-                          </td>
-                          <td className="listing-price-cell">
-                            <span className="listing-price-amount">{listing.price_amount}</span>
-                            <span className="listing-price-currency">
-                              {listing.price_currency === 'chaos' ? 'c' : listing.price_currency === 'divine' ? ' div' : ` ${listing.price_currency}`}
-                            </span>
-                          </td>
-                          <td className="listing-ilvl">{listing.item_level}</td>
-                          <td className="listing-account">{listing.account_name}</td>
-                          <td className="listing-age">{formatAge(listing.indexed_time)}</td>
+                {itemPrice.listings && itemPrice.listings.length > 0 ? (() => {
+                  const itemSlot = getSlotFromCategory(item.base_category, item.base_name);
+                  const columns = getListingColumns(itemSlot);
+
+                  return (
+                    <table className="listings-table">
+                      <thead>
+                        <tr>
+                          {columns.map(col => (
+                            <th key={col.key} style={col.width ? { width: col.width } : undefined}>
+                              {col.label}
+                            </th>
+                          ))}
                         </tr>
-                      ))}
-                    </tbody>
-                  </table>
-                ) : (
+                      </thead>
+                      <tbody>
+                        {itemPrice.listings.slice(0, 20).map((listing, idx) => {
+                          // Use computed values from backend (properly parsed from trade API)
+                          const eleRes = listing.total_ele_res ?? 0;
+                          const chaosRes = listing.total_chaos_res ?? 0;
+                          const ms = listing.movement_speed ?? 0;
+                          const life = listing.total_life ?? 0;
+
+                          // Build row class based on listing status
+                          const rowClasses = [
+                            'listing-row',
+                            listing.is_outlier ? 'listing-outlier' : '',
+                            listing.is_stale_cheap ? 'listing-stale-cheap' : '',
+                            listing.value_comparison === 'better' ? 'listing-better' : '',
+                            listing.value_comparison === 'worse' ? 'listing-worse' : '',
+                          ].filter(Boolean).join(' ');
+
+                          return (
+                            <tr key={idx} className={rowClasses}>
+                              {columns.map(col => {
+                                switch (col.key) {
+                                  case 'preview':
+                                    return (
+                                      <td key={col.key}>
+                                        <button
+                                          className={`listing-preview-btn ${pinnedListingTooltip === idx ? 'pinned' : ''}`}
+                                          title={pinnedListingTooltip === idx ? "Click to unpin preview" : "Click to pin preview"}
+                                          onClick={(e) => {
+                                            e.stopPropagation()
+                                            if (pinnedListingTooltip === idx) {
+                                              // Unpin this tooltip
+                                              setPinnedListingTooltip(null)
+                                              const tooltip = document.getElementById(`listing-tooltip-${idx}`)
+                                              if (tooltip) tooltip.style.display = 'none'
+                                            } else {
+                                              // Hide previous pinned tooltip
+                                              if (pinnedListingTooltip !== null) {
+                                                const prevTooltip = document.getElementById(`listing-tooltip-${pinnedListingTooltip}`)
+                                                if (prevTooltip) prevTooltip.style.display = 'none'
+                                              }
+                                              // Pin this tooltip
+                                              setPinnedListingTooltip(idx)
+                                            }
+                                          }}
+                                          onMouseEnter={(e) => {
+                                            const tooltip = document.getElementById(`listing-tooltip-${idx}`)
+                                            if (tooltip) {
+                                              // Show tooltip first to measure it
+                                              tooltip.style.display = 'block'
+                                              tooltip.style.visibility = 'hidden'
+
+                                              const tooltipRect = tooltip.getBoundingClientRect()
+                                              const tooltipWidth = tooltipRect.width || 350
+                                              const tooltipHeight = tooltipRect.height || 400
+                                              const padding = 10
+
+                                              // Calculate left position - prefer left of cursor, but flip to right if needed
+                                              let left = e.clientX - tooltipWidth - padding
+                                              if (left < padding) {
+                                                left = e.clientX + padding
+                                              }
+
+                                              // Calculate top position - prefer aligned with cursor, but keep in viewport
+                                              let top = e.clientY - 20
+                                              if (top + tooltipHeight > window.innerHeight - padding) {
+                                                top = window.innerHeight - tooltipHeight - padding
+                                              }
+                                              if (top < padding) {
+                                                top = padding
+                                              }
+
+                                              tooltip.style.left = `${left}px`
+                                              tooltip.style.top = `${top}px`
+                                              tooltip.style.visibility = 'visible'
+                                            }
+                                          }}
+                                          onMouseLeave={() => {
+                                            // Only hide if not pinned
+                                            if (pinnedListingTooltip !== idx) {
+                                              const tooltip = document.getElementById(`listing-tooltip-${idx}`)
+                                              if (tooltip) tooltip.style.display = 'none'
+                                            }
+                                          }}
+                                        >
+                                          👁
+                                        </button>
+                                        <div
+                                          id={`listing-tooltip-${idx}`}
+                                          className="item-preview-tooltip"
+                                          style={{ display: 'none' }}
+                                        >
+                                          <PoE2TradeListingPreview listing={listing} />
+                                        </div>
+                                      </td>
+                                    );
+                                  case 'price':
+                                    const compPct = listing.comparison_pct ?? 0;
+                                    const compClass = compPct > 5 ? 'comparison-better' : compPct < -5 ? 'comparison-worse' : 'comparison-similar';
+                                    const compSign = compPct > 0 ? '+' : '';
+                                    return (
+                                      <td key={col.key} className="listing-price-cell">
+                                        <div className="price-with-comparison">
+                                          <span className="listing-price-amount">{listing.price_amount}</span>
+                                          <span className="listing-price-currency">
+                                            {listing.price_currency === 'chaos' ? 'c' : listing.price_currency === 'divine' ? ' div' : ` ${listing.price_currency}`}
+                                          </span>
+                                          {listing.comparison_pct !== null && listing.comparison_pct !== undefined && (
+                                            <span
+                                              className={`listing-comparison ${compClass}`}
+                                              title={listing.stat_comparisons ? Object.entries(listing.stat_comparisons).map(([stat, data]) =>
+                                                `${stat}: ${data.listing} vs ${data.user} (${data.diff_pct > 0 ? '+' : ''}${data.diff_pct}%)`
+                                              ).join('\n') : ''}
+                                            >
+                                              {compSign}{Math.round(compPct)}%
+                                            </span>
+                                          )}
+                                        </div>
+                                      </td>
+                                    );
+                                  case 'defence':
+                                    return <td key={col.key} className="listing-defence">{getDefenceDisplay(listing)}</td>;
+                                  case 'ms':
+                                    return <td key={col.key} className="listing-ms">{ms > 0 ? `${ms}%` : '-'}</td>;
+                                  case 'eleRes':
+                                    return <td key={col.key} className="listing-res listing-ele-res">{eleRes > 0 ? `+${eleRes}%` : '-'}</td>;
+                                  case 'chaosRes':
+                                    return <td key={col.key} className="listing-res listing-chaos-res">{chaosRes > 0 ? `+${chaosRes}%` : '-'}</td>;
+                                  case 'life':
+                                    return <td key={col.key} className="listing-life">{life > 0 ? `+${life}` : '-'}</td>;
+                                  case 'ilvl':
+                                    return <td key={col.key} className="listing-ilvl">{listing.item_level}</td>;
+                                  case 'account':
+                                    return <td key={col.key} className="listing-account">{listing.account_name}</td>;
+                                  case 'age':
+                                    return <td key={col.key} className="listing-age">{formatAge(listing.indexed_time)}</td>;
+                                  default:
+                                    return <td key={col.key}>-</td>;
+                                }
+                              })}
+                            </tr>
+                          );
+                        })}
+                      </tbody>
+                    </table>
+                  );
+                })() : (
                   <div className="no-listings">No comparable listings found</div>
                 )}
               </div>

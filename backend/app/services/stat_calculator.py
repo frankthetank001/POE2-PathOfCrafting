@@ -180,7 +180,137 @@ class StatCalculator:
         base = get_item_base_by_name(item.base_name)
         item.base_stats = base.base_stats if base else {}
 
-        # Calculate final stats
+        # Calculate final stats (armour/evasion/ES)
         item.calculated_stats = StatCalculator.calculate_stats(item)
 
+        # Calculate weapon DPS if this is a weapon
+        if 'PhysicalMin' in item.base_stats or 'PhysicalMax' in item.base_stats:
+            weapon_stats = StatCalculator.calculate_weapon_stats(item)
+            item.calculated_stats.update(weapon_stats)
+
         return item
+
+    @staticmethod
+    def calculate_weapon_stats(item: CraftableItem) -> Dict[str, float]:
+        """Calculate weapon DPS stats"""
+        base = get_item_base_by_name(item.base_name)
+        base_stats = base.base_stats if base else {}
+
+        # Get base values
+        base_phys_min = base_stats.get('PhysicalMin', 0)
+        base_phys_max = base_stats.get('PhysicalMax', 0)
+        base_attack_rate = base_stats.get('AttackRateBase', 1.0)
+        base_crit = base_stats.get('CritChanceBase', 5.0)
+
+        # Collect all mods
+        all_mods = item.implicit_mods + item.prefix_mods + item.suffix_mods
+
+        # Calculate flat physical damage additions
+        flat_phys_min = 0
+        flat_phys_max = 0
+        for mod in all_mods:
+            stat_text = mod.stat_text.lower()
+            if 'adds {} to {} physical damage' in stat_text:
+                values = mod.current_values if hasattr(mod, 'current_values') and mod.current_values else []
+                if len(values) >= 2:
+                    flat_phys_min += values[0]
+                    flat_phys_max += values[1]
+                elif mod.current_value:
+                    # Fallback: use stat_ranges if available
+                    if mod.stat_ranges and len(mod.stat_ranges) >= 2:
+                        flat_phys_min += mod.stat_ranges[0].min
+                        flat_phys_max += mod.stat_ranges[1].min
+
+        # Calculate flat elemental damage
+        flat_fire_min, flat_fire_max = 0, 0
+        flat_cold_min, flat_cold_max = 0, 0
+        flat_light_min, flat_light_max = 0, 0
+        flat_chaos_min, flat_chaos_max = 0, 0
+
+        for mod in all_mods:
+            stat_text = mod.stat_text.lower()
+            values = mod.current_values if hasattr(mod, 'current_values') and mod.current_values else []
+
+            if 'adds {} to {} fire damage' in stat_text and len(values) >= 2:
+                flat_fire_min += values[0]
+                flat_fire_max += values[1]
+            elif 'adds {} to {} cold damage' in stat_text and len(values) >= 2:
+                flat_cold_min += values[0]
+                flat_cold_max += values[1]
+            elif 'adds {} to {} lightning damage' in stat_text and len(values) >= 2:
+                flat_light_min += values[0]
+                flat_light_max += values[1]
+            elif 'adds {} to {} chaos damage' in stat_text and len(values) >= 2:
+                flat_chaos_min += values[0]
+                flat_chaos_max += values[1]
+
+        # Calculate percentage increased physical damage
+        inc_phys_pct = 0
+        for mod in all_mods:
+            stat_text = mod.stat_text.lower()
+            value = mod.current_value or 0
+            if '{}% increased physical damage' in stat_text:
+                inc_phys_pct += value
+
+        # Add rune bonuses for physical damage
+        for rune in item.socketed_runes:
+            all_mod_texts = rune.mods + (rune.bonded_mods or [])
+            for mod_text in all_mod_texts:
+                text_lower = mod_text.lower()
+                if text_lower.startswith("bonded:"):
+                    text_lower = text_lower[7:].strip()
+                value_match = re.search(r'(\d+)%', mod_text)
+                if value_match and 'increased physical damage' in text_lower:
+                    inc_phys_pct += float(value_match.group(1))
+
+        # Calculate attack speed increases
+        inc_attack_speed_pct = 0
+        for mod in all_mods:
+            stat_text = mod.stat_text.lower()
+            value = mod.current_value or 0
+            if '{}% increased attack speed' in stat_text:
+                inc_attack_speed_pct += value
+
+        # Quality affects physical damage on weapons
+        quality_multiplier = 1 + item.quality / 100.0
+
+        # Calculate final physical damage
+        # Formula: (Base + Flat) × (1 + Quality%) × (1 + Increased%)
+        phys_multiplier = quality_multiplier * (1 + inc_phys_pct / 100.0)
+        final_phys_min = (base_phys_min + flat_phys_min) * phys_multiplier
+        final_phys_max = (base_phys_max + flat_phys_max) * phys_multiplier
+
+        # Calculate final attack speed
+        final_attack_rate = base_attack_rate * (1 + inc_attack_speed_pct / 100.0)
+
+        # Round damage values first (game behavior)
+        rounded_phys_min = round(final_phys_min)
+        rounded_phys_max = round(final_phys_max)
+        rounded_attack_rate = round(final_attack_rate, 2)
+
+        # Calculate DPS using rounded values (matches game display)
+        phys_dps = ((rounded_phys_min + rounded_phys_max) / 2) * rounded_attack_rate
+
+        # Elemental DPS (flat elemental is not affected by physical % or quality)
+        ele_avg = ((flat_fire_min + flat_fire_max) / 2 +
+                   (flat_cold_min + flat_cold_max) / 2 +
+                   (flat_light_min + flat_light_max) / 2)
+        ele_dps = ele_avg * rounded_attack_rate
+
+        # Chaos DPS
+        chaos_avg = (flat_chaos_min + flat_chaos_max) / 2
+        chaos_dps = chaos_avg * rounded_attack_rate
+
+        # Total DPS
+        total_dps = phys_dps + ele_dps + chaos_dps
+
+        return {
+            'PhysicalMin': rounded_phys_min,
+            'PhysicalMax': rounded_phys_max,
+            'AttackRate': rounded_attack_rate,
+            'CritChance': base_crit,  # TODO: add crit chance modifiers
+            'PhysicalDPS': round(phys_dps, 1),
+            'ElementalDPS': round(ele_dps, 1),
+            'ChaosDPS': round(chaos_dps, 1),
+            'TotalDPS': round(total_dps, 1),
+        }

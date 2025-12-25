@@ -255,6 +255,7 @@ class ItemPriceRequest(BaseModel):
     rarity_enabled: Optional[bool] = Field(True, description="Whether to filter by item rarity")
     ilvl_enabled: Optional[bool] = Field(False, description="Whether to filter by item level (min ilvl)")
     mod_min_values: Optional[Dict[str, float]] = Field(None, description="Custom min values for mods by index (0-based, prefixes first then suffixes, keys are string indices)")
+    use_pseudo_stats: Optional[Dict[str, bool]] = Field(None, description="Which pseudo stats to use (stat_id -> bool). True = use aggregated pseudo, False = use individual mods")
 
 
 class PriceListingResponse(BaseModel):
@@ -276,9 +277,9 @@ class PriceListingResponse(BaseModel):
     energy_shield: Optional[int] = Field(None, description="Energy shield")
     quality: Optional[int] = Field(None, description="Quality percentage")
 
-    # Prefix/suffix split with tier info
-    prefix_mods: Optional[List[Dict[str, Any]]] = Field(None, description="Prefix mods with tier info")
-    suffix_mods: Optional[List[Dict[str, Any]]] = Field(None, description="Suffix mods with tier info")
+    # Parsed mods with tier info and values
+    prefix_mods: Optional[List[Dict[str, Any]]] = Field(None, description="Prefix mods with tier info and values")
+    suffix_mods: Optional[List[Dict[str, Any]]] = Field(None, description="Suffix mods with tier info and values")
 
     # Rune mods
     rune_mods: Optional[List[str]] = Field(None, description="Mods from socketed runes")
@@ -288,12 +289,36 @@ class PriceListingResponse(BaseModel):
     is_corrupted: bool = Field(False, description="Whether item is corrupted")
     is_desecrated: bool = Field(False, description="Whether item is desecrated")
 
+    # Computed aggregate stats (from parsed mod values)
+    total_ele_res: Optional[float] = Field(None, description="Total elemental resistance")
+    total_chaos_res: Optional[float] = Field(None, description="Total chaos resistance")
+    total_life: Optional[float] = Field(None, description="Total maximum life")
+    movement_speed: Optional[float] = Field(None, description="Movement speed")
+
+    # Comparison indicators
+    is_outlier: bool = Field(False, description="Marked as price outlier by IQR")
+    is_stale_cheap: bool = Field(False, description="Stale + cheap = likely price fixer")
+    similarity_score: Optional[float] = Field(None, description="0-1 similarity to user's item")
+    listing_age_hours: Optional[float] = Field(None, description="Hours since listed")
+    value_comparison: Optional[str] = Field(None, description="'better', 'similar', or 'worse' vs user's item")
+    comparison_pct: Optional[float] = Field(None, description="Overall % better/worse (positive = listing is better)")
+    stat_comparisons: Optional[Dict[str, Dict[str, Any]]] = Field(None, description="Per-stat comparison breakdown")
+
+
+class PseudoStatInfo(BaseModel):
+    """Information about a pseudo stat used in search."""
+    stat_id: str = Field(..., description="The pseudo stat ID (e.g., pseudo.pseudo_total_elemental_resistance)")
+    display_name: str = Field(..., description="Human-readable name (e.g., 'Total Elemental Resistance')")
+    total_value: float = Field(..., description="Combined value from all contributing mods")
+    contributing_mod_indices: List[int] = Field(default_factory=list, description="Indices of mods that contribute (prefix indices, then suffix indices)")
+    mod_type: str = Field(..., description="'prefix' or 'suffix' or 'mixed'")
+
 
 class ItemPriceResponse(BaseModel):
     """Response with item price estimate."""
     min_price: float = Field(..., description="Minimum price found")
     max_price: float = Field(..., description="Maximum price found")
-    median_price: float = Field(..., description="Median price")
+    median_price: float = Field(..., description="Median price (weighted by similarity)")
     average_price: float = Field(..., description="Average price")
     currency: str = Field(..., description="Price currency (chaos)")
     num_listings: int = Field(..., description="Number of comparable listings found")
@@ -309,6 +334,12 @@ class ItemPriceResponse(BaseModel):
         description="Stats used for search"
     )
 
+    # Pseudo stats used in search (aggregated mods like total elemental resistance)
+    pseudo_stats: List[PseudoStatInfo] = Field(
+        default_factory=list,
+        description="Pseudo stats that aggregate multiple mods"
+    )
+
     # Trade URL
     trade_url: Optional[str] = Field(None, description="URL to view search on trade site")
 
@@ -317,6 +348,11 @@ class ItemPriceResponse(BaseModel):
         default_factory=list,
         description="Individual item listings"
     )
+
+    # Enhanced statistics
+    outliers_removed: int = Field(0, description="Number of outlier prices filtered out")
+    avg_similarity: Optional[float] = Field(None, description="Average similarity score of listings (0-1)")
+    price_spread: Optional[float] = Field(None, description="Price spread as IQR % of median (lower = tighter)")
 
 
 @router.post("/price-item", response_model=ItemPriceResponse)
@@ -338,7 +374,8 @@ async def estimate_item_price(request: ItemPriceRequest) -> ItemPriceResponse:
             equipment_enabled=request.equipment_enabled,
             rarity_enabled=request.rarity_enabled,
             ilvl_enabled=request.ilvl_enabled,
-            mod_min_values=request.mod_min_values
+            mod_min_values=request.mod_min_values,
+            use_pseudo_stats=request.use_pseudo_stats
         )
 
         if estimate is None:
@@ -372,6 +409,31 @@ async def estimate_item_price(request: ItemPriceRequest) -> ItemPriceResponse:
                     socketed_rune_name=listing.socketed_rune_name,
                     is_corrupted=listing.is_corrupted,
                     is_desecrated=listing.is_desecrated,
+                    # Computed aggregate stats
+                    total_ele_res=listing.total_ele_res,
+                    total_chaos_res=listing.total_chaos_res,
+                    total_life=listing.total_life,
+                    movement_speed=listing.movement_speed,
+                    # Comparison indicators
+                    is_outlier=listing.is_outlier,
+                    is_stale_cheap=listing.is_stale_cheap,
+                    similarity_score=listing.similarity_score,
+                    listing_age_hours=listing.listing_age_hours,
+                    value_comparison=listing.value_comparison,
+                    comparison_pct=listing.comparison_pct,
+                    stat_comparisons=listing.stat_comparisons,
+                ))
+
+        # Convert pseudo stats to response format
+        pseudo_stats_response = []
+        if estimate.pseudo_stats:
+            for ps in estimate.pseudo_stats:
+                pseudo_stats_response.append(PseudoStatInfo(
+                    stat_id=ps.stat_id,
+                    display_name=ps.display_name,
+                    total_value=ps.total_value,
+                    contributing_mod_indices=ps.contributing_mod_indices,
+                    mod_type=ps.mod_type,
                 ))
 
         return ItemPriceResponse(
@@ -385,8 +447,12 @@ async def estimate_item_price(request: ItemPriceRequest) -> ItemPriceResponse:
             exalted_value=estimate.exalted_value,
             divine_value=estimate.divine_value,
             search_criteria=estimate.search_criteria,
+            pseudo_stats=pseudo_stats_response,
             trade_url=estimate.trade_url,
             listings=listings_response,
+            outliers_removed=estimate.outliers_removed,
+            avg_similarity=estimate.avg_similarity,
+            price_spread=estimate.price_spread,
         )
     except HTTPException:
         raise

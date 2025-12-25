@@ -63,6 +63,63 @@ class TradeSearchResult:
 
 
 @dataclass
+class TradeMod:
+    """A parsed mod from a trade listing with actual values."""
+    text: str  # Display text like "+32% to Fire Resistance"
+    name: str  # Mod name like "of the Furnace"
+    tier: str  # Tier like "S5" or "P1"
+    mod_type: str  # "prefix" or "suffix"
+    values: List[float]  # Actual rolled values [32.0] or [10.0, 20.0] for ranges
+    stat_id: Optional[str] = None  # Trade stat ID if available
+    is_desecrated: bool = False
+
+    # Computed stats for easy access
+    @property
+    def fire_resistance(self) -> float:
+        if 'fire resistance' in self.text.lower():
+            return self.values[0] if self.values else 0
+        return 0
+
+    @property
+    def cold_resistance(self) -> float:
+        if 'cold resistance' in self.text.lower():
+            return self.values[0] if self.values else 0
+        return 0
+
+    @property
+    def lightning_resistance(self) -> float:
+        if 'lightning resistance' in self.text.lower():
+            return self.values[0] if self.values else 0
+        return 0
+
+    @property
+    def chaos_resistance(self) -> float:
+        if 'chaos resistance' in self.text.lower():
+            return self.values[0] if self.values else 0
+        return 0
+
+    @property
+    def movement_speed(self) -> float:
+        if 'movement speed' in self.text.lower():
+            return self.values[0] if self.values else 0
+        return 0
+
+    @property
+    def maximum_life(self) -> float:
+        text_lower = self.text.lower()
+        if 'maximum life' in text_lower and 'leech' not in text_lower:
+            return self.values[0] if self.values else 0
+        return 0
+
+    @property
+    def maximum_mana(self) -> float:
+        text_lower = self.text.lower()
+        if 'maximum mana' in text_lower and 'leech' not in text_lower:
+            return self.values[0] if self.values else 0
+        return 0
+
+
+@dataclass
 class TradeListing:
     """A single item listing from trade."""
     item_hash: str
@@ -82,8 +139,8 @@ class TradeListing:
     energy_shield: Optional[int] = None
     quality: Optional[int] = None
 
-    # Prefix/suffix split (with tier info)
-    prefix_mods: Optional[List[Dict[str, Any]]] = None  # [{text, tier, name}, ...]
+    # Parsed mods with actual values
+    prefix_mods: Optional[List[Dict[str, Any]]] = None  # Serialized TradeMod dicts
     suffix_mods: Optional[List[Dict[str, Any]]] = None
 
     # Rune mods
@@ -93,6 +150,55 @@ class TradeListing:
     # Flags
     is_corrupted: bool = False
     is_desecrated: bool = False
+
+    # Computed aggregate stats for easy access
+    @property
+    def total_elemental_resistance(self) -> float:
+        """Sum of fire + cold + lightning resistance."""
+        total = 0.0
+        for mod_dict in (self.prefix_mods or []) + (self.suffix_mods or []):
+            text = mod_dict.get('text', '').lower()
+            values = mod_dict.get('values', [])
+            if not values:
+                continue
+            val = values[0]
+            if 'fire resistance' in text or 'cold resistance' in text or 'lightning resistance' in text:
+                total += val
+            elif 'all elemental' in text and 'resistance' in text:
+                total += val * 3  # All ele res counts triple
+        return total
+
+    @property
+    def total_chaos_resistance(self) -> float:
+        """Total chaos resistance."""
+        total = 0.0
+        for mod_dict in (self.prefix_mods or []) + (self.suffix_mods or []):
+            text = mod_dict.get('text', '').lower()
+            values = mod_dict.get('values', [])
+            if values and 'chaos resistance' in text:
+                total += values[0]
+        return total
+
+    @property
+    def total_movement_speed(self) -> float:
+        """Total movement speed."""
+        for mod_dict in (self.prefix_mods or []) + (self.suffix_mods or []):
+            text = mod_dict.get('text', '').lower()
+            values = mod_dict.get('values', [])
+            if values and 'movement speed' in text:
+                return values[0]
+        return 0.0
+
+    @property
+    def total_life(self) -> float:
+        """Total flat life."""
+        total = 0.0
+        for mod_dict in (self.prefix_mods or []) + (self.suffix_mods or []):
+            text = mod_dict.get('text', '').lower()
+            values = mod_dict.get('values', [])
+            if values and 'maximum life' in text and 'leech' not in text:
+                total += values[0]
+        return total
 
 
 class TradeAPIClient:
@@ -292,9 +398,9 @@ class TradeAPIClient:
                             pass
                     break
 
-            # Extract prefix/suffix mods with tier info from extended.mods
+            # Extract prefix/suffix mods with tier info and VALUES from extended.mods
             # Key insight: hashes.explicit and explicitMods are in the SAME display order
-            # We iterate through hashes to get the stat_hash, use it to look up tier info
+            # We iterate through hashes to get the stat_hash, use it to look up tier info AND values
             prefix_mods = []
             suffix_mods = []
 
@@ -302,7 +408,11 @@ class TradeAPIClient:
             mods_data = extended_data.get("mods", {})
 
             def build_hash_to_mod_info(mod_entries: List) -> Dict[str, Dict]:
-                """Build mapping from stat hash to mod info (name, tier)."""
+                """Build mapping from stat hash to mod info (name, tier, values).
+
+                The magnitudes array contains the actual rolled values for each stat.
+                Example magnitude: {"hash": "123456", "min": 32, "max": 32}
+                """
                 hash_to_info = {}
                 for mod_entry in mod_entries:
                     tier = mod_entry.get("tier", "")
@@ -310,11 +420,29 @@ class TradeAPIClient:
                     for mag in mod_entry.get("magnitudes", []):
                         stat_hash = mag.get("hash", "")
                         if stat_hash:
-                            hash_to_info[stat_hash] = {"name": name, "tier": tier}
+                            # Extract the actual rolled value(s)
+                            # min and max are usually the same for rolled mods
+                            min_val = mag.get("min")
+                            max_val = mag.get("max")
+                            values = []
+                            if min_val is not None:
+                                values.append(float(min_val))
+                            if max_val is not None and max_val != min_val:
+                                values.append(float(max_val))
+
+                            hash_to_info[stat_hash] = {
+                                "name": name,
+                                "tier": tier,
+                                "values": values,
+                                "stat_id": str(stat_hash),
+                            }
                 return hash_to_info
 
             def process_mods_in_order(mod_texts: List[str], hash_entries: List, hash_to_info: Dict, is_desecrated: bool = False):
-                """Process mods - hashes and mod_texts are in same display order."""
+                """Process mods - hashes and mod_texts are in same display order.
+
+                Returns properly structured mod dicts with values extracted.
+                """
                 results_prefix = []
                 results_suffix = []
 
@@ -328,11 +456,24 @@ class TradeAPIClient:
                         info = hash_to_info.get(stat_hash, {})
                         tier_str = info.get("tier", "")
                         mod_name = info.get("name", "")
+                        values = info.get("values", [])
+                        stat_id = info.get("stat_id")
 
                         if not mod_text:
                             continue
 
-                        mod_info = {"text": mod_text, "name": mod_name, "tier": tier_str, "is_desecrated": is_desecrated}
+                        # Determine mod type from tier
+                        mod_type = "prefix" if tier_str.startswith("P") else "suffix" if tier_str.startswith("S") else "unknown"
+
+                        mod_info = {
+                            "text": mod_text,
+                            "name": mod_name,
+                            "tier": tier_str,
+                            "mod_type": mod_type,
+                            "values": values,
+                            "stat_id": stat_id,
+                            "is_desecrated": is_desecrated,
+                        }
 
                         if tier_str.startswith("P"):
                             results_prefix.append(mod_info)

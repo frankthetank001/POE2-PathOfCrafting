@@ -78,18 +78,28 @@ class ItemParser:
                     for line in lines
                 )
 
-                if has_implicit_marker or (not has_detailed_format and not implicit_found and "implicit" in section.lower()):
+                # If section has detailed format with both implicit and explicit markers,
+                # parse all mods and split them by mod_type
+                if has_detailed_format and has_implicit_marker:
+                    all_mods = ItemParser._parse_mods(section)
+                    for mod in all_mods:
+                        if mod.mod_type == 'implicit':
+                            implicits.append(mod)
+                        else:
+                            explicits.append(mod)
+                    implicit_found = True
+                elif has_implicit_marker or (not has_detailed_format and not implicit_found and "implicit" in section.lower()):
                     # Section has implicit marker OR contains "(implicit)" text
-                    implicits = ItemParser._parse_mods(section)
+                    implicits.extend(ItemParser._parse_mods(section))
                     implicit_found = True
                 elif has_detailed_format or not implicit_found:
                     # Detailed format OR first mod section without implicit markers = explicits
                     # (Most items don't have implicits, so default to explicits)
-                    explicits = ItemParser._parse_mods(section)
+                    explicits.extend(ItemParser._parse_mods(section))
                     implicit_found = True  # Mark that we've seen the first mod section
                 else:
                     # Second+ mod section = also explicits
-                    explicits = ItemParser._parse_mods(section)
+                    explicits.extend(ItemParser._parse_mods(section))
 
         return ParsedItem(
             rarity=rarity,
@@ -223,10 +233,23 @@ class ItemParser:
 
     @staticmethod
     def _looks_like_mods(lines: List[str]) -> bool:
+        # Property labels that should NOT be treated as mods
+        property_labels = [
+            "Quality:", "Physical Damage:", "Elemental Damage:", "Chaos Damage:",
+            "Critical Hit Chance:", "Attacks per Second:", "Weapon Range:",
+            "Armour:", "Evasion Rating:", "Energy Shield:", "Ward:",
+            "Block:", "Spell Damage:", "Attack Damage:",
+        ]
+
+        # If most lines look like properties (Label: Value format), this is not a mod section
+        property_count = sum(1 for line in lines if any(line.startswith(label) for label in property_labels))
+        if property_count > 0 and property_count >= len(lines) * 0.5:
+            return False
+
         mod_indicators = ["+", "increased", "reduced", "to", "%", "Adds", "Bears", "Grants", "Mark of"]
 
-        # Check for detailed format: { Prefix/Suffix Modifier "Name" (Tier: X) }
-        detailed_format_pattern = r'\{\s*(?:Prefix|Suffix)\s+Modifier\s+"[^"]+"\s+\(Tier:\s*\d+\)'
+        # Check for detailed format: { Prefix/Suffix/Implicit Modifier "Name" (Tier: X) }
+        detailed_format_pattern = r'\{\s*(?:Prefix|Suffix|Implicit)\s+Modifier\s+"[^"]+"\s*(?:\(Tier:\s*\d+\))?'
 
         return any(
             any(indicator in line for indicator in mod_indicators) or
@@ -265,12 +288,21 @@ class ItemParser:
                 tags_str = detailed_match.group(4) or ""
                 tags = [tag.strip() for tag in tags_str.split(",") if tag.strip()]
 
+                # Check if desecrated from tags
+                is_desecrated = "desecrated" in tags_str.lower()
+
                 # Collect ALL stat lines until next header or end
                 i += 1
                 stat_lines = []
                 all_values = []
                 while i < len(lines) and not header_pattern.match(lines[i]):
                     stat_line = lines[i]
+                    # Check for (desecrated) suffix in stat line
+                    if stat_line.endswith("(desecrated)"):
+                        stat_line = stat_line[:-12].strip()
+                        is_desecrated = True
+                    # Strip tier range annotations like "160(155-169)" -> "160"
+                    stat_line = re.sub(r'(\d+(?:\.\d+)?)\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\)', r'\1', stat_line)
                     stat_lines.append(stat_line)
                     all_values.extend(re.findall(r"\d+(?:\.\d+)?", stat_line))
                     i += 1
@@ -283,12 +315,21 @@ class ItemParser:
                         mod_name=mod_name,
                         tier=tier,
                         mod_type=mod_type,
-                        tags=tags
+                        tags=tags,
+                        is_desecrated=is_desecrated
                     ))
             else:
                 # Simple format without detailed info
-                values = re.findall(r"\d+(?:\.\d+)?", line)
-                mods.append(ItemMod(text=line, values=values))
+                is_desecrated = False
+                mod_text = line
+
+                # Check for (desecrated) suffix
+                if mod_text.endswith("(desecrated)"):
+                    mod_text = mod_text[:-12].strip()
+                    is_desecrated = True
+
+                values = re.findall(r"\d+(?:\.\d+)?", mod_text)
+                mods.append(ItemMod(text=mod_text, values=values, is_desecrated=is_desecrated))
                 i += 1
 
         return mods

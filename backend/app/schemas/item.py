@@ -23,6 +23,7 @@ class ItemMod(BaseModel):
     tier: Optional[int] = None
     mod_type: Optional[str] = None
     tags: List[str] = Field(default_factory=list)
+    is_desecrated: bool = False
 
 
 class ParsedRune(BaseModel):

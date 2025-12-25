@@ -1227,6 +1227,182 @@
   transform: translateY(-1px);
 }
 
+/* Pseudo Stats Section - for aggregated stats like Total Elemental Resistance */
+.pseudo-stats-section {
+  padding: 0.5rem 0;
+}
+
+.pseudo-stats-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  padding: 0.25rem 0.5rem;
+  color: #8888ff;
+  font-size: 0.75rem;
+  transition: color 0.2s;
+}
+
+.pseudo-stats-header:hover {
+  color: #aaaaff;
+}
+
+.pseudo-stats-toggle {
+  font-size: 0.6rem;
+}
+
+.pseudo-stats-title {
+  font-style: italic;
+}
+
+.pseudo-stats-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin-top: 0.25rem;
+}
+
+.pseudo-stat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.35rem 0.5rem;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s;
+  font-size: 0.75rem;
+}
+
+.pseudo-stat-item.pseudo-enabled {
+  background: rgba(136, 136, 255, 0.15);
+  border: 1px solid rgba(136, 136, 255, 0.4);
+  color: #aaf;
+}
+
+.pseudo-stat-item.pseudo-disabled {
+  background: rgba(100, 100, 100, 0.1);
+  border: 1px solid rgba(100, 100, 100, 0.3);
+  color: #888;
+  opacity: 0.7;
+}
+
+.pseudo-stat-item:hover {
+  transform: translateX(2px);
+}
+
+.pseudo-stat-value {
+  font-weight: 600;
+  min-width: 3rem;
+  color: #8888ff;
+}
+
+.pseudo-stat-item.pseudo-disabled .pseudo-stat-value {
+  color: #888;
+}
+
+.pseudo-stat-name {
+  flex: 1;
+}
+
+.pseudo-stat-source {
+  font-size: 0.65rem;
+  color: #666;
+  font-style: italic;
+}
+
+/* Highlight mods that are part of pseudo stats when price panel is open */
+.mod-line.pseudo-contributing {
+  position: relative;
+}
+
+.mod-line.pseudo-contributing::before {
+  content: '';
+  position: absolute;
+  left: -4px;
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: linear-gradient(to bottom, #8888ff, #6666cc);
+  border-radius: 1px;
+}
+
+/* Inline pseudo stat display - replaces hidden mods */
+.pseudo-stat-row {
+  background: rgba(100, 100, 180, 0.15);
+  border-left: 3px solid #8888cc;
+}
+
+.pseudo-stat-row:hover {
+  background: rgba(100, 100, 180, 0.25);
+}
+
+.mod-tier-indicator.pseudo-tier {
+  background: linear-gradient(135deg, #6666aa, #8888cc);
+  color: #fff;
+  font-weight: bold;
+  font-size: 0.75rem;
+}
+
+.pseudo-stat-text {
+  color: #aaaaff;
+  font-style: italic;
+}
+
+/* Disabled pseudo stat row - keep visible but show it's not active */
+.pseudo-stat-row.price-excluded {
+  opacity: 0.7;
+  border-left: 3px dashed rgba(136, 136, 204, 0.5);
+  background: rgba(80, 80, 100, 0.1);
+}
+
+.pseudo-stat-row.price-excluded:hover {
+  opacity: 0.9;
+  background: rgba(80, 80, 100, 0.2);
+}
+
+/* Hidden mods toggle button */
+.hidden-mods-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  margin: 4px 0;
+  background: rgba(80, 80, 100, 0.3);
+  border: 1px dashed rgba(136, 136, 204, 0.4);
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.75rem;
+  color: #999;
+  transition: all 0.2s ease;
+}
+
+.hidden-mods-toggle:hover {
+  background: rgba(100, 100, 140, 0.4);
+  color: #bbb;
+  border-color: rgba(136, 136, 204, 0.6);
+}
+
+.hidden-mods-toggle .toggle-icon {
+  font-size: 0.65rem;
+  color: #8888cc;
+}
+
+.hidden-mods-toggle .toggle-text {
+  font-style: italic;
+}
+
+/* Revealed hidden mods styling */
+.mod-line.hidden-mod-revealed {
+  opacity: 0.7;
+  background: rgba(80, 80, 100, 0.2);
+  border-left: 2px dashed rgba(136, 136, 204, 0.4);
+  padding-left: 10px;
+}
+
+.mod-line.hidden-mod-revealed:hover {
+  opacity: 0.9;
+}
+
 .mod-remove-btn {
   position: absolute;
   top: 4px;
@@ -4021,6 +4197,60 @@
   border: 1px solid rgba(255, 100, 100, 0.3);
 }
 
+/* Enhanced Stats Row */
+.price-enhanced-stats {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 8px 0 12px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.enhanced-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.enhanced-stat-label {
+  font-size: 0.65rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.enhanced-stat-value {
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #ccc;
+}
+
+.enhanced-stat-value.good {
+  color: #6c6;
+}
+
+.enhanced-stat-value.medium {
+  color: #fc8;
+}
+
+.enhanced-stat-value.low {
+  color: #f88;
+}
+
+.enhanced-stat-value.warning {
+  color: #f88;
+  font-size: 0.75rem;
+}
+
+.enhanced-stat.outliers {
+  opacity: 0.8;
+}
+
 /* Equipment Filters */
 .price-equipment-filters {
   margin: 12px 0;
@@ -4137,6 +4367,51 @@
   text-align: right;
 }
 
+/* Global Strictness Slider - Compact */
+.price-strictness-compact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: rgba(40, 40, 50, 0.4);
+  border-radius: 4px;
+  margin: 8px 0;
+}
+
+.price-strictness-compact .strictness-label {
+  font-size: 0.7rem;
+  color: #888;
+  white-space: nowrap;
+}
+
+.price-strictness-compact .strictness-slider-compact {
+  flex: 1;
+  height: 4px;
+  background: rgba(100, 100, 120, 0.4);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+}
+
+.price-strictness-compact .strictness-slider-compact::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  background: var(--poe2-currency, #aa9e82);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.price-strictness-compact .strictness-value {
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+  font-size: 0.75rem;
+  color: var(--poe2-currency, #aa9e82);
+  font-weight: bold;
+  min-width: 32px;
+  text-align: right;
+}
+
 /* Listings Table */
 .listings-table {
   width: 100%;
@@ -4188,6 +4463,35 @@
   white-space: nowrap;
 }
 
+.price-with-comparison {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.listing-comparison {
+  font-size: 0.7rem;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-weight: 500;
+  cursor: help;
+}
+
+.listing-comparison.comparison-better {
+  color: #7dcea0;
+  background: rgba(125, 206, 160, 0.15);
+}
+
+.listing-comparison.comparison-worse {
+  color: #e57373;
+  background: rgba(229, 115, 115, 0.15);
+}
+
+.listing-comparison.comparison-similar {
+  color: #90a4ae;
+  background: rgba(144, 164, 174, 0.15);
+}
+
 .listing-price-amount {
   color: var(--poe2-currency, #aa9e82);
   font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
@@ -4222,6 +4526,12 @@
   color: var(--poe2-magic, #8888ff);
 }
 
+.listing-preview-btn.pinned {
+  opacity: 1;
+  color: var(--poe2-currency, #aa9e82);
+  text-shadow: 0 0 4px rgba(170, 158, 130, 0.5);
+}
+
 .listing-ilvl {
   color: var(--poe2-text-value, #fff);
   font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
@@ -4245,6 +4555,82 @@
   font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
   font-size: 0.75rem;
   white-space: nowrap;
+}
+
+/* Dynamic listing columns */
+.listing-defence {
+  color: var(--poe2-text-value, #fff);
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.listing-ms {
+  color: var(--poe2-augmented, #8888ff);
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+  font-weight: 500;
+}
+
+.listing-res {
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+  font-size: 0.75rem;
+}
+
+.listing-ele-res {
+  color: #88ccaa; /* Greenish for elemental resistance */
+}
+
+.listing-chaos-res {
+  color: #cc88cc; /* Purple for chaos resistance */
+}
+
+.listing-life {
+  color: #ff8888; /* Red for life */
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+}
+
+/* Listing row status indicators */
+.listing-row.listing-outlier {
+  opacity: 0.4;
+  background: rgba(255, 100, 100, 0.05);
+}
+
+.listing-row.listing-outlier td {
+  text-decoration: line-through;
+  text-decoration-color: rgba(255, 100, 100, 0.3);
+}
+
+.listing-row.listing-stale-cheap {
+  opacity: 0.5;
+  background: rgba(255, 200, 100, 0.05);
+}
+
+.listing-row.listing-stale-cheap td:first-child::before {
+  content: '⚠️';
+  margin-right: 4px;
+  font-size: 0.7rem;
+}
+
+.listing-row.listing-better {
+  background: rgba(100, 200, 100, 0.08);
+}
+
+.listing-row.listing-better td:first-child {
+  border-left: 2px solid rgba(100, 200, 100, 0.6);
+}
+
+.listing-row.listing-worse {
+  background: rgba(200, 100, 100, 0.05);
+}
+
+.listing-row.listing-worse td:first-child {
+  border-left: 2px solid rgba(200, 100, 100, 0.4);
+}
+
+/* Hover overrides for marked rows */
+.listing-row.listing-outlier:hover td,
+.listing-row.listing-stale-cheap:hover td {
+  background: rgba(255, 255, 255, 0.02);
 }
 
 /* Item Preview Tooltip */

@@ -65,6 +65,9 @@ export interface TradeMod {
   text: string
   name: string
   tier: string
+  mod_type: 'prefix' | 'suffix' | 'unknown'
+  values: number[]  // Actual rolled values [32] or [10, 20] for ranges
+  stat_id?: string
   is_desecrated?: boolean
 }
 
@@ -86,7 +89,7 @@ export interface PriceListing {
   energy_shield?: number | null
   quality?: number | null
 
-  // Prefix/suffix split with tier info
+  // Parsed mods with tier info and values
   prefix_mods?: TradeMod[] | null
   suffix_mods?: TradeMod[] | null
 
@@ -97,6 +100,29 @@ export interface PriceListing {
   // Flags
   is_corrupted?: boolean
   is_desecrated?: boolean
+
+  // Computed aggregate stats (from parsed mod values)
+  total_ele_res?: number | null
+  total_chaos_res?: number | null
+  total_life?: number | null
+  movement_speed?: number | null
+
+  // Comparison indicators
+  is_outlier?: boolean
+  is_stale_cheap?: boolean
+  similarity_score?: number | null
+  listing_age_hours?: number | null
+  value_comparison?: 'better' | 'similar' | 'worse' | null
+  comparison_pct?: number | null  // Overall % better/worse (positive = better)
+  stat_comparisons?: Record<string, { user: number; listing: number; diff_pct: number; name?: string; matched?: string }> | null
+}
+
+export interface PseudoStatInfo {
+  stat_id: string
+  display_name: string
+  total_value: number
+  contributing_mod_indices: number[]  // Indices into prefix_mods (0-based) then suffix_mods
+  mod_type: 'prefix' | 'suffix' | 'mixed'
 }
 
 export interface ItemPriceEstimate {
@@ -110,8 +136,13 @@ export interface ItemPriceEstimate {
   exalted_value: number | null
   divine_value: number | null
   search_criteria: Record<string, number>
+  pseudo_stats: PseudoStatInfo[]  // Aggregated stats like "Total Elemental Resistance"
   trade_url: string | null
   listings: PriceListing[]
+  // Enhanced statistics
+  outliers_removed: number  // Number of price fixers/outliers filtered
+  avg_similarity: number | null  // Average similarity score (0-1)
+  price_spread: number | null  // IQR as % of median (lower = tighter prices)
 }
 
 // API client
@@ -190,7 +221,8 @@ export const marketApi = {
     equipmentEnabled?: Record<string, boolean>,
     rarityEnabled?: boolean,
     ilvlEnabled?: boolean,
-    modMinValues?: Record<number, number>
+    modMinValues?: Record<number, number>,
+    usePseudoStats?: Record<string, boolean>
   ): Promise<ItemPriceEstimate> => {
     const response = await api.post<ItemPriceEstimate>('/price-item', {
       item,
@@ -200,6 +232,7 @@ export const marketApi = {
       rarity_enabled: rarityEnabled,
       ilvl_enabled: ilvlEnabled,
       mod_min_values: modMinValues,
+      use_pseudo_stats: usePseudoStats,
     })
     return response.data
   },

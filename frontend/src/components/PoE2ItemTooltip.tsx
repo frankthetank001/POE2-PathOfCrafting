@@ -58,12 +58,21 @@ export function PoE2ItemTooltip({ item, showTiers = false, compact = false }: Po
       'energy_shield': 'Energy Shield',
       'block': 'Block',
       'ward': 'Ward',
+      'PhysicalDPS': 'Physical DPS',
+      'ElementalDPS': 'Elemental DPS',
+      'TotalDPS': 'Total DPS',
+      'AttackRate': 'Attacks per Second',
+      'CritChance': 'Critical Hit Chance',
     }
     return statNames[stat] || stat.replace(/_/g, ' ').replace(/\b\w/g, l => l.toUpperCase())
   }
 
   const defenseStats = ['armour', 'evasion', 'energy_shield', 'ward', 'block']
   const hasDefenseStats = Object.keys(item.calculated_stats || {}).some(stat => defenseStats.includes(stat))
+
+  // Check for weapon stats
+  const weaponStats = item.calculated_stats || {}
+  const hasWeaponStats = 'PhysicalDPS' in weaponStats || 'PhysicalMin' in weaponStats
 
   const allExplicitMods = [
     ...(item.prefix_mods || []),
@@ -83,6 +92,58 @@ export function PoE2ItemTooltip({ item, showTiers = false, compact = false }: Po
           </div>
         )}
       </div>
+
+      {/* Weapon Stats */}
+      {hasWeaponStats && (
+        <>
+          <div className="poe2-separator-simple" />
+          <div className="poe2-item-properties">
+            {/* Physical Damage Range */}
+            {weaponStats.PhysicalMin != null && weaponStats.PhysicalMax != null && (
+              <div className="poe2-property-line">
+                <span className="poe2-property-name">Physical Damage:</span>
+                <span className="poe2-property-value augmented">
+                  {weaponStats.PhysicalMin}-{weaponStats.PhysicalMax}
+                </span>
+              </div>
+            )}
+            {/* Critical Hit Chance */}
+            {weaponStats.CritChance != null && (
+              <div className="poe2-property-line">
+                <span className="poe2-property-name">Critical Hit Chance:</span>
+                <span className="poe2-property-value">{weaponStats.CritChance}%</span>
+              </div>
+            )}
+            {/* Attacks per Second */}
+            {weaponStats.AttackRate != null && (
+              <div className="poe2-property-line">
+                <span className="poe2-property-name">Attacks per Second:</span>
+                <span className="poe2-property-value augmented">{weaponStats.AttackRate}</span>
+              </div>
+            )}
+            {/* DPS Stats */}
+            {weaponStats.PhysicalDPS != null && weaponStats.PhysicalDPS > 0 && (
+              <div className="poe2-property-line dps-stat">
+                <span className="poe2-property-name">Physical DPS:</span>
+                <span className="poe2-property-value">{weaponStats.PhysicalDPS}</span>
+              </div>
+            )}
+            {weaponStats.ElementalDPS != null && weaponStats.ElementalDPS > 0 && (
+              <div className="poe2-property-line dps-stat">
+                <span className="poe2-property-name">Elemental DPS:</span>
+                <span className="poe2-property-value">{weaponStats.ElementalDPS}</span>
+              </div>
+            )}
+            {weaponStats.TotalDPS != null && weaponStats.TotalDPS > 0 &&
+             (weaponStats.ElementalDPS > 0 || weaponStats.ChaosDPS > 0) && (
+              <div className="poe2-property-line dps-stat">
+                <span className="poe2-property-name">Total DPS:</span>
+                <span className="poe2-property-value">{weaponStats.TotalDPS}</span>
+              </div>
+            )}
+          </div>
+        </>
+      )}
 
       {/* Defense Stats */}
       {hasDefenseStats && (

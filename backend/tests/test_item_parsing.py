@@ -299,3 +299,211 @@ Bears the Mark of the Abyssal Lord
         all_mods = craftable.prefix_mods + craftable.suffix_mods
         abyssal_mods = [m for m in all_mods if m.name == "Abyssal"]
         assert len(abyssal_mods) == 1, "Abyssal mark should be parseable on rings"
+
+
+class TestTalismanParsing:
+    """Test parsing of talismans with both simple and detailed formats."""
+
+    def test_simple_format_excludes_properties(self):
+        """
+        Test that property lines (Quality, Physical Damage, etc.) are not parsed as mods.
+        """
+        item_text = """Item Class: Talismans
+Rarity: Rare
+Whispering Invocation
+Spiny Talisman
+--------
+Quality: +20% (augmented)
+Physical Damage: 334-526 (augmented)
+Critical Hit Chance: 11.00%
+Attacks per Second: 1.49 (augmented)
+--------
+Requires: Level 67, 86 Str, 65 Int
+--------
+Sockets: S S
+--------
+Item Level: 79
+--------
+36% increased Physical Damage (rune)
+--------
+160% increased Physical Damage
+Adds 34 to 49 Physical Damage
+19% increased Attack Speed
++5 to Level of all Attack Skills
+Gain 25% of Damage as Extra Physical Damage
+51% increased Critical Hit Chance against Marked Enemies (desecrated)
+"""
+        parsed = ItemParser.parse(item_text)
+
+        # Properties should NOT be in explicits
+        explicit_texts = [m.text for m in parsed.explicits]
+        assert not any("Quality:" in t for t in explicit_texts), "Quality should not be parsed as mod"
+        assert not any("Physical Damage:" in t for t in explicit_texts), "Physical Damage property should not be parsed as mod"
+        assert not any("Critical Hit Chance:" in t for t in explicit_texts), "Crit Chance property should not be parsed as mod"
+        assert not any("Attacks per Second:" in t for t in explicit_texts), "APS property should not be parsed as mod"
+
+        # Should have exactly 6 explicit mods
+        assert len(parsed.explicits) == 6, f"Expected 6 explicits, got {len(parsed.explicits)}: {explicit_texts}"
+
+    def test_simple_format_desecrated_detection(self):
+        """Test that (desecrated) suffix is detected and stripped in simple format."""
+        item_text = """Item Class: Talismans
+Rarity: Rare
+Test Talisman
+Spiny Talisman
+--------
+Item Level: 79
+--------
+51% increased Critical Hit Chance against Marked Enemies (desecrated)
+"""
+        parsed = ItemParser.parse(item_text)
+
+        assert len(parsed.explicits) == 1
+        mod = parsed.explicits[0]
+        assert mod.is_desecrated is True
+        assert "(desecrated)" not in mod.text, "Desecrated suffix should be stripped from text"
+        assert mod.text == "51% increased Critical Hit Chance against Marked Enemies"
+
+    def test_simple_format_rune_parsing(self):
+        """Test that rune mods are correctly parsed in simple format."""
+        item_text = """Item Class: Talismans
+Rarity: Rare
+Test Talisman
+Spiny Talisman
+--------
+Item Level: 79
+--------
+36% increased Physical Damage (rune)
+--------
++5 to Level of all Attack Skills
+"""
+        parsed = ItemParser.parse(item_text)
+
+        assert len(parsed.runes) == 1
+        assert parsed.runes[0].mods == ["36% increased Physical Damage"]
+        assert len(parsed.explicits) == 1
+
+    def test_detailed_format_splits_implicits_and_explicits(self):
+        """
+        Test that detailed format with both implicit and explicit mods
+        correctly splits them into separate lists.
+        """
+        item_text = """Item Class: Talismans
+Rarity: Rare
+Test Talisman
+Spiny Talisman
+--------
+Item Level: 79
+--------
+{ Implicit Modifier "of the Gorilla" (Tier: 3) — Strength }
++15 to Strength
+{ Prefix Modifier "Tyrannical" (Tier: 2) — Damage, Physical, Attack }
+160% increased Physical Damage
+{ Suffix Modifier "of Skill" (Tier: 1) — Attack, Gem }
++5 to Level of all Attack Skills
+"""
+        parsed = ItemParser.parse(item_text)
+
+        # Should have 1 implicit
+        assert len(parsed.implicits) == 1
+        assert parsed.implicits[0].mod_type == "implicit"
+        assert parsed.implicits[0].mod_name == "of the Gorilla"
+        assert "+15 to Strength" in parsed.implicits[0].text
+
+        # Should have 2 explicits (1 prefix, 1 suffix)
+        assert len(parsed.explicits) == 2
+        prefix = next((m for m in parsed.explicits if m.mod_type == "prefix"), None)
+        suffix = next((m for m in parsed.explicits if m.mod_type == "suffix"), None)
+        assert prefix is not None
+        assert suffix is not None
+        assert prefix.mod_name == "Tyrannical"
+        assert suffix.mod_name == "of Skill"
+
+    def test_detailed_format_strips_tier_ranges(self):
+        """Test that tier range annotations like 160(155-169)% are cleaned."""
+        item_text = """Item Class: Talismans
+Rarity: Rare
+Test Talisman
+Spiny Talisman
+--------
+Item Level: 79
+--------
+{ Prefix Modifier "Tyrannical" (Tier: 2) — Damage, Physical, Attack }
+160(155-169)% increased Physical Damage
+{ Prefix Modifier "Flaring" (Tier: 2) — Damage, Physical, Attack }
+Adds 34(23-35) to 49(39-59) Physical Damage
+"""
+        parsed = ItemParser.parse(item_text)
+
+        assert len(parsed.explicits) == 2
+        # Tier ranges should be stripped
+        assert parsed.explicits[0].text == "160% increased Physical Damage"
+        assert parsed.explicits[1].text == "Adds 34 to 49 Physical Damage"
+
+    def test_detailed_format_desecrated_from_tags(self):
+        """Test that desecrated is detected from tags in detailed format."""
+        item_text = """Item Class: Talismans
+Rarity: Rare
+Test Talisman
+Spiny Talisman
+--------
+Item Level: 79
+--------
+{ Suffix Modifier "of Marksmanship" (Tier: 1) — Attack, Speed, Desecrated }
+19% increased Attack Speed
+"""
+        parsed = ItemParser.parse(item_text)
+
+        assert len(parsed.explicits) == 1
+        assert parsed.explicits[0].is_desecrated is True
+
+    def test_detailed_format_rune_with_name(self):
+        """Test that rune name is extracted from detailed format."""
+        item_text = """Item Class: Talismans
+Rarity: Rare
+Test Talisman
+Spiny Talisman
+--------
+Item Level: 79
+--------
+{ Rune "Greater Iron Rune" }
+36% increased Physical Damage (rune)
+--------
++5 to Level of all Attack Skills
+"""
+        parsed = ItemParser.parse(item_text)
+
+        assert len(parsed.runes) == 1
+        assert parsed.runes[0].name == "Greater Iron Rune"
+        assert parsed.runes[0].mods == ["36% increased Physical Damage"]
+
+    def test_talisman_weapon_mods_matched(self, item_converter):
+        """Test that talismans can use weapon mods since they are 2H weapons."""
+        item_text = """Item Class: Talismans
+Rarity: Rare
+Whispering Invocation
+Spiny Talisman
+--------
+Item Level: 79
+--------
+160% increased Physical Damage
+Adds 34 to 49 Physical Damage
+19% increased Attack Speed
++5 to Level of all Attack Skills
+Gain 25% of Damage as Extra Physical Damage
+51% increased Critical Hit Chance against Marked Enemies (desecrated)
+"""
+        parsed = ItemParser.parse(item_text)
+        craftable = item_converter.convert_to_craftable(parsed)
+
+        assert craftable is not None
+        assert craftable.base_category == "talisman"
+
+        # Should have 3 prefix and 3 suffix mods
+        assert len(craftable.prefix_mods) == 3, f"Expected 3 prefixes, got {len(craftable.prefix_mods)}"
+        assert len(craftable.suffix_mods) == 3, f"Expected 3 suffixes, got {len(craftable.suffix_mods)}"
+
+        # Check desecrated mod is properly tagged
+        crit_mod = next((m for m in craftable.suffix_mods if "critical" in m.stat_text.lower()), None)
+        assert crit_mod is not None
+        assert "desecrated_only" in (crit_mod.tags or []), "Crit mod should be tagged as desecrated"

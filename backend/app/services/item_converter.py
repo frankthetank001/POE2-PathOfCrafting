@@ -169,6 +169,11 @@ class ItemConverter:
                 return True
             if 'jewellery' in mod.applicable_items and base_category in ['ring', 'amulet', 'belt']:
                 return True
+            # Talismans are 2-handed weapons, so weapon mods apply to them
+            if 'weapon' in mod.applicable_items and base_category == 'talisman':
+                return True
+            if 'two_hand_weapon' in mod.applicable_items and base_category == 'talisman':
+                return True
             # Special case: AbyssTargetMod (Mark of the Abyssal Lord) can appear on any item
             # even though it has empty applicable_items in the database
             if mod.mod_group == 'AbyssTargetMod':
@@ -251,18 +256,26 @@ class ItemConverter:
         candidates = sorted(candidates, key=lambda m: len(m.stat_text), reverse=True)
 
         for candidate in candidates:
-            # Build pattern by escaping the stat_text but preserving the {} placeholder
-            # Then replace {} with a pattern that matches: number + optional (min-max) range
+            # Build pattern by escaping the stat_text but preserving placeholders
+            # Handle both {} placeholders and (min-max) range patterns in stat_text
             stat_text_lower = candidate.stat_text.lower()
 
+            # First, replace (min-max) patterns with a placeholder we can find later
+            # This handles mods like "Gain (25-33)% of Damage as Extra Physical Damage"
+            range_placeholder = "___RANGE___"
+            stat_text_normalized = re.sub(r'\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\)', range_placeholder, stat_text_lower)
+
             # Split by {} to escape the text parts separately
-            parts = stat_text_lower.split('{}')
+            parts = stat_text_normalized.split('{}')
             escaped_parts = [re.escape(part) for part in parts]
 
             # Join with pattern for number + optional range, supporting decimals
             # Pattern: \d+(?:\.\d+)?(?:\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\))?
             # Matches: 111, 11.4, 111(100-119), 11.4(9.1-13)
             pattern = r'\d+(?:\.\d+)?(?:\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\))?'.join(escaped_parts)
+
+            # Also replace the range placeholder with the same number pattern
+            pattern = pattern.replace(re.escape(range_placeholder), r'\d+(?:\.\d+)?(?:\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\))?')
 
             # Use full string matching with anchors to avoid partial matches
             full_pattern = f'^{pattern}$'

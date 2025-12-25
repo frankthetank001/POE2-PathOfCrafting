@@ -5,6 +5,7 @@ Estimates item value by searching the POE2 trade site for comparable items.
 Uses trade_hash from mods for explicit searches and pseudo stats for combined values.
 """
 
+import json
 from dataclasses import dataclass
 from typing import Any, Dict, List, Optional
 from statistics import median, mean
@@ -36,7 +37,7 @@ class PriceListing:
     energy_shield: Optional[int] = None
     quality: Optional[int] = None
 
-    # Prefix/suffix split with tier info
+    # Parsed mods with tier info and values
     prefix_mods: Optional[List[Dict[str, Any]]] = None
     suffix_mods: Optional[List[Dict[str, Any]]] = None
 
@@ -47,6 +48,21 @@ class PriceListing:
     # Flags
     is_corrupted: bool = False
     is_desecrated: bool = False
+
+    # Computed aggregate stats (for easy frontend access)
+    total_ele_res: Optional[float] = None
+    total_chaos_res: Optional[float] = None
+    total_life: Optional[float] = None
+    movement_speed: Optional[float] = None
+
+    # Comparison indicators (set during price calculation)
+    is_outlier: bool = False          # Removed by IQR outlier detection
+    is_stale_cheap: bool = False      # Stale + cheap = likely price fixer
+    similarity_score: Optional[float] = None  # 0-1 how similar to user's item
+    listing_age_hours: Optional[float] = None  # Hours since listed
+    value_comparison: Optional[str] = None  # "better", "similar", "worse" vs user's item
+    comparison_pct: Optional[float] = None  # Overall % better/worse (positive = better)
+    stat_comparisons: Optional[Dict[str, Dict[str, Any]]] = None  # Individual stat diffs: {stat_name: {user: x, listing: y, diff_pct: z}}
 
 logger = get_logger(__name__)
 
@@ -74,6 +90,21 @@ PSEUDO_MOD_GROUPS = {
     "Dexterity": "pseudo.pseudo_total_dexterity",
     "Intelligence": "pseudo.pseudo_total_intelligence",
     "AllAttributes": "pseudo.pseudo_total_attributes",
+}
+
+# Human-readable names for pseudo stats
+PSEUDO_DISPLAY_NAMES = {
+    "pseudo.pseudo_total_elemental_resistance": "Total Elemental Resistance",
+    "pseudo.pseudo_total_fire_resistance": "Total Fire Resistance",
+    "pseudo.pseudo_total_cold_resistance": "Total Cold Resistance",
+    "pseudo.pseudo_total_lightning_resistance": "Total Lightning Resistance",
+    "pseudo.pseudo_total_chaos_resistance": "Total Chaos Resistance",
+    "pseudo.pseudo_total_life": "Total Life",
+    "pseudo.pseudo_total_mana": "Total Mana",
+    "pseudo.pseudo_total_strength": "Total Strength",
+    "pseudo.pseudo_total_dexterity": "Total Dexterity",
+    "pseudo.pseudo_total_intelligence": "Total Intelligence",
+    "pseudo.pseudo_total_attributes": "Total Attributes",
 }
 
 # Base stat names to trade API filter keys (keys match pob-data)
@@ -107,6 +138,16 @@ CATEGORY_TO_TRADE = {
 
 
 @dataclass
+class PseudoStatInfo:
+    """Information about a pseudo stat used in search."""
+    stat_id: str
+    display_name: str
+    total_value: float
+    contributing_mod_indices: List[int]  # Indices into prefix_mods (0-based) then suffix_mods
+    mod_type: str  # "prefix", "suffix", or "mixed"
+
+
+@dataclass
 class PriceEstimate:
     """Result of price estimation."""
     min_price: float
@@ -127,6 +168,14 @@ class PriceEstimate:
 
     # Individual listings
     listings: List[PriceListing] = None
+
+    # Pseudo stats used in search
+    pseudo_stats: List[PseudoStatInfo] = None
+
+    # Enhanced statistics
+    outliers_removed: int = 0  # Number of outlier prices filtered
+    avg_similarity: Optional[float] = None  # Average similarity score of listings
+    price_spread: Optional[float] = None  # IQR as % of median (lower = tighter prices)
 
 
 class ItemPricer:
@@ -160,6 +209,7 @@ class ItemPricer:
         rarity_enabled: Optional[bool] = True,
         ilvl_enabled: Optional[bool] = False,
         mod_min_values: Optional[Dict[str, float]] = None,
+        use_pseudo_stats: Optional[Dict[str, bool]] = None,
     ) -> Optional[PriceEstimate]:
         """
         Estimate the price of an item.
@@ -172,6 +222,7 @@ class ItemPricer:
             rarity_enabled: Whether to filter by item rarity
             ilvl_enabled: Whether to filter by item level (min ilvl)
             mod_min_values: Custom min values for mods by string index (0-based, prefixes first then suffixes)
+            use_pseudo_stats: Which pseudo stats to use (stat_id -> bool). True = use pseudo, False = use individual mods
 
         Returns:
             PriceEstimate or None if unable to price
@@ -179,7 +230,7 @@ class ItemPricer:
         await self.initialize()
 
         # Extract mod filters using trade_hash
-        mod_filters = self._extract_mod_filters(item)
+        mod_filters, pseudo_stats = self._extract_mod_filters(item)
 
         if not mod_filters:
             logger.info(f"No priceable mods found on {item.base_name}")
@@ -190,33 +241,49 @@ class ItemPricer:
 
         # Try progressively relaxed searches
         for strictness in [0.9, 0.8, 0.7, 0.5]:
-            query = self._build_query(item, mod_filters, strictness, equipment_filters, equipment_enabled, rarity_enabled, ilvl_enabled, mod_min_values)
+            query = self._build_query(item, mod_filters, strictness, equipment_filters, equipment_enabled, rarity_enabled, ilvl_enabled, mod_min_values, use_pseudo_stats)
+
+            # Dump trade request to file for debugging
+            with open("trade_request_debug.json", "w") as f:
+                json.dump({
+                    "query": query,
+                    "league": league,
+                    "strictness": strictness,
+                    "mod_filters": {k: {kk: vv for kk, vv in v.items() if kk != "individual_mods"} for k, v in mod_filters.items()},
+                    "use_pseudo_stats": use_pseudo_stats,
+                    "mod_min_values": mod_min_values,
+                }, f, indent=2, default=str)
+            logger.info(f"Dumped trade request to trade_request_debug.json (strictness={strictness})")
+
             listings, query_id = await self._trade_client.search_and_fetch(query, league, max_results=20)
 
             if len(listings) >= 5:
                 trade_url = self._trade_client.build_trade_url(query_id, search_league) if query_id else None
-                return await self._calculate_price(listings, mod_filters, strictness, trade_url, item)
+                return await self._calculate_price(listings, mod_filters, strictness, trade_url, item, pseudo_stats)
 
         # If we still don't have enough results, try one more with very relaxed criteria
-        query = self._build_query(item, mod_filters, 0.3, equipment_filters, equipment_enabled, rarity_enabled, ilvl_enabled, mod_min_values)
+        query = self._build_query(item, mod_filters, 0.3, equipment_filters, equipment_enabled, rarity_enabled, ilvl_enabled, mod_min_values, use_pseudo_stats)
         listings, query_id = await self._trade_client.search_and_fetch(query, league, max_results=20)
 
         if listings:
             trade_url = self._trade_client.build_trade_url(query_id, search_league) if query_id else None
-            return await self._calculate_price(listings, mod_filters, 0.3, trade_url, item)
+            return await self._calculate_price(listings, mod_filters, 0.3, trade_url, item, pseudo_stats)
 
         return None
 
-    def _extract_mod_filters(self, item: CraftableItem) -> Dict[str, Dict[str, Any]]:
+    def _extract_mod_filters(self, item: CraftableItem) -> tuple[Dict[str, Dict[str, Any]], List[PseudoStatInfo]]:
         """
         Extract mod filters from an item using trade_hash.
 
-        Returns a dict of stat_id -> {value, name, is_pseudo, mod_index}
-        mod_index is 0-based with prefixes first, then suffixes (implicits not indexed for user control)
+        Returns a tuple of:
+        - filters: dict of stat_id -> {value, name, is_pseudo, mod_index}
+          mod_index is 0-based with prefixes first, then suffixes (implicits not indexed for user control)
+        - pseudo_stats: list of PseudoStatInfo for aggregated mods
         """
         filters: Dict[str, Dict[str, Any]] = {}
         pseudo_totals: Dict[str, float] = {}
         pseudo_indices: Dict[str, List[int]] = {}  # Track indices that contribute to each pseudo
+        pseudo_individual_mods: Dict[str, List[Dict[str, Any]]] = {}  # Individual mod info for each pseudo
 
         # Process prefix and suffix mods with indices (for user-controlled min values)
         explicit_mods_with_idx = []
@@ -246,6 +313,21 @@ class ItemPricer:
                     if pseudo_id not in pseudo_indices:
                         pseudo_indices[pseudo_id] = []
                     pseudo_indices[pseudo_id].append(mod_index)
+
+                # Also store individual mod info for when pseudo is disabled
+                trade_hash = self._get_trade_hash(mod)
+                if trade_hash:
+                    individual_stat_id = f"explicit.stat_{trade_hash}"
+                    if pseudo_id not in pseudo_individual_mods:
+                        pseudo_individual_mods[pseudo_id] = []
+                    pseudo_individual_mods[pseudo_id].append({
+                        "stat_id": individual_stat_id,
+                        "value": value,
+                        "name": mod.name,
+                        "stat_text": mod.stat_text,
+                        "mod_index": mod_index,
+                    })
+
                 logger.info(f"Mod '{mod.name}' (group={mod.mod_group}, idx={mod_index}) -> pseudo {pseudo_id} += {value}")
             else:
                 # Try to get trade_hash (from mod or lookup)
@@ -266,18 +348,44 @@ class ItemPricer:
                 else:
                     logger.warning(f"Mod '{mod.name}' (id={mod.mod_id}, group={mod.mod_group}) has no trade_hash, skipping")
 
-        # Add pseudo totals to filters
+        # Add pseudo totals to filters and build pseudo_stats list
+        pseudo_stats: List[PseudoStatInfo] = []
+        num_prefixes = len(item.prefix_mods)
+
         for pseudo_id, total in pseudo_totals.items():
+            indices = pseudo_indices.get(pseudo_id, [])
+            individual_mods = pseudo_individual_mods.get(pseudo_id, [])
             filters[pseudo_id] = {
                 "value": total,
                 "name": pseudo_id.split(".")[-1],
                 "is_pseudo": True,
-                "mod_indices": pseudo_indices.get(pseudo_id, []),  # All contributing mod indices
+                "mod_indices": indices,
+                "individual_mods": individual_mods,  # For when pseudo is disabled
             }
-            logger.info(f"Pseudo total: {pseudo_id} = {total} (indices={pseudo_indices.get(pseudo_id, [])})")
+
+            # Determine if prefixes, suffixes, or mixed
+            prefix_indices = [i for i in indices if i < num_prefixes]
+            suffix_indices = [i for i in indices if i >= num_prefixes]
+            if prefix_indices and suffix_indices:
+                mod_type = "mixed"
+            elif prefix_indices:
+                mod_type = "prefix"
+            else:
+                mod_type = "suffix"
+
+            # Build PseudoStatInfo
+            display_name = PSEUDO_DISPLAY_NAMES.get(pseudo_id, pseudo_id.split(".")[-1].replace("_", " ").title())
+            pseudo_stats.append(PseudoStatInfo(
+                stat_id=pseudo_id,
+                display_name=display_name,
+                total_value=total,
+                contributing_mod_indices=indices,
+                mod_type=mod_type,
+            ))
+            logger.info(f"Pseudo total: {pseudo_id} = {total} (indices={indices}, type={mod_type})")
 
         logger.info(f"Extracted {len(filters)} filters: {list(filters.keys())}")
-        return filters
+        return filters, pseudo_stats
 
     def _get_mod_value(self, mod: ItemModifier) -> Optional[float]:
         """Get the rolled value from a mod."""
@@ -328,6 +436,7 @@ class ItemPricer:
         rarity_enabled: Optional[bool] = True,
         ilvl_enabled: Optional[bool] = False,
         mod_min_values: Optional[Dict[str, float]] = None,
+        use_pseudo_stats: Optional[Dict[str, bool]] = None,
     ) -> Dict[str, Any]:
         """
         Build a trade API query from mod filters.
@@ -341,16 +450,73 @@ class ItemPricer:
             rarity_enabled: Whether to filter by item rarity
             ilvl_enabled: Whether to filter by item level (min ilvl)
             mod_min_values: Custom min values for mods by string index
+            use_pseudo_stats: Which pseudo stats to use (stat_id -> bool)
         """
         filters = []
 
         # Add mod filters
         for stat_id, filter_info in mod_filters.items():
             value = filter_info["value"]
+            is_pseudo = filter_info.get("is_pseudo", False)
 
             # Skip very low values
             if value < 5:
                 continue
+
+            # Check if this is a pseudo stat
+            if is_pseudo and use_pseudo_stats is not None:
+                use_pseudo = use_pseudo_stats.get(stat_id, True)  # Default to using pseudo
+
+                if not use_pseudo:
+                    # Pseudo is disabled - add individual mods instead
+                    individual_mods = filter_info.get("individual_mods", [])
+                    for ind_mod in individual_mods:
+                        ind_value = ind_mod["value"]
+                        if ind_value < 5:
+                            continue
+                        # Check if user set a custom min value for this individual mod
+                        ind_mod_index = ind_mod.get("mod_index")
+                        if ind_mod_index is not None and mod_min_values:
+                            str_idx = str(ind_mod_index)
+                            if str_idx in mod_min_values:
+                                min_val = int(mod_min_values[str_idx])
+                            else:
+                                min_val = int(ind_value * strictness)
+                        else:
+                            min_val = int(ind_value * strictness)
+                        filters.append({
+                            "id": ind_mod["stat_id"],
+                            "value": {"min": min_val},
+                            "_value": ind_value,
+                        })
+                        logger.info(f"  Individual mod (pseudo disabled): {ind_mod['stat_id']} min={min_val}")
+                    logger.info(f"Pseudo {stat_id} disabled - using {len(individual_mods)} individual mods")
+                    continue
+                else:
+                    # Pseudo is enabled - also check if any individual mods are explicitly selected
+                    # Frontend uses "hidden-{index}" keys to signal explicitly enabled hidden mods
+                    individual_mods = filter_info.get("individual_mods", [])
+                    added_individual = 0
+                    for ind_mod in individual_mods:
+                        ind_mod_index = ind_mod.get("mod_index")
+                        if ind_mod_index is not None and mod_min_values:
+                            # Check for special "hidden-{index}" key that signals explicit enablement
+                            hidden_key = f"hidden-{ind_mod_index}"
+                            if hidden_key in mod_min_values:
+                                # User explicitly enabled this individual mod alongside the pseudo
+                                ind_value = ind_mod["value"]
+                                min_val = int(mod_min_values[hidden_key])
+                                filters.append({
+                                    "id": ind_mod["stat_id"],
+                                    "value": {"min": min_val},
+                                    "_value": ind_value,
+                                })
+                                added_individual += 1
+                                logger.info(f"  Individual mod (with pseudo): {ind_mod['stat_id']} min={min_val}")
+                    if added_individual > 0:
+                        logger.info(f"Pseudo {stat_id} enabled + {added_individual} individual mods")
+                    else:
+                        logger.info(f"Pseudo {stat_id} enabled - using aggregated pseudo stat only")
 
             # Check if we have custom min value from user
             min_value = None
@@ -363,8 +529,12 @@ class ItemPricer:
                     if str_idx in mod_min_values:
                         min_value = int(mod_min_values[str_idx])
                         logger.info(f"Using custom min value for {stat_id} (idx={mod_index}): {min_value}")
-                # For pseudo mods, could sum user values but for now just use strictness
-                # (pseudo mods aggregate multiple mods, so user control is complex)
+                # For pseudo mods, check for pseudo-{stat_id} key
+                if is_pseudo:
+                    pseudo_key = f"pseudo-{stat_id}"
+                    if pseudo_key in mod_min_values:
+                        min_value = int(mod_min_values[pseudo_key])
+                        logger.info(f"Using custom min value for pseudo {stat_id}: {min_value}")
 
             # Fall back to strictness-based calculation
             if min_value is None:
@@ -481,12 +651,22 @@ class ItemPricer:
         strictness: float,
         trade_url: Optional[str] = None,
         item: Optional[CraftableItem] = None,
+        pseudo_stats: Optional[List[PseudoStatInfo]] = None,
     ) -> PriceEstimate:
-        """Calculate price statistics from listings."""
+        """Calculate price statistics using floor-price approach.
 
-        # Normalize all prices to chaos and build listing objects
+        The cheapest recent listing is the best price indicator - if it hasn't
+        been snatched up, that's a reasonable floor price. We use the 25th
+        percentile of fresh listings, filtering out stale cheap listings that
+        may be price fixers.
+        """
+        from datetime import datetime, timezone
+
+        # Normalize all prices to chaos and build listing objects with age
+        now = datetime.now(timezone.utc)
         chaos_prices = []
         price_listings = []
+        listing_ages_hours = []
 
         for listing in listings:
             chaos_value = await self._normalize_to_chaos(
@@ -494,7 +674,17 @@ class ItemPricer:
                 listing.price_currency
             )
             if chaos_value is not None:
+                # Calculate listing age in hours
+                age_hours = 0
+                if listing.indexed_time:
+                    try:
+                        indexed = datetime.fromisoformat(listing.indexed_time.replace('Z', '+00:00'))
+                        age_hours = (now - indexed).total_seconds() / 3600
+                    except:
+                        age_hours = 0
+
                 chaos_prices.append(chaos_value)
+                listing_ages_hours.append(age_hours)
                 price_listings.append(PriceListing(
                     price_amount=listing.price_amount,
                     price_currency=listing.price_currency,
@@ -516,24 +706,135 @@ class ItemPricer:
                     socketed_rune_name=listing.socketed_rune_name,
                     is_corrupted=listing.is_corrupted,
                     is_desecrated=listing.is_desecrated,
+                    # Computed aggregate stats from TradeListing
+                    total_ele_res=listing.total_elemental_resistance,
+                    total_chaos_res=listing.total_chaos_resistance,
+                    total_life=listing.total_life,
+                    movement_speed=listing.total_movement_speed,
                 ))
 
         if not chaos_prices:
             return None
 
-        # Sort listings by chaos price
-        price_listings.sort(key=lambda x: x.price_chaos)
+        # Sort listings by chaos price first
+        sorted_data = sorted(zip(chaos_prices, price_listings, listing_ages_hours), key=lambda x: x[0])
+        chaos_prices = [x[0] for x in sorted_data]
+        price_listings = [x[1] for x in sorted_data]
+        listing_ages_hours = [x[2] for x in sorted_data]
+
+        # Identify outliers using IQR method (mark but don't remove)
+        outlier_indices = self._identify_outliers(chaos_prices)
+        outliers_removed = len(outlier_indices)
+
+        # Mark each listing and calculate similarity
+        fresh_prices = []
+
+        for i, (price, listing, age) in enumerate(zip(chaos_prices, price_listings, listing_ages_hours)):
+            # Set age on listing
+            listing.listing_age_hours = round(age, 1)
+
+            # Mark outliers
+            listing.is_outlier = i in outlier_indices
+
+            # Calculate similarity score for this listing
+            sim = self._calculate_listing_similarity(listing, mod_filters, item)
+            listing.similarity_score = round(sim, 2)
+
+            # Calculate detailed comparison (% better/worse)
+            comparison_pct, stat_comparisons = self._calculate_listing_comparison(listing, mod_filters, item)
+            listing.comparison_pct = comparison_pct
+            listing.stat_comparisons = stat_comparisons
+            # Set value comparison label
+            if comparison_pct > 5:
+                listing.value_comparison = "better"
+            elif comparison_pct < -5:
+                listing.value_comparison = "worse"
+            else:
+                listing.value_comparison = "similar"
+
+            # Track fresh prices for stats (non-outlier)
+            if not listing.is_outlier:
+                fresh_prices.append(price)
+
+        # If too few fresh prices, include all
+        if len(fresh_prices) < 3:
+            fresh_prices = [p for p in chaos_prices]
+
+        # Note: value_comparison is left as None for now
+        # A proper comparison would need to compare like-for-like stats
+        # (e.g., user's total ele res vs listing's total ele res)
+
+        # Dump listings to file for debugging (after all markers are set)
+        import json
+        debug_data = []
+        for i, pl in enumerate(price_listings):
+            debug_data.append({
+                "index": i,
+                "price_chaos": pl.price_chaos,
+                "price_amount": pl.price_amount,
+                "price_currency": pl.price_currency,
+                "age_hours": pl.listing_age_hours,
+                "is_outlier": pl.is_outlier,
+                "is_stale_cheap": pl.is_stale_cheap,
+                "similarity_score": pl.similarity_score,
+                "value_comparison": pl.value_comparison,
+                "comparison_pct": pl.comparison_pct,
+                "stat_comparisons": pl.stat_comparisons,
+                "item_name": pl.item_name,
+                "item_base": pl.item_base,
+                "item_level": pl.item_level,
+                "total_ele_res": pl.total_ele_res,
+                "total_chaos_res": pl.total_chaos_res,
+                "total_life": pl.total_life,
+                "movement_speed": pl.movement_speed,
+                "armour": pl.armour,
+                "evasion": pl.evasion,
+                "energy_shield": pl.energy_shield,
+                "prefix_mods": pl.prefix_mods,
+                "suffix_mods": pl.suffix_mods,
+            })
+        with open("listings_debug.json", "w") as f:
+            json.dump(debug_data, f, indent=2, default=str)
+        logger.info(f"Dumped {len(debug_data)} listings to listings_debug.json")
+
+        # Calculate similarity scores for fresh listings only (for avg)
+        similarity_scores = [pl.similarity_score for pl in price_listings
+                            if not pl.is_outlier and pl.similarity_score]
+
+        avg_similarity = mean(similarity_scores) if similarity_scores else 0.5
 
         # Calculate statistics
-        min_price = min(chaos_prices)
-        max_price = max(chaos_prices)
-        median_price = median(chaos_prices)
-        avg_price = mean(chaos_prices)
+        min_price = min(fresh_prices)
+        max_price = max(fresh_prices)
+        avg_price = mean(fresh_prices)
 
-        # Determine confidence based on sample size and strictness
-        if len(chaos_prices) >= 10 and strictness >= 0.8:
+        # Floor price approach: Use 25th percentile instead of median
+        # This gives a price closer to what you'd actually pay
+        if len(fresh_prices) >= 4:
+            # 25th percentile
+            floor_price = fresh_prices[len(fresh_prices) // 4]
+        elif len(fresh_prices) >= 2:
+            # With few listings, use the lower of first two
+            floor_price = fresh_prices[0] if fresh_prices[0] < fresh_prices[1] * 0.7 else fresh_prices[1]
+        else:
+            floor_price = fresh_prices[0] if fresh_prices else 0
+
+        # Also calculate median for reference
+        median_idx = len(fresh_prices) // 2
+        true_median = fresh_prices[median_idx] if fresh_prices else 0
+
+        # Calculate price spread (IQR as % of floor price)
+        price_spread = None
+        if len(fresh_prices) >= 4 and floor_price > 0:
+            q1 = fresh_prices[len(fresh_prices) // 4]
+            q3 = fresh_prices[(3 * len(fresh_prices)) // 4]
+            iqr = q3 - q1
+            price_spread = round((iqr / floor_price) * 100, 1)
+
+        # Confidence based on sample size and price consistency
+        if len(fresh_prices) >= 10 and (price_spread is None or price_spread < 50):
             confidence = "high"
-        elif len(chaos_prices) >= 5 and strictness >= 0.6:
+        elif len(fresh_prices) >= 5:
             confidence = "medium"
         else:
             confidence = "low"
@@ -544,7 +845,7 @@ class ItemPricer:
             display_name = filter_info.get("name", stat_id)
             search_criteria[display_name] = filter_info["value"]
 
-        # Add base stats (keys match pob-data: Armour, Evasion, EnergyShield)
+        # Add base stats
         if item and item.calculated_stats:
             for stat_name, stat_value in item.calculated_stats.items():
                 if stat_name in BASE_STAT_TO_TRADE and stat_value > 0:
@@ -553,27 +854,327 @@ class ItemPricer:
         estimate = PriceEstimate(
             min_price=min_price,
             max_price=max_price,
-            median_price=median_price,
+            median_price=floor_price,  # Use floor price as main estimate
             average_price=avg_price,
             currency="chaos",
-            num_listings=len(chaos_prices),
+            num_listings=len(fresh_prices),
             confidence=confidence,
             search_criteria=search_criteria,
-            listings=price_listings,
+            listings=price_listings,  # Return ALL listings with markers
             trade_url=trade_url,
+            pseudo_stats=pseudo_stats or [],
+            outliers_removed=outliers_removed,
+            avg_similarity=round(avg_similarity, 2),
+            price_spread=price_spread,
         )
 
-        # Add exalted/divine values
+        # Add exalted/divine values based on floor price
         try:
             market = await get_market_service()
-            exalt_value = await market.convert(median_price, "chaos", "exalted")
-            divine_value = await market.convert(median_price, "chaos", "divine")
+            exalt_value = await market.convert(floor_price, "chaos", "exalted")
+            divine_value = await market.convert(floor_price, "chaos", "divine")
             estimate.exalted_value = exalt_value
             estimate.divine_value = divine_value
         except Exception as e:
             logger.warning(f"Failed to convert price to exalted/divine: {e}")
 
+        logger.info(f"Floor price: {floor_price:.0f}c ({estimate.divine_value:.1f} div), median: {true_median:.0f}c, outliers: {outliers_removed}")
         return estimate
+
+    def _identify_outliers(self, prices: List[float]) -> set:
+        """
+        Identify outlier prices using IQR method.
+
+        Returns:
+            Set of indices that are outliers
+        """
+        if len(prices) < 5:
+            return set()
+
+        sorted_prices = sorted(prices)
+        n = len(sorted_prices)
+
+        # Calculate Q1, Q3, IQR
+        q1_idx = n // 4
+        q3_idx = (3 * n) // 4
+        q1 = sorted_prices[q1_idx]
+        q3 = sorted_prices[q3_idx]
+        iqr = q3 - q1
+
+        # Define bounds (1.5 * IQR is standard)
+        lower_bound = q1 - 1.5 * iqr
+        upper_bound = q3 + 1.5 * iqr
+
+        # Find outlier indices
+        outlier_indices = set()
+        for i, price in enumerate(prices):
+            if price < lower_bound or price > upper_bound:
+                outlier_indices.add(i)
+
+        logger.info(f"Outlier detection: {len(outlier_indices)} outliers (bounds: {lower_bound:.1f}-{upper_bound:.1f})")
+        return outlier_indices
+
+    def _calculate_listing_total_value(
+        self,
+        listing: PriceListing,
+        mod_filters: Dict[str, Dict[str, Any]]
+    ) -> float:
+        """
+        Calculate a comparable total value for a listing based on the mod filters.
+        Used to determine if a listing is better/worse than user's item.
+        """
+        total = 0.0
+
+        # Use computed aggregate stats if available
+        if listing.total_ele_res:
+            total += listing.total_ele_res
+        if listing.total_chaos_res:
+            total += listing.total_chaos_res
+        if listing.total_life:
+            total += listing.total_life
+        if listing.movement_speed:
+            total += listing.movement_speed
+
+        # If no aggregate stats, try to parse from mods
+        if total == 0:
+            all_mods = (listing.prefix_mods or []) + (listing.suffix_mods or [])
+            for mod in all_mods:
+                if isinstance(mod, dict):
+                    values = mod.get('values', [])
+                    if values:
+                        total += values[0]
+
+        return total
+
+    def _parse_mod_value_from_text(self, mod_text: str) -> Optional[float]:
+        """
+        Extract the numeric value from a mod text string.
+
+        Examples:
+            "+45 to maximum Life" -> 45
+            "+32% to Fire Resistance" -> 32
+            "Adds 15 to 25 Physical Damage" -> 20 (average)
+        """
+        import re
+
+        # Pattern for range values: "Adds X to Y"
+        range_match = re.search(r'(\d+)\s+to\s+(\d+)', mod_text)
+        if range_match:
+            low = float(range_match.group(1))
+            high = float(range_match.group(2))
+            return (low + high) / 2
+
+        # Pattern for single values: "+X" or "X%"
+        single_match = re.search(r'[+-]?(\d+(?:\.\d+)?)', mod_text)
+        if single_match:
+            return float(single_match.group(1))
+
+        return None
+
+    def _calculate_listing_similarity(
+        self,
+        listing: PriceListing,
+        mod_filters: Dict[str, Dict[str, Any]],
+        item: Optional[CraftableItem] = None
+    ) -> float:
+        """
+        Calculate how similar a listing is to the user's item.
+
+        Returns a score from 0.0 to 1.0 where 1.0 is a perfect match.
+        """
+        if not mod_filters:
+            return 0.5  # No filters to compare
+
+        total_score = 0.0
+        num_filters = 0
+
+        # Combine all listing mods for searching
+        all_mods = listing.explicit_mods + (listing.implicit_mods or [])
+        all_mods_text = " ".join(all_mods).lower()
+
+        for stat_id, filter_info in mod_filters.items():
+            user_value = filter_info.get("value", 0)
+            if user_value <= 0:
+                continue
+
+            num_filters += 1
+
+            # Try to find this stat in the listing mods
+            # For pseudo stats, we need to look for keywords
+            stat_name = filter_info.get("stat_text", filter_info.get("name", "")).lower()
+
+            # Simple keyword matching
+            found_value = None
+            for mod in all_mods:
+                mod_lower = mod.lower()
+                # Check if this mod relates to our stat
+                if stat_name and any(word in mod_lower for word in stat_name.split()[:3] if len(word) > 3):
+                    found_value = self._parse_mod_value_from_text(mod)
+                    if found_value:
+                        break
+
+            if found_value is not None:
+                # Score based on how close the value is
+                # 1.0 if listing value >= user value, proportionally less otherwise
+                ratio = min(found_value / user_value, 1.2)  # Cap at 1.2 to not over-reward
+                total_score += min(ratio, 1.0)
+            else:
+                # Mod not found - partial penalty (listing might still have it via trade filter)
+                total_score += 0.3  # Give some credit since trade API found it
+
+        # Add base stat similarity if available
+        if item and item.calculated_stats:
+            for stat_name in ["Armour", "Evasion", "EnergyShield"]:
+                user_stat = item.calculated_stats.get(stat_name, 0)
+                if user_stat > 0:
+                    listing_stat = getattr(listing, stat_name.lower().replace("energyshield", "energy_shield"), 0) or 0
+                    if listing_stat > 0:
+                        ratio = min(listing_stat / user_stat, 1.2)
+                        total_score += min(ratio, 1.0) * 0.5  # Half weight for base stats
+                        num_filters += 0.5
+
+        return total_score / num_filters if num_filters > 0 else 0.5
+
+    def _calculate_listing_comparison(
+        self,
+        listing: PriceListing,
+        mod_filters: Dict[str, Dict[str, Any]],
+        item: Optional[CraftableItem] = None
+    ) -> tuple[float, Dict[str, Dict[str, Any]]]:
+        """
+        Calculate how the listing compares to the user's item.
+
+        Returns:
+            - overall_pct: Overall % difference (positive = listing is better)
+            - stat_comparisons: Dict of {stat_id: {user: x, listing: y, diff_pct: z, name: str, matched: str}}
+        """
+        stat_comparisons = {}
+        total_diff_pct = 0.0
+        num_stats = 0
+
+        # Map pseudo stat IDs to listing aggregate fields
+        PSEUDO_TO_LISTING = {
+            "pseudo.pseudo_total_elemental_resistance": ("total_ele_res", "Total Ele Res"),
+            "pseudo.pseudo_total_chaos_resistance": ("total_chaos_res", "Total Chaos Res"),
+            "pseudo.pseudo_total_life": ("total_life", "Total Life"),
+        }
+
+        # Build a map of stat_id -> value from listing's parsed mods
+        listing_stat_values: Dict[str, float] = {}
+        listing_stat_names: Dict[str, str] = {}
+
+        if listing.prefix_mods:
+            for mod in listing.prefix_mods:
+                if mod.get("stat_id") and mod.get("values"):
+                    # Use the first value (current rolled value)
+                    listing_stat_values[mod["stat_id"]] = mod["values"][0]
+                    listing_stat_names[mod["stat_id"]] = mod.get("name", "")
+
+        if listing.suffix_mods:
+            for mod in listing.suffix_mods:
+                if mod.get("stat_id") and mod.get("values"):
+                    listing_stat_values[mod["stat_id"]] = mod["values"][0]
+                    listing_stat_names[mod["stat_id"]] = mod.get("name", "")
+
+        for stat_id, filter_info in mod_filters.items():
+            user_value = filter_info.get("value", 0)
+            if user_value <= 0:
+                continue
+
+            listing_value = None
+            stat_display_name = filter_info.get("name", stat_id)
+            match_method = "none"
+
+            # Check if this is a pseudo stat with a direct mapping
+            if stat_id in PSEUDO_TO_LISTING:
+                field_name, display_name = PSEUDO_TO_LISTING[stat_id]
+                listing_value = getattr(listing, field_name, None)
+                stat_display_name = display_name
+                match_method = f"pseudo:{field_name}"
+
+            # Try to match by stat_id directly from parsed mods
+            elif stat_id in listing_stat_values:
+                listing_value = listing_stat_values[stat_id]
+                match_method = f"stat_id:{stat_id}"
+
+            # Check for movement speed specially (common stat)
+            elif "movement speed" in filter_info.get("stat_text", "").lower():
+                listing_value = listing.movement_speed
+                stat_display_name = "Move Speed"
+                match_method = "pattern:movement_speed"
+
+            # Calculate diff if we found a value
+            if listing_value is not None and user_value > 0:
+                diff_pct = ((listing_value - user_value) / user_value) * 100
+                stat_comparisons[stat_id] = {
+                    "user": round(user_value, 1),
+                    "listing": round(listing_value, 1),
+                    "diff_pct": round(diff_pct, 1),
+                    "name": stat_display_name,
+                    "matched": match_method,
+                }
+                total_diff_pct += diff_pct
+                num_stats += 1
+
+        # Add equipment stat comparisons if we have the user's item
+        if item and item.calculated_stats:
+            EQUIPMENT_STATS = [
+                ("EnergyShield", "energy_shield", "Energy Shield"),
+                ("Armour", "armour", "Armour"),
+                ("Evasion", "evasion", "Evasion"),
+            ]
+            for item_field, listing_field, display_name in EQUIPMENT_STATS:
+                user_value = item.calculated_stats.get(item_field, 0)
+                if user_value > 0:
+                    listing_value = getattr(listing, listing_field, 0) or 0
+                    if listing_value > 0:
+                        diff_pct = ((listing_value - user_value) / user_value) * 100
+                        stat_comparisons[f"equip.{listing_field}"] = {
+                            "user": round(user_value, 1),
+                            "listing": round(listing_value, 1),
+                            "diff_pct": round(diff_pct, 1),
+                            "name": display_name,
+                            "matched": f"equipment:{listing_field}",
+                        }
+                        total_diff_pct += diff_pct
+                        num_stats += 1
+
+        overall_pct = total_diff_pct / num_stats if num_stats > 0 else 0.0
+        return round(overall_pct, 1), stat_comparisons
+
+    def _weighted_median(
+        self,
+        prices: List[float],
+        weights: List[float]
+    ) -> float:
+        """
+        Calculate weighted median price.
+
+        Higher weight = more influence on the median.
+        """
+        if not prices:
+            return 0.0
+
+        if len(prices) == 1:
+            return prices[0]
+
+        # Sort by price while keeping weights paired
+        sorted_pairs = sorted(zip(prices, weights), key=lambda x: x[0])
+        sorted_prices = [p for p, w in sorted_pairs]
+        sorted_weights = [w for p, w in sorted_pairs]
+
+        # Calculate cumulative weights
+        total_weight = sum(sorted_weights)
+        if total_weight <= 0:
+            return median(prices)  # Fallback to simple median
+
+        cumulative = 0.0
+        for price, weight in sorted_pairs:
+            cumulative += weight
+            if cumulative >= total_weight / 2:
+                return price
+
+        return sorted_prices[-1]
 
     async def _normalize_to_chaos(
         self,

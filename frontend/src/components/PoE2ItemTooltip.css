@@ -150,6 +150,18 @@
   color: var(--poe2-magic, #8888ff);
 }
 
+/* DPS Stats */
+.poe2-property-line.dps-stat {
+  margin-top: 4px;
+  padding-top: 4px;
+  border-top: 1px dashed rgba(127, 127, 127, 0.2);
+}
+
+.poe2-property-line.dps-stat .poe2-property-value {
+  color: #e8c873;
+  font-weight: 600;
+}
+
 /* Item Level */
 .poe2-item-level {
   padding: 4px 14px 6px;
