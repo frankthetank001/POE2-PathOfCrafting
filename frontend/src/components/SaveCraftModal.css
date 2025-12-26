@@ -1,0 +1,192 @@
+.save-craft-modal {
+  background: #1a1a1a;
+  border: 2px solid rgba(100, 180, 255, 0.5);
+  border-radius: 8px;
+  padding: 1.5rem;
+  max-width: 500px;
+  width: 90%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 0 20px rgba(100, 180, 255, 0.3);
+}
+
+.save-craft-modal h3 {
+  color: #88ccff;
+  margin: 0 0 1rem 0;
+  text-align: center;
+  font-size: 1.3rem;
+}
+
+.save-mode-tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.save-mode-tab {
+  flex: 1;
+  padding: 0.6rem 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  color: #888;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 0.9rem;
+}
+
+.save-mode-tab:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  color: #aaa;
+}
+
+.save-mode-tab.active {
+  background: rgba(100, 180, 255, 0.2);
+  border-color: rgba(100, 180, 255, 0.5);
+  color: #88ccff;
+}
+
+.save-mode-tab:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.save-form {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.form-group label {
+  color: #aaa;
+  font-size: 0.85rem;
+}
+
+.form-group input,
+.form-group textarea {
+  background: rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+  padding: 0.6rem;
+  color: #fff;
+  font-size: 0.95rem;
+  font-family: inherit;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: rgba(100, 180, 255, 0.5);
+}
+
+.form-group textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+.save-info {
+  color: #888;
+  font-size: 0.85rem;
+  margin: 0;
+  padding: 0.5rem;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 4px;
+}
+
+.error-message {
+  color: #ff6666;
+  font-size: 0.9rem;
+  margin: 0;
+  padding: 0.5rem;
+  background: rgba(255, 0, 0, 0.1);
+  border-radius: 4px;
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.save-btn,
+.cancel-btn {
+  flex: 1;
+  padding: 0.7rem 1rem;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.save-btn {
+  background: rgba(100, 180, 255, 0.2);
+  border: 1px solid rgba(100, 180, 255, 0.5);
+  color: #88ccff;
+}
+
+.save-btn:hover:not(:disabled) {
+  background: rgba(100, 180, 255, 0.3);
+}
+
+.save-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cancel-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #888;
+}
+
+.cancel-btn:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.1);
+  color: #aaa;
+}
+
+/* Success state */
+.save-success {
+  text-align: center;
+  padding: 1rem 0;
+}
+
+.success-message {
+  color: #44ff88;
+  font-size: 1.1rem;
+  margin: 0 0 0.5rem 0;
+}
+
+.success-detail {
+  color: #888;
+  font-size: 0.9rem;
+  margin: 0 0 1.5rem 0;
+}
+
+.success-detail code {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 0.2rem 0.4rem;
+  border-radius: 3px;
+  font-family: monospace;
+  color: #aaa;
+}
+
+.save-success .close-modal-btn {
+  padding: 0.7rem 2rem;
+  background: rgba(68, 255, 136, 0.2);
+  border: 1px solid rgba(68, 255, 136, 0.5);
+  border-radius: 4px;
+  color: #44ff88;
+  cursor: pointer;
+  font-size: 0.95rem;
+  transition: all 0.2s ease;
+}
+
+.save-success .close-modal-btn:hover {
+  background: rgba(68, 255, 136, 0.3);
+}

@@ -27,5 +27,14 @@ class Settings(BaseSettings):
 
     api_v1_prefix: str = Field(default="/api/v1")
 
+    # Security settings
+    secret_key: str = Field(default="change-this-secret-key-in-production")
+    jwt_algorithm: str = Field(default="HS256")
+    access_token_expire_days: int = Field(default=7)
+
+    # Default admin credentials (change in production via env vars)
+    default_admin_username: str = Field(default="admin")
+    default_admin_password: str = Field(default="changeme")
+
 
 settings = Settings()

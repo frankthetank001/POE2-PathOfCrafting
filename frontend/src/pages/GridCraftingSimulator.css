@@ -730,37 +730,47 @@
 }
 
 .tab-headers {
-  display: flex;
-  background: #2a2a2a;
-  border-bottom: 2px solid #444;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 0.25rem;
+  padding: 0.35rem;
+  background: rgba(15, 12, 10, 0.9);
+  border-bottom: 1px solid #27211f;
 }
 
 .tab-header {
-  flex: 1;
-  padding: 0.35rem 0.75rem;
-  background: transparent;
-  border: none;
-  color: #aaa;
-  font-size: 0.75rem;
-  font-weight: 500;
+  padding: 0.3rem 0.4rem;
+  border: 1px solid #3a3530;
+  border-radius: 2px;
   cursor: pointer;
-  transition: all 0.2s;
-  border-right: 1px solid #444;
+  font-family: 'FontinSmallCaps', 'Fontin', Georgia, serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+  transition: all 0.15s ease;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 0.3rem;
+  background: linear-gradient(180deg, #1a1814 0%, #0f0d0a 100%);
+  color: #7f7f7f;
+  text-transform: uppercase;
 }
 
 .tab-header:last-child {
-  border-right: none;
+  border-right: 1px solid #3a3530;
 }
 
 .tab-header:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: #fff;
+  background: linear-gradient(180deg, #252219 0%, #1a1814 100%);
+  border-color: #4a4035;
+  color: #aa9e82;
 }
 
 .tab-header.active {
-  background: #d4af37;
-  color: #000;
-  font-weight: 600;
+  background: linear-gradient(180deg, #2a2520 0%, #1f1b16 100%);
+  border-color: #aa9e82;
+  color: #aa9e82;
 }
 
 .tab-content-area {
@@ -1497,80 +1507,47 @@
 }
 
 .item-controls {
-  display: flex;
-  gap: 0.4rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 0.25rem;
+  padding: 0.5rem;
+  background: rgba(15, 12, 10, 0.8);
+  border-top: 1px solid #27211f;
 }
 
-.reset-button, .undo-button, .redo-button, .redo-rerun-button {
-  padding: 0.5rem 0.75rem;
-  border: none;
-  border-radius: 4px;
+.item-controls button {
+  padding: 0.3rem 0.4rem;
+  border: 1px solid #3a3530;
+  border-radius: 2px;
   cursor: pointer;
-  font-weight: 500;
-  font-size: 0.8rem;
-  transition: all 0.2s;
+  font-family: 'FontinSmallCaps', 'Fontin', Georgia, serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+  transition: all 0.15s ease;
   display: flex;
+  flex-direction: row;
   align-items: center;
+  justify-content: center;
   gap: 0.3rem;
-  white-space: nowrap;
+  background: linear-gradient(180deg, #1a1814 0%, #0f0d0a 100%);
+  color: #7f7f7f;
+  text-transform: uppercase;
 }
 
-.reset-button {
-  background: #dc3545;
-  color: white;
+.item-controls button:hover:not(:disabled) {
+  background: linear-gradient(180deg, #252219 0%, #1a1814 100%);
+  border-color: #4a4035;
+  color: #aa9e82;
 }
 
-.reset-button:hover:not(:disabled) {
-  background: #e55666;
-  transform: translateY(-2px);
-}
-
-.undo-button {
-  background: #6c757d;
-  color: white;
-}
-
-.undo-button:hover:not(:disabled) {
-  background: #7c848d;
-  transform: translateY(-2px);
-}
-
-.undo-button:disabled {
-  opacity: 0.5;
+.item-controls button:disabled {
+  opacity: 0.35;
   cursor: not-allowed;
-  transform: none;
 }
 
-.redo-button {
-  background: #5a6268;
-  color: white;
-}
-
-.redo-button:hover:not(:disabled) {
-  background: #6a737b;
-  transform: translateY(-2px);
-}
-
-.redo-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.redo-rerun-button {
-  background: #28a745;
-  color: white;
-}
-
-.redo-rerun-button:hover:not(:disabled) {
-  background: #34b755;
-  transform: translateY(-2px);
-}
-
-.redo-rerun-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
+.item-controls button .btn-icon {
+  font-size: 0.85rem;
+  opacity: 0.7;
 }
 
 /* Base and Paste Mode Styles */
@@ -2351,16 +2328,7 @@
   }
 
   .tab-headers {
-    flex-direction: column;
-  }
-
-  .tab-header {
-    border-right: none;
-    border-bottom: 1px solid #444;
-  }
-
-  .tab-header:last-child {
-    border-bottom: none;
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .base-selector-row {
@@ -2379,7 +2347,7 @@
   }
 
   .item-controls {
-    flex-direction: column;
+    grid-template-columns: repeat(3, 1fr);
   }
 
   .vertical-currency-button {

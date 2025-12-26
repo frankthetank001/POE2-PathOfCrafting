@@ -1,0 +1,212 @@
+.local-crafts-modal {
+  background: #1a1a1a;
+  border: 2px solid rgba(100, 180, 255, 0.5);
+  border-radius: 8px;
+  padding: 1.5rem;
+  max-width: 550px;
+  width: 90%;
+  max-height: 80vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 0 20px rgba(100, 180, 255, 0.3);
+}
+
+.local-crafts-modal h3 {
+  color: #88ccff;
+  margin: 0 0 1rem 0;
+  text-align: center;
+  font-size: 1.3rem;
+  flex-shrink: 0;
+}
+
+.no-crafts {
+  text-align: center;
+  padding: 2rem 1rem;
+  color: #888;
+}
+
+.no-crafts p {
+  margin: 0.5rem 0;
+}
+
+.no-crafts-hint {
+  font-size: 0.85rem;
+  color: #666;
+}
+
+.crafts-list {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  padding-right: 0.5rem;
+}
+
+.crafts-list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.crafts-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 4px;
+}
+
+.crafts-list::-webkit-scrollbar-thumb {
+  background: rgba(100, 180, 255, 0.3);
+  border-radius: 4px;
+}
+
+.craft-item {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 6px;
+  padding: 0.75rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.craft-item:hover {
+  background: rgba(255, 255, 255, 0.05);
+  border-color: rgba(255, 255, 255, 0.2);
+}
+
+.craft-item.selected {
+  background: rgba(100, 180, 255, 0.1);
+  border-color: rgba(100, 180, 255, 0.5);
+}
+
+.craft-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.4rem;
+}
+
+.craft-name {
+  color: #fff;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.craft-date {
+  color: #666;
+  font-size: 0.8rem;
+}
+
+.craft-details {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.85rem;
+}
+
+.craft-base {
+  color: #aaa;
+}
+
+.craft-stats {
+  color: #888;
+}
+
+.craft-description {
+  color: #777;
+  font-size: 0.8rem;
+  margin: 0.4rem 0 0 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.craft-actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  justify-content: flex-end;
+}
+
+.craft-actions button {
+  padding: 0.3rem 0.6rem;
+  font-size: 0.75rem;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.submit-btn {
+  background: rgba(68, 255, 136, 0.1);
+  border: 1px solid rgba(68, 255, 136, 0.3);
+  color: #44ff88;
+}
+
+.submit-btn:hover:not(:disabled) {
+  background: rgba(68, 255, 136, 0.2);
+}
+
+.submit-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.delete-btn {
+  background: rgba(255, 100, 100, 0.1);
+  border: 1px solid rgba(255, 100, 100, 0.3);
+  color: #ff8888;
+}
+
+.delete-btn:hover {
+  background: rgba(255, 100, 100, 0.2);
+}
+
+.delete-btn.confirm {
+  background: rgba(255, 100, 100, 0.3);
+  border-color: rgba(255, 100, 100, 0.6);
+}
+
+.modal-buttons {
+  display: flex;
+  gap: 0.75rem;
+  flex-shrink: 0;
+}
+
+.load-btn,
+.cancel-btn {
+  flex: 1;
+  padding: 0.7rem 1rem;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.load-btn {
+  background: rgba(100, 180, 255, 0.2);
+  border: 1px solid rgba(100, 180, 255, 0.5);
+  color: #88ccff;
+}
+
+.load-btn:hover:not(:disabled) {
+  background: rgba(100, 180, 255, 0.3);
+}
+
+.load-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.cancel-btn {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #888;
+}
+
+.cancel-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #aaa;
+}
+
+.cancel-btn.solo {
+  max-width: 200px;
+  margin: 0 auto;
+}

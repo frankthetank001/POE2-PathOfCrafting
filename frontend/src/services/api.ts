@@ -1,6 +1,5 @@
 import axios from 'axios'
 import type { ItemParseRequest, ItemParseResponse } from '@/types/item'
-import type { BuildsResponse, LeaguesResponse } from '@/types/build'
 
 // Get API URL from runtime config (loaded from config.js) or fall back to env/localhost
 const getApiBaseUrl = () => {
@@ -24,22 +23,6 @@ const api = axios.create({
 export const itemsApi = {
   parseItem: async (request: ItemParseRequest): Promise<ItemParseResponse> => {
     const response = await api.post<ItemParseResponse>('/items/parse', request)
-    return response.data
-  },
-}
-
-export const buildsApi = {
-  getLeagues: async (): Promise<LeaguesResponse> => {
-    const response = await api.get<LeaguesResponse>('/builds/leagues')
-    return response.data
-  },
-
-  getBuilds: async (params?: {
-    league?: string
-    class?: string
-    limit?: number
-  }): Promise<BuildsResponse> => {
-    const response = await api.get<BuildsResponse>('/builds', { params })
     return response.data
   },
 }

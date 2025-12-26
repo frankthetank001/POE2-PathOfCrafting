@@ -1,8 +1,12 @@
 import { useState } from 'react'
 import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom'
-import BuildBrowser from './pages/BuildBrowser'
 import GridCraftingSimulator from './pages/GridCraftingSimulator'
+import CraftLibrary from './pages/CraftLibrary'
+import CraftDetail from './pages/CraftDetail'
+import AdminLogin from './pages/AdminLogin'
+import AdminDashboard from './pages/AdminDashboard'
 import { VersionProvider, useGameVersion, GameVersion } from './contexts/VersionContext'
+import { AdminProvider } from './contexts/AdminContext'
 import './App.css'
 
 // Version injected at build time from git tags
@@ -39,7 +43,9 @@ function Navigation() {
           <Link to="/" className={`nav-link ${location.pathname === '/' ? 'nav-link-active' : ''}`}>
             Crafting Simulator
           </Link>
-          <span className="nav-link-disabled" title="Coming soon">Build Browser</span>
+          <Link to="/crafts" className={`nav-link ${location.pathname.startsWith('/craft') ? 'nav-link-active' : ''}`}>
+            Craft Library
+          </Link>
           <div className="version-selector">
             <select
               className="version-select"
@@ -85,18 +91,29 @@ function Navigation() {
 function App() {
   return (
     <VersionProvider>
-      <Router>
-        <div className="app">
-          <Navigation />
+      <AdminProvider>
+        <Router>
+          <Routes>
+            {/* Admin routes - no main navigation */}
+            <Route path="/admin/login" element={<AdminLogin />} />
+            <Route path="/admin" element={<AdminDashboard />} />
 
-          <main className="main">
-            <Routes>
-              <Route path="/" element={<GridCraftingSimulator />} />
-              <Route path="/builds" element={<BuildBrowser />} />
-            </Routes>
-          </main>
-        </div>
-      </Router>
+            {/* Main app routes */}
+            <Route path="/*" element={
+              <div className="app">
+                <Navigation />
+                <main className="main">
+                  <Routes>
+                    <Route path="/" element={<GridCraftingSimulator />} />
+                    <Route path="/crafts" element={<CraftLibrary />} />
+                    <Route path="/craft/:shortId" element={<CraftDetail />} />
+                  </Routes>
+                </main>
+              </div>
+            } />
+          </Routes>
+        </Router>
+      </AdminProvider>
     </VersionProvider>
   )
 }

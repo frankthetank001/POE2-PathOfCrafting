@@ -2,8 +2,11 @@ import { useState, useEffect, useMemo, useCallback } from 'react'
 import { craftingApi, HiddenTagsConfig } from '@/services/crafting-api'
 import { marketApi, ExchangeRates, ItemPriceEstimate, PseudoStatInfo } from '@/services/market-api'
 import { UnifiedCurrencyStash } from '@/components/UnifiedCurrencyStash'
+import { SaveCraftModal } from '@/components/SaveCraftModal'
+import { LocalCraftsList } from '@/components/LocalCraftsList'
 import { PoE2ItemFrame, PoE2Separator, PoE2Section, PoE2Property, PoE2TwoColumn, PoE2Column, PoE2TradeListingPreview } from '@/components/poe2'
 import type { CraftableItem, ItemModifier, ItemRarity, ItemBasesBySlot, SocketedRune } from '@/types/crafting'
+import type { CraftSnapshot } from '@/types/saved-craft'
 import { CURRENCY_DESCRIPTIONS } from '@/data/currency-descriptions'
 import './GridCraftingSimulator.css'
 
@@ -859,6 +862,10 @@ function GridCraftingSimulator() {
   // Reveal modal state
   const [revealModalOpen, setRevealModalOpen] = useState(false)
   const [revealingModId, setRevealingModId] = useState<string | null>(null)
+
+  // Save/Load craft modal state
+  const [saveModalOpen, setSaveModalOpen] = useState(false)
+  const [loadModalOpen, setLoadModalOpen] = useState(false)
   const [revealChoices, setRevealChoices] = useState<ItemModifier[]>([])
   const [rerollUsed, setRerollUsed] = useState(false)
 
@@ -2039,6 +2046,44 @@ function GridCraftingSimulator() {
       setLoading(false)
     }
   }
+
+  // Create a snapshot of the current craft state for saving
+  const createCraftSnapshot = useCallback((): CraftSnapshot => {
+    // Get the initial item (first in history, or current if no history)
+    const initialItem = itemHistory.length > 0 ? itemHistory[0] : item
+
+    return {
+      initialItem,
+      finalItem: item,
+      history,
+      itemHistory,
+      actionHistory,
+      currencySpent,
+      currencySpentHistory,
+    }
+  }, [item, history, itemHistory, actionHistory, currencySpent, currencySpentHistory])
+
+  // Load a craft snapshot into the simulator
+  const loadCraftSnapshot = useCallback((snapshot: CraftSnapshot) => {
+    setItem(snapshot.finalItem)
+    setHistory(snapshot.history)
+    setItemHistory(snapshot.itemHistory)
+    setActionHistory(snapshot.actionHistory)
+    setCurrencySpent(snapshot.currencySpent)
+    setCurrencySpentHistory(snapshot.currencySpentHistory)
+
+    // Clear redo stacks
+    setRedoItemStack([])
+    setRedoHistoryStack([])
+    setRedoCurrencyStack([])
+    setRedoOmensStack([])
+    setRedoCurrencySpentStack([])
+
+    // Mark item as created so we show the crafting view
+    setItemCreated(true)
+
+    setMessage('Craft loaded successfully')
+  }, [])
 
   const handleUndo = () => {
     if (itemHistory.length > 0) {
@@ -4856,9 +4901,10 @@ function GridCraftingSimulator() {
                       <button
                         className="reset-to-create-btn"
                         onClick={handleResetToCreate}
-                        title="Go back to item creation"
+                        title="New item"
                       >
-                        🔄 New
+                        <span className="btn-icon">✦</span>
+                        New
                       </button>
 
                       <button
@@ -4874,35 +4920,58 @@ function GridCraftingSimulator() {
                           handleHistoryReset()
                           setMessage('Item reset to Normal rarity')
                         }}
+                        title="Reset to normal"
                       >
-                        🔄 Reset
+                        <span className="btn-icon">↺</span>
+                        Reset
                       </button>
 
                       <button
                         className="undo-button"
                         onClick={handleUndo}
                         disabled={itemHistory.length === 0}
-                        title="Ctrl+Z"
+                        title="Undo (Ctrl+Z)"
                       >
-                        ↶ Undo
+                        <span className="btn-icon">◄</span>
+                        Undo
                       </button>
 
                       <button
                         className="redo-button"
                         onClick={handleRedo}
                         disabled={redoItemStack.length === 0}
-                        title="Ctrl+Y - Redo last undone action"
+                        title="Redo (Ctrl+Y)"
                       >
-                        ↷ Redo
+                        <span className="btn-icon">►</span>
+                        Redo
                       </button>
 
                       <button
                         className="redo-rerun-button"
                         onClick={handleRetryLastAction}
                         disabled={actionHistory.length === 0 || !actionHistory[actionHistory.length - 1]}
-                        title="Ctrl+R - Retry the last currency with new RNG"
+                        title="Retry with new RNG (Ctrl+R)"
                       >
-                        🎲 Retry
+                        <span className="btn-icon">⟳</span>
+                        Retry
+                      </button>
+
+                      <button
+                        className="save-craft-btn"
+                        onClick={() => setSaveModalOpen(true)}
+                        title="Save craft"
+                      >
+                        <span className="btn-icon">▼</span>
+                        Save
+                      </button>
+
+                      <button
+                        className="load-craft-btn"
+                        onClick={() => setLoadModalOpen(true)}
+                        title="Load craft"
+                      >
+                        <span className="btn-icon">▲</span>
+                        Load
                       </button>
                     </div>
                       </div>
@@ -5466,6 +5535,19 @@ function GridCraftingSimulator() {
           </div>
         )
       })()}
+
+      {/* Save/Load Craft Modals */}
+      <SaveCraftModal
+        isOpen={saveModalOpen}
+        onClose={() => setSaveModalOpen(false)}
+        snapshot={createCraftSnapshot()}
+      />
+
+      <LocalCraftsList
+        isOpen={loadModalOpen}
+        onClose={() => setLoadModalOpen(false)}
+        onLoad={loadCraftSnapshot}
+      />
     </div>
   )
 }

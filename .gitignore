@@ -84,3 +84,5 @@ backend/source_data/pob-data/
 nul
 backend/listings_debug.json
 backend/trade_request_debug.json
+backend/trade_api_actual_query.json
+backend/trade_stats_cache_debug.json

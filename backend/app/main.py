@@ -7,6 +7,29 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.api.v1.router import api_router
 from app.core.config import settings
 from app.core.logging import get_logger, setup_logging
+from app.models import Base, engine, SessionLocal, AdminUser
+from app.core.security import hash_password
+
+
+def init_database() -> None:
+    """Initialize database tables and seed default admin user."""
+    Base.metadata.create_all(bind=engine)
+
+    # Seed default admin user if none exists
+    db = SessionLocal()
+    try:
+        admin = db.query(AdminUser).first()
+        if admin is None:
+            default_admin = AdminUser(
+                username=settings.default_admin_username,
+                password_hash=hash_password(settings.default_admin_password),
+            )
+            db.add(default_admin)
+            db.commit()
+            logger = get_logger(__name__)
+            logger.info(f"Created default admin user: {settings.default_admin_username}")
+    finally:
+        db.close()
 
 
 @asynccontextmanager
@@ -14,6 +37,11 @@ async def lifespan(app: FastAPI) -> AsyncGenerator:
     setup_logging()
     logger = get_logger(__name__)
     logger.info("Starting PoE2 AI TradeCraft API")
+
+    # Initialize database
+    init_database()
+    logger.info("Database initialized")
+
     yield
     logger.info("Shutting down PoE2 AI TradeCraft API")
 
