@@ -1,53 +1,68 @@
 .save-craft-modal {
-  background: #1a1a1a;
-  border: 2px solid rgba(100, 180, 255, 0.5);
-  border-radius: 8px;
+  background: linear-gradient(180deg, #1a1814 0%, #0f0d0a 100%);
+  border: 1px solid #3a3530;
+  border-radius: 2px;
   padding: 1.5rem;
   max-width: 500px;
   width: 90%;
   max-height: 90vh;
   overflow-y: auto;
-  box-shadow: 0 0 20px rgba(100, 180, 255, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
 }
 
 .save-craft-modal h3 {
-  color: #88ccff;
+  color: #aa9e82;
   margin: 0 0 1rem 0;
   text-align: center;
-  font-size: 1.3rem;
+  font-family: 'FontinSmallCaps', 'Fontin', Georgia, serif;
+  font-size: 1.1rem;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .save-mode-tabs {
-  display: flex;
-  gap: 0.5rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.25rem;
   margin-bottom: 1rem;
+  padding: 0.35rem;
+  background: rgba(15, 12, 10, 0.9);
+  border: 1px solid #27211f;
+  border-radius: 2px;
 }
 
 .save-mode-tab {
-  flex: 1;
-  padding: 0.6rem 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
-  color: #888;
+  padding: 0.3rem 0.4rem;
+  border: 1px solid #3a3530;
+  border-radius: 2px;
   cursor: pointer;
-  transition: all 0.2s ease;
-  font-size: 0.9rem;
+  font-family: 'FontinSmallCaps', 'Fontin', Georgia, serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #1a1814 0%, #0f0d0a 100%);
+  color: #7f7f7f;
+  text-transform: uppercase;
 }
 
 .save-mode-tab:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.1);
-  color: #aaa;
+  background: linear-gradient(180deg, #252219 0%, #1a1814 100%);
+  border-color: #4a4035;
+  color: #aa9e82;
 }
 
 .save-mode-tab.active {
-  background: rgba(100, 180, 255, 0.2);
-  border-color: rgba(100, 180, 255, 0.5);
-  color: #88ccff;
+  background: linear-gradient(180deg, #2a2520 0%, #1f1b16 100%);
+  border-color: #aa9e82;
+  color: #aa9e82;
 }
 
 .save-mode-tab:disabled {
-  opacity: 0.5;
+  opacity: 0.35;
   cursor: not-allowed;
 }
 
@@ -64,25 +79,28 @@
 }
 
 .form-group label {
-  color: #aaa;
-  font-size: 0.85rem;
+  color: #7f7f7f;
+  font-family: 'FontinSmallCaps', 'Fontin', Georgia, serif;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .form-group input,
 .form-group textarea {
   background: rgba(0, 0, 0, 0.3);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  border-radius: 4px;
-  padding: 0.6rem;
-  color: #fff;
-  font-size: 0.95rem;
-  font-family: inherit;
+  border: 1px solid #3a3530;
+  border-radius: 2px;
+  padding: 0.5rem;
+  color: #aa9e82;
+  font-family: 'Fontin', Georgia, serif;
+  font-size: 0.85rem;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
   outline: none;
-  border-color: rgba(100, 180, 255, 0.5);
+  border-color: #aa9e82;
 }
 
 .form-group textarea {
@@ -91,63 +109,63 @@
 }
 
 .save-info {
-  color: #888;
-  font-size: 0.85rem;
+  color: #7f7f7f;
+  font-family: 'Fontin', Georgia, serif;
+  font-size: 0.8rem;
   margin: 0;
   padding: 0.5rem;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid #27211f;
+  border-radius: 2px;
 }
 
 .error-message {
   color: #ff6666;
-  font-size: 0.9rem;
+  font-family: 'Fontin', Georgia, serif;
+  font-size: 0.85rem;
   margin: 0;
   padding: 0.5rem;
   background: rgba(255, 0, 0, 0.1);
-  border-radius: 4px;
+  border: 1px solid rgba(255, 100, 100, 0.3);
+  border-radius: 2px;
 }
 
 .modal-buttons {
-  display: flex;
-  gap: 0.75rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.25rem;
   margin-top: 0.5rem;
 }
 
 .save-btn,
 .cancel-btn {
-  flex: 1;
-  padding: 0.7rem 1rem;
-  border-radius: 4px;
-  font-size: 0.95rem;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid #3a3530;
+  border-radius: 2px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  font-family: 'FontinSmallCaps', 'Fontin', Georgia, serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.03em;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #1a1814 0%, #0f0d0a 100%);
+  color: #7f7f7f;
+  text-transform: uppercase;
 }
 
-.save-btn {
-  background: rgba(100, 180, 255, 0.2);
-  border: 1px solid rgba(100, 180, 255, 0.5);
-  color: #88ccff;
-}
-
-.save-btn:hover:not(:disabled) {
-  background: rgba(100, 180, 255, 0.3);
-}
-
-.save-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.cancel-btn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #888;
-}
-
+.save-btn:hover:not(:disabled),
 .cancel-btn:hover:not(:disabled) {
-  background: rgba(255, 255, 255, 0.1);
-  color: #aaa;
+  background: linear-gradient(180deg, #252219 0%, #1a1814 100%);
+  border-color: #4a4035;
+  color: #aa9e82;
+}
+
+.save-btn:disabled,
+.cancel-btn:disabled {
+  opacity: 0.35;
+  cursor: not-allowed;
 }
 
 /* Success state */
@@ -157,36 +175,45 @@
 }
 
 .success-message {
-  color: #44ff88;
-  font-size: 1.1rem;
+  color: #aa9e82;
+  font-family: 'FontinSmallCaps', 'Fontin', Georgia, serif;
+  font-size: 1rem;
   margin: 0 0 0.5rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
 }
 
 .success-detail {
-  color: #888;
-  font-size: 0.9rem;
+  color: #7f7f7f;
+  font-family: 'Fontin', Georgia, serif;
+  font-size: 0.85rem;
   margin: 0 0 1.5rem 0;
 }
 
 .success-detail code {
-  background: rgba(255, 255, 255, 0.1);
+  background: rgba(0, 0, 0, 0.3);
   padding: 0.2rem 0.4rem;
-  border-radius: 3px;
+  border-radius: 2px;
   font-family: monospace;
-  color: #aaa;
+  color: #aa9e82;
 }
 
 .save-success .close-modal-btn {
-  padding: 0.7rem 2rem;
-  background: rgba(68, 255, 136, 0.2);
-  border: 1px solid rgba(68, 255, 136, 0.5);
-  border-radius: 4px;
-  color: #44ff88;
+  padding: 0.4rem 1.5rem;
+  border: 1px solid #3a3530;
+  border-radius: 2px;
   cursor: pointer;
-  font-size: 0.95rem;
-  transition: all 0.2s ease;
+  font-family: 'FontinSmallCaps', 'Fontin', Georgia, serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.03em;
+  transition: all 0.15s ease;
+  background: linear-gradient(180deg, #1a1814 0%, #0f0d0a 100%);
+  color: #7f7f7f;
+  text-transform: uppercase;
 }
 
 .save-success .close-modal-btn:hover {
-  background: rgba(68, 255, 136, 0.3);
+  background: linear-gradient(180deg, #252219 0%, #1a1814 100%);
+  border-color: #4a4035;
+  color: #aa9e82;
 }

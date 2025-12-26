@@ -1,28 +1,33 @@
 .local-crafts-modal {
-  background: #1a1a1a;
-  border: 2px solid rgba(100, 180, 255, 0.5);
-  border-radius: 8px;
+  background: linear-gradient(180deg, #1a1814 0%, #0f0d0a 100%);
+  border: 1px solid #3a3530;
+  border-radius: 2px;
   padding: 1.5rem;
   max-width: 550px;
   width: 90%;
   max-height: 80vh;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 0 20px rgba(100, 180, 255, 0.3);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
 }
 
 .local-crafts-modal h3 {
-  color: #88ccff;
+  color: #aa9e82;
   margin: 0 0 1rem 0;
   text-align: center;
-  font-size: 1.3rem;
+  font-family: 'FontinSmallCaps', 'Fontin', Georgia, serif;
+  font-size: 1.1rem;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
   flex-shrink: 0;
 }
 
 .no-crafts {
   text-align: center;
   padding: 2rem 1rem;
-  color: #888;
+  color: #7f7f7f;
+  font-family: 'Fontin', Georgia, serif;
 }
 
 .no-crafts p {
@@ -30,8 +35,8 @@
 }
 
 .no-crafts-hint {
-  font-size: 0.85rem;
-  color: #666;
+  font-size: 0.8rem;
+  color: #555;
 }
 
 .crafts-list {
@@ -45,36 +50,36 @@
 }
 
 .crafts-list::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 .crafts-list::-webkit-scrollbar-track {
-  background: rgba(255, 255, 255, 0.05);
-  border-radius: 4px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
 }
 
 .crafts-list::-webkit-scrollbar-thumb {
-  background: rgba(100, 180, 255, 0.3);
-  border-radius: 4px;
+  background: #3a3530;
+  border-radius: 2px;
 }
 
 .craft-item {
-  background: rgba(255, 255, 255, 0.03);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 6px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid #3a3530;
+  border-radius: 2px;
   padding: 0.75rem;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.15s ease;
 }
 
 .craft-item:hover {
-  background: rgba(255, 255, 255, 0.05);
-  border-color: rgba(255, 255, 255, 0.2);
+  background: rgba(0, 0, 0, 0.3);
+  border-color: #4a4035;
 }
 
 .craft-item.selected {
-  background: rgba(100, 180, 255, 0.1);
-  border-color: rgba(100, 180, 255, 0.5);
+  background: linear-gradient(180deg, #2a2520 0%, #1f1b16 100%);
+  border-color: #aa9e82;
 }
 
 .craft-header {
@@ -85,34 +90,38 @@
 }
 
 .craft-name {
-  color: #fff;
-  font-weight: 500;
-  font-size: 0.95rem;
+  color: #aa9e82;
+  font-family: 'FontinSmallCaps', 'Fontin', Georgia, serif;
+  font-weight: normal;
+  font-size: 0.9rem;
 }
 
 .craft-date {
-  color: #666;
-  font-size: 0.8rem;
+  color: #555;
+  font-family: 'Fontin', Georgia, serif;
+  font-size: 0.75rem;
 }
 
 .craft-details {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.85rem;
+  font-family: 'Fontin', Georgia, serif;
+  font-size: 0.8rem;
 }
 
 .craft-base {
-  color: #aaa;
+  color: #7f7f7f;
 }
 
 .craft-stats {
-  color: #888;
+  color: #555;
 }
 
 .craft-description {
-  color: #777;
-  font-size: 0.8rem;
+  color: #666;
+  font-family: 'Fontin', Georgia, serif;
+  font-size: 0.75rem;
   margin: 0.4rem 0 0 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -121,89 +130,77 @@
 
 .craft-actions {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.25rem;
   margin-top: 0.5rem;
   justify-content: flex-end;
 }
 
 .craft-actions button {
-  padding: 0.3rem 0.6rem;
-  font-size: 0.75rem;
-  border-radius: 3px;
+  padding: 0.25rem 0.4rem;
+  border: 1px solid #3a3530;
+  border-radius: 2px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  font-family: 'FontinSmallCaps', 'Fontin', Georgia, serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.03em;
+  transition: all 0.15s ease;
+  background: linear-gradient(180deg, #1a1814 0%, #0f0d0a 100%);
+  color: #7f7f7f;
+  text-transform: uppercase;
 }
 
-.submit-btn {
-  background: rgba(68, 255, 136, 0.1);
-  border: 1px solid rgba(68, 255, 136, 0.3);
-  color: #44ff88;
+.craft-actions button:hover:not(:disabled) {
+  background: linear-gradient(180deg, #252219 0%, #1a1814 100%);
+  border-color: #4a4035;
+  color: #aa9e82;
 }
 
-.submit-btn:hover:not(:disabled) {
-  background: rgba(68, 255, 136, 0.2);
-}
-
-.submit-btn:disabled {
-  opacity: 0.6;
+.craft-actions button:disabled {
+  opacity: 0.35;
   cursor: not-allowed;
 }
 
-.delete-btn {
-  background: rgba(255, 100, 100, 0.1);
-  border: 1px solid rgba(255, 100, 100, 0.3);
-  color: #ff8888;
-}
-
-.delete-btn:hover {
-  background: rgba(255, 100, 100, 0.2);
-}
-
 .delete-btn.confirm {
-  background: rgba(255, 100, 100, 0.3);
-  border-color: rgba(255, 100, 100, 0.6);
+  border-color: rgba(255, 100, 100, 0.5) !important;
+  color: #ff8888 !important;
 }
 
 .modal-buttons {
-  display: flex;
-  gap: 0.75rem;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.25rem;
   flex-shrink: 0;
 }
 
 .load-btn,
 .cancel-btn {
-  flex: 1;
-  padding: 0.7rem 1rem;
-  border-radius: 4px;
-  font-size: 0.95rem;
+  padding: 0.4rem 0.5rem;
+  border: 1px solid #3a3530;
+  border-radius: 2px;
   cursor: pointer;
-  transition: all 0.2s ease;
+  font-family: 'FontinSmallCaps', 'Fontin', Georgia, serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.03em;
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(180deg, #1a1814 0%, #0f0d0a 100%);
+  color: #7f7f7f;
+  text-transform: uppercase;
 }
 
-.load-btn {
-  background: rgba(100, 180, 255, 0.2);
-  border: 1px solid rgba(100, 180, 255, 0.5);
-  color: #88ccff;
+.load-btn:hover:not(:disabled),
+.cancel-btn:hover:not(:disabled) {
+  background: linear-gradient(180deg, #252219 0%, #1a1814 100%);
+  border-color: #4a4035;
+  color: #aa9e82;
 }
 
-.load-btn:hover:not(:disabled) {
-  background: rgba(100, 180, 255, 0.3);
-}
-
-.load-btn:disabled {
-  opacity: 0.5;
+.load-btn:disabled,
+.cancel-btn:disabled {
+  opacity: 0.35;
   cursor: not-allowed;
-}
-
-.cancel-btn {
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #888;
-}
-
-.cancel-btn:hover {
-  background: rgba(255, 255, 255, 0.1);
-  color: #aaa;
 }
 
 .cancel-btn.solo {
