@@ -28,12 +28,6 @@ jobs:
         pip install -r requirements.txt
         pip install pytest ruff
 
-    - name: Set up database
-      working-directory: backend
-      run: |
-        python scripts/create_tables.py
-        python scripts/populate_complete_crafting_data.py
-
     - name: Run tests
       working-directory: backend
       run: pytest -v --tb=short
