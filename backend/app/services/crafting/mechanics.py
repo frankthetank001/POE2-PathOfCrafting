@@ -6,6 +6,7 @@ Separates mechanics (stable, in code) from content (dynamic, in database).
 """
 
 import random
+import re
 from abc import ABC, abstractmethod
 from typing import List, Optional, Tuple, Dict, Any
 from enum import Enum

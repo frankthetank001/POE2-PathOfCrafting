@@ -67,7 +67,7 @@ Item Level: 81
         assert accuracy_mod.name == "Deliberate"
         # Tier number doesn't matter - game tiers don't match our database tiers
         # What matters is the value falls within the correct range
-        assert accuracy_mod.stat_text == "+{} to Accuracy Rating"
+        assert accuracy_mod.stat_text == "+# to Accuracy Rating"
         assert accuracy_mod.current_value == 111.0
         assert accuracy_mod.stat_min <= 111.0 <= accuracy_mod.stat_max
         assert "amulet" in accuracy_mod.applicable_items
@@ -139,7 +139,7 @@ Item Level: 81
         accuracy_mod = craftable.prefix_mods[0]
         assert accuracy_mod.name == "Deliberate"
         # Tier number doesn't matter - we match by stat text and value
-        assert accuracy_mod.stat_text == "+{} to Accuracy Rating"
+        assert accuracy_mod.stat_text == "+# to Accuracy Rating"
         assert accuracy_mod.current_value == 111.0
         assert accuracy_mod.stat_min <= 111.0 <= accuracy_mod.stat_max
 
@@ -198,13 +198,13 @@ class TestApplicabilityFiltering:
 
     def test_simple_accuracy_applicable_to_amulets(self, modifier_pool):
         """
-        Test that simple "+{} to Accuracy Rating" mod IS applicable to amulets.
+        Test that simple "+# to Accuracy Rating" mod IS applicable to amulets.
         """
         # Find any Deliberate mod that's applicable to amulets
         simple_mods = [
             m for m in modifier_pool.modifiers
             if m.name == "Deliberate"
-            and m.stat_text == "+{} to Accuracy Rating"
+            and m.stat_text == "+# to Accuracy Rating"
             and "amulet" in m.applicable_items
         ]
 
@@ -240,7 +240,7 @@ class TestAbyssalMarkParsing:
 
         Regression test for:
         - Empty applicable_items preventing mod from being matched
-        - Stat text matching for mods without {} placeholders
+        - Stat text matching for mods without # placeholders
         """
         # Rare amulet with Mark of the Abyssal Lord
         item_text = """Item Class: Amulets

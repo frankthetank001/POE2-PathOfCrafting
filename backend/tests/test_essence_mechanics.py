@@ -52,7 +52,7 @@ def create_test_modifier():
             name=name,
             mod_type=mod_type,
             tier=tier,
-            stat_text=stat_text or f"+{{}} {name}",  # Use {} placeholder for value matching
+            stat_text=stat_text or f"+# {name}",  # Use # placeholder for value matching
             stat_min=stat_min,
             stat_max=stat_max,
             required_ilvl=required_ilvl,
@@ -117,7 +117,7 @@ def create_essence_info():
                 essence_id=1,
                 item_type="Body Armour",  # Must match category mapping in mechanics.py
                 modifier_type=mod_type,
-                effect_text=f"+10 {guaranteed_mod_name}",  # Will be normalized to +{} {name}
+                effect_text=f"+10 {guaranteed_mod_name}",  # Will be normalized to +# {name}
                 value_min=10,
                 value_max=20,
             )

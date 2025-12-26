@@ -372,28 +372,28 @@ class TestPatternMatching:
 
     def test_matches_simple_pattern(self, exclusion_service, create_mod):
         """Test matching simple numeric placeholder patterns."""
-        pattern = "+{} to Strength"
+        pattern = "+# to Strength"
         mod = create_mod("+50 to Strength")
 
         assert exclusion_service._pattern_matches_mod(pattern, mod)
 
     def test_matches_range_pattern(self, exclusion_service, create_mod):
         """Test matching range patterns like (10-20)%."""
-        pattern = "({}-{})% increased Elemental Damage"
+        pattern = "(#-#)% increased Elemental Damage"
         mod = create_mod("(74-89)% increased Elemental Damage")
 
         assert exclusion_service._pattern_matches_mod(pattern, mod)
 
     def test_matches_multiple_placeholders(self, exclusion_service, create_mod):
         """Test matching patterns with multiple placeholders."""
-        pattern = "{} to {} Physical Thorns damage"
+        pattern = "# to # Physical Thorns damage"
         mod = create_mod("5 to 10 Physical Thorns damage")
 
         assert exclusion_service._pattern_matches_mod(pattern, mod)
 
     def test_does_not_match_different_text(self, exclusion_service, create_mod):
         """Test that patterns don't match different text."""
-        pattern = "+{} to Strength"
+        pattern = "+# to Strength"
         mod = create_mod("+50 to Dexterity")
 
         assert not exclusion_service._pattern_matches_mod(pattern, mod)
