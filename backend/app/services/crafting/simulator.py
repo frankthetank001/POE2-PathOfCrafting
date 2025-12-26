@@ -107,12 +107,14 @@ class CraftingSimulator:
                     already_added.add(currency_name)
 
         # Check essences separately
+        # Use for_display=True so essences with conflicting mod_groups still show
+        # (they'll fail with an error message when actually applied)
         for essence_name in unified_crafting_factory.get_all_available_essences():
             if essence_name in already_added:
                 continue
             essence = unified_crafting_factory.create_currency(essence_name)
             if essence:
-                can_apply, _ = essence.can_apply(item)
+                can_apply, _ = essence.can_apply(item, for_display=True)
                 if can_apply:
                     available.append(essence_name)
                     already_added.add(essence_name)

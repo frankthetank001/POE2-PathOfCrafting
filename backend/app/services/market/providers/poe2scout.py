@@ -34,6 +34,13 @@ class Poe2ScoutProvider(MarketDataProvider):
     pre-calculated exchange rates with exalted as the base currency.
     """
 
+    # Categories to fetch for exchange rates
+    # - currency: orbs, scrolls, etc.
+    # - essences: crafting essences
+    # - ritual: omens
+    # - abyss: desecration bones (Preserved/Gnawed/Ancient Jawbone, Rib, etc.)
+    CURRENCY_CATEGORIES = ["currency", "essences", "ritual", "abyss"]
+
     def __init__(self, timeout: float = DEFAULT_TIMEOUT):
         """
         Initialize the provider.
@@ -89,6 +96,8 @@ class Poe2ScoutProvider(MarketDataProvider):
         """
         Fetch all currency exchange rates for a league.
 
+        Fetches from multiple categories: currency, essences, and omens.
+
         Args:
             league: League name (e.g., "Dawn of the Hunt")
 
@@ -96,20 +105,6 @@ class Poe2ScoutProvider(MarketDataProvider):
             ExchangeRates with all currencies, or None on failure.
         """
         try:
-            # Fetch currencies with exalted as reference (matches our base)
-            params = {
-                "league": league,
-                "referenceCurrency": "exalted",
-                "perPage": 250,  # Get all currencies
-            }
-
-            response = await self._client.get(
-                f"{BASE_URL}/items/currency/currency",
-                params=params
-            )
-            response.raise_for_status()
-            data = response.json()
-
             # Also fetch leagues to get divine price for conversion
             leagues = await self.get_leagues()
             league_data = next((l for l in leagues if l.name == league), None)
@@ -117,36 +112,65 @@ class Poe2ScoutProvider(MarketDataProvider):
 
             rates: Dict[str, CurrencyPrice] = {}
 
-            for item in data.get("items", []):
-                currency_id = self._normalize_currency_id(item.get("apiId", ""))
-                if not currency_id:
+            # Fetch from all currency categories
+            for category in self.CURRENCY_CATEGORIES:
+                params = {
+                    "league": league,
+                    "referenceCurrency": "exalted",
+                    "perPage": 250,  # Get all items in category
+                }
+
+                try:
+                    response = await self._client.get(
+                        f"{BASE_URL}/items/currency/{category}",
+                        params=params
+                    )
+                    response.raise_for_status()
+                    data = response.json()
+
+                    for item in data.get("items", []):
+                        api_id = item.get("apiId", "")
+                        display_name = item.get("text", "")
+
+                        if not api_id:
+                            continue
+
+                        # Normalize the ID for internal use
+                        currency_id = self._normalize_currency_id(api_id)
+                        exalted_value = item.get("currentPrice", 0.0)
+
+                        # Calculate divine value if we have the rate
+                        divine_value = None
+                        if divine_exalted_rate and divine_exalted_rate > 0:
+                            divine_value = exalted_value / divine_exalted_rate
+
+                        # Store chaos rate for later
+                        if currency_id == "chaos":
+                            self._chaos_rate = exalted_value
+
+                        # Store by normalized ID
+                        rates[currency_id] = CurrencyPrice(
+                            id=currency_id,
+                            name=display_name or currency_id,
+                            icon_url=item.get("iconUrl"),
+                            exalted_value=exalted_value,
+                            divine_value=divine_value,
+                            chaos_value=None,  # Will be calculated in post-processing
+                            last_updated=datetime.utcnow(),
+                        )
+
+                        # Also store by display name for easier frontend lookup
+                        # (e.g., "Greater Essence of Abrasion" -> same CurrencyPrice)
+                        if display_name and display_name != currency_id:
+                            normalized_display = self._normalize_display_name(display_name)
+                            if normalized_display not in rates:
+                                rates[normalized_display] = rates[currency_id]
+
+                    logger.info(f"Fetched {len(data.get('items', []))} items from {category} category")
+
+                except httpx.HTTPError as e:
+                    logger.warning(f"Failed to fetch {category} category: {e}")
                     continue
-
-                exalted_value = item.get("currentPrice", 0.0)
-
-                # Calculate divine and chaos values if we have the rates
-                divine_value = None
-                chaos_value = None
-
-                if divine_exalted_rate and divine_exalted_rate > 0:
-                    divine_value = exalted_value / divine_exalted_rate
-
-                # Chaos is typically around 90 exalted based on research
-                # We'll get the exact rate from the data
-                if currency_id == "chaos":
-                    chaos_rate = exalted_value
-                    # Store for later use
-                    self._chaos_rate = chaos_rate
-
-                rates[currency_id] = CurrencyPrice(
-                    id=currency_id,
-                    name=item.get("text", currency_id),
-                    icon_url=item.get("iconUrl"),
-                    exalted_value=exalted_value,
-                    divine_value=divine_value,
-                    chaos_value=None,  # Will be calculated in post-processing
-                    last_updated=datetime.utcnow(),
-                )
 
             # Post-process to add chaos values
             chaos_rate = rates.get("chaos", CurrencyPrice(
@@ -170,7 +194,7 @@ class Poe2ScoutProvider(MarketDataProvider):
                     last_updated=datetime.utcnow(),
                 )
 
-            logger.info(f"Fetched {len(rates)} currency rates for {league}")
+            logger.info(f"Fetched {len(rates)} total currency rates for {league}")
 
             return ExchangeRates(
                 league=league,
@@ -239,3 +263,14 @@ class Poe2ScoutProvider(MarketDataProvider):
 
         normalized = api_id.lower().strip()
         return id_map.get(normalized, normalized)
+
+    def _normalize_display_name(self, display_name: str) -> str:
+        """
+        Normalize a display name for lookup.
+
+        Converts display names like "Greater Essence of Abrasion" to
+        a consistent lowercase format for dictionary lookup.
+        """
+        if not display_name:
+            return ""
+        return display_name.lower().strip()

@@ -175,25 +175,20 @@ class WeightsLoader:
         """
         Normalize a stat text pattern for matching.
 
-        Converts patterns like "#% to Chaos Resistance" to a normalized form
-        that can be matched against our mod stat_text.
+        Converts patterns to use # as placeholder (matching trade API format).
+        Normalizes to uppercase for consistent matching.
         """
-        # Replace # with {} for consistency with our normalized format
-        pattern = stat_text.replace("#", "{}")
-        # Remove leading +/- signs before {} (these vary between sources)
-        pattern = re.sub(r'[+\-]?\{\}', '{}', pattern)
-        # Handle "Adds X to {}" format -> "Adds {} to {}" (fixed min values)
-        pattern = re.sub(r'(\d+)\s+to\s+\{\}', '{} to {}', pattern)
-        # Handle "Adds {} to X" format -> "Adds {} to {}" (fixed max values)
-        pattern = re.sub(r'\{\}\s+to\s+(\d+)', '{} to {}', pattern)
-        # Handle fixed percentages like "5% increased" -> "{}% increased"
-        pattern = re.sub(r'(\d+)%', '{}%', pattern)
-        # Handle fixed flat values like "+5 to" -> "+{} to"
-        pattern = re.sub(r'[+\-]?(\d+)\s+to\b', '{} to', pattern)
+        pattern = stat_text.upper()
+        # Handle "Adds X to #" format -> "Adds # to #" (fixed min values)
+        pattern = re.sub(r'(\d+)\s+TO\s+#', '# TO #', pattern)
+        # Handle "Adds # to X" format -> "Adds # to #" (fixed max values)
+        pattern = re.sub(r'#\s+TO\s+(\d+)', '# TO #', pattern)
+        # Handle fixed percentages like "5% increased" -> "#% increased"
+        pattern = re.sub(r'(\d+)%', '#%', pattern)
+        # Handle fixed flat values like "+5 to" -> "+# to"
+        pattern = re.sub(r'([+\-])(\d+)\s+TO\b', r'\1# TO', pattern)
         # Remove commas (CSV uses ", " for hybrid mods, normalize for comparison)
         pattern = pattern.replace(",", "")
-        # Lowercase for case-insensitive matching
-        pattern = pattern.lower()
         # Remove extra whitespace
         pattern = " ".join(pattern.split())
         return pattern
@@ -212,7 +207,7 @@ class WeightsLoader:
         Args:
             item_category: The item's category (e.g., "ring", "int_armour")
             mod_type: "prefix" or "suffix"
-            stat_text: The mod's stat text (with {} placeholders)
+            stat_text: The mod's stat text (with # placeholders)
             tier: The mod tier (1 = best)
             item_tags: Optional list of item tags for more specific matching
 
@@ -277,9 +272,9 @@ class WeightsLoader:
 
     def _patterns_match(self, pattern1: str, pattern2: str) -> bool:
         """Check if two stat patterns match (allowing for minor differences)."""
-        # Remove all {} placeholders and compare core text
-        core1 = re.sub(r'\{\}', '', pattern1).strip()
-        core2 = re.sub(r'\{\}', '', pattern2).strip()
+        # Remove all # placeholders and compare core text
+        core1 = re.sub(r'#', '', pattern1).strip()
+        core2 = re.sub(r'#', '', pattern2).strip()
 
         # Check if core text is similar enough
         if core1 == core2:

@@ -355,7 +355,7 @@ class DivineMechanic(CraftingMechanic):
             # Reroll hybrid modifiers (multiple stat ranges)
             if mod.stat_ranges and len(mod.stat_ranges) > 0:
                 mod.current_values = [
-                    random.uniform(stat_range.min, stat_range.max)
+                    round(random.uniform(stat_range.min, stat_range.max))
                     for stat_range in mod.stat_ranges
                 ]
                 # Set legacy current_value to first value for backwards compatibility
@@ -363,7 +363,7 @@ class DivineMechanic(CraftingMechanic):
                 rerolled_count += 1
             # Fall back to legacy single value for older mods
             elif mod.stat_min is not None and mod.stat_max is not None:
-                mod.current_value = random.uniform(mod.stat_min, mod.stat_max)
+                mod.current_value = round(random.uniform(mod.stat_min, mod.stat_max))
                 rerolled_count += 1
 
         return True, f"Rerolled values on {rerolled_count} modifier(s)", manager.item
@@ -841,8 +841,14 @@ class EssenceMechanic(CraftingMechanic):
         super().__init__(config)
         self.essence_info = essence_info
 
-    def can_apply(self, item: CraftableItem) -> Tuple[bool, Optional[str]]:
+    def can_apply(self, item: CraftableItem, for_display: bool = False) -> Tuple[bool, Optional[str]]:
+        """Check if this essence can be applied to the item.
 
+        Args:
+            item: The item to check
+            for_display: If True, skip mod_group conflict check (essence still shows in UI,
+                        but will fail with error message when actually applied)
+        """
         # Special check for Essence of the Abyss: cannot be used on items with desecrated mods or Mark of the Abyssal Lord
         if self.essence_info.name == "Essence of the Abyss":
             all_mods = item.prefix_mods + item.suffix_mods
@@ -864,11 +870,13 @@ class EssenceMechanic(CraftingMechanic):
                 return False, f"{self.essence_info.name} cannot be used on items with unrevealed Desecrated modifiers"
 
         # Check if the essence mod group already exists on the item
-        target_mod_group = self._get_target_mod_group()
-        if target_mod_group:
-            existing_mod_groups = [mod.mod_group for mod in item.prefix_mods + item.suffix_mods]
-            if target_mod_group in existing_mod_groups:
-                return False, f"{self.essence_info.name} mod already exists on item"
+        # Skip this check if for_display=True (show essence in UI, fail on apply)
+        if not for_display:
+            target_mod_group = self._get_target_mod_group_for_item(item)
+            if target_mod_group:
+                existing_mod_groups = [mod.mod_group for mod in item.prefix_mods + item.suffix_mods]
+                if target_mod_group in existing_mod_groups:
+                    return False, f"{self.essence_info.name} mod already exists on item"
 
         if self.essence_info.mechanic == "magic_to_rare":
             # Lesser/Normal/Greater essences - require Magic items only
@@ -987,35 +995,41 @@ class EssenceMechanic(CraftingMechanic):
 
         return False
 
-    def _get_target_mod_group(self) -> Optional[str]:
-        """Get the mod group this essence will add."""
-        essence_to_mod_group = {
-            "insulation": "fireresistance",
-            "thawing": "coldresistance",
-            "grounding": "lightningresistance",
-            "ruin": "chaosresistance",
-            "body": "life",
-            "mind": "mana",
-            "enhancement": "alldefences",
-            "abrasion": "physicaldamage",
-            "flames": "firedamage",
-            "ice": "colddamage",
-            "electricity": "lightningdamage",
-            "battle": "accuracy",
-            "sorcery": "spelldamage",
-            "infinite": "attributes",
-            "seeking": "critical",
-            "alacrity": "castspeed",
-            "haste": "attackspeed",
-            "command": "minion",
-            "opulence": "itemrarity",
-            # Corrupted essences - unique mod groups for essence-only modifiers
-            "hysteria": "essence_hysteria",
-            "delirium": "essence_delirium",
-            "horror": "essence_horror",
-            "insanity": "essence_insanity",
-        }
-        return essence_to_mod_group.get(self.essence_info.essence_type)
+    def _get_target_mod_group_for_item(self, item: CraftableItem) -> Optional[str]:
+        """Get the mod group this essence will add for the specific item.
+
+        Looks up the actual mod that would be added based on the item type,
+        rather than using a hardcoded mapping. This ensures Perfect essences
+        (which add different mods than Lesser/Normal/Greater) are handled correctly.
+        """
+        from app.services.crafting.pob_data_loader import get_pob_data_loader
+
+        # Find the matching effect for this item
+        matching_effect = None
+        for effect in self.essence_info.item_effects:
+            if self._effect_applies_to_item(effect, item):
+                matching_effect = effect
+                break
+
+        if not matching_effect:
+            return None
+
+        # If effect has a mod_id, look up the actual mod to get its mod_group
+        if matching_effect.mod_id:
+            loader = get_pob_data_loader()
+            base_mod = loader.get_modifier_by_id(matching_effect.mod_id)
+            if base_mod and base_mod.mod_group:
+                return base_mod.mod_group
+
+        # Fallback: try to find mod by matching effect text
+        normalized_effect = re.sub(r'\(\d+(\.\d+)?-\d+(\.\d+)?\)', '#', matching_effect.effect_text)
+        loader = get_pob_data_loader()
+        for mod in loader.get_all_modifiers():
+            if mod.stat_text == normalized_effect or mod.stat_text == matching_effect.effect_text:
+                if mod.mod_group:
+                    return mod.mod_group
+
+        return None
 
 
     def apply(
@@ -1157,11 +1171,11 @@ class EssenceMechanic(CraftingMechanic):
             mod_type = effect.modifier_type
 
             # Normalize effect text
-            normalized_effect = re.sub(r'\(\d+(\.\d+)?-\d+(\.\d+)?\)', '{}', effect.effect_text)
-            normalized_effect = re.sub(r'\d+(\.\d+)?', '{}', normalized_effect)
+            normalized_effect = re.sub(r'\(\d+(\.\d+)?-\d+(\.\d+)?\)', '#', effect.effect_text)
+            normalized_effect = re.sub(r'\d+(\.\d+)?', '#', normalized_effect)
 
             # Check if any modifiers match this effect for this item
-            # Check both normalized format ({}%) and original format ((7-10)%) since
+            # Check both normalized format (#%) and original format ((7-10)%) since
             # essence-only modifiers may be created with either format
             suitable_mods = [
                 mod for mod in modifier_pool.modifiers
@@ -1181,6 +1195,7 @@ class EssenceMechanic(CraftingMechanic):
         Uses the direct mod_id from Essence.json to look up the exact modifier.
         Falls back to stat_text matching for backwards compatibility.
         """
+        import re
         from app.services.crafting.pob_data_loader import get_pob_data_loader
 
         # Special handling for Essence of the Abyss - return Mark of the Abyssal Lord directly
@@ -1217,21 +1232,35 @@ class EssenceMechanic(CraftingMechanic):
             base_mod = loader.get_modifier_by_id(matching_effect.mod_id)
 
             if base_mod:
-                # Roll the current value within the mod's range
-                current_value = None
-                if matching_effect.value_min is not None and matching_effect.value_max is not None:
-                    current_value = random.uniform(matching_effect.value_min, matching_effect.value_max)
+                # Roll all values from stat_ranges (rounded to integers)
+                current_values = []
+                if base_mod.stat_ranges:
+                    current_values = [
+                        round(random.uniform(stat_range.min, stat_range.max))
+                        for stat_range in base_mod.stat_ranges
+                    ]
+                current_value = current_values[0] if current_values else None
+
+                # Format stat_text with rolled values instead of range patterns
+                stat_text = matching_effect.effect_text
+                for rolled_value in current_values:
+                    value_str = str(int(rolled_value))
+                    # Replace (min-max) pattern first
+                    stat_text = re.sub(r'\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\)', value_str, stat_text, count=1)
+                    # Also replace # placeholder if present
+                    stat_text = stat_text.replace('#', value_str, 1)
 
                 # Create essence mod with proper values
                 essence_mod = ItemModifier(
                     name=base_mod.name,
                     mod_type=base_mod.mod_type,
                     tier=base_mod.tier,
-                    stat_text=matching_effect.effect_text,
+                    stat_text=stat_text,
                     stat_ranges=base_mod.stat_ranges,
-                    stat_min=matching_effect.value_min,
-                    stat_max=matching_effect.value_max,
+                    stat_min=base_mod.stat_ranges[0].min if base_mod.stat_ranges else None,
+                    stat_max=base_mod.stat_ranges[0].max if base_mod.stat_ranges else None,
                     current_value=current_value,
+                    current_values=current_values if len(current_values) > 1 else None,
                     required_ilvl=base_mod.required_ilvl,
                     mod_group=base_mod.mod_group,
                     applicable_items=base_mod.applicable_items,
@@ -1244,10 +1273,9 @@ class EssenceMechanic(CraftingMechanic):
                 logger.warning(f"Mod ID {matching_effect.mod_id} not found in pob-data")
 
         # Fallback: try to find matching modifier in pool by stat_text
-        import re
         logger.warning(f"Falling back to stat_text matching for {self.essence_info.name}")
-        normalized_effect = re.sub(r'\(\d+(\.\d+)?-\d+(\.\d+)?\)', '{}', matching_effect.effect_text)
-        normalized_effect = re.sub(r'\d+(\.\d+)?', '{}', normalized_effect)
+        normalized_effect = re.sub(r'\(\d+(\.\d+)?-\d+(\.\d+)?\)', '#', matching_effect.effect_text)
+        normalized_effect = re.sub(r'\d+(\.\d+)?', '#', normalized_effect)
 
         suitable_mods = [
             mod for mod in modifier_pool.modifiers
@@ -1261,25 +1289,39 @@ class EssenceMechanic(CraftingMechanic):
             return None
 
         best_mod = suitable_mods[0]
-        if matching_effect.value_min is not None and matching_effect.value_max is not None:
-            current_value = random.uniform(matching_effect.value_min, matching_effect.value_max)
-            essence_mod = ItemModifier(
-                name=best_mod.name,
-                mod_type=best_mod.mod_type,
-                tier=best_mod.tier,
-                stat_text=matching_effect.effect_text,
-                stat_ranges=best_mod.stat_ranges,
-                stat_min=matching_effect.value_min,
-                stat_max=matching_effect.value_max,
-                current_value=current_value,
-                required_ilvl=best_mod.required_ilvl,
-                mod_group=best_mod.mod_group,
-                applicable_items=best_mod.applicable_items,
-                tags=(best_mod.tags or []) + ["essence_guaranteed"]
-            )
-            return essence_mod
 
-        return best_mod
+        # Roll all values from stat_ranges (rounded to integers)
+        current_values = []
+        if best_mod.stat_ranges:
+            current_values = [
+                round(random.uniform(stat_range.min, stat_range.max))
+                for stat_range in best_mod.stat_ranges
+            ]
+        current_value = current_values[0] if current_values else None
+
+        # Format stat_text with rolled values instead of range patterns
+        stat_text = matching_effect.effect_text
+        for rolled_value in current_values:
+            value_str = str(int(rolled_value))
+            stat_text = re.sub(r'\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\)', value_str, stat_text, count=1)
+            stat_text = stat_text.replace('#', value_str, 1)
+
+        essence_mod = ItemModifier(
+            name=best_mod.name,
+            mod_type=best_mod.mod_type,
+            tier=best_mod.tier,
+            stat_text=stat_text,
+            stat_ranges=best_mod.stat_ranges,
+            stat_min=best_mod.stat_ranges[0].min if best_mod.stat_ranges else None,
+            stat_max=best_mod.stat_ranges[0].max if best_mod.stat_ranges else None,
+            current_value=current_value,
+            current_values=current_values if len(current_values) > 1 else None,
+            required_ilvl=best_mod.required_ilvl,
+            mod_group=best_mod.mod_group,
+            applicable_items=best_mod.applicable_items,
+            tags=(best_mod.tags or []) + ["essence_guaranteed"]
+        )
+        return essence_mod
 
 # REMOVED: Duplicate method definition that was missing int_armour/str_armour/dex_armour mappings
 

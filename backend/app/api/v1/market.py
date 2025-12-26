@@ -293,6 +293,9 @@ class PriceListingResponse(BaseModel):
     rune_mods: Optional[List[str]] = Field(None, description="Mods from socketed runes")
     socketed_rune_name: Optional[str] = Field(None, description="Name of socketed rune")
 
+    # Rarity from trade API (normal, magic, rare, unique)
+    rarity: Optional[str] = Field(None, description="Item rarity")
+
     # Flags
     is_corrupted: bool = Field(False, description="Whether item is corrupted")
     is_desecrated: bool = Field(False, description="Whether item is desecrated")

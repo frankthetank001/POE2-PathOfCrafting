@@ -105,6 +105,9 @@ export interface PriceListing {
   rune_mods?: string[] | null
   socketed_rune_name?: string | null
 
+  // Rarity from trade API (normal, magic, rare, unique)
+  rarity?: string | null
+
   // Flags
   is_corrupted?: boolean
   is_desecrated?: boolean

@@ -66,6 +66,18 @@ class ItemConverter:
                             base_stats={}
                         )
                         logger.info(f"Created temporary belt base for: {parsed_item.base_type}")
+                    elif 'talisman' in base_type_lower:
+                        # Talismans are treated as two-hand weapons for mod purposes
+                        base = ItemBase(
+                            name=parsed_item.base_type,
+                            category="talisman",
+                            slot="talisman",
+                            attribute_requirements=[],
+                            default_ilvl=1,
+                            description="Talisman",
+                            base_stats={}
+                        )
+                        logger.info(f"Created temporary talisman base for: {parsed_item.base_type}")
                     else:
                         # Last resort fallback
                         base = next((b for b in ITEM_BASES if b.slot == "body_armour"), None)
@@ -252,12 +264,12 @@ class ItemConverter:
         parsed_text = parsed_text.replace('\n', ', ')
 
         # Sort candidates by specificity (longer stat_text first) to match more specific mods first
-        # This prevents "+{} to Accuracy Rating" from matching before "Allies in your Presence have +{} to Accuracy Rating"
+        # This prevents "+# to Accuracy Rating" from matching before "Allies in your Presence have +# to Accuracy Rating"
         candidates = sorted(candidates, key=lambda m: len(m.stat_text), reverse=True)
 
         for candidate in candidates:
-            # Build pattern by escaping the stat_text but preserving placeholders
-            # Handle both {} placeholders and (min-max) range patterns in stat_text
+            # Build pattern by escaping the stat_text but preserving # placeholders
+            # Handle both # placeholders and (min-max) range patterns in stat_text
             stat_text_lower = candidate.stat_text.lower()
 
             # First, replace (min-max) patterns with a placeholder we can find later
@@ -265,8 +277,8 @@ class ItemConverter:
             range_placeholder = "___RANGE___"
             stat_text_normalized = re.sub(r'\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\)', range_placeholder, stat_text_lower)
 
-            # Split by {} to escape the text parts separately
-            parts = stat_text_normalized.split('{}')
+            # Split by # to escape the text parts separately
+            parts = stat_text_normalized.split('#')
             escaped_parts = [re.escape(part) for part in parts]
 
             # Join with pattern for number + optional range, supporting decimals

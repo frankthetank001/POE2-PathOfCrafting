@@ -713,6 +713,145 @@ class TestEssenceWorkflows:
 
 
 # ============================================================================
+# ESSENCE MOD GROUP CONFLICT TESTS
+# ============================================================================
+
+class TestEssenceModGroupConflicts:
+    """Test that essences cannot be applied when item already has conflicting mod group."""
+
+    def test_abrasion_essence_blocked_by_physical_damage_mod(self, create_test_item, create_test_modifier, create_essence_info):
+        """Essence of Abrasion should be blocked if item already has LocalPhysicalDamage mod."""
+        # Create item with existing physical damage mod (matching POB data group name)
+        phys_mod = create_test_modifier(
+            "Adds Physical Damage",
+            ModType.PREFIX,
+            mod_group="LocalPhysicalDamage"  # Must match POB data group name
+        )
+        item = create_test_item(rarity=ItemRarity.MAGIC, prefix_mods=[phys_mod])
+
+        essence_info = create_essence_info(
+            name="Greater Essence of Abrasion",
+            essence_type="abrasion",
+            essence_tier="greater",
+        )
+        mechanic = EssenceMechanic({}, essence_info)
+
+        can_apply, error = mechanic.can_apply(item)
+
+        assert can_apply is False
+        assert "already exists" in error.lower()
+
+    def test_flames_essence_blocked_by_fire_damage_mod(self, create_test_item, create_test_modifier, create_essence_info):
+        """Essence of Flames should be blocked if item already has LocalFireDamage mod."""
+        fire_mod = create_test_modifier(
+            "Adds Fire Damage",
+            ModType.PREFIX,
+            mod_group="LocalFireDamage"
+        )
+        item = create_test_item(rarity=ItemRarity.MAGIC, prefix_mods=[fire_mod])
+
+        essence_info = create_essence_info(
+            name="Greater Essence of Flames",
+            essence_type="flames",
+            essence_tier="greater",
+        )
+        mechanic = EssenceMechanic({}, essence_info)
+
+        can_apply, error = mechanic.can_apply(item)
+
+        assert can_apply is False
+        assert "already exists" in error.lower()
+
+    def test_body_essence_blocked_by_life_mod(self, create_test_item, create_test_modifier, create_essence_info):
+        """Essence of the Body should be blocked if item already has IncreasedLife mod."""
+        life_mod = create_test_modifier(
+            "Maximum Life",
+            ModType.PREFIX,
+            mod_group="IncreasedLife"
+        )
+        item = create_test_item(rarity=ItemRarity.MAGIC, prefix_mods=[life_mod])
+
+        essence_info = create_essence_info(
+            name="Greater Essence of the Body",
+            essence_type="body",
+            essence_tier="greater",
+        )
+        mechanic = EssenceMechanic({}, essence_info)
+
+        can_apply, error = mechanic.can_apply(item)
+
+        assert can_apply is False
+        assert "already exists" in error.lower()
+
+    def test_insulation_essence_blocked_by_fire_resistance_mod(self, create_test_item, create_test_modifier, create_essence_info):
+        """Essence of Insulation should be blocked if item already has FireResistance mod."""
+        fire_res_mod = create_test_modifier(
+            "Fire Resistance",
+            ModType.SUFFIX,
+            mod_group="FireResistance"
+        )
+        item = create_test_item(rarity=ItemRarity.MAGIC, suffix_mods=[fire_res_mod])
+
+        essence_info = create_essence_info(
+            name="Greater Essence of Insulation",
+            essence_type="insulation",
+            essence_tier="greater",
+        )
+        mechanic = EssenceMechanic({}, essence_info)
+
+        can_apply, error = mechanic.can_apply(item)
+
+        assert can_apply is False
+        assert "already exists" in error.lower()
+
+    def test_essence_allowed_when_no_conflict(self, create_test_item, create_test_modifier, create_essence_info):
+        """Essence should be allowed when item has no conflicting mod group."""
+        # Item has cold damage, so fire essence should work
+        cold_mod = create_test_modifier(
+            "Adds Cold Damage",
+            ModType.PREFIX,
+            mod_group="LocalColdDamage"
+        )
+        item = create_test_item(rarity=ItemRarity.MAGIC, prefix_mods=[cold_mod])
+
+        essence_info = create_essence_info(
+            name="Greater Essence of Flames",
+            essence_type="flames",
+            essence_tier="greater",
+        )
+        mechanic = EssenceMechanic({}, essence_info)
+
+        can_apply, error = mechanic.can_apply(item)
+
+        # Should pass the mod group check (may fail for other reasons like item type)
+        # If it fails, it shouldn't be because of mod group conflict
+        if not can_apply:
+            assert "already exists" not in error.lower()
+
+    def test_get_target_mod_group_returns_pob_group_names(self, create_essence_info):
+        """_get_target_mod_group should return actual POB data group names."""
+        # Test a few key essence types
+        test_cases = [
+            ("abrasion", "LocalPhysicalDamage"),
+            ("flames", "LocalFireDamage"),
+            ("ice", "LocalColdDamage"),
+            ("electricity", "LocalLightningDamage"),
+            ("body", "IncreasedLife"),
+            ("mind", "IncreasedMana"),
+            ("insulation", "FireResistance"),
+            ("thawing", "ColdResistance"),
+            ("grounding", "LightningResistance"),
+            ("ruin", "ChaosResistance"),
+        ]
+
+        for essence_type, expected_group in test_cases:
+            essence_info = create_essence_info(essence_type=essence_type)
+            mechanic = EssenceMechanic({}, essence_info)
+            actual_group = mechanic._get_target_mod_group()
+            assert actual_group == expected_group, f"Expected {expected_group} for {essence_type}, got {actual_group}"
+
+
+# ============================================================================
 # RUN ALL TESTS
 # ============================================================================
 

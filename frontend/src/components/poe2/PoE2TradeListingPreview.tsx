@@ -31,6 +31,14 @@ export function PoE2TradeListingPreview({ listing, className = '' }: PoE2TradeLi
   const hasPrefixSuffixSplit = (listing.prefix_mods && listing.prefix_mods.length > 0) ||
                                (listing.suffix_mods && listing.suffix_mods.length > 0)
 
+  // Use rarity from API if available, otherwise infer from mod count
+  const prefixCount = listing.prefix_mods?.length || 0
+  const suffixCount = listing.suffix_mods?.length || 0
+  const totalModCount = prefixCount + suffixCount
+  const inferredRarity = totalModCount === 0 ? 'normal' : totalModCount <= 2 ? 'magic' : 'rare'
+  const rarity = listing.rarity || inferredRarity
+  const defaultItemName = rarity === 'rare' ? 'Rare Item' : rarity === 'magic' ? 'Magic Item' : 'Item'
+
   // Helper to get comparison for a stat_id
   const getComparison = (statId: string) => {
     if (!listing.stat_comparisons) return null
@@ -45,8 +53,8 @@ export function PoE2TradeListingPreview({ listing, className = '' }: PoE2TradeLi
 
   return (
     <PoE2ItemFrame
-      rarity="rare"
-      itemName={listing.item_name || 'Rare Item'}
+      rarity={rarity}
+      itemName={listing.item_name || defaultItemName}
       itemBase={listing.item_base}
       className={className}
     >

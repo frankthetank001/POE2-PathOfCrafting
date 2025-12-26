@@ -1,7 +1,9 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Tooltip } from './Tooltip'
 import { CurrencyTooltipWrapper } from './CurrencyTooltipWrapper'
 import { useGameVersion, isFeatureAvailable } from '../contexts/VersionContext'
+
+const HIDE_UNAVAILABLE_KEY = 'currency-stash-hide-unavailable'
 
 interface UnifiedCurrencyStashProps {
   categorizedCurrencies: {
@@ -34,13 +36,27 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
   onCurrencyDragEnd,
   searchFilter = () => true
 }) => {
-  const [essencesExpanded, setEssencesExpanded] = useState(false)
   const { gameVersion } = useGameVersion()
+
+  // Hide unavailable toggle with sessionStorage persistence
+  const [hideUnavailable, setHideUnavailable] = useState(() => {
+    const stored = sessionStorage.getItem(HIDE_UNAVAILABLE_KEY)
+    return stored === 'true'
+  })
+
+  useEffect(() => {
+    sessionStorage.setItem(HIDE_UNAVAILABLE_KEY, String(hideUnavailable))
+  }, [hideUnavailable])
 
   // Filter omens based on game version
   const versionFilteredOmens = availableOmens.filter(omen => isFeatureAvailable(omen, gameVersion))
 
   const renderCurrencySlot = (currency: string, isImplemented: boolean, isAvailable: boolean) => {
+    // Hide unavailable items if toggle is on
+    if (hideUnavailable && !isAvailable) {
+      return null
+    }
+
     const additionalMechanics = !isImplemented
       ? "Not implemented yet"
       : isAvailable
@@ -84,7 +100,16 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
     <div className="currency-stash-unified">
       {/* Stash Header */}
       <div className="currency-stash-header">
-        <h4 className="stash-tab-title">🪙 Currency Stash</h4>
+        <h4 className="stash-tab-title">Currency Stash</h4>
+        <label className="hide-unavailable-toggle">
+          <input
+            type="checkbox"
+            checked={hideUnavailable}
+            onChange={(e) => setHideUnavailable(e.target.checked)}
+          />
+          <span className="toggle-slider"></span>
+          <span className="toggle-label">Hide unavailable</span>
+        </label>
       </div>
 
       {/* New Grid Layout */}
@@ -211,17 +236,12 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
           )}
         </div>
 
-        {/* Row 3: Essences - Full Width, Collapsible */}
+        {/* Row 3: Essences - Full Width */}
         <div className="currency-section essences-section">
-          <div
-            className="currency-section-header essences-header"
-            onClick={() => setEssencesExpanded(!essencesExpanded)}
-            style={{ cursor: 'pointer', userSelect: 'none' }}
-          >
-            <span>Essences {essencesExpanded ? '▼' : '▶'}</span>
+          <div className="currency-section-header essences-header">
+            <span>Essences</span>
           </div>
-          {essencesExpanded && (
-            <div className="currency-section-content essences-content">
+          <div className="currency-section-content essences-content">
               <div className="essence-three-column">
                 {(() => {
                   // Group essences by type - only Greater and Perfect
@@ -273,9 +293,12 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
                   ]
 
                   const renderEssenceSlot = (essence: string | null, className: string) => {
-                    if (!essence) return <div className="essence-slot-empty" />
+                    if (!essence) return hideUnavailable ? null : <div className="essence-slot-empty" />
 
                     const isAvailable = availableCurrencies.includes(essence)
+                    if (hideUnavailable && !isAvailable) {
+                      return null
+                    }
                     return (
                       <Tooltip
                         content={
@@ -312,18 +335,19 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
                     const group = groupedEssences[baseType]
                     if (!group || (!group.greater && !group.perfect)) return null
 
+                    const greaterSlot = renderEssenceSlot(group.greater, 'essence-greater')
+                    const perfectSlot = renderEssenceSlot(group.perfect, 'essence-perfect perfect-essence')
+
+                    // Hide the entire pair if both slots are hidden
+                    if (!greaterSlot && !perfectSlot) return null
+
                     return (
                       <div key={baseType} className="essence-pair">
-                        {renderEssenceSlot(group.greater, 'essence-greater')}
-                        {renderEssenceSlot(group.perfect, 'essence-perfect perfect-essence')}
+                        {greaterSlot}
+                        {perfectSlot}
                       </div>
                     )
                   }).filter(Boolean)
-
-                  // Split into left and right columns
-                  const midpoint = Math.ceil(normalEssencePairs.length / 2)
-                  const leftEssences = normalEssencePairs.slice(0, midpoint)
-                  const rightEssences = normalEssencePairs.slice(midpoint)
 
                   // Corrupted essences
                   const corruptedEssences = [
@@ -335,6 +359,11 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
                   ).filter(searchFilter).map((essence) => {
                     const isImplemented = categorizedCurrencies.essences.implemented.includes(essence)
                     const isAvailable = availableCurrencies.includes(essence) && isImplemented
+
+                    if (hideUnavailable && !isAvailable) {
+                      return null
+                    }
+
                     const additionalMechanics = !isImplemented
                       ? "Not implemented yet"
                       : isAvailable
@@ -387,7 +416,6 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
                 })()}
               </div>
             </div>
-          )}
         </div>
       </div>
     </div>

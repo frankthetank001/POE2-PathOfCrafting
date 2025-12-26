@@ -14,16 +14,16 @@ export function PoE2ItemTooltip({ item, showTiers = false, compact = false }: Po
   const formatModText = (mod: ItemModifier): React.ReactNode => {
     let text = mod.stat_text
 
-    // Replace {} placeholders with current values
+    // Replace # placeholders with current values
     if (mod.current_values && mod.current_values.length > 0) {
       let valueIndex = 0
-      text = text.replace(/\{\}/g, () => {
+      text = text.replace(/#/g, () => {
         const value = mod.current_values?.[valueIndex] ?? mod.current_value ?? '#'
         valueIndex++
         return `<span class="poe2-mod-value">${value}</span>`
       })
-    } else if (mod.current_value !== undefined && text.includes('{}')) {
-      text = text.replace('{}', `<span class="poe2-mod-value">${mod.current_value}</span>`)
+    } else if (mod.current_value !== undefined && text.includes('#')) {
+      text = text.replace('#', `<span class="poe2-mod-value">${mod.current_value}</span>`)
     }
 
     return (

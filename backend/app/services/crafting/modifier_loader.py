@@ -270,27 +270,35 @@ class ModifierLoader:
 
     @classmethod
     def _get_essence_mod_group(cls, essence_type: str) -> str:
-        """Get modifier group for essence type."""
+        """Get modifier group for essence type.
+
+        These must match the 'group' field from POB data (ModItem.json).
+        """
         group_mapping = {
-            "body": "life",
-            "mind": "mana",
-            "enhancement": "alldefences",
-            "abrasion": "physicaldamage",
-            "flames": "firedamage",
-            "ice": "colddamage",
-            "electricity": "lightningdamage",
-            "ruin": "chaosresistance",
-            "battle": "skillgems",
-            "sorcery": "skillgems",
-            "haste": "combat",
-            "infinite": "attributes",
-            "seeking": "critical",
-            "insulation": "fireresistance",
-            "thawing": "coldresistance",
-            "grounding": "lightningresistance",
-            "alacrity": "mana",
-            "opulence": "itemrarity",
-            "command": "aura",
+            # Resistances
+            "insulation": "FireResistance",
+            "thawing": "ColdResistance",
+            "grounding": "LightningResistance",
+            "ruin": "ChaosResistance",
+            # Life/Mana
+            "body": "IncreasedLife",
+            "mind": "IncreasedMana",
+            # Defences
+            "enhancement": "AllDefences",
+            # Damage types (local weapon mods)
+            "abrasion": "LocalPhysicalDamage",
+            "flames": "LocalFireDamage",
+            "ice": "LocalColdDamage",
+            "electricity": "LocalLightningDamage",
+            # Combat stats
+            "battle": "LocalAccuracyRating",
+            "sorcery": "WeaponSpellDamage",
+            "infinite": "AllAttributes",
+            "seeking": "CriticalStrikeChance",
+            "alacrity": "IncreasedCastSpeed",
+            "haste": "LocalIncreasedAttackSpeed",
+            "command": "MinionLife",
+            "opulence": "ItemFoundRarityIncrease",
             # Corrupted essences
             "hysteria": "essence_hysteria",
             "delirium": "essence_delirium",

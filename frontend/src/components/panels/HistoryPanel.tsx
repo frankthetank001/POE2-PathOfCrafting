@@ -16,8 +16,8 @@ export function HistoryPanel({
   onClearHistory
 }: HistoryPanelProps) {
   const formatModText = (mod: any): string => {
-    if (mod.current_value !== undefined && mod.stat_text.includes('{}')) {
-      return mod.stat_text.replace('{}', mod.current_value.toString())
+    if (mod.current_value !== undefined && mod.stat_text.includes('#')) {
+      return mod.stat_text.replace('#', mod.current_value.toString())
     }
     return mod.stat_text
   }

@@ -56,16 +56,16 @@ class StatCalculator:
 
         for mod in mods:
             value = mod.current_value or 0
-            stat_text = mod.stat_text.lower()
+            stat_text = mod.stat_text.upper()
 
             # Flat armour bonuses: "+50 to Armour"
-            if '+{} to armour' in stat_text:
+            if '+# TO ARMOUR' in stat_text:
                 flat_bonuses['Armour'] = flat_bonuses.get('Armour', 0) + int(value)
-            elif '+{} to evasion' in stat_text:
+            elif '+# TO EVASION' in stat_text:
                 flat_bonuses['Evasion'] = flat_bonuses.get('Evasion', 0) + int(value)
-            elif '+{} to energy shield' in stat_text:
+            elif '+# TO ENERGY SHIELD' in stat_text:
                 flat_bonuses['EnergyShield'] = flat_bonuses.get('EnergyShield', 0) + int(value)
-            elif '+{} to maximum energy shield' in stat_text:
+            elif '+# TO MAXIMUM ENERGY SHIELD' in stat_text:
                 flat_bonuses['EnergyShield'] = flat_bonuses.get('EnergyShield', 0) + int(value)
 
         return flat_bonuses
@@ -77,22 +77,22 @@ class StatCalculator:
 
         for mod in mods:
             value = mod.current_value or 0
-            stat_text = mod.stat_text.lower()
+            stat_text = mod.stat_text.upper()
 
             # Percentage bonuses: "15% increased Armour"
-            if '{}% increased armour' in stat_text:
+            if '#% INCREASED ARMOUR' in stat_text:
                 percentage_bonuses['Armour'] = percentage_bonuses.get('Armour', 0) + value
-            elif '{}% increased evasion' in stat_text:
+            elif '#% INCREASED EVASION' in stat_text:
                 percentage_bonuses['Evasion'] = percentage_bonuses.get('Evasion', 0) + value
-            elif '{}% increased energy shield' in stat_text:
+            elif '#% INCREASED ENERGY SHIELD' in stat_text:
                 percentage_bonuses['EnergyShield'] = percentage_bonuses.get('EnergyShield', 0) + value
-            elif '{}% increased armour and evasion' in stat_text:
+            elif '#% INCREASED ARMOUR AND EVASION' in stat_text:
                 percentage_bonuses['Armour'] = percentage_bonuses.get('Armour', 0) + value
                 percentage_bonuses['Evasion'] = percentage_bonuses.get('Evasion', 0) + value
-            elif '{}% increased armour and energy shield' in stat_text:
+            elif '#% INCREASED ARMOUR AND ENERGY SHIELD' in stat_text:
                 percentage_bonuses['Armour'] = percentage_bonuses.get('Armour', 0) + value
                 percentage_bonuses['EnergyShield'] = percentage_bonuses.get('EnergyShield', 0) + value
-            elif '{}% increased evasion and energy shield' in stat_text:
+            elif '#% INCREASED EVASION AND ENERGY SHIELD' in stat_text:
                 percentage_bonuses['Evasion'] = percentage_bonuses.get('Evasion', 0) + value
                 percentage_bonuses['EnergyShield'] = percentage_bonuses.get('EnergyShield', 0) + value
 
@@ -209,8 +209,8 @@ class StatCalculator:
         flat_phys_min = 0
         flat_phys_max = 0
         for mod in all_mods:
-            stat_text = mod.stat_text.lower()
-            if 'adds {} to {} physical damage' in stat_text:
+            stat_text = mod.stat_text.upper()
+            if 'ADDS # TO # PHYSICAL DAMAGE' in stat_text:
                 values = mod.current_values if hasattr(mod, 'current_values') and mod.current_values else []
                 if len(values) >= 2:
                     flat_phys_min += values[0]
@@ -228,28 +228,28 @@ class StatCalculator:
         flat_chaos_min, flat_chaos_max = 0, 0
 
         for mod in all_mods:
-            stat_text = mod.stat_text.lower()
+            stat_text = mod.stat_text.upper()
             values = mod.current_values if hasattr(mod, 'current_values') and mod.current_values else []
 
-            if 'adds {} to {} fire damage' in stat_text and len(values) >= 2:
+            if 'ADDS # TO # FIRE DAMAGE' in stat_text and len(values) >= 2:
                 flat_fire_min += values[0]
                 flat_fire_max += values[1]
-            elif 'adds {} to {} cold damage' in stat_text and len(values) >= 2:
+            elif 'ADDS # TO # COLD DAMAGE' in stat_text and len(values) >= 2:
                 flat_cold_min += values[0]
                 flat_cold_max += values[1]
-            elif 'adds {} to {} lightning damage' in stat_text and len(values) >= 2:
+            elif 'ADDS # TO # LIGHTNING DAMAGE' in stat_text and len(values) >= 2:
                 flat_light_min += values[0]
                 flat_light_max += values[1]
-            elif 'adds {} to {} chaos damage' in stat_text and len(values) >= 2:
+            elif 'ADDS # TO # CHAOS DAMAGE' in stat_text and len(values) >= 2:
                 flat_chaos_min += values[0]
                 flat_chaos_max += values[1]
 
         # Calculate percentage increased physical damage
         inc_phys_pct = 0
         for mod in all_mods:
-            stat_text = mod.stat_text.lower()
+            stat_text = mod.stat_text.upper()
             value = mod.current_value or 0
-            if '{}% increased physical damage' in stat_text:
+            if '#% INCREASED PHYSICAL DAMAGE' in stat_text:
                 inc_phys_pct += value
 
         # Add rune bonuses for physical damage
@@ -266,9 +266,9 @@ class StatCalculator:
         # Calculate attack speed increases
         inc_attack_speed_pct = 0
         for mod in all_mods:
-            stat_text = mod.stat_text.lower()
+            stat_text = mod.stat_text.upper()
             value = mod.current_value or 0
-            if '{}% increased attack speed' in stat_text:
+            if '#% INCREASED ATTACK SPEED' in stat_text:
                 inc_attack_speed_pct += value
 
         # Quality affects physical damage on weapons

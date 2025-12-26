@@ -42,20 +42,19 @@ class ExclusionService:
         """
         Check if a pattern matches a modifier's stat_text.
 
-        Patterns use {} as placeholders for numeric values.
+        Patterns use # as placeholders for numeric values.
         We convert the pattern to a regex and match against the mod's stat_text.
         """
-        # First check for exact match (for mods with literal {} placeholders)
+        # First check for exact match (for mods with literal # placeholders)
         if pattern == mod.stat_text:
             return True
 
-        # Escape special regex characters except {}
+        # Escape special regex characters except #
         pattern_escaped = re.escape(pattern)
 
-        # Replace escaped {} placeholders with regex for numbers OR literal {}
-        # This allows matching both "12 to Level of all Spell Skills" and "{} to Level of all Spell Skills"
-        pattern_regex = pattern_escaped.replace(r'\{\}', r'(\{\}|[\d\-\(\)]+)')
-        pattern_regex = pattern_regex.replace(r'\(\{?\}\-\{?\}\)', r'(\(\{\}\-\{\}\)|\(\d+\-\d+\))')
+        # Replace escaped # placeholders with regex for numbers OR literal #
+        # This allows matching both "12 to Level of all Spell Skills" and "+# to Level of all Spell Skills"
+        pattern_regex = pattern_escaped.replace(r'\#', r'(#|[\d\-\(\)]+)')
 
         # Add anchors to match full string
         pattern_regex = f'^{pattern_regex}$'

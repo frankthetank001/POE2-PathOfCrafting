@@ -302,10 +302,10 @@ class BaseAbyssalBone(CraftingCurrency, ABC):
             is_exclusive=False
         )
 
-        # Apply value roll for hybrid modifiers (multiple stat ranges)
+        # Apply value roll for hybrid modifiers (multiple stat ranges, rounded to integers)
         if desecrated_mod.stat_ranges and len(desecrated_mod.stat_ranges) > 0:
             desecrated_mod.current_values = [
-                random.uniform(stat_range.min, stat_range.max)
+                round(random.uniform(stat_range.min, stat_range.max))
                 for stat_range in desecrated_mod.stat_ranges
             ]
             # Set legacy current_value to first value for backwards compatibility
@@ -314,12 +314,7 @@ class BaseAbyssalBone(CraftingCurrency, ABC):
             # Format stat_text with rolled values instead of ranges
             formatted_text = desecrated_mod.stat_text
             for rolled_value in desecrated_mod.current_values:
-                # Replace first range pattern with the rolled value
-                # Handle both integer and decimal display
-                if rolled_value == int(rolled_value):
-                    value_str = str(int(rolled_value))
-                else:
-                    value_str = f"{rolled_value:.1f}"
+                value_str = str(int(rolled_value))
                 formatted_text = re.sub(
                     r'\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\)',
                     value_str,
@@ -328,16 +323,13 @@ class BaseAbyssalBone(CraftingCurrency, ABC):
                 )
             desecrated_mod.stat_text = formatted_text
 
-        # Fall back to legacy single value for older mods
+        # Fall back to legacy single value for older mods (rounded to integer)
         elif desecrated_mod.stat_min is not None and desecrated_mod.stat_max is not None:
-            desecrated_mod.current_value = random.uniform(
+            desecrated_mod.current_value = round(random.uniform(
                 desecrated_mod.stat_min, desecrated_mod.stat_max
-            )
+            ))
             # Format stat_text with rolled value
-            if desecrated_mod.current_value == int(desecrated_mod.current_value):
-                value_str = str(int(desecrated_mod.current_value))
-            else:
-                value_str = f"{desecrated_mod.current_value:.1f}"
+            value_str = str(int(desecrated_mod.current_value))
             desecrated_mod.stat_text = re.sub(
                 r'\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\)',
                 value_str,

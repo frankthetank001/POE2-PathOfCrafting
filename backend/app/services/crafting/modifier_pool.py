@@ -250,19 +250,19 @@ class ModifierPool:
             if rand_value <= cumulative:
                 rolled_mod = mod.model_copy()
 
-                # Roll values for hybrid modifiers (multiple stat ranges)
+                # Roll values for hybrid modifiers (multiple stat ranges, rounded to integers)
                 if rolled_mod.stat_ranges and len(rolled_mod.stat_ranges) > 0:
                     rolled_mod.current_values = [
-                        random.uniform(stat_range.min, stat_range.max)
+                        round(random.uniform(stat_range.min, stat_range.max))
                         for stat_range in rolled_mod.stat_ranges
                     ]
                     # Set legacy current_value to first value for backwards compatibility
                     rolled_mod.current_value = rolled_mod.current_values[0]
                 # Fall back to legacy single value for older mods
                 elif rolled_mod.stat_min is not None and rolled_mod.stat_max is not None:
-                    rolled_mod.current_value = random.uniform(
+                    rolled_mod.current_value = round(random.uniform(
                         rolled_mod.stat_min, rolled_mod.stat_max
-                    )
+                    ))
 
                 return rolled_mod
 
@@ -796,6 +796,17 @@ class ModifierPool:
                     return True
             # Also check if the category is directly listed
             if item_category in mod.applicable_items:
+                return True
+
+        # Handle talismans - they use two-hand weapon mods
+        if item_category == "talisman":
+            # Check generic weapon and two_hand_weapon tags
+            if "weapon" in mod.applicable_items:
+                return True
+            if "two_hand_weapon" in mod.applicable_items:
+                return True
+            # Check if talisman is directly listed
+            if "talisman" in mod.applicable_items:
                 return True
 
         # Handle "jewellery" category - expands to amulet, ring, belt

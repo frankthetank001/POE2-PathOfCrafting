@@ -156,6 +156,9 @@ class TradeListing:
     rune_mods: Optional[List[str]] = None  # Mod texts from socketed runes
     socketed_rune_name: Optional[str] = None  # Name of socketed rune (e.g., "Greater Iron Rune")
 
+    # Rarity (from frameType: 0=normal, 1=magic, 2=rare, 3=unique)
+    rarity: Optional[str] = None
+
     # Flags
     is_corrupted: bool = False
     is_desecrated: bool = False
@@ -303,6 +306,13 @@ class TradeAPIClient:
 
         url = f"{TRADE_API_BASE}/search/poe2/{league}"
         logger.info(f"Searching trade API: POST {url}")
+
+        # Log the actual query being sent for debugging
+        import json
+        logger.info(f"Trade API query: {json.dumps(query, indent=2)}")
+        # Also save to file for debugging
+        with open("trade_api_actual_query.json", "w") as f:
+            json.dump(query, f, indent=2)
 
         try:
             response = await self._make_request("POST", url, json=query)
@@ -550,6 +560,39 @@ class TradeAPIClient:
             prefix_mods.extend(p)
             suffix_mods.extend(s)
 
+            # Combine hybrid mods (mods with same name and tier are actually one mod)
+            def combine_hybrid_mods(mods: List[Dict]) -> List[Dict]:
+                """Combine stat lines that belong to the same hybrid mod."""
+                if not mods:
+                    return mods
+
+                combined = []
+                seen_keys = {}  # (name, tier) -> index in combined
+
+                for mod in mods:
+                    key = (mod.get("name", ""), mod.get("tier", ""))
+                    if key[0] and key[1] and key in seen_keys:
+                        # This is a hybrid mod - combine with existing
+                        idx = seen_keys[key]
+                        existing = combined[idx]
+                        # Combine text with comma
+                        existing["text"] = existing["text"] + ", " + mod["text"]
+                        # Combine values
+                        existing["values"] = existing.get("values", []) + mod.get("values", [])
+                        # Keep first stat_id but could track multiple
+                        if mod.get("stat_id") and existing.get("stat_id"):
+                            existing["stat_ids"] = existing.get("stat_ids", [existing["stat_id"]])
+                            existing["stat_ids"].append(mod["stat_id"])
+                    else:
+                        # New mod
+                        seen_keys[key] = len(combined)
+                        combined.append(mod.copy())
+
+                return combined
+
+            prefix_mods = combine_hybrid_mods(prefix_mods)
+            suffix_mods = combine_hybrid_mods(suffix_mods)
+
             # Extract rune mods and socketed rune name
             rune_mod_texts = rune_mods if rune_mods else None
             socketed_rune_name = None
@@ -564,6 +607,12 @@ class TradeAPIClient:
             # Check flags
             is_corrupted = item_data.get("corrupted", False)
             is_desecrated = item_data.get("desecrated", False) or len(desecrated_mods) > 0
+
+            # Parse rarity from frameType
+            # 0=normal, 1=magic, 2=rare, 3=unique
+            frame_type = item_data.get("frameType", 0)
+            rarity_map = {0: "normal", 1: "magic", 2: "rare", 3: "unique"}
+            rarity = rarity_map.get(frame_type, "normal")
 
             parsed = TradeListing(
                 item_hash=result.get("id", ""),
@@ -591,6 +640,7 @@ class TradeAPIClient:
                 suffix_mods=suffix_mods if suffix_mods else None,
                 rune_mods=rune_mod_texts,
                 socketed_rune_name=socketed_rune_name,
+                rarity=rarity,
                 is_corrupted=is_corrupted,
                 is_desecrated=is_desecrated,
             )

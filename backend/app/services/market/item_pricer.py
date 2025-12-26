@@ -55,6 +55,9 @@ class PriceListing:
     rune_mods: Optional[List[str]] = None
     socketed_rune_name: Optional[str] = None
 
+    # Rarity from trade API (normal, magic, rare, unique)
+    rarity: Optional[str] = None
+
     # Flags
     is_corrupted: bool = False
     is_desecrated: bool = False
@@ -242,37 +245,40 @@ class ItemPricer:
                     stat_id = entry.get("id", "")
                     text = entry.get("text", "")
                     if stat_id and text:
-                        # Normalize text for matching: replace # with {} and lowercase
-                        normalized = text.replace("#", "{}").lower()
-                        _trade_stats_cache[normalized] = stat_id
+                        # Normalize to uppercase for consistent matching
+                        _trade_stats_cache[text.upper()] = stat_id
             logger.info(f"Loaded {len(_trade_stats_cache)} trade stats from API")
+            # Dump cache to file for debugging
+            try:
+                with open("trade_stats_cache_debug.json", "w") as f:
+                    json.dump(_trade_stats_cache, f, indent=2, sort_keys=True)
+                logger.info("Dumped trade stats cache to trade_stats_cache_debug.json")
+            except Exception as dump_err:
+                logger.warning(f"Failed to dump trade stats cache: {dump_err}")
         except Exception as e:
             logger.warning(f"Failed to load trade stats from API: {e}")
 
     def _match_stat_to_trade_ids(self, stat_text: str, mod_type: str = "explicit") -> List[str]:
         """
-        Match a mod's stat_text to PoE2 trade API stat ID(s).
-        Returns both global and local variants when available.
+        Match a mod's stat_text to PoE2 trade API stat ID.
+
+        Uses direct lookup - stat_text should already be normalized with # placeholders
+        (e.g., "+# to Maximum Life", "#% increased Physical Damage").
 
         Args:
-            stat_text: The mod's stat text pattern like "{}% increased Physical Damage"
+            stat_text: The mod's stat text pattern with # placeholder
             mod_type: The mod type prefix ("explicit", "implicit", etc.)
 
         Returns:
-            List of matching trade stat IDs. May contain both global and local variants.
+            List of matching trade stat IDs (includes local variant if exists).
         """
         if not _trade_stats_cache:
             logger.warning("Trade stats cache is empty")
             return []
 
-        # Normalize the stat text for comparison
-        normalized = stat_text.lower().strip()
+        # Normalize to uppercase for matching
+        normalized = stat_text.strip().upper()
         results = []
-
-        # Check for both global and local variants
-        # Global: "{}% increased attack speed"
-        # Local: "{}% increased attack speed (local)"
-        local_text = normalized + " (local)"
 
         def add_stat_id(cache_key: str) -> bool:
             """Try to add a stat ID from the cache key."""
@@ -285,50 +291,12 @@ class ItemPricer:
                 return True
             return False
 
-        # Try exact matches first (both global and local)
+        # Direct lookup - try exact match and local variant
         add_stat_id(normalized)
-        add_stat_id(local_text)
-
-        # If we found matches, return them
-        if results:
-            return results
-
-        # Try without leading + (pob-data uses "+{}%" but trade API uses "{}%")
-        if normalized.startswith("+"):
-            no_plus = normalized[1:]
-            add_stat_id(no_plus)
-            add_stat_id(no_plus + " (local)")
-
-        if results:
-            return results
-
-        # Try fuzzy match - handle variations like (min-max) ranges
-        # e.g., "Gain (25-33)% of Damage" -> "Gain {}% of Damage"
-        fuzzy_text = re.sub(r'\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\)', '{}', normalized)
-        if fuzzy_text != normalized:
-            add_stat_id(fuzzy_text)
-            add_stat_id(fuzzy_text + " (local)")
-
-        if results:
-            return results
-
-        # Try even more relaxed matching - strip the placeholder values and + prefix
-        # e.g., "+{} to Maximum Life" should match "# to Maximum Life"
-        text_core = normalized.replace("{}", "").replace("  ", " ").strip()
-        text_core_no_plus = text_core.lstrip("+").strip()
-        for cache_key, cache_id in _trade_stats_cache.items():
-            if cache_id.startswith(f"{mod_type}.") or cache_id.startswith("explicit."):
-                cache_core = cache_key.replace("{}", "").replace("  ", " ").strip()
-                # Match both with and without "(local)" suffix
-                cache_core_no_local = cache_core.replace(" (local)", "").strip()
-                if cache_core in (text_core, text_core_no_plus) or cache_core_no_local in (text_core, text_core_no_plus):
-                    stat_hash = cache_id.split(".")[-1]
-                    stat_id = f"{mod_type}.{stat_hash}"
-                    if stat_id not in results:
-                        results.append(stat_id)
+        add_stat_id(normalized + " (LOCAL)")
 
         if not results:
-            logger.debug(f"No trade stat match for: {stat_text}")
+            logger.warning(f"No trade stat match for: '{stat_text}'")
 
         return results
 
@@ -471,8 +439,52 @@ class ItemPricer:
 
                 logger.info(f"Mod '{mod.name}' (group={mod.mod_group}, idx={mod_index}) -> pseudo {pseudo_id} += {value}")
             else:
-                # Match stat text to trade API stat ID(s) - may return both global and local variants
-                stat_ids = self._match_stat_to_trade_ids(mod.stat_text, mod_type)
+                # Match stat_text directly to trade API stat ID
+                # stat_text should already be normalized with # placeholders (e.g., "+# to Maximum Life")
+                stat_ids = []
+
+                # Check if stat_text has a # placeholder
+                has_template = "#" in mod.stat_text
+
+                if has_template:
+                    stat_ids = self._match_stat_to_trade_ids(mod.stat_text, mod_type)
+                    if stat_ids:
+                        logger.info(f"Mod '{mod.name}' matched -> {stat_ids}")
+
+                    # If exact match failed, try splitting hybrid mods
+                    # e.g., "#% increased Physical Damage, +# to Accuracy Rating"
+                    if not stat_ids and ", " in mod.stat_text:
+                        parts = mod.stat_text.split(", ")
+                        all_values = mod.current_values if mod.current_values else [value]
+
+                        for i, part in enumerate(parts):
+                            part = part.strip()
+                            if "#" in part:
+                                part_stat_ids = self._match_stat_to_trade_ids(part, mod_type)
+                                if part_stat_ids:
+                                    part_value = all_values[i] if i < len(all_values) else value
+                                    for part_stat_id in part_stat_ids:
+                                        if part_stat_id not in filters or part_value > filters[part_stat_id]["value"]:
+                                            filters[part_stat_id] = {
+                                                "value": part_value,
+                                                "name": mod.name,
+                                                "stat_text": part,
+                                                "is_pseudo": False,
+                                                "mod_index": mod_index,
+                                                "stat_ids": [part_stat_id],
+                                            }
+                                    logger.info(f"Mod '{mod.name}' hybrid part {i}: '{part}' -> {part_stat_ids} = {part_value}")
+                                    stat_ids.extend(part_stat_ids)
+                        if stat_ids:
+                            logger.info(f"Mod '{mod.name}' matched via hybrid split -> {stat_ids}")
+                            continue
+
+                if not stat_ids and mod.trade_hash:
+                    # Fallback to trade_hash if stat_text matching failed
+                    stat_id = f"{mod_type}.stat_{mod.trade_hash}"
+                    stat_ids = [stat_id]
+                    logger.info(f"Mod '{mod.name}' using trade_hash fallback -> {stat_id}")
+
                 if stat_ids:
                     # Use the first stat_id as the key, but store all variants
                     primary_stat_id = stat_ids[0]
@@ -488,7 +500,7 @@ class ItemPricer:
                         }
                     logger.info(f"Mod '{mod.name}' (idx={mod_index}) -> {stat_ids} = {value}")
                 else:
-                    logger.warning(f"Mod '{mod.name}' (stat_text={mod.stat_text}) has no matching trade stat, skipping")
+                    logger.warning(f"Mod '{mod.name}' (stat_text={mod.stat_text}, trade_hash={mod.trade_hash}) has no matching trade stat, skipping")
                     unmatched_mods.append({
                         "name": mod.name,
                         "stat_text": mod.stat_text,
@@ -885,6 +897,7 @@ class ItemPricer:
                     suffix_mods=listing.suffix_mods,
                     rune_mods=listing.rune_mods,
                     socketed_rune_name=listing.socketed_rune_name,
+                    rarity=listing.rarity,
                     is_corrupted=listing.is_corrupted,
                     is_desecrated=listing.is_desecrated,
                     # Computed aggregate stats from TradeListing

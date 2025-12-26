@@ -534,8 +534,8 @@ class POBDataLoader:
                     break
             raw_stat_text = ", ".join(stat_lines) if stat_lines else ""
             stat_ranges = self._parse_stat_ranges(raw_stat_text)
-            # Normalize stat_text by replacing range patterns with {} placeholders
-            # e.g., "+(85-123) to Accuracy Rating" -> "+{} to Accuracy Rating"
+            # Normalize stat_text by replacing range patterns with # placeholders
+            # e.g., "+(85-123) to Accuracy Rating" -> "+# to Accuracy Rating"
             # For guaranteed mods (desecrated, essence-only), preserve the actual ranges
             if preserve_ranges:
                 stat_text = raw_stat_text
@@ -625,14 +625,26 @@ class POBDataLoader:
         return ranges
 
     def _normalize_stat_text(self, stat_text: str) -> str:
-        """Normalize stat_text by replacing range patterns with {} placeholders.
+        """Normalize stat_text by replacing numeric values with # placeholder.
 
-        Converts pob-data format like '+(85-123) to Accuracy Rating'
-        to placeholder format '+{} to Accuracy Rating' for pattern matching.
+        Converts pob-data format like '+(85-123) to Accuracy Rating' or '+1 to Level of all Melee Skills'
+        to placeholder format '+# to Accuracy Rating' or '+# to Level of all Melee Skills'.
+
+        Uses # as placeholder to match the trade API format exactly.
         """
-        # Replace range patterns (X-Y) with {} placeholder
-        pattern = r'\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\)'
-        return re.sub(pattern, '{}', stat_text)
+        # Replace range patterns (X-Y) with # placeholder
+        range_pattern = r'\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\)'
+        result = re.sub(range_pattern, '#', stat_text)
+
+        # If no ranges were replaced, replace standalone numeric values
+        if '#' not in result:
+            # Replace numbers that follow + or - (e.g., "+1 to", "-5%")
+            result = re.sub(r'(?<=[\+\-])\d+(?:\.\d+)?', '#', result)
+            # If still no placeholder, try numbers before %
+            if '#' not in result:
+                result = re.sub(r'\d+(?:\.\d+)?(?=%)', '#', result)
+
+        return result
 
     def _extract_value_range(self, stat_text: str) -> Tuple[Optional[float], Optional[float]]:
         """Extract first value range from stat text."""

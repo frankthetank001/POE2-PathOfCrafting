@@ -882,11 +882,18 @@ class OmenOfCorruption(BaseOmen):
             return True, f"Corrupted: Quality changed to {item.quality}%", item
 
         elif chosen_outcome == "reroll_values":
-            # Reroll all modifier values
+            # Reroll all modifier values (rounded to integers)
             rerolled = 0
             for mod in item.prefix_mods + item.suffix_mods:
-                if mod.stat_min is not None and mod.stat_max is not None:
-                    mod.current_value = random.uniform(mod.stat_min, mod.stat_max)
+                if mod.stat_ranges and len(mod.stat_ranges) > 0:
+                    mod.current_values = [
+                        round(random.uniform(stat_range.min, stat_range.max))
+                        for stat_range in mod.stat_ranges
+                    ]
+                    mod.current_value = mod.current_values[0]
+                    rerolled += 1
+                elif mod.stat_min is not None and mod.stat_max is not None:
+                    mod.current_value = round(random.uniform(mod.stat_min, mod.stat_max))
                     rerolled += 1
 
             return True, f"Corrupted: Rerolled {rerolled} modifier values", item

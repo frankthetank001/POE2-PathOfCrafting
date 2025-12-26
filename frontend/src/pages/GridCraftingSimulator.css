@@ -623,6 +623,20 @@
   background: rgba(156, 77, 212, 0.25);
 }
 
+/* Draggable tier styling */
+.tier-detail.draggable-tier {
+  cursor: grab;
+}
+
+.tier-detail.draggable-tier:hover {
+  border-color: #d4af37;
+  background: rgba(212, 175, 55, 0.15);
+}
+
+.tier-detail.draggable-tier:active {
+  cursor: grabbing;
+}
+
 .essence-guarantee-indicator {
   color: #b366e0;
   font-size: 0.7rem;
@@ -1714,6 +1728,12 @@
   border: 1px solid #ff4444;
 }
 
+.paste-message.warning {
+  background: rgba(255, 200, 100, 0.1);
+  color: #ffcc66;
+  border: 1px solid #ffaa44;
+}
+
 /* History Tab */
 .history-section {
   height: 100%;
@@ -1826,11 +1846,20 @@
   padding: 0.75rem;
   background: #0f0f0f;
   border-radius: 6px;
+  gap: 0.5rem;
+}
+
+.currency-spent-icon {
+  width: 28px;
+  height: 28px;
+  object-fit: contain;
+  flex-shrink: 0;
 }
 
 .currency-spent-name {
   color: #d4af37;
   font-weight: 500;
+  flex: 1;
 }
 
 .currency-spent-count {
@@ -1914,6 +1943,47 @@
 
 .value-amount.divine {
   color: #88ccff;
+}
+
+/* Dynamic cost display with icon */
+.value-row.dynamic-cost {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  border-left-color: #d4af37;
+}
+
+.cost-currency-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
+
+.value-row.secondary {
+  background: transparent;
+  padding: 0.25rem 0;
+  justify-content: center;
+}
+
+.secondary-value {
+  color: #666;
+  font-size: 0.85rem;
+  font-style: italic;
+}
+
+/* Inline cost icon for header */
+.cost-with-icon {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.cost-inline-icon {
+  width: 18px;
+  height: 18px;
+  object-fit: contain;
+  vertical-align: middle;
 }
 
 .market-source {
@@ -2410,7 +2480,9 @@
 }
 
 .currency-stash-header {
-  text-align: center;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   margin-bottom: 1rem;
   border-bottom: 1px solid #444;
   padding-bottom: 0.5rem;
@@ -2422,6 +2494,57 @@
   font-weight: 600;
   margin: 0;
   text-shadow: 0 0 5px rgba(212, 175, 55, 0.3);
+}
+
+/* Hide unavailable toggle */
+.hide-unavailable-toggle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  font-size: 0.75rem;
+  color: #888;
+  user-select: none;
+}
+
+.hide-unavailable-toggle input {
+  display: none;
+}
+
+.toggle-slider {
+  width: 32px;
+  height: 16px;
+  background: #333;
+  border-radius: 8px;
+  position: relative;
+  transition: background 0.2s;
+  border: 1px solid #555;
+}
+
+.toggle-slider::after {
+  content: '';
+  position: absolute;
+  width: 12px;
+  height: 12px;
+  background: #888;
+  border-radius: 50%;
+  top: 1px;
+  left: 2px;
+  transition: transform 0.2s, background 0.2s;
+}
+
+.hide-unavailable-toggle input:checked + .toggle-slider {
+  background: #2a4a2a;
+  border-color: #4a7;
+}
+
+.hide-unavailable-toggle input:checked + .toggle-slider::after {
+  transform: translateX(14px);
+  background: #6c6;
+}
+
+.toggle-label {
+  white-space: nowrap;
 }
 
 .currency-unified-grid {

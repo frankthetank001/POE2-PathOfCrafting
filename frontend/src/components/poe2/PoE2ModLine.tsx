@@ -36,13 +36,13 @@ export function PoE2ModLine({
 
     if (mod.current_values && mod.current_values.length > 0) {
       let valueIndex = 0
-      text = text.replace(/\{\}/g, () => {
+      text = text.replace(/#/g, () => {
         const value = mod.current_values?.[valueIndex] ?? mod.current_value ?? '#'
         valueIndex++
         return String(value)
       })
-    } else if (mod.current_value !== undefined && text.includes('{}')) {
-      text = text.replace('{}', String(mod.current_value))
+    } else if (mod.current_value !== undefined && text.includes('#')) {
+      text = text.replace('#', String(mod.current_value))
     }
 
     return text

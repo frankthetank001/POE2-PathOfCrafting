@@ -206,6 +206,7 @@ interface TabContentProps {
   onHistoryReset: () => void
   setMessage: (message: string) => void
   onItemCreated?: () => void
+  getCurrencyIconUrl?: (currency: string) => string
 }
 
 function ItemTab({ setItem, onHistoryReset, setMessage, onItemCreated }: TabContentProps) {
@@ -362,7 +363,13 @@ function ItemTab({ setItem, onHistoryReset, setMessage, onItemCreated }: TabCont
       const result = await craftingApi.parseItem(itemPasteText)
       setItem(result.item)
       onHistoryReset()
-      setPasteMessage('Item parsed successfully!')
+
+      // Show warnings if any mods failed to match
+      if (result.warnings && result.warnings.length > 0) {
+        setPasteMessage(`⚠️ Item imported with ${result.warnings.length} warning(s): ${result.warnings.join('; ')}`)
+      } else {
+        setPasteMessage('Item parsed successfully!')
+      }
       onItemCreated?.()
     } catch (err: any) {
       setPasteMessage(err.message || 'Failed to parse item')
@@ -419,7 +426,10 @@ function ItemTab({ setItem, onHistoryReset, setMessage, onItemCreated }: TabCont
                   </button>
                 </div>
                 {pasteMessage && (
-                  <div className={`paste-message ${pasteMessage.includes('success') ? 'success' : 'error'}`}>
+                  <div className={`paste-message ${
+                    pasteMessage.includes('successfully') ? 'success' :
+                    pasteMessage.includes('warning') ? 'warning' : 'error'
+                  }`}>
                     {pasteMessage}
                   </div>
                 )}
@@ -553,7 +563,7 @@ function HistoryTab({ history, itemHistory, onRevertToStep, onClearHistory }: Ta
   )
 }
 
-function CurrencyTab({ currencySpent, exchangeRates }: TabContentProps) {
+function CurrencyTab({ currencySpent, exchangeRates, getCurrencyIconUrl }: TabContentProps) {
   const getTotalSpent = (): number => {
     return Object.values(currencySpent).reduce((sum, count) => sum + count, 0)
   }
@@ -566,19 +576,23 @@ function CurrencyTab({ currencySpent, exchangeRates }: TabContentProps) {
     const breakdown: Record<string, number> = {}
 
     for (const [currency, count] of Object.entries(currencySpent)) {
-      // Normalize currency name to match API format (lowercase, handle variations)
-      const normalizedName = currency.toLowerCase()
-        .replace(/^orb of /, '')
-        .replace(/^greater /, '')
-        .replace(/^perfect /, '')
-        .replace(/ orb$/, '')
-        .replace(/ /g, '-')
+      // Normalize currency name to match API format
+      // API stores by: normalized-id (e.g., "greater-essence-of-abrasion")
+      // and also by lowercase display name (e.g., "greater essence of abrasion")
+      const lowerCurrency = currency.toLowerCase()
+      const dashName = lowerCurrency.replace(/ /g, '-')
 
-      // Try to find matching rate
-      const rate = exchangeRates.rates[normalizedName]
-        || exchangeRates.rates[currency.toLowerCase()]
+      // For basic orbs, try without "Orb of" prefix
+      const basicOrbName = lowerCurrency
+        .replace(/^orb of /, '')
+        .replace(/ orb$/, '')
+
+      // Try to find matching rate using multiple strategies
+      const rate = exchangeRates.rates[lowerCurrency]  // "greater essence of abrasion"
+        || exchangeRates.rates[dashName]               // "greater-essence-of-abrasion"
+        || exchangeRates.rates[basicOrbName]           // "exalted", "divine" etc
         || Object.values(exchangeRates.rates).find(r =>
-            r.name.toLowerCase() === currency.toLowerCase()
+            r.name.toLowerCase() === lowerCurrency
           )
 
       if (rate) {
@@ -592,10 +606,32 @@ function CurrencyTab({ currencySpent, exchangeRates }: TabContentProps) {
     const divineRate = exchangeRates.rates['divine']
     const totalDivine = divineRate ? totalExalted / divineRate.exalted_value : 0
 
-    return { totalExalted, totalDivine, breakdown }
+    return { totalExalted, totalDivine, breakdown, divineRate: divineRate?.exalted_value || 0 }
   }
 
   const costs = calculateCosts()
+
+  // Format cost dynamically - show exalted until >= 1 divine, then show divine
+  const formatDynamicCost = () => {
+    if (!costs) return null
+
+    // If we have >= 1 divine worth, show in divines
+    if (costs.totalDivine >= 1) {
+      return {
+        value: costs.totalDivine.toFixed(2),
+        unit: 'div',
+        icon: 'https://www.poe2wiki.net/images/5/58/Divine_Orb_inventory_icon.png'
+      }
+    }
+    // Otherwise show in exalted
+    return {
+      value: costs.totalExalted.toFixed(2),
+      unit: 'ex',
+      icon: 'https://www.poe2wiki.net/images/2/26/Exalted_Orb_inventory_icon.png'
+    }
+  }
+
+  const dynamicCost = formatDynamicCost()
 
   return (
     <div className="tab-content">
@@ -609,6 +645,13 @@ function CurrencyTab({ currencySpent, exchangeRates }: TabContentProps) {
             <div className="currency-spent-list">
               {Object.entries(currencySpent).map(([currency, count]) => (
                 <div key={currency} className="currency-spent-item">
+                  {getCurrencyIconUrl && (
+                    <img
+                      src={getCurrencyIconUrl(currency)}
+                      alt={currency}
+                      className="currency-spent-icon"
+                    />
+                  )}
                   <span className="currency-spent-name">{currency}</span>
                   <span className="currency-spent-count">x{count}</span>
                 </div>
@@ -619,17 +662,25 @@ function CurrencyTab({ currencySpent, exchangeRates }: TabContentProps) {
             </div>
 
             {/* Market Value Section */}
-            {costs && exchangeRates && (
+            {dynamicCost && exchangeRates && (
               <div className="currency-value-section">
                 <h4>Estimated Value</h4>
                 <div className="currency-value-display">
-                  <div className="value-row primary">
-                    <span className="value-label">Exalted Orbs:</span>
-                    <span className="value-amount exalted">{costs.totalExalted.toFixed(2)}</span>
+                  <div className="value-row primary dynamic-cost">
+                    <img
+                      src={dynamicCost.icon}
+                      alt={dynamicCost.unit}
+                      className="cost-currency-icon"
+                    />
+                    <span className="value-amount">{dynamicCost.value} {dynamicCost.unit}</span>
                   </div>
-                  <div className="value-row primary">
-                    <span className="value-label">Divine Orbs:</span>
-                    <span className="value-amount divine">{costs.totalDivine.toFixed(4)}</span>
+                  {/* Show secondary currency for reference */}
+                  <div className="value-row secondary">
+                    {costs && costs.totalDivine >= 1 ? (
+                      <span className="secondary-value">({costs.totalExalted.toFixed(0)} ex)</span>
+                    ) : costs && costs.divineRate > 0 ? (
+                      <span className="secondary-value">({costs.totalDivine.toFixed(4)} div)</span>
+                    ) : null}
                   </div>
                 </div>
                 <div className="market-source">
@@ -728,6 +779,10 @@ function GridCraftingSimulator() {
 
   // Track action details for each history step (for Ctrl+Y)
   const [actionHistory, setActionHistory] = useState<Array<{currency: string, omens: string[]} | null>>([])
+
+  // Track currency spent at each history step (for undo/redo)
+  const [currencySpentHistory, setCurrencySpentHistory] = useState<Array<Record<string, number>>>([])
+  const [redoCurrencySpentStack, setRedoCurrencySpentStack] = useState<Array<Record<string, number>>>([])
 
   const [availableMods, setAvailableMods] = useState<{
     prefixes: ItemModifier[]
@@ -840,6 +895,7 @@ function GridCraftingSimulator() {
     onHistoryReset: handleHistoryReset,
     setMessage,
     onItemCreated: handleItemCreated
+    // Note: getCurrencyIconUrl is passed directly to CurrencyTab in JSX
   }
 
   function handleRevertToStep(stepIndex: number) {
@@ -848,11 +904,18 @@ function GridCraftingSimulator() {
       setItemHistory(itemHistory.slice(0, stepIndex + 1))
       setHistory(history.slice(0, stepIndex + 1))
       setActionHistory(actionHistory.slice(0, stepIndex + 1))
+      setCurrencySpentHistory(currencySpentHistory.slice(0, stepIndex + 1))
+      // Restore currency spent to the state at that step
+      const revertedCurrencySpent = stepIndex < currencySpentHistory.length
+        ? currencySpentHistory[stepIndex]
+        : {}
+      setCurrencySpent(revertedCurrencySpent)
       // Clear redo stacks when jumping to a specific step
       setRedoItemStack([])
       setRedoHistoryStack([])
       setRedoCurrencyStack([])
       setRedoOmensStack([])
+      setRedoCurrencySpentStack([])
       setMessage(`Reverted to step ${stepIndex + 1}`)
     }
   }
@@ -862,10 +925,12 @@ function GridCraftingSimulator() {
     setItemHistory([])
     setActionHistory([])
     setCurrencySpent({})
+    setCurrencySpentHistory([])
     setRedoItemStack([])
     setRedoHistoryStack([])
     setRedoCurrencyStack([])
     setRedoOmensStack([])
+    setRedoCurrencySpentStack([])
     setMessage('History cleared')
   }
 
@@ -874,10 +939,12 @@ function GridCraftingSimulator() {
     setItemHistory([])
     setActionHistory([])
     setCurrencySpent({})
+    setCurrencySpentHistory([])
     setRedoItemStack([])
     setRedoHistoryStack([])
     setRedoCurrencyStack([])
     setRedoOmensStack([])
+    setRedoCurrencySpentStack([])
   }
 
   // Global paste handler
@@ -1046,7 +1113,7 @@ function GridCraftingSimulator() {
         const rangeStr = includeRange && mod.stat_ranges && mod.stat_ranges[idx]
           ? `(${mod.stat_ranges[idx].min}-${mod.stat_ranges[idx].max})`
           : ''
-        text = text.replace('{}', valueStr + rangeStr)
+        text = text.replace('#', valueStr + rangeStr)
       })
     } else if (mod.current_value !== undefined && mod.current_value !== null) {
       // Single value mod
@@ -1054,10 +1121,10 @@ function GridCraftingSimulator() {
       const rangeStr = includeRange && mod.stat_ranges && mod.stat_ranges.length > 0
         ? `(${mod.stat_ranges[0].min}-${mod.stat_ranges[0].max})`
         : ''
-      text = text.replace('{}', valueStr + rangeStr)
+      text = text.replace('#', valueStr + rangeStr)
     } else {
       // No value, use range
-      text = text.replace('{}', `(${mod.stat_min}-${mod.stat_max})`)
+      text = text.replace('#', `(${mod.stat_min}-${mod.stat_max})`)
     }
 
     return text
@@ -1432,12 +1499,14 @@ function GridCraftingSimulator() {
     setHistory([...history, `Manually added ${draggedMod.name}`])
     setItemHistory([...itemHistory, item])
     setActionHistory([...actionHistory, null]) // Manual actions can't be retried
+    setCurrencySpentHistory([...currencySpentHistory, currencySpent])
 
     // Clear redo stacks on new action
     setRedoItemStack([])
     setRedoHistoryStack([])
     setRedoCurrencyStack([])
     setRedoOmensStack([])
+    setRedoCurrencySpentStack([])
 
     // Add the mod to the item - support hybrid mods
     const newItem = { ...item }
@@ -1507,12 +1576,14 @@ function GridCraftingSimulator() {
     setHistory([...history, `Manually removed ${modName}`])
     setItemHistory([...itemHistory, item])
     setActionHistory([...actionHistory, null]) // Manual actions can't be retried
+    setCurrencySpentHistory([...currencySpentHistory, currencySpent])
 
     // Clear redo stacks on new action
     setRedoItemStack([])
     setRedoHistoryStack([])
     setRedoCurrencyStack([])
     setRedoOmensStack([])
+    setRedoCurrencySpentStack([])
 
     const newItem = { ...item }
     if (modType === 'prefix') {
@@ -1572,12 +1643,14 @@ function GridCraftingSimulator() {
     setHistory([...history, `Revealed desecrated modifier: ${choice.name}`])
     setItemHistory([...itemHistory, item])
     setActionHistory([...actionHistory, null]) // Manual actions can't be retried
+    setCurrencySpentHistory([...currencySpentHistory, currencySpent])
 
     // Clear redo stacks on new action
     setRedoItemStack([])
     setRedoHistoryStack([])
     setRedoCurrencyStack([])
     setRedoOmensStack([])
+    setRedoCurrencySpentStack([])
 
     // Remove unrevealed mod and replace the placeholder with chosen revealed mod
     const newItem = { ...item }
@@ -1746,18 +1819,17 @@ function GridCraftingSimulator() {
 
   // Pattern matching function (mirrors backend logic)
   const patternMatchesMod = (pattern: string, modStatText: string): boolean => {
-    // Handle exact match for mods with placeholders (e.g., "+{} to Level of all Melee Skills")
+    // Handle exact match for mods with placeholders (e.g., "+# to Level of all Melee Skills")
     if (pattern === modStatText) {
       return true
     }
 
-    // Escape special regex characters except {}
+    // Escape special regex characters except #
     let patternRegex = pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 
-    // Replace escaped {} placeholders with regex for numbers OR the literal {}
-    // This handles both "+2 to Level..." and "+{} to Level..."
-    patternRegex = patternRegex.replace(/\\{\\}/g, '(\\{\\}|[\\d\\-\\(\\)]+)')
-    patternRegex = patternRegex.replace(/\\(\\{?\\}\\-\\{?\\}\\)/g, '(\\(\\{\\}\\-\\{\\}\\)|\\(\\d+\\-\\d+\\))')
+    // Replace # placeholders with regex for numbers OR the literal #
+    // This handles both "+2 to Level..." and "+# to Level..."
+    patternRegex = patternRegex.replace(/#/g, '(#|[\\d\\-\\(\\)]+)')
 
     // Add anchors to match full string
     patternRegex = `^${patternRegex}$`
@@ -1933,22 +2005,28 @@ function GridCraftingSimulator() {
         setItem(result.result_item)
       }
 
-      // Add to history
+      // Add to history (save current state BEFORE changes)
       setHistory([...history, `Applied ${currencyType}${selectedOmens.length > 0 ? ` with ${selectedOmens.join(', ')}` : ''}`])
       setItemHistory([...itemHistory, item])
       setActionHistory([...actionHistory, { currency: currencyType, omens: [...selectedOmens] }])
+      setCurrencySpentHistory([...currencySpentHistory, currencySpent])
 
       // Clear redo stacks on new action
       setRedoItemStack([])
       setRedoHistoryStack([])
       setRedoCurrencyStack([])
       setRedoOmensStack([])
+      setRedoCurrencySpentStack([])
 
-      // Update currency spent
-      setCurrencySpent(prev => ({
-        ...prev,
-        [currencyType]: (prev[currencyType] || 0) + 1
-      }))
+      // Update currency spent (including omens)
+      setCurrencySpent(prev => {
+        const updated = { ...prev, [currencyType]: (prev[currencyType] || 0) + 1 }
+        // Also track omens used
+        for (const omen of selectedOmens) {
+          updated[omen] = (updated[omen] || 0) + 1
+        }
+        return updated
+      })
 
       setMessage(`${currencyType} applied successfully!`)
 
@@ -1968,10 +2046,12 @@ function GridCraftingSimulator() {
       const previousHistory = history.slice(0, -1)
       const previousItemHistory = itemHistory.slice(0, -1)
       const previousActionHistory = actionHistory.slice(0, -1)
+      const previousCurrencySpentHistory = currencySpentHistory.slice(0, -1)
 
       // Save current state to redo stacks
       setRedoItemStack([...redoItemStack, item])
       setRedoHistoryStack([...redoHistoryStack, history[history.length - 1]])
+      setRedoCurrencySpentStack([...redoCurrencySpentStack, currencySpent])
 
       // Save action details if available (for Ctrl+Y)
       const lastAction = actionHistory[actionHistory.length - 1]
@@ -1987,6 +2067,14 @@ function GridCraftingSimulator() {
       setHistory(previousHistory)
       setItemHistory(previousItemHistory)
       setActionHistory(previousActionHistory)
+      setCurrencySpentHistory(previousCurrencySpentHistory)
+
+      // Restore currency spent from history (or empty if this was the first action)
+      const previousCurrencySpent = currencySpentHistory.length > 0
+        ? currencySpentHistory[currencySpentHistory.length - 1]
+        : {}
+      setCurrencySpent(previousCurrencySpent)
+
       setMessage('Undone last action')
     }
   }
@@ -1997,10 +2085,12 @@ function GridCraftingSimulator() {
       const nextHistoryEntry = redoHistoryStack[redoHistoryStack.length - 1]
       const nextCurrency = redoCurrencyStack[redoCurrencyStack.length - 1]
       const nextOmens = redoOmensStack[redoOmensStack.length - 1]
+      const nextCurrencySpent = redoCurrencySpentStack[redoCurrencySpentStack.length - 1]
 
-      // Add current item to history before redoing
+      // Add current state to history before redoing
       setItemHistory([...itemHistory, item])
       setHistory([...history, nextHistoryEntry])
+      setCurrencySpentHistory([...currencySpentHistory, currencySpent])
       if (nextCurrency) {
         setActionHistory([...actionHistory, { currency: nextCurrency, omens: nextOmens }])
       } else {
@@ -2012,8 +2102,10 @@ function GridCraftingSimulator() {
       setRedoHistoryStack(redoHistoryStack.slice(0, -1))
       setRedoCurrencyStack(redoCurrencyStack.slice(0, -1))
       setRedoOmensStack(redoOmensStack.slice(0, -1))
+      setRedoCurrencySpentStack(redoCurrencySpentStack.slice(0, -1))
 
       setItem(nextItem)
+      setCurrencySpent(nextCurrencySpent || {})
       setMessage('Redone last action')
     }
   }
@@ -2067,21 +2159,31 @@ function GridCraftingSimulator() {
           }
 
           // Replace the last history entry with the retry
+          // Keep the same previous currency state since we're replacing the action
+          const previousCurrencyState = currencySpentHistory.length > 0
+            ? currencySpentHistory[currencySpentHistory.length - 1]
+            : {}
           setHistory([...history.slice(0, -1), `Applied ${lastAction.currency}${lastAction.omens.length > 0 ? ` with ${lastAction.omens.join(', ')}` : ''} (retry)`])
           setItemHistory([...itemHistory.slice(0, -1), previousItem])
           setActionHistory([...actionHistory.slice(0, -1), { currency: lastAction.currency, omens: lastAction.omens }])
+          setCurrencySpentHistory([...currencySpentHistory.slice(0, -1), previousCurrencyState])
 
           // Clear redo stacks
           setRedoItemStack([])
           setRedoHistoryStack([])
           setRedoCurrencyStack([])
           setRedoOmensStack([])
+          setRedoCurrencySpentStack([])
 
-          // Update currency spent
-          setCurrencySpent(prev => ({
-            ...prev,
-            [lastAction.currency]: (prev[lastAction.currency] || 0) + 1
-          }))
+          // Update currency spent (including omens)
+          setCurrencySpent(prev => {
+            const updated = { ...prev, [lastAction.currency]: (prev[lastAction.currency] || 0) + 1 }
+            // Also track omens used
+            for (const omen of lastAction.omens) {
+              updated[omen] = (updated[omen] || 0) + 1
+            }
+            return updated
+          })
 
           setMessage(`${lastAction.currency} retried successfully!`)
 
@@ -2113,7 +2215,7 @@ function GridCraftingSimulator() {
 
     window.addEventListener('keydown', handleKeyDown)
     return () => window.removeEventListener('keydown', handleKeyDown)
-  }, [itemHistory, redoItemStack, actionHistory, redoCurrencyStack, redoOmensStack])
+  }, [itemHistory, redoItemStack, actionHistory, redoCurrencyStack, redoOmensStack, currencySpentHistory, redoCurrencySpentStack, currencySpent])
 
   // Auto-dismiss message after 3 seconds
   useEffect(() => {
@@ -2159,7 +2261,7 @@ function GridCraftingSimulator() {
     } else if (mod.current_value !== undefined) {
       // Legacy: single value, duplicate for all placeholders
       const roundedValue = Math.round(mod.current_value)
-      const placeholderCount = (mod.stat_text.match(/\{\}/g) || []).length
+      const placeholderCount = (mod.stat_text.match(/#/g) || []).length
       values.push(...Array(placeholderCount).fill(roundedValue))
     } else if (mod.stat_ranges && mod.stat_ranges.length > 0) {
       // Show ranges for each stat
@@ -2167,16 +2269,16 @@ function GridCraftingSimulator() {
     } else if (mod.stat_min !== undefined && mod.stat_max !== undefined) {
       // Legacy: single range, duplicate for all placeholders
       const rangeText = `${mod.stat_min}-${mod.stat_max}`
-      const placeholderCount = (mod.stat_text.match(/\{\}/g) || []).length
+      const placeholderCount = (mod.stat_text.match(/#/g) || []).length
       values.push(...Array(placeholderCount).fill(rangeText))
     } else {
       values.push('?')
     }
 
-    // Replace {} placeholders with corresponding values
+    // Replace # placeholders with corresponding values
     let statText = mod.stat_text
     for (const value of values) {
-      statText = statText.replace('{}', value.toString())
+      statText = statText.replace('#', value.toString())
     }
     const modName = mod.name || 'Unknown'
 
@@ -2427,7 +2529,7 @@ function GridCraftingSimulator() {
     return omenIncompatible || tagFiltered || searchFiltered
   }
 
-  // Format stat_text by replacing {} placeholders with actual value ranges
+  // Format stat_text by replacing # placeholders with actual value ranges
   const formatStatTextWithRanges = (mod: ItemModifier): string => {
     if (!mod.stat_ranges || mod.stat_ranges.length === 0) {
       return mod.stat_text
@@ -2436,8 +2538,8 @@ function GridCraftingSimulator() {
     let result = mod.stat_text
     let rangeIndex = 0
 
-    // Replace each {} with the corresponding range
-    result = result.replace(/\{\}/g, () => {
+    // Replace each # with the corresponding range
+    result = result.replace(/#/g, () => {
       if (rangeIndex < mod.stat_ranges!.length) {
         const range = mod.stat_ranges![rangeIndex]
         rangeIndex++
@@ -2447,7 +2549,7 @@ function GridCraftingSimulator() {
         }
         return `${range.min}-${range.max}`
       }
-      return '{}'
+      return '#'
     })
 
     return result
@@ -3012,19 +3114,19 @@ function GridCraftingSimulator() {
                               let formattedText = mod.stat_text
 
                               if (mod.stat_ranges && mod.stat_ranges.length > 0) {
-                                // Replace each {} with the corresponding range in curly braces
+                                // Replace each # with the corresponding range in curly braces
                                 mod.stat_ranges.forEach(range => {
                                   const rangeText = range.min === range.max
                                     ? `${range.min}`
                                     : `{${range.min}-${range.max}}`
-                                  formattedText = formattedText.replace('{}', rangeText)
+                                  formattedText = formattedText.replace('#', rangeText)
                                 })
                               } else if (mod.stat_min !== undefined && mod.stat_max !== undefined) {
                                 // Legacy single range
                                 const rangeText = mod.stat_min === mod.stat_max
                                   ? `${mod.stat_min}`
                                   : `{${mod.stat_min}-${mod.stat_max}}`
-                                formattedText = formattedText.replace('{}', rangeText)
+                                formattedText = formattedText.replace('#', rangeText)
                               }
 
                               const tierPct = mod.weight && totalWeights.prefix > 0
@@ -3035,10 +3137,17 @@ function GridCraftingSimulator() {
                               const essenceGuarantees = mod.mod_id ? availableMods.essence_guarantees[mod.mod_id] : null
                               const hasEssenceGuarantee = essenceGuarantees && essenceGuarantees.length > 0
 
+                              const isUnavailable = mod.required_ilvl && mod.required_ilvl > item.item_level
+                              const isDraggable = !isUnavailable && itemCreated
+
                               return (
                                 <div
                                   key={mod.tier}
-                                  className={`tier-detail ${mod.required_ilvl && mod.required_ilvl > item.item_level ? 'unavailable' : ''} ${hasEssenceGuarantee ? 'has-essence-guarantee' : ''}`}
+                                  className={`tier-detail ${isUnavailable ? 'unavailable' : ''} ${hasEssenceGuarantee ? 'has-essence-guarantee' : ''} ${isDraggable ? 'draggable-tier' : ''}`}
+                                  draggable={isDraggable}
+                                  onDragStart={() => isDraggable && handleDragStart(mod, 'prefix')}
+                                  onDragEnd={handleDragEnd}
+                                  title={isDraggable ? "Drag to add this specific tier to item" : undefined}
                                 >
                                   <span className="tier-label">T{mod.tier}</span>
                                   {hasEssenceGuarantee && (
@@ -3410,19 +3519,19 @@ function GridCraftingSimulator() {
                               let formattedText = mod.stat_text
 
                               if (mod.stat_ranges && mod.stat_ranges.length > 0) {
-                                // Replace each {} with the corresponding range in curly braces
+                                // Replace each # with the corresponding range in curly braces
                                 mod.stat_ranges.forEach(range => {
                                   const rangeText = range.min === range.max
                                     ? `${range.min}`
                                     : `{${range.min}-${range.max}}`
-                                  formattedText = formattedText.replace('{}', rangeText)
+                                  formattedText = formattedText.replace('#', rangeText)
                                 })
                               } else if (mod.stat_min !== undefined && mod.stat_max !== undefined) {
                                 // Legacy single range
                                 const rangeText = mod.stat_min === mod.stat_max
                                   ? `${mod.stat_min}`
                                   : `{${mod.stat_min}-${mod.stat_max}}`
-                                formattedText = formattedText.replace('{}', rangeText)
+                                formattedText = formattedText.replace('#', rangeText)
                               }
 
                               const tierPct = mod.weight && totalWeights.suffix > 0
@@ -3433,10 +3542,17 @@ function GridCraftingSimulator() {
                               const essenceGuarantees = mod.mod_id ? availableMods.essence_guarantees[mod.mod_id] : null
                               const hasEssenceGuarantee = essenceGuarantees && essenceGuarantees.length > 0
 
+                              const isUnavailable = mod.required_ilvl && mod.required_ilvl > item.item_level
+                              const isDraggable = !isUnavailable && itemCreated
+
                               return (
                                 <div
                                   key={mod.tier}
-                                  className={`tier-detail ${mod.required_ilvl && mod.required_ilvl > item.item_level ? 'unavailable' : ''} ${hasEssenceGuarantee ? 'has-essence-guarantee' : ''}`}
+                                  className={`tier-detail ${isUnavailable ? 'unavailable' : ''} ${hasEssenceGuarantee ? 'has-essence-guarantee' : ''} ${isDraggable ? 'draggable-tier' : ''}`}
+                                  draggable={isDraggable}
+                                  onDragStart={() => isDraggable && handleDragStart(mod, 'suffix')}
+                                  onDragEnd={handleDragEnd}
+                                  title={isDraggable ? "Drag to add this specific tier to item" : undefined}
                                 >
                                   <span className="tier-label">T{mod.tier}</span>
                                   {hasEssenceGuarantee && (
@@ -3979,17 +4095,69 @@ function GridCraftingSimulator() {
                       <div className="item-value-bar">
                         <div className="value-section cost-section">
                           <span className="value-label">Cost:</span>
-                          {Object.keys(currencySpent).length > 0 && exchangeRates ? (
-                            <span className="value-amount">
+                          {Object.keys(currencySpent).length > 0 ? (
+                            <span className="value-amount cost-with-icon">
                               {(() => {
                                 let totalExalted = 0
+                                let unpricedCount = 0
                                 for (const [currency, count] of Object.entries(currencySpent)) {
-                                  const rate = exchangeRates.rates[currency]
+                                  // Try to find rate with various normalizations
+                                  let rate = null
+                                  if (exchangeRates) {
+                                    // API stores by lowercase display name (e.g., "greater essence of abrasion")
+                                    // and by dash-separated name (e.g., "greater-essence-of-abrasion")
+                                    const lowerCurrency = currency.toLowerCase()
+                                    const dashName = lowerCurrency.replace(/ /g, '-')
+                                    // For basic orbs, try without "Orb of" prefix
+                                    const basicOrbName = lowerCurrency
+                                      .replace(/^orb of /, '')
+                                      .replace(/ orb$/, '')
+
+                                    rate = exchangeRates.rates[lowerCurrency]  // "greater essence of abrasion"
+                                      || exchangeRates.rates[dashName]         // "greater-essence-of-abrasion"
+                                      || exchangeRates.rates[basicOrbName]     // "exalted", "divine" etc
+                                      || Object.values(exchangeRates.rates).find(r =>
+                                          r.name.toLowerCase() === lowerCurrency
+                                        )
+                                  }
                                   if (rate) {
                                     totalExalted += count * rate.exalted_value
+                                  } else {
+                                    unpricedCount += count
                                   }
                                 }
-                                return `${totalExalted.toFixed(2)} ex`
+
+                                // Calculate divine equivalent
+                                const divineRate = exchangeRates?.rates['divine']?.exalted_value || 0
+                                const totalDivine = divineRate > 0 ? totalExalted / divineRate : 0
+
+                                // Dynamic display: show divine if >= 1, else exalted
+                                if (totalExalted > 0) {
+                                  const suffix = unpricedCount > 0 ? ` + ${unpricedCount} other` : ''
+                                  if (totalDivine >= 1) {
+                                    return (
+                                      <>
+                                        <img
+                                          src="https://www.poe2wiki.net/images/5/58/Divine_Orb_inventory_icon.png"
+                                          alt="div"
+                                          className="cost-inline-icon"
+                                        />
+                                        {totalDivine.toFixed(2)} div{suffix}
+                                      </>
+                                    )
+                                  }
+                                  return (
+                                    <>
+                                      <img
+                                        src="https://www.poe2wiki.net/images/2/26/Exalted_Orb_inventory_icon.png"
+                                        alt="ex"
+                                        className="cost-inline-icon"
+                                      />
+                                      {totalExalted.toFixed(2)} ex{suffix}
+                                    </>
+                                  )
+                                }
+                                return `${Object.values(currencySpent).reduce((a, b) => a + b, 0)} items`
                               })()}
                             </span>
                           ) : (
@@ -4744,7 +4912,7 @@ function GridCraftingSimulator() {
               )}
 
               {activeTab === 'history' && <HistoryTab {...tabContentProps} />}
-              {activeTab === 'currency' && <CurrencyTab {...tabContentProps} />}
+              {activeTab === 'currency' && <CurrencyTab {...tabContentProps} getCurrencyIconUrl={getCurrencyIconUrl} />}
             </div>
           </div>
         </div>
