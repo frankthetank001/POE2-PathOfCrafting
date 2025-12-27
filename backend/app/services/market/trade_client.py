@@ -29,6 +29,14 @@ USER_AGENT = "POE2-PathOfCrafting/1.0 (github.com/POE2-PathOfCrafting)"
 DEFAULT_LEAGUE = "Fate of the Vaal"
 
 
+class RateLimitError(Exception):
+    """Raised when the trade API rate limit is exceeded."""
+    def __init__(self, message: str, wait_seconds: int = 0):
+        self.message = message
+        self.wait_seconds = wait_seconds
+        super().__init__(message)
+
+
 @dataclass
 class RateLimitState:
     """Tracks rate limit state from API headers."""
@@ -318,10 +326,31 @@ class TradeAPIClient:
             response = await self._make_request("POST", url, json=query)
             logger.info(f"Trade API response status: {response.status_code}")
 
-            if response.status_code == 400:
-                error_data = response.json()
-                logger.warning(f"Invalid query: {error_data}")
-                return None
+            # Handle rate limit (429) or error responses
+            if response.status_code == 429 or response.status_code >= 400:
+                try:
+                    error_data = response.json()
+                    error_info = error_data.get("error", {})
+                    error_code = error_info.get("code")
+                    error_message = error_info.get("message", "")
+
+                    # Rate limit error (code 3 or 429 status)
+                    if error_code == 3 or response.status_code == 429:
+                        # Extract wait time from message like "Please wait 215 seconds before trying again."
+                        import re
+                        wait_match = re.search(r'wait\s+(\d+)\s+seconds', error_message, re.IGNORECASE)
+                        wait_seconds = int(wait_match.group(1)) if wait_match else 60
+                        logger.warning(f"Rate limited: {error_message} (wait {wait_seconds}s)")
+                        raise RateLimitError(error_message, wait_seconds)
+
+                    # Other 400 errors
+                    if response.status_code == 400:
+                        logger.warning(f"Invalid query: {error_data}")
+                        return None
+                except RateLimitError:
+                    raise
+                except Exception:
+                    pass
 
             response.raise_for_status()
             data = response.json()
@@ -336,6 +365,8 @@ class TradeAPIClient:
                 item_hashes=data.get("result", []),
             )
 
+        except RateLimitError:
+            raise
         except httpx.HTTPError as e:
             logger.error(f"Trade search failed: {e}")
             return None

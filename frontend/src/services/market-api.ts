@@ -242,7 +242,8 @@ export const marketApi = {
     rarityEnabled?: boolean,
     ilvlEnabled?: boolean,
     modMinValues?: Record<number, number>,
-    usePseudoStats?: Record<string, boolean>
+    usePseudoStats?: Record<string, boolean>,
+    purchaseType?: string
   ): Promise<ItemPriceEstimate> => {
     const response = await api.post<ItemPriceEstimate>('/price-item', {
       item,
@@ -253,6 +254,7 @@ export const marketApi = {
       ilvl_enabled: ilvlEnabled,
       mod_min_values: modMinValues,
       use_pseudo_stats: usePseudoStats,
+      purchase_type: purchaseType,
     })
     return response.data
   },

@@ -19,6 +19,7 @@ from app.services.market import (
     League,
 )
 from app.services.market.item_pricer import get_item_pricer
+from app.services.market.trade_client import RateLimitError
 
 logger = get_logger(__name__)
 
@@ -256,6 +257,7 @@ class ItemPriceRequest(BaseModel):
     ilvl_enabled: Optional[bool] = Field(False, description="Whether to filter by item level (min ilvl)")
     mod_min_values: Optional[Dict[str, float]] = Field(None, description="Custom min values for mods by index (0-based, prefixes first then suffixes, keys are string indices)")
     use_pseudo_stats: Optional[Dict[str, bool]] = Field(None, description="Which pseudo stats to use (stat_id -> bool). True = use aggregated pseudo, False = use individual mods")
+    purchase_type: Optional[str] = Field("any", description="Purchase type filter: 'any', 'buyout', 'priced', 'online', 'onlineleague'")
 
 
 class PriceListingResponse(BaseModel):
@@ -392,7 +394,8 @@ async def estimate_item_price(request: ItemPriceRequest) -> ItemPriceResponse:
             rarity_enabled=request.rarity_enabled,
             ilvl_enabled=request.ilvl_enabled,
             mod_min_values=request.mod_min_values,
-            use_pseudo_stats=request.use_pseudo_stats
+            use_pseudo_stats=request.use_pseudo_stats,
+            purchase_type=request.purchase_type
         )
 
         if estimate is None:
@@ -481,6 +484,12 @@ async def estimate_item_price(request: ItemPriceRequest) -> ItemPriceResponse:
         )
     except HTTPException:
         raise
+    except RateLimitError as e:
+        logger.warning(f"Rate limited: {e.message} (wait {e.wait_seconds}s)")
+        raise HTTPException(
+            status_code=429,
+            detail=f"Rate limited. Please wait {e.wait_seconds} seconds before trying again."
+        )
     except Exception as e:
         logger.error(f"Error estimating item price: {e}")
         raise HTTPException(status_code=500, detail=str(e))

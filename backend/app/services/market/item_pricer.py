@@ -349,6 +349,7 @@ class ItemPricer:
         ilvl_enabled: Optional[bool] = False,
         mod_min_values: Optional[Dict[str, float]] = None,
         use_pseudo_stats: Optional[Dict[str, bool]] = None,
+        purchase_type: Optional[str] = "any",
     ) -> Optional[PriceEstimate]:
         """
         Estimate the price of an item.
@@ -362,6 +363,7 @@ class ItemPricer:
             ilvl_enabled: Whether to filter by item level (min ilvl)
             mod_min_values: Custom min values for mods by string index (0-based, prefixes first then suffixes)
             use_pseudo_stats: Which pseudo stats to use (stat_id -> bool). True = use pseudo, False = use individual mods
+            purchase_type: Purchase type filter ('any', 'buyout', 'priced', 'online', 'onlineleague')
 
         Returns:
             PriceEstimate or None if unable to price
@@ -380,7 +382,7 @@ class ItemPricer:
 
         # Try progressively relaxed searches
         for strictness in [0.9, 0.8, 0.7, 0.5]:
-            query = self._build_query(item, mod_filters, strictness, equipment_filters, equipment_enabled, rarity_enabled, ilvl_enabled, mod_min_values, use_pseudo_stats)
+            query = self._build_query(item, mod_filters, strictness, equipment_filters, equipment_enabled, rarity_enabled, ilvl_enabled, mod_min_values, use_pseudo_stats, purchase_type)
 
             # Dump trade request to file for debugging
             with open("trade_request_debug.json", "w") as f:
@@ -406,7 +408,7 @@ class ItemPricer:
                 return result
 
         # If we still don't have enough results, try one more with very relaxed criteria
-        query = self._build_query(item, mod_filters, 0.3, equipment_filters, equipment_enabled, rarity_enabled, ilvl_enabled, mod_min_values, use_pseudo_stats)
+        query = self._build_query(item, mod_filters, 0.3, equipment_filters, equipment_enabled, rarity_enabled, ilvl_enabled, mod_min_values, use_pseudo_stats, purchase_type)
         listings, query_id = await self._trade_client.search_and_fetch(query, league, max_results=20)
 
         if listings:
@@ -639,6 +641,7 @@ class ItemPricer:
         ilvl_enabled: Optional[bool] = False,
         mod_min_values: Optional[Dict[str, float]] = None,
         use_pseudo_stats: Optional[Dict[str, bool]] = None,
+        purchase_type: Optional[str] = "any",
     ) -> Dict[str, Any]:
         """
         Build a trade API query from mod filters.
@@ -653,6 +656,7 @@ class ItemPricer:
             ilvl_enabled: Whether to filter by item level (min ilvl)
             mod_min_values: Custom min values for mods by string index
             use_pseudo_stats: Which pseudo stats to use (stat_id -> bool)
+            purchase_type: Purchase type filter ('any', 'buyout', 'priced', 'online', 'onlineleague')
         """
         filters = []
         count_filters = []  # For stats with multiple variants (global + local)
@@ -803,9 +807,11 @@ class ItemPricer:
             })
 
         # Build the query
+        # Map user-friendly purchase types to trade API status options
+        status_option = purchase_type or "any"
         query: Dict[str, Any] = {
             "query": {
-                "status": {"option": "any"},
+                "status": {"option": status_option},
                 "stats": stats_groups
             },
             "sort": {"price": "asc"}

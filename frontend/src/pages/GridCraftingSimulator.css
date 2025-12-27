@@ -4791,6 +4791,48 @@
   text-align: right;
 }
 
+/* Purchase Type Dropdown */
+.price-purchase-type {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: rgba(40, 40, 50, 0.4);
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.price-purchase-type .purchase-type-label {
+  font-size: 0.7rem;
+  color: #888;
+  white-space: nowrap;
+}
+
+.price-purchase-type .purchase-type-select {
+  flex: 1;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  background: rgba(30, 30, 40, 0.8);
+  border: 1px solid rgba(100, 100, 120, 0.4);
+  border-radius: 3px;
+  color: var(--poe2-text-default, #c8b59a);
+  cursor: pointer;
+  outline: none;
+}
+
+.price-purchase-type .purchase-type-select:hover {
+  border-color: rgba(150, 150, 170, 0.5);
+}
+
+.price-purchase-type .purchase-type-select:focus {
+  border-color: var(--poe2-currency, #aa9e82);
+}
+
+.price-purchase-type .purchase-type-select option {
+  background: #1a1a24;
+  color: var(--poe2-text-default, #c8b59a);
+}
+
 /* Listings Table */
 .listings-table {
   width: 100%;

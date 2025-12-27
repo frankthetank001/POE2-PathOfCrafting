@@ -877,6 +877,14 @@ function GridCraftingSimulator() {
   const [enabledHiddenMods, setEnabledHiddenMods] = useState<Set<string>>(new Set())
   // Global strictness percentage for all mods (default 80%)
   const [priceStrictness, setPriceStrictness] = useState(80)
+  // Purchase type filter for trade search (cached in session storage)
+  const [purchaseType, setPurchaseType] = useState<string>(() => {
+    return sessionStorage.getItem('tradePurchaseType') || 'any'
+  })
+  const handlePurchaseTypeChange = (newType: string) => {
+    setPurchaseType(newType)
+    sessionStorage.setItem('tradePurchaseType', newType)
+  }
 
   // Redo stacks for Ctrl+R and Ctrl+Y
   const [redoItemStack, setRedoItemStack] = useState<CraftableItem[]>([])
@@ -1523,7 +1531,8 @@ function GridCraftingSimulator() {
         priceRarityEnabled,
         priceIlvlEnabled,
         modMinValuesForApi,  // Always pass mod min values
-        usePseudoStats       // Always pass pseudo stats toggle
+        usePseudoStats,      // Always pass pseudo stats toggle
+        purchaseType         // Pass purchase type filter
       )
       // On refresh, preserve original pseudo_stats (based on full item, not filtered)
       if (priceModalOpen && itemPrice?.pseudo_stats) {
@@ -1548,7 +1557,14 @@ function GridCraftingSimulator() {
       setPriceModalOpen(true)
     } catch (error: any) {
       console.error('Price check failed:', error)
-      if (error.response?.status === 404) {
+      if (error.response?.status === 429) {
+        // Rate limited - show the wait time from the error message
+        const detail = error.response?.data?.detail || ''
+        const waitMatch = detail.match(/(\d+)\s+seconds/)
+        const waitSeconds = waitMatch ? parseInt(waitMatch[1]) : 60
+        const waitMinutes = Math.ceil(waitSeconds / 60)
+        setMessage(`Rate limited. Please wait ${waitMinutes > 1 ? `~${waitMinutes} minutes` : `${waitSeconds} seconds`} before trying again.`)
+      } else if (error.response?.status === 404) {
         setMessage('No comparable items found on trade')
       } else {
         setMessage('Price check failed - try again later')
@@ -5457,6 +5473,26 @@ function GridCraftingSimulator() {
                     className="strictness-slider-compact"
                   />
                   <span className="strictness-value">{priceStrictness}%</span>
+                </div>
+
+                {/* Purchase Type Dropdown */}
+                <div className="price-purchase-type">
+                  <label className="purchase-type-label">Listing:</label>
+                  <select
+                    value={purchaseType}
+                    onChange={(e) => {
+                      handlePurchaseTypeChange(e.target.value)
+                      // Trigger a refresh with the new purchase type
+                      setTimeout(() => handlePriceCheck(true), 50)
+                    }}
+                    className="purchase-type-select"
+                  >
+                    <option value="any">Any</option>
+                    <option value="buyout">Instant Buyout Only</option>
+                    <option value="priced">Buyout + In Person</option>
+                    <option value="online">In Person (Online)</option>
+                    <option value="onlineleague">In Person (Online in League)</option>
+                  </select>
                 </div>
 
                 {/* Listings Table */}
