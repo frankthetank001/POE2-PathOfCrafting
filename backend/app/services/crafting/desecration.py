@@ -8,6 +8,13 @@ from app.services.crafting.item_state import ItemStateManager
 from app.services.crafting.modifier_pool import ModifierPool
 from app.services.crafting.currencies import CraftingCurrency
 from app.core.logging import get_logger
+from app.core.item_classification import (
+    ALL_WEAPON_CATEGORIES,
+    ALL_ARMOR_CATEGORIES,
+    CASTER_WEAPONS,
+    JEWELRY_CATEGORIES,
+    OFFHAND_CATEGORIES,
+)
 
 logger = get_logger(__name__)
 
@@ -69,34 +76,18 @@ class BaseAbyssalBone(CraftingCurrency, ABC):
 
     def _get_applicable_items_for_bone_type(self, bone_type: AbyssalBoneType) -> List[str]:
         """Get list of item types this bone can be applied to based on logical modifier placement."""
+        # Use centralized constants for item type sets
+        all_weapons = list(ALL_WEAPON_CATEGORIES) + ["talisman"]
+        all_armor = list(ALL_ARMOR_CATEGORIES)
+        all_jewelry = list(JEWELRY_CATEGORIES)
+        caster_weapons_list = list(CASTER_WEAPONS) + ["focus"]
+
         type_restrictions = {
-            AbyssalBoneType.JAWBONE: [
-                # Damage modifiers - weapons only
-                "sword", "axe", "mace", "bow", "crossbow", "wand", "staff",
-                "sceptre", "dagger", "claw", "flail", "spear", "warstaff", "talisman"
-            ],
-            AbyssalBoneType.RIB: [
-                # Defensive modifiers - armor pieces only
-                "str_armour", "dex_armour", "int_armour", "str_dex_armour",
-                "str_int_armour", "dex_int_armour", "shield", "belt"
-            ],
-            AbyssalBoneType.COLLARBONE: [
-                # Resistance modifiers - armor and jewelry
-                "str_armour", "dex_armour", "int_armour", "str_dex_armour",
-                "str_int_armour", "dex_int_armour", "shield", "belt", "ring", "amulet"
-            ],
-            AbyssalBoneType.CRANIUM: [
-                # Caster modifiers - caster weapons and jewelry
-                "wand", "staff", "sceptre", "ring", "amulet", "focus"
-            ],
-            AbyssalBoneType.VERTEBRAE: [
-                # Attribute modifiers - any equipment
-                "str_armour", "dex_armour", "int_armour", "str_dex_armour",
-                "str_int_armour", "dex_int_armour", "shield", "belt", "ring", "amulet",
-                "sword", "axe", "mace", "bow", "crossbow", "wand", "staff",
-                "sceptre", "dagger", "claw", "flail", "spear", "warstaff", "talisman",
-                "quiver", "focus"
-            ]
+            AbyssalBoneType.JAWBONE: all_weapons,  # Damage modifiers - weapons only
+            AbyssalBoneType.RIB: all_armor + ["shield", "belt"],  # Defensive modifiers - armor pieces only
+            AbyssalBoneType.COLLARBONE: all_armor + ["shield"] + all_jewelry,  # Resistance modifiers - armor and jewelry
+            AbyssalBoneType.CRANIUM: caster_weapons_list + ["ring", "amulet"],  # Caster modifiers - caster weapons and jewelry
+            AbyssalBoneType.VERTEBRAE: all_armor + ["shield"] + all_jewelry + all_weapons + ["quiver", "focus"],  # Attribute modifiers - any equipment
         }
         return type_restrictions.get(bone_type, [])
 

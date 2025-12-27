@@ -19,6 +19,12 @@ from app.services.crafting.item_state import ItemStateManager
 from app.services.crafting.modifier_pool import ModifierPool
 from app.services.crafting.constants import HIDDEN_TAGS_FOR_HOMOGENISING
 from app.core.logging import get_logger
+from app.core.item_classification import (
+    ALL_WEAPON_CATEGORIES,
+    ALL_ARMOR_CATEGORIES,
+    JEWELRY_CATEGORIES,
+    ESSENCE_ITEM_TYPE_TO_CATEGORY,
+)
 
 logger = get_logger(__name__)
 
@@ -569,30 +575,17 @@ class DesecrationMechanic(CraftingMechanic):
         bone_configs = get_bone_configs_for_part(bone_part)
         if not bone_configs:
             # Fallback to hardcoded logic if no config found (based on design document)
+            # Use centralized constants for item categories
+            all_weapons = list(ALL_WEAPON_CATEGORIES) + ["weapon", "one_handed_sword", "two_handed_sword", "quiver"]
+            all_armor = ["armour", "body_armour"] + list(ALL_ARMOR_CATEGORIES) + ["helmet", "gloves", "boots", "shield"]
+            all_jewelry = list(JEWELRY_CATEGORIES)
+
             type_restrictions = {
-                'jawbone': [
-                    # Weapons and Quivers only
-                    "weapon", "one_handed_sword", "two_handed_sword", "bow", "crossbow",
-                    "wand", "staff", "sceptre", "dagger", "claw", "mace", "axe", "flail", "quiver"
-                ],
-                'rib': [
-                    # Armour only (all armor pieces)
-                    "armour", "body_armour", "int_armour", "str_armour", "dex_armour",
-                    "str_dex_armour", "str_int_armour", "dex_int_armour", "str_dex_int_armour",
-                    "helmet", "gloves", "boots", "shield"
-                ],
-                'collarbone': [
-                    # Amulet, Ring or Belt only
-                    "ring", "amulet", "belt"
-                ],
-                'cranium': [
-                    # Jewel only (Preserved bones only)
-                    "jewel"
-                ],
-                'vertebrae': [
-                    # Waystone only (Preserved bones only)
-                    "waystone"
-                ]
+                'jawbone': all_weapons,  # Weapons and Quivers only
+                'rib': all_armor,  # Armour only (all armor pieces)
+                'collarbone': all_jewelry,  # Amulet, Ring or Belt only
+                'cranium': ["jewel"],  # Jewel only (Preserved bones only)
+                'vertebrae': ["waystone"]  # Waystone only (Preserved bones only)
             }
             return type_restrictions.get(bone_part.lower(), [])
 
@@ -600,18 +593,11 @@ class DesecrationMechanic(CraftingMechanic):
         applicable_items = set()
         for bone_config in bone_configs:
             for item_type in bone_config.applicable_items:
-                # Map broad categories to specific item categories
+                # Map broad categories to specific item categories using centralized constants
                 if item_type == "armour":
-                    applicable_items.update([
-                        "armour", "body_armour", "int_armour", "str_armour", "dex_armour",
-                        "str_dex_armour", "str_int_armour", "dex_int_armour", "str_dex_int_armour",
-                        "helmet", "gloves", "boots", "shield"
-                    ])
+                    applicable_items.update(["armour", "body_armour"] + list(ALL_ARMOR_CATEGORIES) + ["helmet", "gloves", "boots", "shield"])
                 elif item_type == "weapon":
-                    applicable_items.update([
-                        "weapon", "one_handed_sword", "two_handed_sword", "bow", "crossbow",
-                        "wand", "staff", "sceptre", "dagger", "claw", "mace", "axe", "flail"
-                    ])
+                    applicable_items.update(["weapon", "one_handed_sword", "two_handed_sword"] + list(ALL_WEAPON_CATEGORIES))
                 else:
                     # Direct mapping for specific types like ring, amulet, belt, jewel, waystone, quiver
                     applicable_items.add(item_type)
@@ -902,42 +888,10 @@ class EssenceMechanic(CraftingMechanic):
 
     def _has_applicable_effect_for_item(self, item: CraftableItem) -> bool:
         """Check if the essence has any item effect that applies to this item type."""
-        # Map item_type from essence effects to base_category
-        item_type_to_category = {
-            # Armour types
-            "Armour": ["body_armour", "int_armour", "str_armour", "dex_armour", "str_dex_armour",
-                       "str_int_armour", "dex_int_armour", "str_dex_int_armour", "helmet", "gloves", "boots", "shield"],
-            "Body Armour": ["body_armour", "int_armour", "str_armour", "dex_armour", "str_dex_armour",
-                            "str_int_armour", "dex_int_armour", "str_dex_int_armour"],
-            "Helmet": ["helmet"],
-            "Gloves": ["gloves"],
-            "Boots": ["boots"],
-            "Shield": ["shield"],
-            # Jewellery
-            "Jewellery": ["amulet", "ring"],
-            "Amulet": ["amulet"],
-            "Ring": ["ring"],
-            "Belt": ["belt"],
-            # Weapons
-            "One Handed Melee Weapon": ["one_handed_sword", "dagger", "claw", "mace", "axe", "sceptre", "wand"],
-            "Two Handed Melee Weapon": ["two_handed_sword", "staff", "flail", "spear", "talisman"],
-            "Bow": ["bow"],
-            "Crossbow": ["crossbow"],
-            "Martial Weapon": ["one_handed_sword", "two_handed_sword", "bow", "crossbow", "dagger", "claw",
-                               "mace", "axe", "flail", "staff", "spear", "talisman"],
-            "Caster Weapon": ["wand", "sceptre", "staff"],
-            "Quarterstaff": ["staff"],
-            "Focus": ["focus"],
-            # Generic
-            "Equipment": ["body_armour", "int_armour", "str_armour", "dex_armour", "str_dex_armour",
-                          "str_int_armour", "dex_int_armour", "str_dex_int_armour", "helmet", "gloves",
-                          "boots", "shield", "amulet", "ring", "belt"],
-        }
-
-        # Check each item effect
+        # Use centralized item type to category mapping
         for effect in self.essence_info.item_effects:
             effect_item_type = effect.item_type
-            applicable_categories = item_type_to_category.get(effect_item_type, [])
+            applicable_categories = ESSENCE_ITEM_TYPE_TO_CATEGORY.get(effect_item_type, [])
 
             # Direct match
             if item.base_category in applicable_categories:
@@ -951,40 +905,9 @@ class EssenceMechanic(CraftingMechanic):
 
     def _effect_applies_to_item(self, effect, item: CraftableItem) -> bool:
         """Check if a specific effect applies to this item type."""
-        # Same mapping as _has_applicable_effect_for_item
-        item_type_to_category = {
-            # Armour types
-            "Armour": ["body_armour", "int_armour", "str_armour", "dex_armour", "str_dex_armour",
-                       "str_int_armour", "dex_int_armour", "str_dex_int_armour", "helmet", "gloves", "boots", "shield"],
-            "Body Armour": ["body_armour", "int_armour", "str_armour", "dex_armour", "str_dex_armour",
-                            "str_int_armour", "dex_int_armour", "str_dex_int_armour"],
-            "Helmet": ["helmet"],
-            "Gloves": ["gloves"],
-            "Boots": ["boots"],
-            "Shield": ["shield"],
-            # Jewellery
-            "Jewellery": ["amulet", "ring"],
-            "Amulet": ["amulet"],
-            "Ring": ["ring"],
-            "Belt": ["belt"],
-            # Weapons
-            "One Handed Melee Weapon": ["one_handed_sword", "dagger", "claw", "mace", "axe", "sceptre", "wand"],
-            "Two Handed Melee Weapon": ["two_handed_sword", "staff", "flail", "spear", "talisman"],
-            "Bow": ["bow"],
-            "Crossbow": ["crossbow"],
-            "Martial Weapon": ["one_handed_sword", "two_handed_sword", "bow", "crossbow", "dagger", "claw",
-                               "mace", "axe", "flail", "staff", "spear", "talisman"],
-            "Caster Weapon": ["wand", "sceptre", "staff"],
-            "Quarterstaff": ["staff"],
-            "Focus": ["focus"],
-            # Generic
-            "Equipment": ["body_armour", "int_armour", "str_armour", "dex_armour", "str_dex_armour",
-                          "str_int_armour", "dex_int_armour", "str_dex_int_armour", "helmet", "gloves",
-                          "boots", "shield", "amulet", "ring", "belt"],
-        }
-
+        # Use centralized item type to category mapping
         effect_item_type = effect.item_type
-        applicable_categories = item_type_to_category.get(effect_item_type, [])
+        applicable_categories = ESSENCE_ITEM_TYPE_TO_CATEGORY.get(effect_item_type, [])
 
         # Direct match
         if item.base_category in applicable_categories:

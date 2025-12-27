@@ -13,6 +13,7 @@ from statistics import median, mean
 import re
 
 from app.core.logging import get_logger
+from app.core.item_classification import CATEGORY_TO_TRADE_API
 from app.schemas.crafting import CraftableItem, ItemModifier
 from app.schemas.item_bases import get_item_base_by_name
 from app.services.market.trade_client import TradeAPIClient, TradeListing, get_trade_client
@@ -131,36 +132,10 @@ BASE_STAT_TO_TRADE = {
     "Ward": "ward",
 }
 
-# Category mappings for trade API
-CATEGORY_TO_TRADE = {
-    # Armour slots
-    "boots": "armour.boots",
-    "gloves": "armour.gloves",
-    "helmet": "armour.helmet",
-    "body_armour": "armour.chest",
-    "body": "armour.chest",  # Alias for body_armour
-    "shield": "armour.shield",
-    "quiver": "armour.quiver",
-    "focus": "armour.focus",
-    # Accessories
-    "ring": "accessory.ring",
-    "amulet": "accessory.amulet",
-    "belt": "accessory.belt",
-    # Weapons
-    "wand": "weapon.wand",
-    "staff": "weapon.staff",
-    "bow": "weapon.bow",
-    "crossbow": "weapon.crossbow",
-    "mace": "weapon.mace",
-    "sceptre": "weapon.sceptre",
-    "sword": "weapon.sword",
-    "axe": "weapon.axe",
-    "dagger": "weapon.dagger",
-    "claw": "weapon.claw",
-    "flail": "weapon.flail",
-    "spear": "weapon.spear",
-    "talisman": "weapon.talisman",
-}
+# Category mappings for trade API - imported from centralized item_classification module
+# CATEGORY_TO_TRADE_API is imported from app.core.item_classification
+# Keeping alias for backward compatibility
+CATEGORY_TO_TRADE = CATEGORY_TO_TRADE_API
 
 
 @dataclass

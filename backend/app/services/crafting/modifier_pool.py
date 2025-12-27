@@ -5,6 +5,17 @@ from typing import List, Optional
 
 from app.schemas.crafting import ItemModifier, ModType
 from app.services.crafting.exclusion_service import exclusion_service
+from app.core.item_classification import (
+    ALL_WEAPON_CATEGORIES,
+    ONE_HANDED_WEAPONS,
+    TWO_HANDED_WEAPONS,
+    ALL_ARMOR_CATEGORIES,
+    JEWELRY_CATEGORIES,
+    CASTER_WEAPONS,
+    ARMOR_DEFENSE_PATTERNS,
+    POB_TO_DB_CATEGORY,
+    classify_item,
+)
 
 
 def _get_item_slot(base_name: str) -> Optional[str]:
@@ -281,7 +292,7 @@ class ModifierPool:
 
         # Item-specific restrictions based on game knowledge
         # These mods exist for some item types but not others
-        if item_category in ['int_armour', 'str_armour', 'dex_armour', 'str_dex_armour', 'str_int_armour', 'dex_int_armour', 'str_dex_int_armour', 'body_armour']:
+        if item_category in ALL_ARMOR_CATEGORIES or item_category == 'body_armour':
             # Body armor cannot roll recharge rate mods (only helmet/gloves/boots can)
             body_armor_restricted = {'energyshieldregeneration'}
             if mod_group and mod_group.lower() in body_armor_restricted:
@@ -480,12 +491,10 @@ class ModifierPool:
                 # If we have seen it, prefer the more specific one (not using generic 'weapon' tag)
                 existing_mod = seen_mods[key]
                 has_generic_weapon = "weapon" in mod.applicable_items and not any(
-                    w in mod.applicable_items for w in ["bow", "sword", "axe", "mace", "dagger", "claw", "wand",
-                    "sceptre", "flail", "spear", "crossbow", "staff", "warstaff"]
+                    w in mod.applicable_items for w in ALL_WEAPON_CATEGORIES
                 )
                 existing_has_generic = "weapon" in existing_mod.applicable_items and not any(
-                    w in existing_mod.applicable_items for w in ["bow", "sword", "axe", "mace", "dagger", "claw", "wand",
-                    "sceptre", "flail", "spear", "crossbow", "staff", "warstaff"]
+                    w in existing_mod.applicable_items for w in ALL_WEAPON_CATEGORIES
                 )
 
                 # Keep the more specific one (the one NOT using generic weapon tag)
@@ -590,58 +599,9 @@ class ModifierPool:
             exclusions = self._get_item_elemental_exclusions(item)
             return weight_key in exclusions
 
-        # Direct category match (bow, sword, str_armour, etc.)
-        if weight_key == item_category:
-            return True
-
-        # === Generic Tags ===
-        
-        # Ranged weapons (bow, crossbow only - excludes wand which is a caster weapon)
-        if weight_key == "ranged" and item_category in ["bow", "crossbow"]:
-            return True
-        
-        # One-hand weapons (attack weapons only, excludes caster weapons)
-        if weight_key == "one_hand_weapon" and item_slot == "weapons - 1 hand":
-            caster_weapons = ["wand", "sceptre", "focus"]
-            if item_category not in caster_weapons:
-                return True
-
-        # Two-hand weapons (attack weapons only, excludes staff)
-        if weight_key == "two_hand_weapon" and item_slot == "weapons - 2 hand":
-            if item_category != "staff":
-                return True
-        
-        # Generic weapon (attack weapons only, excludes caster weapons)
-        if weight_key == "weapon" and "weapon" in item_slot:
-            # Exclude caster weapons (staff, wand, sceptre, focus)
-            caster_weapons = ["staff", "wand", "sceptre", "focus"]
-            if item_category not in caster_weapons:
-                return True
-        
-        # Generic armour
-        if weight_key == "armour" and "armour" in item_category:
-            return True
-        
-        # === Slots ===
-        # For things like body_armour, helmet, gloves, boots, amulet, ring, belt, etc.
-        if weight_key == item_slot:
-            return True
-        
-        # === Shield sub-types ===
-        if "shield" in weight_key and item_slot == "shield":
-            # Check if shield defense type matches
-            # e.g., "str_shield" matches if item_category is "str_shield"
-            if weight_key == item_category:
-                return True
-            # "shield" matches any shield
-            if weight_key == "shield":
-                return True
-        
-        # === Default always matches ===
-        if weight_key == "default":
-            return True
-        
-        return False
+        # Use centralized classification system for all other checks
+        classification = classify_item(item_category, item_slot)
+        return classification.matches_weight_key(weight_key)
 
     def _check_weight_condition(self, weight_conditions: dict, item_category: str, item_slot: str, item=None) -> bool:
         """
@@ -767,8 +727,7 @@ class ModifierPool:
                 return True
 
             # Map specific weapon types to one_hand_weapon
-            weapon_types_1h = ["sword", "axe", "mace", "dagger", "claw", "wand", "sceptre", "flail"]
-            if item_category in weapon_types_1h:
+            if item_category in ONE_HANDED_WEAPONS:
                 # Check generic one_hand_weapon tag
                 if "one_hand_weapon" in mod.applicable_items:
                     return True
@@ -785,8 +744,7 @@ class ModifierPool:
                 return True
 
             # Map specific weapon types to two_hand_weapon
-            weapon_types_2h = ["sword", "axe", "mace", "bow", "crossbow", "staff", "spear", "warstaff"]
-            if item_category in weapon_types_2h:
+            if item_category in TWO_HANDED_WEAPONS:
                 # Check generic two_hand_weapon tag
                 if "two_hand_weapon" in mod.applicable_items:
                     return True
@@ -811,31 +769,18 @@ class ModifierPool:
 
         # Handle "jewellery" category - expands to amulet, ring, belt
         if "jewellery" in mod.applicable_items:
-            if item_slot in ["amulet", "ring", "belt"]:
+            if item_slot in JEWELRY_CATEGORIES:
                 return True
 
         # Check if slot matches (for slot-specific mods)
         # BUT for body_armour slot, need to check defence type filtering first
         if item_slot and item_slot in mod.applicable_items:
             # Special handling for body_armour slot: check defence type compatibility
-            if item_slot == "body_armour" and item_category in ["int_armour", "str_armour", "dex_armour", "str_dex_armour", "str_int_armour", "dex_int_armour", "str_dex_int_armour"]:
+            if item_slot == "body_armour" and item_category in ALL_ARMOR_CATEGORIES:
                 # Check if this is a defence % mod (these are stat-specific)
                 if "% increased" in mod.stat_text:
-                    # Map armour types to their EXACT defence combinations
-                    armour_defence_patterns = {
-                        "str_armour": ["% increased Armour"],
-                        "dex_armour": ["% increased Evasion"],
-                        "int_armour": ["% increased Energy Shield"],
-                        "str_dex_armour": ["% increased Armour and Evasion"],
-                        "str_int_armour": ["% increased Armour and Energy Shield"],
-                        "dex_int_armour": ["% increased Evasion and Energy Shield"],
-                        "str_dex_int_armour": ["% increased Armour", "% increased Evasion", "% increased Energy Shield",
-                                               "% increased Armour and Evasion", "% increased Armour and Energy Shield",
-                                               "% increased Evasion and Energy Shield"]
-                    }
-
-                    # Get expected defence patterns for this armour type
-                    expected_patterns = armour_defence_patterns.get(item_category, [])
+                    # Get expected defence patterns for this armour type from centralized config
+                    expected_patterns = ARMOR_DEFENSE_PATTERNS.get(item_category, [])
 
                     # Check if the mod matches any expected pattern
                     for pattern in expected_patterns:
@@ -852,33 +797,17 @@ class ModifierPool:
             return True
 
         # PathOfBuilding uses generic categories for universal mods
-        if item_category in ["int_armour", "str_armour", "dex_armour", "str_dex_armour", "str_int_armour", "dex_int_armour", "str_dex_int_armour"]:
+        if item_category in ALL_ARMOR_CATEGORIES:
             # "armour" is for universal mods (resistances, life, etc)
             if "armour" in mod.applicable_items:
                 return True
 
         # Handle weapon category mapping (our detailed categories to PoB weapon types)
         # PoB uses generic weapon types (sword, axe, mace) without one/two-handed distinction
-        weapon_category_map = {
-            # One-handed weapons
-            "Wand": "wand",
-            "Dagger": "dagger",
-            "Spear": "spear",
-            "Sceptre": "sceptre",
-            "One Handed Axe": "axe",
-            "One Handed Mace": "mace",
-            "One Handed Sword": "sword",
-            "Flail": "flail",
-            "Claw": "claw",
-            # Two-handed weapons
-            "Bow": "bow",
-            "Crossbow": "crossbow",
-            "Staff": "staff",
-            "Two Handed Axe": "axe",
-            "Two Handed Mace": "mace",
-            "Two Handed Sword": "sword",
-            "Warstaff": "warstaff",
-            # Test category names (snake_case)
+        # Use centralized POB_TO_DB_CATEGORY mapping, plus snake_case test variants
+        extended_weapon_map = {
+            **POB_TO_DB_CATEGORY,
+            # Test category names (snake_case) - kept for backward compatibility
             "one_hand_sword": "sword",
             "one_hand_axe": "axe",
             "one_hand_mace": "mace",
@@ -888,8 +817,8 @@ class ModifierPool:
             "two_hand_mace": "mace",
         }
 
-        if item_category in weapon_category_map:
-            pob_weapon_type = weapon_category_map[item_category]
+        if item_category in extended_weapon_map:
+            pob_weapon_type = extended_weapon_map[item_category]
             if pob_weapon_type in mod.applicable_items:
                 return True
 

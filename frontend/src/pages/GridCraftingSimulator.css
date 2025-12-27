@@ -395,6 +395,10 @@
   pointer-events: none;
 }
 
+.pool-mod-group.omen-incompatible {
+  display: none;
+}
+
 .pool-mod-group.essence-only {
   border-left: 3px solid #9c4dd4;
   background: rgba(156, 77, 212, 0.1);

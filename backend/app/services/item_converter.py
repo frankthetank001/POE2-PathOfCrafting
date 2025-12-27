@@ -3,6 +3,7 @@ import re
 import uuid
 
 from app.core.logging import get_logger
+from app.core.item_classification import ALL_ARMOR_CATEGORIES, JEWELRY_CATEGORIES
 from app.schemas.item import ParsedItem, ItemMod
 from app.schemas.crafting import CraftableItem, ItemModifier, ModType, ItemRarity, UnrevealedModifier, SocketedRune
 from app.schemas.item_bases import get_item_base_by_name, ITEM_BASES, ItemBase
@@ -179,7 +180,7 @@ class ItemConverter:
         def is_mod_applicable(mod):
             if base_category in mod.applicable_items:
                 return True
-            if 'jewellery' in mod.applicable_items and base_category in ['ring', 'amulet', 'belt']:
+            if 'jewellery' in mod.applicable_items and base_category in JEWELRY_CATEGORIES:
                 return True
             # Talismans are 2-handed weapons, so weapon mods apply to them
             if 'weapon' in mod.applicable_items and base_category == 'talisman':
@@ -191,16 +192,11 @@ class ItemConverter:
             if mod.mod_group == 'AbyssTargetMod':
                 return True
             # Map specific armour types to generic 'body_armour' category
-            if 'body_armour' in mod.applicable_items and base_category in [
-                'int_armour', 'str_armour', 'dex_armour',
-                'str_int_armour', 'str_dex_armour', 'dex_int_armour'
-            ]:
+            if 'body_armour' in mod.applicable_items and base_category in ALL_ARMOR_CATEGORIES:
                 return True
             # Map attribute-specific gloves/helmet/boots categories to their slot
             # e.g., dex_int_armour with slot=gloves should match mods with applicable_items=['gloves']
-            armour_categories = ['int_armour', 'str_armour', 'dex_armour',
-                                 'str_int_armour', 'str_dex_armour', 'dex_int_armour', 'str_dex_int_armour']
-            if base_category in armour_categories:
+            if base_category in ALL_ARMOR_CATEGORIES:
                 # These mods use slot names (gloves, helmet, boots) in applicable_items
                 if 'gloves' in mod.applicable_items or 'helmet' in mod.applicable_items or 'boots' in mod.applicable_items:
                     return True

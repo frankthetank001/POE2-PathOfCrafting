@@ -3403,9 +3403,10 @@ function GridCraftingSimulator() {
                   {availableMods.essence_prefixes.map((mod, idx) => {
                     const isTagFiltered = activeTagFilters.size > 0 && !isModMatchingTagFilters(mod)
                     const isSearchFiltered = searchQuery.trim() && !isModMatchingSearch(mod)
+                    const isOmenIncompatible = shouldGreyOutMod(mod, 'prefix')
                     const isFiltered = isTagFiltered || isSearchFiltered
                     return (
-                      <div key={`essence-prefix-${idx}`} className={`pool-mod-group essence-only ${isFiltered ? 'tag-filtered' : ''}`}>
+                      <div key={`essence-prefix-${idx}`} className={`pool-mod-group essence-only ${isFiltered ? 'tag-filtered' : ''} ${isOmenIncompatible ? 'omen-incompatible' : ''}`}>
                         <div
                           className="pool-mod-group-header prefix compact-single-line mod-group-clickable"
                           onDoubleClick={() => applyAllModTags(mod)}
@@ -3498,9 +3499,10 @@ function GridCraftingSimulator() {
                   {availableMods.desecrated_prefixes.map((mod, idx) => {
                     const isTagFiltered = activeTagFilters.size > 0 && !isModMatchingTagFilters(mod)
                     const isSearchFiltered = searchQuery.trim() && !isModMatchingSearch(mod)
+                    const isOmenIncompatible = shouldGreyOutMod(mod, 'prefix')
                     const isFiltered = isTagFiltered || isSearchFiltered
                     return (
-                      <div key={`desecrated-prefix-${idx}`} className={`pool-mod-group desecrated-only ${isFiltered ? 'tag-filtered' : ''}`}>
+                      <div key={`desecrated-prefix-${idx}`} className={`pool-mod-group desecrated-only ${isFiltered ? 'tag-filtered' : ''} ${isOmenIncompatible ? 'omen-incompatible' : ''}`}>
                         <div
                           className="pool-mod-group-header prefix compact-single-line mod-group-clickable"
                           onDoubleClick={() => applyAllModTags(mod)}
@@ -3808,9 +3810,10 @@ function GridCraftingSimulator() {
                   {availableMods.essence_suffixes.map((mod, idx) => {
                     const isTagFiltered = activeTagFilters.size > 0 && !isModMatchingTagFilters(mod)
                     const isSearchFiltered = searchQuery.trim() && !isModMatchingSearch(mod)
+                    const isOmenIncompatible = shouldGreyOutMod(mod, 'suffix')
                     const isFiltered = isTagFiltered || isSearchFiltered
                     return (
-                      <div key={`essence-suffix-${idx}`} className={`pool-mod-group essence-only ${isFiltered ? 'tag-filtered' : ''}`}>
+                      <div key={`essence-suffix-${idx}`} className={`pool-mod-group essence-only ${isFiltered ? 'tag-filtered' : ''} ${isOmenIncompatible ? 'omen-incompatible' : ''}`}>
                         <div
                           className="pool-mod-group-header suffix compact-single-line mod-group-clickable"
                           onDoubleClick={() => applyAllModTags(mod)}
@@ -3903,9 +3906,10 @@ function GridCraftingSimulator() {
                   {availableMods.desecrated_suffixes.map((mod, idx) => {
                     const isTagFiltered = activeTagFilters.size > 0 && !isModMatchingTagFilters(mod)
                     const isSearchFiltered = searchQuery.trim() && !isModMatchingSearch(mod)
+                    const isOmenIncompatible = shouldGreyOutMod(mod, 'suffix')
                     const isFiltered = isTagFiltered || isSearchFiltered
                     return (
-                      <div key={`desecrated-suffix-${idx}`} className={`pool-mod-group desecrated-only ${isFiltered ? 'tag-filtered' : ''}`}>
+                      <div key={`desecrated-suffix-${idx}`} className={`pool-mod-group desecrated-only ${isFiltered ? 'tag-filtered' : ''} ${isOmenIncompatible ? 'omen-incompatible' : ''}`}>
                         <div
                           className="pool-mod-group-header suffix compact-single-line mod-group-clickable"
                           onDoubleClick={() => applyAllModTags(mod)}

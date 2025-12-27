@@ -22,7 +22,7 @@ class ItemParser:
             raise ValueError("Invalid item format: insufficient sections")
 
         rarity = ItemParser._parse_rarity(sections[0])
-        name, base_type = ItemParser._parse_name_and_base(sections[0], rarity)
+        name, base_type = ItemParser._parse_name_and_base(sections[0], sections[1] if len(sections) > 1 else None, rarity)
 
         item_level: Optional[int] = None
         quality: Optional[int] = None
@@ -131,12 +131,30 @@ class ItemParser:
         raise ValueError("No rarity found in item text")
 
     @staticmethod
-    def _parse_name_and_base(first_section: str, rarity: ItemRarity) -> Tuple[str, str]:
+    def _parse_name_and_base(first_section: str, second_section: Optional[str], rarity: ItemRarity) -> Tuple[str, str]:
         lines = [line.strip() for line in first_section.split("\n") if line.strip()]
 
         rarity_line_idx = next(i for i, line in enumerate(lines) if line.startswith("Rarity:"))
 
         remaining_lines = lines[rarity_line_idx + 1 :]
+
+        # Filter out warning/info messages that appear before the name
+        # e.g., "You cannot use this item. Its stats will be ignored"
+        remaining_lines = [
+            line for line in remaining_lines
+            if not line.startswith("You cannot use this item")
+            and not line.startswith("This item will be")
+        ]
+
+        # If name/base not in first section, check second section
+        # This handles items with warnings where name/base appear after a separator
+        if len(remaining_lines) == 0 and second_section:
+            second_lines = [line.strip() for line in second_section.split("\n") if line.strip()]
+            # Second section should just be name and base (2 lines for rare/unique)
+            if len(second_lines) >= 2:
+                return second_lines[0], second_lines[1]
+            elif len(second_lines) == 1:
+                return second_lines[0], second_lines[0]
 
         if rarity in [ItemRarity.RARE, ItemRarity.UNIQUE] and len(remaining_lines) >= 2:
             return remaining_lines[0], remaining_lines[1]

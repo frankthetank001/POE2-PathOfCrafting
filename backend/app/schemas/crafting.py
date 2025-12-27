@@ -1,7 +1,11 @@
 from enum import Enum
-from typing import Dict, List, Optional
+from functools import cached_property
+from typing import TYPE_CHECKING, Dict, FrozenSet, List, Optional
 
 from pydantic import BaseModel, Field
+
+if TYPE_CHECKING:
+    from app.core.item_classification import ItemClassification, DefenseType
 
 
 class ItemRarity(str, Enum):
@@ -140,6 +144,100 @@ class CraftableItem(BaseModel):
     @property
     def has_open_affix(self) -> bool:
         return self.can_add_prefix or self.can_add_suffix
+
+    # === Item Classification Convenience Properties ===
+    # These delegate to the centralized ItemClassification system
+
+    def _get_slot(self) -> str:
+        """Get the item slot from the item base, falling back to category."""
+        from app.schemas.item_bases import get_item_base_by_name
+        base = get_item_base_by_name(self.base_name)
+        return base.slot if base else self.base_category
+
+    def get_classification(self) -> "ItemClassification":
+        """Get the full ItemClassification for this item."""
+        from app.core.item_classification import classify_item
+        return classify_item(self.base_category, self._get_slot())
+
+    @property
+    def is_weapon(self) -> bool:
+        """Check if this is any type of weapon."""
+        return self.get_classification().is_weapon
+
+    @property
+    def is_armor(self) -> bool:
+        """Check if this is an armor piece (body, helmet, gloves, boots)."""
+        return self.get_classification().is_armor
+
+    @property
+    def is_jewelry(self) -> bool:
+        """Check if this is jewelry (ring, amulet, belt)."""
+        return self.get_classification().is_jewelry
+
+    @property
+    def is_accessory(self) -> bool:
+        """Alias for is_jewelry."""
+        return self.is_jewelry
+
+    @property
+    def is_offhand(self) -> bool:
+        """Check if this is an offhand item (shield, quiver, focus)."""
+        return self.get_classification().is_offhand
+
+    @property
+    def is_shield(self) -> bool:
+        """Check if this is a shield."""
+        return self.get_classification().is_shield
+
+    @property
+    def is_one_handed(self) -> bool:
+        """Check if this is a one-handed weapon."""
+        return self.get_classification().is_one_handed
+
+    @property
+    def is_two_handed(self) -> bool:
+        """Check if this is a two-handed weapon."""
+        return self.get_classification().is_two_handed
+
+    @property
+    def is_caster_weapon(self) -> bool:
+        """Check if this is a caster weapon (staff, wand, sceptre)."""
+        return self.get_classification().is_caster_weapon
+
+    @property
+    def is_attack_weapon(self) -> bool:
+        """Check if this is an attack weapon (non-caster)."""
+        return self.get_classification().is_attack_weapon
+
+    @property
+    def is_melee_weapon(self) -> bool:
+        """Check if this is a melee weapon."""
+        return self.get_classification().is_melee_weapon
+
+    @property
+    def is_ranged_weapon(self) -> bool:
+        """Check if this is a ranged weapon (bow, crossbow)."""
+        return self.get_classification().is_ranged_weapon
+
+    @property
+    def defense_types(self) -> FrozenSet["DefenseType"]:
+        """Get the defense types for this armor piece."""
+        return self.get_classification().defense_types
+
+    @property
+    def has_armour_defense(self) -> bool:
+        """Check if this armor has Armour defense."""
+        return self.get_classification().has_armour
+
+    @property
+    def has_evasion_defense(self) -> bool:
+        """Check if this armor has Evasion defense."""
+        return self.get_classification().has_evasion
+
+    @property
+    def has_energy_shield_defense(self) -> bool:
+        """Check if this armor has Energy Shield defense."""
+        return self.get_classification().has_energy_shield
 
 
 class CraftingStep(BaseModel):
