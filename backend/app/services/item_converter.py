@@ -321,6 +321,10 @@ class ItemConverter:
                 if len(all_values) > 1:
                     result_mod.current_values = all_values
 
+                # Normalize stat_text: replace (X-Y) range patterns with # placeholder
+                # This ensures consistent format for trade API matching
+                result_mod.stat_text = re.sub(r'\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\)', '#', result_mod.stat_text)
+
                 # If the original text had (desecrated), ensure the tag is present
                 if '(desecrated)' in item_mod.text.lower():
                     if not result_mod.tags:

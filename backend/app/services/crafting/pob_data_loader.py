@@ -680,11 +680,20 @@ class POBDataLoader:
 
     def _renumber_mod_list_tiers(self, modifiers: List[ItemModifier]) -> None:
         """Renumber tiers for a list of modifiers."""
-        # Group mods by (mod_group OR stat_text, mod_type)
+        # Group mods by (mod_id_base, mod_type) where mod_id_base is the mod_id without trailing number
+        # This keeps one-hand and two-hand variants separate (e.g., LocalAddedPhysicalDamage vs LocalAddedPhysicalDamageTwoHand)
         groups: Dict[tuple, List[ItemModifier]] = {}
         for mod in modifiers:
-            # Use mod_group if available, otherwise fall back to stat_text
-            group_key = mod.mod_group if mod.mod_group else mod.stat_text
+            # Use mod_id without trailing number (and any underscores) as primary grouping key
+            # This keeps variants like "TwoHand" separate from base versions
+            # Pattern handles IDs like "LocalAddedLightningDamageTwoHand1_" or "WeaponElementalDamageOnTwohandWeapon2____"
+            if mod.mod_id:
+                mod_id_base = re.sub(r'\d+_*$', '', mod.mod_id)
+                group_key = mod_id_base
+            elif mod.mod_group:
+                group_key = mod.mod_group
+            else:
+                group_key = mod.stat_text
             key = (group_key, mod.mod_type)
             if key not in groups:
                 groups[key] = []

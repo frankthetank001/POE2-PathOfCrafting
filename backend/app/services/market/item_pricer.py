@@ -240,14 +240,39 @@ class ItemPricer:
 
         try:
             stats_data = await self._trade_client.get_stats()
+
+            # Priority order for stat types - explicit should be preferred
+            # We'll process in reverse priority order so higher priority overwrites
+            priority_order = ["sanctum", "skill", "augment", "enchant", "desecrated", "fractured", "implicit", "pseudo", "explicit"]
+            groups_by_label = {}
+
             for group in stats_data.get("result", []):
+                label = group.get("label", "").lower()
+                groups_by_label[label] = group
+
+            # Process groups in priority order (lowest to highest, so explicit is last and wins)
+            for label in priority_order:
+                group = groups_by_label.get(label)
+                if not group:
+                    continue
                 for entry in group.get("entries", []):
                     stat_id = entry.get("id", "")
                     text = entry.get("text", "")
                     if stat_id and text:
                         # Normalize to uppercase for consistent matching
                         _trade_stats_cache[text.upper()] = stat_id
-            logger.info(f"Loaded {len(_trade_stats_cache)} trade stats from API")
+
+            # Process any remaining groups not in our priority list
+            for label, group in groups_by_label.items():
+                if label in priority_order:
+                    continue
+                for entry in group.get("entries", []):
+                    stat_id = entry.get("id", "")
+                    text = entry.get("text", "")
+                    if stat_id and text:
+                        _trade_stats_cache[text.upper()] = stat_id
+
+            logger.info(f"Loaded {len(_trade_stats_cache)} trade stats from API (explicit-prioritized)")
             # Dump cache to file for debugging
             try:
                 with open("trade_stats_cache_debug.json", "w") as f:
@@ -279,21 +304,60 @@ class ItemPricer:
         # Normalize to uppercase for matching
         normalized = stat_text.strip().upper()
         results = []
+        found_with_fallback = False
 
-        def add_stat_id(cache_key: str) -> bool:
-            """Try to add a stat ID from the cache key."""
+        def add_stat_id(cache_key: str, use_fallback: bool = False) -> bool:
+            """Try to add a stat ID from the cache key.
+
+            Args:
+                cache_key: The key to look up in the cache
+                use_fallback: If True, use the full ID from cache as-is instead of
+                             constructing with mod_type prefix
+            """
+            nonlocal found_with_fallback
             if cache_key in _trade_stats_cache:
                 full_id = _trade_stats_cache[cache_key]
                 stat_hash = full_id.split(".")[-1]
-                stat_id = f"{mod_type}.{stat_hash}"
+
+                if use_fallback:
+                    # Use the full ID as-is from cache (e.g., desecrated.stat_xxx)
+                    stat_id = full_id
+                    found_with_fallback = True
+                else:
+                    # Construct ID with requested prefix
+                    stat_id = f"{mod_type}.{stat_hash}"
+
                 if stat_id not in results:
                     results.append(stat_id)
                 return True
             return False
 
-        # Direct lookup - try exact match and local variant
+        # Direct lookup - try exact match and local variant with requested prefix
         add_stat_id(normalized)
         add_stat_id(normalized + " (LOCAL)")
+
+        # If no match, try without leading +/- sign
+        # Trade API sometimes has "# to Maximum Life" while mod has "+# to Maximum Life"
+        if not results and normalized.startswith(("+", "-")):
+            stripped = normalized[1:].lstrip()
+            add_stat_id(stripped)
+            add_stat_id(stripped + " (LOCAL)")
+            if results:
+                logger.debug(f"Matched after stripping leading sign: '{stat_text}' -> {results}")
+
+        # If no results with requested prefix, try using the cached prefix as fallback
+        # This handles cases where a mod (e.g., "Gain #% of Damage as Extra Physical Damage")
+        # only exists as desecrated/fractured in trade API but appears as explicit on items
+        if not results:
+            add_stat_id(normalized, use_fallback=True)
+            add_stat_id(normalized + " (LOCAL)", use_fallback=True)
+            # Also try without leading sign with fallback
+            if not results and normalized.startswith(("+", "-")):
+                stripped = normalized[1:].lstrip()
+                add_stat_id(stripped, use_fallback=True)
+                add_stat_id(stripped + " (LOCAL)", use_fallback=True)
+            if found_with_fallback:
+                logger.debug(f"Used fallback prefix for stat: '{stat_text}' -> {results}")
 
         if not results:
             logger.warning(f"No trade stat match for: '{stat_text}'")
@@ -352,9 +416,9 @@ class ItemPricer:
                     "mod_filters": {k: {kk: vv for kk, vv in v.items() if kk != "individual_mods"} for k, v in mod_filters.items()},
                     "use_pseudo_stats": use_pseudo_stats,
                     "mod_min_values": mod_min_values,
+                    "unmatched_mods": unmatched_mods,
                 }, f, indent=2, default=str)
-            logger.info(f"Dumped trade request to trade_request_debug.json (strictness={strictness})")
-            logger.info(f"Calling search_and_fetch with league={league}...")
+            logger.debug(f"Dumped trade request to trade_request_debug.json (strictness={strictness})")
 
             listings, query_id = await self._trade_client.search_and_fetch(query, league, max_results=20)
             logger.info(f"search_and_fetch returned {len(listings)} listings, query_id={query_id}")
@@ -407,7 +471,7 @@ class ItemPricer:
 
         all_mods_with_idx = explicit_mods_with_idx + implicit_mods
 
-        logger.info(f"Extracting filters from {len(all_mods_with_idx)} mods")
+        logger.debug(f"Extracting filters from {len(all_mods_with_idx)} mods")
 
         for mod, mod_index, mod_type in all_mods_with_idx:
             # Get the rolled value
@@ -425,7 +489,13 @@ class ItemPricer:
                     pseudo_indices[pseudo_id].append(mod_index)
 
                 # Also store individual mod info for when pseudo is disabled
-                stat_ids = self._match_stat_to_trade_ids(mod.stat_text, mod_type)
+                # Normalize stat_text: replace numeric values with # placeholder
+                pseudo_stat_text_normalized = re.sub(r'\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\)', '#', mod.stat_text)
+                if '#' not in pseudo_stat_text_normalized:
+                    pseudo_stat_text_normalized = re.sub(r'(?<=[\+\-])\d+(?:\.\d+)?', '#', pseudo_stat_text_normalized)
+                    if '#' not in pseudo_stat_text_normalized:
+                        pseudo_stat_text_normalized = re.sub(r'\d+(?:\.\d+)?(?=%)', '#', pseudo_stat_text_normalized)
+                stat_ids = self._match_stat_to_trade_ids(pseudo_stat_text_normalized, mod_type)
                 if stat_ids:
                     if pseudo_id not in pseudo_individual_mods:
                         pseudo_individual_mods[pseudo_id] = []
@@ -437,24 +507,37 @@ class ItemPricer:
                         "mod_index": mod_index,
                     })
 
-                logger.info(f"Mod '{mod.name}' (group={mod.mod_group}, idx={mod_index}) -> pseudo {pseudo_id} += {value}")
+                logger.debug(f"Mod '{mod.name}' (group={mod.mod_group}, idx={mod_index}) -> pseudo {pseudo_id} += {value}")
             else:
                 # Match stat_text directly to trade API stat ID
-                # stat_text should already be normalized with # placeholders (e.g., "+# to Maximum Life")
+                # stat_text may have # placeholders or (min-max) range patterns
                 stat_ids = []
 
-                # Check if stat_text has a # placeholder
-                has_template = "#" in mod.stat_text
+                # Normalize stat_text: replace numeric values with # placeholder
+                # This handles mods with preserve_ranges=True like desecrated/essence mods
+                stat_text_normalized = re.sub(r'\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\)', '#', mod.stat_text)
+
+                # If no ranges were replaced, also replace standalone numeric values
+                # e.g., "+5 to Level" -> "+# to Level", "35% increased" -> "#% increased"
+                if '#' not in stat_text_normalized:
+                    # Replace numbers that follow + or - (e.g., "+5 to", "-5%")
+                    stat_text_normalized = re.sub(r'(?<=[\+\-])\d+(?:\.\d+)?', '#', stat_text_normalized)
+                    # If still no placeholder, try numbers before %
+                    if '#' not in stat_text_normalized:
+                        stat_text_normalized = re.sub(r'\d+(?:\.\d+)?(?=%)', '#', stat_text_normalized)
+
+                # Check if normalized stat_text has a # placeholder
+                has_template = "#" in stat_text_normalized
 
                 if has_template:
-                    stat_ids = self._match_stat_to_trade_ids(mod.stat_text, mod_type)
+                    stat_ids = self._match_stat_to_trade_ids(stat_text_normalized, mod_type)
                     if stat_ids:
-                        logger.info(f"Mod '{mod.name}' matched -> {stat_ids}")
+                        logger.debug(f"Mod '{mod.name}' matched -> {stat_ids}")
 
                     # If exact match failed, try splitting hybrid mods
                     # e.g., "#% increased Physical Damage, +# to Accuracy Rating"
-                    if not stat_ids and ", " in mod.stat_text:
-                        parts = mod.stat_text.split(", ")
+                    if not stat_ids and ", " in stat_text_normalized:
+                        parts = stat_text_normalized.split(", ")
                         all_values = mod.current_values if mod.current_values else [value]
 
                         for i, part in enumerate(parts):
@@ -473,17 +556,17 @@ class ItemPricer:
                                                 "mod_index": mod_index,
                                                 "stat_ids": [part_stat_id],
                                             }
-                                    logger.info(f"Mod '{mod.name}' hybrid part {i}: '{part}' -> {part_stat_ids} = {part_value}")
+                                    logger.debug(f"Mod '{mod.name}' hybrid part {i}: '{part}' -> {part_stat_ids} = {part_value}")
                                     stat_ids.extend(part_stat_ids)
                         if stat_ids:
-                            logger.info(f"Mod '{mod.name}' matched via hybrid split -> {stat_ids}")
+                            logger.debug(f"Mod '{mod.name}' matched via hybrid split -> {stat_ids}")
                             continue
 
                 if not stat_ids and mod.trade_hash:
                     # Fallback to trade_hash if stat_text matching failed
                     stat_id = f"{mod_type}.stat_{mod.trade_hash}"
                     stat_ids = [stat_id]
-                    logger.info(f"Mod '{mod.name}' using trade_hash fallback -> {stat_id}")
+                    logger.debug(f"Mod '{mod.name}' using trade_hash fallback -> {stat_id}")
 
                 if stat_ids:
                     # Use the first stat_id as the key, but store all variants
@@ -498,12 +581,18 @@ class ItemPricer:
                             "mod_index": mod_index,
                             "stat_ids": stat_ids,  # All matching stat IDs (for count filter)
                         }
-                    logger.info(f"Mod '{mod.name}' (idx={mod_index}) -> {stat_ids} = {value}")
+                    logger.debug(f"Mod '{mod.name}' (idx={mod_index}) -> {stat_ids} = {value}")
                 else:
-                    logger.warning(f"Mod '{mod.name}' (stat_text={mod.stat_text}, trade_hash={mod.trade_hash}) has no matching trade stat, skipping")
+                    # Build debug info for unmatched mod
+                    normalized_upper = stat_text_normalized.strip().upper()
+                    stripped_upper = normalized_upper[1:].lstrip() if normalized_upper.startswith(("+", "-")) else None
                     unmatched_mods.append({
                         "name": mod.name,
                         "stat_text": mod.stat_text,
+                        "stat_text_normalized": stat_text_normalized,
+                        "lookup_key": normalized_upper,
+                        "lookup_key_stripped": stripped_upper,
+                        "trade_hash": mod.trade_hash,
                         "mod_index": mod_index,
                         "mod_type": "prefix" if mod_index is not None and mod_index < len(item.prefix_mods) else "suffix" if mod_index is not None else "implicit",
                         "value": value,
@@ -543,9 +632,9 @@ class ItemPricer:
                 contributing_mod_indices=indices,
                 mod_type=mod_type,
             ))
-            logger.info(f"Pseudo total: {pseudo_id} = {total} (indices={indices}, type={mod_type})")
+            logger.debug(f"Pseudo total: {pseudo_id} = {total} (indices={indices}, type={mod_type})")
 
-        logger.info(f"Extracted {len(filters)} filters: {list(filters.keys())}")
+        logger.debug(f"Extracted {len(filters)} filters: {list(filters.keys())}")
         if unmatched_mods:
             logger.warning(f"Unmatched mods: {[m['name'] for m in unmatched_mods]}")
         return filters, pseudo_stats, unmatched_mods
@@ -628,8 +717,8 @@ class ItemPricer:
                             "value": {"min": min_val},
                             "_value": ind_value,
                         })
-                        logger.info(f"  Individual mod (pseudo disabled): {ind_mod['stat_id']} min={min_val}")
-                    logger.info(f"Pseudo {stat_id} disabled - using {len(individual_mods)} individual mods")
+                        logger.debug(f"  Individual mod (pseudo disabled): {ind_mod['stat_id']} min={min_val}")
+                    logger.debug(f"Pseudo {stat_id} disabled - using {len(individual_mods)} individual mods")
                     continue
                 else:
                     # Pseudo is enabled - also check if any individual mods are explicitly selected
@@ -651,11 +740,11 @@ class ItemPricer:
                                     "_value": ind_value,
                                 })
                                 added_individual += 1
-                                logger.info(f"  Individual mod (with pseudo): {ind_mod['stat_id']} min={min_val}")
+                                logger.debug(f"  Individual mod (with pseudo): {ind_mod['stat_id']} min={min_val}")
                     if added_individual > 0:
-                        logger.info(f"Pseudo {stat_id} enabled + {added_individual} individual mods")
+                        logger.debug(f"Pseudo {stat_id} enabled + {added_individual} individual mods")
                     else:
-                        logger.info(f"Pseudo {stat_id} enabled - using aggregated pseudo stat only")
+                        logger.debug(f"Pseudo {stat_id} enabled - using aggregated pseudo stat only")
 
             # Check if we have custom min value from user
             min_value = None
@@ -667,13 +756,13 @@ class ItemPricer:
                     str_idx = str(mod_index)
                     if str_idx in mod_min_values:
                         min_value = int(mod_min_values[str_idx])
-                        logger.info(f"Using custom min value for {stat_id} (idx={mod_index}): {min_value}")
+                        logger.debug(f"Using custom min value for {stat_id} (idx={mod_index}): {min_value}")
                 # For pseudo mods, check for pseudo-{stat_id} key
                 if is_pseudo:
                     pseudo_key = f"pseudo-{stat_id}"
                     if pseudo_key in mod_min_values:
                         min_value = int(mod_min_values[pseudo_key])
-                        logger.info(f"Using custom min value for pseudo {stat_id}: {min_value}")
+                        logger.debug(f"Using custom min value for pseudo {stat_id}: {min_value}")
 
             # Fall back to strictness-based calculation
             if min_value is None:
@@ -688,7 +777,7 @@ class ItemPricer:
                     "min_value": min_value,
                     "_value": value,
                 })
-                logger.info(f"  Multi-stat filter: {stat_ids} min={min_value} (count=1)")
+                logger.debug(f"  Multi-stat filter: {stat_ids} min={min_value} (count=1)")
             else:
                 # Single stat - add to normal filters
                 filters.append({
@@ -713,9 +802,9 @@ class ItemPricer:
         for f in count_filters:
             f.pop("_value", None)
 
-        logger.info(f"Query filters (strictness={strictness}): {filters}")
+        logger.debug(f"Query filters (strictness={strictness}): {filters}")
         if count_filters:
-            logger.info(f"Query count filters: {count_filters}")
+            logger.debug(f"Query count filters: {count_filters}")
 
         # Build the stats array
         stats_groups = []
@@ -770,7 +859,7 @@ class ItemPricer:
                     }
                 }
             }
-            logger.info(f"Category filter: {trade_category} -> {CATEGORY_TO_TRADE[trade_category]}")
+            logger.debug(f"Category filter: {trade_category} -> {CATEGORY_TO_TRADE[trade_category]}")
 
         # Add base stat filters from calculated_stats (keys match pob-data: Armour, Evasion, EnergyShield)
         # Use custom equipment_filters if provided, otherwise calculate from calculated_stats
@@ -781,7 +870,7 @@ class ItemPricer:
                     # Check if this stat is enabled (default to True if not specified)
                     is_enabled = equipment_enabled.get(stat_name, True) if equipment_enabled else True
                     if not is_enabled:
-                        logger.info(f"Base stat filter: {stat_name} disabled by user")
+                        logger.debug(f"Base stat filter: {stat_name} disabled by user")
                         continue
 
                     # Use custom filter value if provided, otherwise use strictness
@@ -791,7 +880,7 @@ class ItemPricer:
                         min_val = int(stat_value * strictness)
 
                     equip_filters[BASE_STAT_TO_TRADE[stat_name]] = {"min": min_val}
-                    logger.info(f"Base stat filter: {stat_name}={stat_value} -> min={min_val}")
+                    logger.debug(f"Base stat filter: {stat_name}={stat_value} -> min={min_val}")
 
             if equip_filters:
                 if "filters" not in query["query"]:
@@ -811,9 +900,9 @@ class ItemPricer:
                 query["query"]["filters"]["type_filters"]["filters"]["rarity"] = {
                     "option": rarity_option
                 }
-                logger.info(f"Rarity filter: {rarity_option}")
+                logger.debug(f"Rarity filter: {rarity_option}")
         elif not rarity_enabled:
-            logger.info("Rarity filter disabled by user")
+            logger.debug("Rarity filter disabled by user")
 
         # Add item level filter if enabled
         if ilvl_enabled and item.item_level:
@@ -824,9 +913,9 @@ class ItemPricer:
             query["query"]["filters"]["misc_filters"]["filters"]["ilvl"] = {
                 "min": item.item_level
             }
-            logger.info(f"Item level filter: min {item.item_level}")
+            logger.debug(f"Item level filter: min {item.item_level}")
         elif not ilvl_enabled:
-            logger.info("Item level filter disabled by user")
+            logger.debug("Item level filter disabled by user")
 
         return query
 
@@ -996,7 +1085,7 @@ class ItemPricer:
             })
         with open("listings_debug.json", "w") as f:
             json.dump(debug_data, f, indent=2, default=str)
-        logger.info(f"Dumped {len(debug_data)} listings to listings_debug.json")
+        logger.debug(f"Dumped {len(debug_data)} listings to listings_debug.json")
 
         # Calculate similarity scores for fresh listings only (for avg)
         similarity_scores = [pl.similarity_score for pl in price_listings
@@ -1112,7 +1201,7 @@ class ItemPricer:
             if price < lower_bound or price > upper_bound:
                 outlier_indices.add(i)
 
-        logger.info(f"Outlier detection: {len(outlier_indices)} outliers (bounds: {lower_bound:.1f}-{upper_bound:.1f})")
+        logger.debug(f"Outlier detection: {len(outlier_indices)} outliers (bounds: {lower_bound:.1f}-{upper_bound:.1f})")
         return outlier_indices
 
     def _calculate_listing_total_value(

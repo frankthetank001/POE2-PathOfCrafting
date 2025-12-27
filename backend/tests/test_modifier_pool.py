@@ -611,6 +611,131 @@ class TestModifierPoolPerformance:
 
 
 # ============================================================================
+# TIER UNIQUENESS TESTS (uses real POB data)
+# ============================================================================
+
+class TestTierUniqueness:
+    """Test that mod tiers are unique within a mod group for each item category."""
+
+    @pytest.fixture
+    def real_modifier_pool(self):
+        """Load the real modifier pool from POB data."""
+        from app.services.crafting.pob_data_loader import get_pob_data_loader
+        loader = get_pob_data_loader()
+        loader.load_all()
+        return ModifierPool(loader._modifiers)
+
+    def test_no_duplicate_tiers_for_talisman(self, real_modifier_pool):
+        """
+        Each mod group should have unique tiers for talisman.
+
+        This catches issues like LocalAddedLightningDamageTwoHand1_ and
+        LocalAddedLightningDamageTwoHand10 both being assigned Tier 1.
+        """
+        eligible_mods = real_modifier_pool.get_all_mods_for_category(
+            item_category="talisman",
+            mod_type="prefix",
+        )
+
+        # Group mods by their stat_text (normalized form)
+        from collections import defaultdict
+        groups = defaultdict(list)
+        for mod in eligible_mods:
+            groups[mod.stat_text].append(mod)
+
+        # Check each group for duplicate tiers
+        duplicates = []
+        for stat_text, mods in groups.items():
+            tier_counts = defaultdict(list)
+            for mod in mods:
+                tier_counts[mod.tier].append(mod.name)
+
+            for tier, names in tier_counts.items():
+                if len(names) > 1:
+                    duplicates.append({
+                        "stat_text": stat_text,
+                        "tier": tier,
+                        "mod_names": names,
+                    })
+
+        assert len(duplicates) == 0, (
+            f"Found {len(duplicates)} mod groups with duplicate tiers:\n"
+            + "\n".join(
+                f"  - '{d['stat_text']}' has {len(d['mod_names'])} T{d['tier']} mods: {d['mod_names']}"
+                for d in duplicates[:5]  # Show first 5
+            )
+        )
+
+    def test_no_duplicate_tiers_for_sword(self, real_modifier_pool):
+        """Each mod group should have unique tiers for one-hand sword."""
+        eligible_mods = real_modifier_pool.get_all_mods_for_category(
+            item_category="sword",
+            mod_type="prefix",
+        )
+
+        from collections import defaultdict
+        groups = defaultdict(list)
+        for mod in eligible_mods:
+            groups[mod.stat_text].append(mod)
+
+        duplicates = []
+        for stat_text, mods in groups.items():
+            tier_counts = defaultdict(list)
+            for mod in mods:
+                tier_counts[mod.tier].append(mod.name)
+
+            for tier, names in tier_counts.items():
+                if len(names) > 1:
+                    duplicates.append({
+                        "stat_text": stat_text,
+                        "tier": tier,
+                        "mod_names": names,
+                    })
+
+        assert len(duplicates) == 0, (
+            f"Found {len(duplicates)} mod groups with duplicate tiers:\n"
+            + "\n".join(
+                f"  - '{d['stat_text']}' has {len(d['mod_names'])} T{d['tier']} mods: {d['mod_names']}"
+                for d in duplicates[:5]
+            )
+        )
+
+    def test_no_duplicate_tiers_for_body_armour(self, real_modifier_pool):
+        """Each mod group should have unique tiers for body armour."""
+        eligible_mods = real_modifier_pool.get_all_mods_for_category(
+            item_category="str_armour",
+            mod_type="prefix",
+        )
+
+        from collections import defaultdict
+        groups = defaultdict(list)
+        for mod in eligible_mods:
+            groups[mod.stat_text].append(mod)
+
+        duplicates = []
+        for stat_text, mods in groups.items():
+            tier_counts = defaultdict(list)
+            for mod in mods:
+                tier_counts[mod.tier].append(mod.name)
+
+            for tier, names in tier_counts.items():
+                if len(names) > 1:
+                    duplicates.append({
+                        "stat_text": stat_text,
+                        "tier": tier,
+                        "mod_names": names,
+                    })
+
+        assert len(duplicates) == 0, (
+            f"Found {len(duplicates)} mod groups with duplicate tiers:\n"
+            + "\n".join(
+                f"  - '{d['stat_text']}' has {len(d['mod_names'])} T{d['tier']} mods: {d['mod_names']}"
+                for d in duplicates[:5]
+            )
+        )
+
+
+# ============================================================================
 # RUN ALL TESTS
 # ============================================================================
 
