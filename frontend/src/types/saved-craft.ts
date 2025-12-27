@@ -19,6 +19,8 @@ export interface CraftSnapshot {
   actionHistory: (CraftAction | null)[]  // Action for each step (null for manual edits)
   currencySpent: Record<string, number>  // Total currency spent
   currencySpentHistory: Record<string, number>[]  // Currency spent at each step
+  stepComments?: Record<number, string>  // Optional comments per step index
+  baseStepIndex?: number  // Optional index of step marked as "base" for price estimation
 }
 
 /**

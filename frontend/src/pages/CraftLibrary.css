@@ -232,3 +232,107 @@
   font-family: 'Fontin', Georgia, serif;
   font-size: 0.8rem;
 }
+
+/* Local Crafts Section */
+.local-crafts-section {
+  margin-bottom: 2rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid #27211f;
+}
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  margin-bottom: 1rem;
+}
+
+.section-header h2,
+.community-crafts-section h2 {
+  color: #aa9e82;
+  font-family: 'FontinSmallCaps', 'Fontin', Georgia, serif;
+  font-size: 1rem;
+  font-weight: normal;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 0;
+}
+
+.toggle-icon {
+  color: #7f7f7f;
+  font-size: 0.7rem;
+}
+
+.section-header:hover .toggle-icon {
+  color: #aa9e82;
+}
+
+.local-grid {
+  max-height: 400px;
+  overflow-y: auto;
+}
+
+.local-grid::-webkit-scrollbar {
+  width: 6px;
+}
+
+.local-grid::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 2px;
+}
+
+.local-grid::-webkit-scrollbar-thumb {
+  background: #3a3530;
+  border-radius: 2px;
+}
+
+.local-card {
+  border-color: #4a4035;
+}
+
+.badge.local {
+  background: rgba(0, 0, 0, 0.3);
+  border-color: #6a8a6a;
+  color: #6a8a6a;
+}
+
+.local-craft-actions {
+  display: flex;
+  gap: 0.25rem;
+  margin-top: 0.5rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid #27211f;
+}
+
+.load-local-btn,
+.delete-local-btn {
+  flex: 1;
+  padding: 0.3rem 0.4rem;
+  border: 1px solid #3a3530;
+  border-radius: 2px;
+  cursor: pointer;
+  font-family: 'FontinSmallCaps', 'Fontin', Georgia, serif;
+  font-size: 0.65rem;
+  letter-spacing: 0.03em;
+  transition: all 0.15s ease;
+  background: linear-gradient(180deg, #1a1814 0%, #0f0d0a 100%);
+  color: #7f7f7f;
+  text-transform: uppercase;
+}
+
+.load-local-btn:hover,
+.delete-local-btn:hover {
+  background: linear-gradient(180deg, #252219 0%, #1a1814 100%);
+  border-color: #4a4035;
+  color: #aa9e82;
+}
+
+.delete-local-btn:hover {
+  border-color: rgba(255, 100, 100, 0.5);
+  color: #ff8888;
+}
+
+.community-crafts-section {
+  margin-bottom: 1rem;
+}

@@ -1,4 +1,5 @@
 import { useState, useEffect, useMemo, useCallback } from 'react'
+import { useLocation } from 'react-router-dom'
 import { craftingApi, HiddenTagsConfig } from '@/services/crafting-api'
 import { marketApi, ExchangeRates, ItemPriceEstimate, PseudoStatInfo } from '@/services/market-api'
 import { UnifiedCurrencyStash } from '@/components/UnifiedCurrencyStash'
@@ -210,6 +211,13 @@ interface TabContentProps {
   setMessage: (message: string) => void
   onItemCreated?: () => void
   getCurrencyIconUrl?: (currency: string) => string
+  stepComments?: Record<number, string>
+  onUpdateComment?: (stepIndex: number, comment: string) => void
+  baseStepIndex?: number
+  onSetBaseStep?: (stepIndex: number | null) => void
+  basePriceEstimate?: { exalted: number; divine: number } | null
+  onCheckBasePrice?: () => void
+  basePriceLoading?: boolean
 }
 
 function ItemTab({ setItem, onHistoryReset, setMessage, onItemCreated }: TabContentProps) {
@@ -514,18 +522,44 @@ function ItemTab({ setItem, onHistoryReset, setMessage, onItemCreated }: TabCont
   )
 }
 
-function HistoryTab({ history, itemHistory, onRevertToStep, onClearHistory }: TabContentProps) {
+function HistoryTab({ history, itemHistory, onRevertToStep, onClearHistory, stepComments, onUpdateComment, baseStepIndex, onSetBaseStep, basePriceEstimate, onCheckBasePrice, basePriceLoading }: TabContentProps) {
+  const [editingComment, setEditingComment] = useState<number | null>(null)
+  const [commentText, setCommentText] = useState('')
 
   const getItemSummary = (item: CraftableItem): string => {
     const totalMods = (item.prefix_mods?.length || 0) + (item.suffix_mods?.length || 0)
     return `${item.base_name} (${totalMods} mods, iLvl ${item.item_level})`
   }
 
+  const handleStartEdit = (idx: number) => {
+    setEditingComment(idx)
+    setCommentText(stepComments?.[idx] || '')
+  }
+
+  const handleSaveComment = (idx: number) => {
+    if (onUpdateComment) {
+      onUpdateComment(idx, commentText)
+    }
+    setEditingComment(null)
+    setCommentText('')
+  }
+
+  const handleCancelEdit = () => {
+    setEditingComment(null)
+    setCommentText('')
+  }
+
+  const handleToggleBase = (idx: number) => {
+    if (onSetBaseStep) {
+      onSetBaseStep(baseStepIndex === idx ? null : idx)
+    }
+  }
+
   return (
     <div className="tab-content">
       <div className="history-section">
         <div className="section-header">
-          <h3>📜 Crafting History</h3>
+          <h3>Crafting History</h3>
           <button
             className="clear-button"
             onClick={onClearHistory}
@@ -540,23 +574,91 @@ function HistoryTab({ history, itemHistory, onRevertToStep, onClearHistory }: Ta
         ) : (
           <div className="history-list">
             {history.map((step, idx) => (
-              <div key={idx} className="history-entry">
+              <div key={idx} className={`history-entry ${baseStepIndex === idx ? 'is-base' : ''}`}>
                 <div className="history-number">{idx + 1}.</div>
-                <div className="history-text">
-                  {step}
-                  {itemHistory[idx] && (
-                    <div className="history-item-summary">
-                      {getItemSummary(itemHistory[idx])}
+                <div className="history-content">
+                  <div className="history-text">
+                    {step}
+                    {baseStepIndex === idx && (
+                      <span className="base-badge-group">
+                        <span className="base-badge">Base</span>
+                        {basePriceEstimate ? (
+                          <span className="base-price">
+                            ~{basePriceEstimate.exalted.toFixed(1)} ex
+                            {basePriceEstimate.divine > 0 && ` / ${basePriceEstimate.divine.toFixed(1)} div`}
+                          </span>
+                        ) : (
+                          <button
+                            className="check-price-btn"
+                            onClick={e => {
+                              e.stopPropagation()
+                              onCheckBasePrice?.()
+                            }}
+                            disabled={basePriceLoading}
+                          >
+                            {basePriceLoading ? '...' : 'Check Price'}
+                          </button>
+                        )}
+                      </span>
+                    )}
+                    {itemHistory[idx] && (
+                      <div className="history-item-summary">
+                        {getItemSummary(itemHistory[idx])}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Comment display/edit */}
+                  {editingComment === idx ? (
+                    <div className="comment-edit">
+                      <textarea
+                        className="comment-input"
+                        value={commentText}
+                        onChange={e => setCommentText(e.target.value)}
+                        placeholder="Add a note about this step..."
+                        rows={2}
+                        autoFocus
+                      />
+                      <div className="comment-actions">
+                        <button className="comment-save" onClick={() => handleSaveComment(idx)}>Save</button>
+                        <button className="comment-cancel" onClick={handleCancelEdit}>Cancel</button>
+                      </div>
                     </div>
+                  ) : (
+                    <>
+                      {stepComments?.[idx] && (
+                        <div className="step-comment" onClick={() => handleStartEdit(idx)}>
+                          <span className="comment-icon">📝</span>
+                          {stepComments[idx]}
+                        </div>
+                      )}
+                    </>
                   )}
                 </div>
-                <button
-                  className="revert-button"
-                  onClick={() => onRevertToStep(idx)}
-                  title="Revert to this step"
-                >
-                  ↶
-                </button>
+
+                <div className="history-actions">
+                  <button
+                    className={`base-button ${baseStepIndex === idx ? 'active' : ''}`}
+                    onClick={() => handleToggleBase(idx)}
+                    title={baseStepIndex === idx ? 'Unmark as base' : 'Mark as base item'}
+                  >
+                    🏷️
+                  </button>
+                  <button
+                    className="comment-button"
+                    onClick={() => handleStartEdit(idx)}
+                    title="Add/edit comment"
+                  >
+                    💬
+                  </button>
+                  <button
+                    className="revert-button"
+                    onClick={() => onRevertToStep(idx)}
+                    title="Revert to this step"
+                  >
+                    ↶
+                  </button>
+                </div>
               </div>
             ))}
           </div>
@@ -705,6 +807,8 @@ function CurrencyTab({ currencySpent, exchangeRates, getCurrencyIconUrl }: TabCo
 }
 
 function GridCraftingSimulator() {
+  const location = useLocation()
+
   const [item, setItem] = useState<CraftableItem>({
     base_name: "Vile Robe",
     base_category: 'int_armour',
@@ -786,6 +890,12 @@ function GridCraftingSimulator() {
   // Track currency spent at each history step (for undo/redo)
   const [currencySpentHistory, setCurrencySpentHistory] = useState<Array<Record<string, number>>>([])
   const [redoCurrencySpentStack, setRedoCurrencySpentStack] = useState<Array<Record<string, number>>>([])
+
+  // Step comments and base step tracking
+  const [stepComments, setStepComments] = useState<Record<number, string>>({})
+  const [baseStepIndex, setBaseStepIndex] = useState<number | undefined>(undefined)
+  const [basePriceEstimate, setBasePriceEstimate] = useState<{ exalted: number; divine: number } | null>(null)
+  const [basePriceLoading, setBasePriceLoading] = useState(false)
 
   const [availableMods, setAvailableMods] = useState<{
     prefixes: ItemModifier[]
@@ -889,6 +999,54 @@ function GridCraftingSimulator() {
     setMessage('Ready to create new item')
   }
 
+  // Callback to update step comment
+  const handleUpdateComment = useCallback((stepIndex: number, comment: string) => {
+    setStepComments(prev => {
+      if (comment.trim()) {
+        return { ...prev, [stepIndex]: comment }
+      } else {
+        const { [stepIndex]: removed, ...rest } = prev
+        return rest
+      }
+    })
+  }, [])
+
+  // Callback to set base step
+  const handleSetBaseStep = useCallback((stepIndex: number | null) => {
+    setBaseStepIndex(stepIndex === null ? undefined : stepIndex)
+    setBasePriceEstimate(null)  // Clear price when base step changes
+  }, [])
+
+  // Check price for base step item
+  const handleCheckBasePrice = useCallback(async () => {
+    if (baseStepIndex === undefined || !itemHistory[baseStepIndex]) return
+    if (basePriceLoading) return
+
+    const baseItem = itemHistory[baseStepIndex]
+    if (baseItem.prefix_mods.length === 0 && baseItem.suffix_mods.length === 0) {
+      setMessage('Base item has no mods to price')
+      return
+    }
+
+    setBasePriceLoading(true)
+    try {
+      const estimate = await marketApi.priceItem(baseItem)
+      if (estimate.estimate_exalted !== undefined) {
+        setBasePriceEstimate({
+          exalted: estimate.estimate_exalted,
+          divine: estimate.estimate_divine || 0,
+        })
+      } else {
+        setMessage('No price estimate available')
+      }
+    } catch (err) {
+      console.error('Failed to check base price:', err)
+      setMessage('Failed to check price')
+    } finally {
+      setBasePriceLoading(false)
+    }
+  }, [baseStepIndex, itemHistory, basePriceLoading, setMessage])
+
   // Tab content props
   const tabContentProps: TabContentProps = {
     item,
@@ -901,7 +1059,14 @@ function GridCraftingSimulator() {
     onClearHistory: handleClearHistory,
     onHistoryReset: handleHistoryReset,
     setMessage,
-    onItemCreated: handleItemCreated
+    onItemCreated: handleItemCreated,
+    stepComments,
+    onUpdateComment: handleUpdateComment,
+    baseStepIndex,
+    onSetBaseStep: handleSetBaseStep,
+    basePriceEstimate,
+    onCheckBasePrice: handleCheckBasePrice,
+    basePriceLoading,
     // Note: getCurrencyIconUrl is passed directly to CurrencyTab in JSX
   }
 
@@ -2060,8 +2225,10 @@ function GridCraftingSimulator() {
       actionHistory,
       currencySpent,
       currencySpentHistory,
+      stepComments: Object.keys(stepComments).length > 0 ? stepComments : undefined,
+      baseStepIndex,
     }
-  }, [item, history, itemHistory, actionHistory, currencySpent, currencySpentHistory])
+  }, [item, history, itemHistory, actionHistory, currencySpent, currencySpentHistory, stepComments, baseStepIndex])
 
   // Load a craft snapshot into the simulator
   const loadCraftSnapshot = useCallback((snapshot: CraftSnapshot) => {
@@ -2071,6 +2238,9 @@ function GridCraftingSimulator() {
     setActionHistory(snapshot.actionHistory)
     setCurrencySpent(snapshot.currencySpent)
     setCurrencySpentHistory(snapshot.currencySpentHistory)
+    setStepComments(snapshot.stepComments || {})
+    setBaseStepIndex(snapshot.baseStepIndex)
+    setBasePriceEstimate(null)  // Clear price when loading new craft
 
     // Clear redo stacks
     setRedoItemStack([])
@@ -2084,6 +2254,16 @@ function GridCraftingSimulator() {
 
     setMessage('Craft loaded successfully')
   }, [])
+
+  // Handle loading craft from navigation state (from CraftLibrary)
+  useEffect(() => {
+    const state = location.state as { loadCraft?: { snapshot: CraftSnapshot } } | null
+    if (state?.loadCraft?.snapshot) {
+      loadCraftSnapshot(state.loadCraft.snapshot)
+      // Clear the state to prevent reloading on subsequent renders
+      window.history.replaceState({}, document.title)
+    }
+  }, [location.state, loadCraftSnapshot])
 
   const handleUndo = () => {
     if (itemHistory.length > 0) {

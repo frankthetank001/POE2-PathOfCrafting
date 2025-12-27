@@ -72,27 +72,30 @@ class BaseAbyssalBone(CraftingCurrency, ABC):
         type_restrictions = {
             AbyssalBoneType.JAWBONE: [
                 # Damage modifiers - weapons only
-                "One Handed Sword", "Two Handed Sword", "Bow", "Crossbow",
-                "Wand", "Staff", "Sceptre"
+                "sword", "axe", "mace", "bow", "crossbow", "wand", "staff",
+                "sceptre", "dagger", "claw", "flail", "spear", "warstaff", "talisman"
             ],
             AbyssalBoneType.RIB: [
                 # Defensive modifiers - armor pieces only
-                "Body Armour", "Helmet", "Gloves", "Boots", "Shield", "Belt"
+                "str_armour", "dex_armour", "int_armour", "str_dex_armour",
+                "str_int_armour", "dex_int_armour", "shield", "belt"
             ],
             AbyssalBoneType.COLLARBONE: [
                 # Resistance modifiers - armor and jewelry
-                "Body Armour", "Helmet", "Gloves", "Boots", "Shield", "Belt",
-                "Ring", "Amulet"
+                "str_armour", "dex_armour", "int_armour", "str_dex_armour",
+                "str_int_armour", "dex_int_armour", "shield", "belt", "ring", "amulet"
             ],
             AbyssalBoneType.CRANIUM: [
                 # Caster modifiers - caster weapons and jewelry
-                "Wand", "Staff", "Sceptre", "Ring", "Amulet"
+                "wand", "staff", "sceptre", "ring", "amulet", "focus"
             ],
             AbyssalBoneType.VERTEBRAE: [
                 # Attribute modifiers - any equipment
-                "Body Armour", "Helmet", "Gloves", "Boots", "Shield", "Belt",
-                "Ring", "Amulet", "One Handed Sword", "Two Handed Sword",
-                "Bow", "Crossbow", "Wand", "Staff", "Sceptre", "Quiver"
+                "str_armour", "dex_armour", "int_armour", "str_dex_armour",
+                "str_int_armour", "dex_int_armour", "shield", "belt", "ring", "amulet",
+                "sword", "axe", "mace", "bow", "crossbow", "wand", "staff",
+                "sceptre", "dagger", "claw", "flail", "spear", "warstaff", "talisman",
+                "quiver", "focus"
             ]
         }
         return type_restrictions.get(bone_type, [])
