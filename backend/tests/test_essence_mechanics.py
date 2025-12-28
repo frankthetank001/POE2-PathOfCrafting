@@ -433,11 +433,16 @@ class TestEssenceCategoryRestrictions:
 
     def test_essence_not_applicable_to_wrong_category(self, create_test_item, create_essence_info):
         """Essence should not be applicable to items not matching item_effects."""
-        # Create a weapon item
-        item = create_test_item(rarity=ItemRarity.MAGIC, base_category="One Handed Sword")
+        # Create a weapon item with proper base name and category
+        # Must use a real sword base name so slot lookup returns the correct slot
+        item = create_test_item(
+            rarity=ItemRarity.MAGIC,
+            base_name="Broadsword",  # Real 1H sword base
+            base_category="sword"
+        )
         # Essence with item_effects for Body Armour only
         essence_info = create_essence_info()
-        # item_effects has "Body Armour" which doesn't match "One Handed Sword"
+        # item_effects has "Body Armour" which doesn't match "sword"
         mechanic = EssenceMechanic({}, essence_info)
 
         can_apply, error = mechanic.can_apply(item)

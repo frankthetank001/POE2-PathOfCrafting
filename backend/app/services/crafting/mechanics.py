@@ -889,12 +889,20 @@ class EssenceMechanic(CraftingMechanic):
     def _has_applicable_effect_for_item(self, item: CraftableItem) -> bool:
         """Check if the essence has any item effect that applies to this item type."""
         # Use centralized item type to category mapping
+        # For armor pieces, base_category is defense type (e.g., "int_armour")
+        # but slot is the actual slot (e.g., "helmet"), so check both
+        item_slot = item._get_slot()
+
         for effect in self.essence_info.item_effects:
             effect_item_type = effect.item_type
             applicable_categories = ESSENCE_ITEM_TYPE_TO_CATEGORY.get(effect_item_type, [])
 
-            # Direct match
+            # Check base_category (works for weapons, jewelry)
             if item.base_category in applicable_categories:
+                return True
+
+            # Check item slot (works for armor pieces like helmet, gloves, boots)
+            if item_slot in applicable_categories:
                 return True
 
             # Also check if item type matches directly (lowercase comparison)
@@ -906,11 +914,18 @@ class EssenceMechanic(CraftingMechanic):
     def _effect_applies_to_item(self, effect, item: CraftableItem) -> bool:
         """Check if a specific effect applies to this item type."""
         # Use centralized item type to category mapping
+        # For armor pieces, base_category is defense type (e.g., "int_armour")
+        # but slot is the actual slot (e.g., "helmet"), so check both
         effect_item_type = effect.item_type
         applicable_categories = ESSENCE_ITEM_TYPE_TO_CATEGORY.get(effect_item_type, [])
+        item_slot = item._get_slot()
 
-        # Direct match
+        # Check base_category (works for weapons, jewelry)
         if item.base_category in applicable_categories:
+            return True
+
+        # Check item slot (works for armor pieces like helmet, gloves, boots)
+        if item_slot in applicable_categories:
             return True
 
         # Also check if item type matches directly (lowercase comparison)
