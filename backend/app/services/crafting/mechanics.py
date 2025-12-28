@@ -2315,6 +2315,75 @@ class HinekoraMechanic(CraftingMechanic):
         return True, "Item can now foresee the result of the next currency used", item
 
 
+class CatalystMechanic(CraftingMechanic):
+    """Catalyst: Adds quality of a specific type to jewelry (rings/amulets).
+
+    Each catalyst type boosts a specific category of modifiers when used
+    with Omen of Catalysing Exaltation.
+    """
+
+    def __init__(self, config: Dict[str, Any]):
+        super().__init__(config)
+        self.catalyst_type = config.get('catalyst_type', 'flesh')  # Default to flesh
+        self.quality_per_use = config.get('quality_per_use', 5)
+        self.max_quality = config.get('max_quality', 20)
+
+    def can_apply(self, item: CraftableItem) -> Tuple[bool, Optional[str]]:
+        # Can only apply to rings and amulets (not belts)
+        if item.base_category not in ['ring', 'amulet']:
+            return False, "Catalysts can only be applied to rings and amulets"
+
+        # Check if already at max quality for this catalyst type
+        if item.catalyst_type == self.catalyst_type and item.catalyst_quality >= self.max_quality:
+            return False, f"Item already has maximum {self.catalyst_type} catalyst quality"
+
+        return True, None
+
+    def apply(
+        self, item: CraftableItem, modifier_pool: ModifierPool
+    ) -> Tuple[bool, str, CraftableItem]:
+        can_apply, error = self.can_apply(item)
+        if not can_apply:
+            return False, error or "Cannot apply", item
+
+        manager = ItemStateManager(item)
+
+        # If applying a different catalyst type, reset quality first
+        if item.catalyst_type and item.catalyst_type != self.catalyst_type:
+            manager.item.catalyst_quality = 0
+
+        # Set catalyst type
+        manager.item.catalyst_type = self.catalyst_type
+
+        # Add quality (capped at max)
+        old_quality = manager.item.catalyst_quality
+        new_quality = min(self.max_quality, old_quality + self.quality_per_use)
+        manager.item.catalyst_quality = new_quality
+
+        quality_added = new_quality - old_quality
+        catalyst_display = self._get_catalyst_display_name()
+
+        return True, f"Added {quality_added}% {catalyst_display} quality (now {new_quality}%)", manager.get_item()
+
+    def _get_catalyst_display_name(self) -> str:
+        """Get user-friendly display name for catalyst type."""
+        display_names = {
+            "flesh": "Life",
+            "neural": "Mana",
+            "carapace": "Defence",
+            "uul_netol": "Physical Damage",
+            "xoph": "Fire Damage",
+            "tul": "Cold Damage",
+            "esh": "Lightning Damage",
+            "chayula": "Chaos Damage",
+            "reaver": "Attack",
+            "sibilant": "Caster",
+            "skittering": "Speed",
+            "adaptive": "Attribute",
+        }
+        return display_names.get(self.catalyst_type, self.catalyst_type.title())
+
+
 # Registry of available mechanics
 MECHANIC_REGISTRY = {
     "TransmutationMechanic": TransmutationMechanic,
@@ -2332,4 +2401,5 @@ MECHANIC_REGISTRY = {
     "ChanceMechanic": ChanceMechanic,
     "MirrorMechanic": MirrorMechanic,
     "HinekoraMechanic": HinekoraMechanic,
+    "CatalystMechanic": CatalystMechanic,
 }

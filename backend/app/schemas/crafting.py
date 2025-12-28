@@ -101,6 +101,10 @@ class CraftableItem(BaseModel):
     base_stats: Dict[str, float] = Field(default_factory=dict)  # Base stats from item base (int or float)
     calculated_stats: Dict[str, float] = Field(default_factory=dict)  # Final calculated stats (int or float)
 
+    # Catalyst quality (rings/amulets only, not belts)
+    catalyst_type: Optional[str] = None  # "flesh", "neural", "carapace", etc.
+    catalyst_quality: int = 0  # 0-20% (each catalyst adds 5%)
+
     @property
     def prefix_count(self) -> int:
         # Count all prefixes (including unrevealed placeholders)

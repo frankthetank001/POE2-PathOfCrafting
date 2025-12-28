@@ -212,6 +212,14 @@ class CraftingConfigService:
         self.ensure_loaded()
         return list(self._bone_configs.keys())
 
+    def get_all_catalyst_names(self) -> List[str]:
+        """Get all available catalyst names."""
+        self.ensure_loaded()
+        return [
+            config.name for config in self._currency_configs.values()
+            if config.currency_type == "catalyst"
+        ]
+
     def get_bone_configs_for_part(self, bone_part: str) -> List[DesecrationBoneInfo]:
         """Get all bone configurations for a specific bone part (e.g., 'rib', 'jawbone')."""
         self.ensure_loaded()

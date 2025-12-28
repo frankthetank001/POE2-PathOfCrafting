@@ -39,7 +39,8 @@ class Poe2ScoutProvider(MarketDataProvider):
     # - essences: crafting essences
     # - ritual: omens
     # - abyss: desecration bones (Preserved/Gnawed/Ancient Jawbone, Rib, etc.)
-    CURRENCY_CATEGORIES = ["currency", "essences", "ritual", "abyss"]
+    # - breach: catalysts (Flesh, Neural, Reaver, etc.)
+    CURRENCY_CATEGORIES = ["currency", "essences", "ritual", "abyss", "breach"]
 
     def __init__(self, timeout: float = DEFAULT_TIMEOUT):
         """
@@ -259,6 +260,19 @@ class Poe2ScoutProvider(MarketDataProvider):
             "orb-of-scouring": "scour",
             "orb-of-transmutation": "transmute",
             "orb-of-augmentation": "aug",
+            # Catalysts (breach)
+            "flesh-catalyst": "flesh_catalyst",
+            "neural-catalyst": "neural_catalyst",
+            "carapace-catalyst": "carapace_catalyst",
+            "uul-netols-catalyst": "uul_netol_catalyst",
+            "xophs-catalyst": "xoph_catalyst",
+            "tuls-catalyst": "tul_catalyst",
+            "eshs-catalyst": "esh_catalyst",
+            "chayulas-catalyst": "chayula_catalyst",
+            "reaver-catalyst": "reaver_catalyst",
+            "sibilant-catalyst": "sibilant_catalyst",
+            "skittering-catalyst": "skittering_catalyst",
+            "adaptive-catalyst": "adaptive_catalyst",
         }
 
         normalized = api_id.lower().strip()

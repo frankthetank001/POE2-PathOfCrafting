@@ -1148,5 +1148,161 @@
         "belt"
       ]
     }
+  },
+  {
+    "name": "Flesh Catalyst",
+    "currency_type": "catalyst",
+    "tier": null,
+    "stack_size": 10,
+    "rarity": "uncommon",
+    "mechanic_class": "CatalystMechanic",
+    "config_data": {
+      "catalyst_type": "flesh",
+      "quality_per_use": 5,
+      "max_quality": 20
+    }
+  },
+  {
+    "name": "Neural Catalyst",
+    "currency_type": "catalyst",
+    "tier": null,
+    "stack_size": 10,
+    "rarity": "uncommon",
+    "mechanic_class": "CatalystMechanic",
+    "config_data": {
+      "catalyst_type": "neural",
+      "quality_per_use": 5,
+      "max_quality": 20
+    }
+  },
+  {
+    "name": "Carapace Catalyst",
+    "currency_type": "catalyst",
+    "tier": null,
+    "stack_size": 10,
+    "rarity": "uncommon",
+    "mechanic_class": "CatalystMechanic",
+    "config_data": {
+      "catalyst_type": "carapace",
+      "quality_per_use": 5,
+      "max_quality": 20
+    }
+  },
+  {
+    "name": "Uul-Netol's Catalyst",
+    "currency_type": "catalyst",
+    "tier": null,
+    "stack_size": 10,
+    "rarity": "rare",
+    "mechanic_class": "CatalystMechanic",
+    "config_data": {
+      "catalyst_type": "uul_netol",
+      "quality_per_use": 5,
+      "max_quality": 20
+    }
+  },
+  {
+    "name": "Xoph's Catalyst",
+    "currency_type": "catalyst",
+    "tier": null,
+    "stack_size": 10,
+    "rarity": "rare",
+    "mechanic_class": "CatalystMechanic",
+    "config_data": {
+      "catalyst_type": "xoph",
+      "quality_per_use": 5,
+      "max_quality": 20
+    }
+  },
+  {
+    "name": "Tul's Catalyst",
+    "currency_type": "catalyst",
+    "tier": null,
+    "stack_size": 10,
+    "rarity": "rare",
+    "mechanic_class": "CatalystMechanic",
+    "config_data": {
+      "catalyst_type": "tul",
+      "quality_per_use": 5,
+      "max_quality": 20
+    }
+  },
+  {
+    "name": "Esh's Catalyst",
+    "currency_type": "catalyst",
+    "tier": null,
+    "stack_size": 10,
+    "rarity": "rare",
+    "mechanic_class": "CatalystMechanic",
+    "config_data": {
+      "catalyst_type": "esh",
+      "quality_per_use": 5,
+      "max_quality": 20
+    }
+  },
+  {
+    "name": "Chayula's Catalyst",
+    "currency_type": "catalyst",
+    "tier": null,
+    "stack_size": 10,
+    "rarity": "very_rare",
+    "mechanic_class": "CatalystMechanic",
+    "config_data": {
+      "catalyst_type": "chayula",
+      "quality_per_use": 5,
+      "max_quality": 20
+    }
+  },
+  {
+    "name": "Reaver Catalyst",
+    "currency_type": "catalyst",
+    "tier": null,
+    "stack_size": 10,
+    "rarity": "uncommon",
+    "mechanic_class": "CatalystMechanic",
+    "config_data": {
+      "catalyst_type": "reaver",
+      "quality_per_use": 5,
+      "max_quality": 20
+    }
+  },
+  {
+    "name": "Sibilant Catalyst",
+    "currency_type": "catalyst",
+    "tier": null,
+    "stack_size": 10,
+    "rarity": "uncommon",
+    "mechanic_class": "CatalystMechanic",
+    "config_data": {
+      "catalyst_type": "sibilant",
+      "quality_per_use": 5,
+      "max_quality": 20
+    }
+  },
+  {
+    "name": "Skittering Catalyst",
+    "currency_type": "catalyst",
+    "tier": null,
+    "stack_size": 10,
+    "rarity": "uncommon",
+    "mechanic_class": "CatalystMechanic",
+    "config_data": {
+      "catalyst_type": "skittering",
+      "quality_per_use": 5,
+      "max_quality": 20
+    }
+  },
+  {
+    "name": "Adaptive Catalyst",
+    "currency_type": "catalyst",
+    "tier": null,
+    "stack_size": 10,
+    "rarity": "uncommon",
+    "mechanic_class": "CatalystMechanic",
+    "config_data": {
+      "catalyst_type": "adaptive",
+      "quality_per_use": 5,
+      "max_quality": 20
+    }
   }
 ]

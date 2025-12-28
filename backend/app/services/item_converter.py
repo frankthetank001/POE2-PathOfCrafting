@@ -141,6 +141,8 @@ class ItemConverter:
                 unrevealed_mods=self._pending_unrevealed_mods,
                 socketed_runes=socketed_runes,
                 corrupted=parsed_item.corrupted,
+                catalyst_type=parsed_item.catalyst_type,
+                catalyst_quality=parsed_item.catalyst_quality or 0,
             )
 
             # Calculate stats

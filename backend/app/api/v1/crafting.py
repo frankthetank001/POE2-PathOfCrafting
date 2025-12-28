@@ -155,12 +155,14 @@ async def get_categorized_currencies() -> dict:
         all_essences = unified_crafting_factory.get_all_available_essences()
         all_bones = unified_crafting_factory.get_all_available_bones()
         all_omens = unified_crafting_factory.get_all_available_omens()
+        all_catalysts = unified_crafting_factory.get_all_available_catalysts()
 
         # Define implemented mechanics
         implemented_mechanics = {
             "TransmutationMechanic", "AugmentationMechanic", "AlchemyMechanic",
             "RegalMechanic", "ExaltedMechanic", "ChaosMechanic", "DivineMechanic",
-            "AnnulmentMechanic", "FracturingMechanic", "DesecrationMechanic", "EssenceMechanic"
+            "AnnulmentMechanic", "FracturingMechanic", "DesecrationMechanic", "EssenceMechanic",
+            "CatalystMechanic"
         }
 
         # Categorize currencies with implementation status
@@ -219,6 +221,20 @@ async def get_categorized_currencies() -> dict:
                 return (bone_priority, bone_part, prefix_order.get(prefix, 999))
             return (999, bone_name, 999)
 
+        # Sort catalysts by a sensible order (damage types first, then utility)
+        catalyst_order = [
+            "Flesh Catalyst", "Neural Catalyst", "Carapace Catalyst",
+            "Uul-Netol's Catalyst", "Xoph's Catalyst", "Tul's Catalyst",
+            "Esh's Catalyst", "Chayula's Catalyst",
+            "Reaver Catalyst", "Sibilant Catalyst", "Skittering Catalyst", "Adaptive Catalyst"
+        ]
+
+        def sort_catalysts(name: str) -> int:
+            try:
+                return catalyst_order.index(name)
+            except ValueError:
+                return 999
+
         return {
             "orbs": {
                 "implemented": sorted(orbs["implemented"]),
@@ -232,9 +248,13 @@ async def get_categorized_currencies() -> dict:
                 "implemented": sorted(bones["implemented"], key=sort_bones),
                 "disabled": sorted(bones["disabled"], key=sort_bones)
             },
+            "catalysts": {
+                "implemented": sorted(all_catalysts, key=sort_catalysts),
+                "disabled": []  # All catalysts are implemented
+            },
             "omens": sorted(all_omens),
-            "total": len(all_currencies) + len(all_essences) + len(all_bones) + len(all_omens),
-            "implemented_count": len(orbs["implemented"]) + len(essences["implemented"]) + len(bones["implemented"]),
+            "total": len(all_currencies) + len(all_essences) + len(all_bones) + len(all_omens) + len(all_catalysts),
+            "implemented_count": len(orbs["implemented"]) + len(essences["implemented"]) + len(bones["implemented"]) + len(all_catalysts),
             "disabled_count": len(orbs["disabled"]) + len(essences["disabled"]) + len(bones["disabled"])
         }
     except Exception as e:

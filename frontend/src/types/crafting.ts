@@ -95,6 +95,10 @@ export interface CraftableItem {
   corrupted: boolean
   base_stats: Record<string, number>
   calculated_stats: Record<string, number>
+
+  // Catalyst quality for jewelry (rings/amulets)
+  catalyst_type?: string | null  // "flesh", "neural", "carapace", etc.
+  catalyst_quality?: number  // 0-20%
 }
 
 export interface CraftingSimulationRequest {

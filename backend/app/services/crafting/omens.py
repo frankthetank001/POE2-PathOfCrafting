@@ -386,7 +386,27 @@ class OmenOfDextralExaltation(BaseOmen):
 
 
 class OmenOfCatalysingExaltation(BaseOmen):
-    """Exalted Orb consumes Catalyst Quality to increase modifier chance."""
+    """Exalted Orb consumes Catalyst Quality to increase modifier chance.
+
+    Consumes ALL catalyst quality from jewelry and boosts the weight of mods
+    matching the catalyst's mod category (life, attack, etc.).
+    """
+
+    # Mapping of catalyst types to their matching mod tags
+    CATALYST_TAG_MAPPING = {
+        "flesh": ["life", "maximum_life"],
+        "neural": ["mana", "maximum_mana", "resource"],
+        "carapace": ["defences", "armour", "evasion", "energy_shield"],
+        "uul_netol": ["physical", "physical_damage"],
+        "xoph": ["fire", "fire_damage"],
+        "tul": ["cold", "cold_damage"],
+        "esh": ["lightning", "lightning_damage"],
+        "chayula": ["chaos", "chaos_damage"],
+        "reaver": ["attack"],
+        "sibilant": ["caster", "spell"],
+        "skittering": ["speed", "attack_speed", "cast_speed"],
+        "adaptive": ["attribute", "strength", "dexterity", "intelligence"],
+    }
 
     def __init__(self):
         super().__init__("Omen of Catalysing Exaltation", OmenCategory.YELLOW)
@@ -400,12 +420,7 @@ class OmenOfCatalysingExaltation(BaseOmen):
         currency_apply_func: Callable,
         modifier_pool: ModifierPool
     ) -> Tuple[bool, str, CraftableItem]:
-        """Add modifier with increased chance for mods matching existing tags."""
-
-        # Get existing tags, but only use visible tags for matching
-        existing_mods = item.prefix_mods + item.suffix_mods
-        all_tags = [tag for mod in existing_mods for tag in (mod.tags or [])]
-        existing_tags = [tag for tag in all_tags if tag.lower() not in HIDDEN_TAGS_FOR_HOMOGENISING]
+        """Add modifier with increased chance for mods matching catalyst type."""
 
         manager = ItemStateManager(item)
 
@@ -421,33 +436,63 @@ class OmenOfCatalysingExaltation(BaseOmen):
 
         mod_type = random.choice(available_types)
 
-        if existing_tags:
+        # Check if item has catalyst quality to consume
+        has_catalyst = item.catalyst_type and item.catalyst_quality > 0
+        catalyst_tags = []
+        weight_multiplier = 1.0
+
+        if has_catalyst:
+            # Get matching tags for this catalyst type
+            catalyst_tags = self.CATALYST_TAG_MAPPING.get(item.catalyst_type, [])
+            # Calculate weight multiplier based on catalyst quality
+            # Formula: 1 + (quality / 20) * 10, so 20% quality = 11x weight
+            weight_multiplier = 1 + (item.catalyst_quality / 20.0) * 10.0
+
+        if catalyst_tags:
             # Get eligible mods
             eligible_mods = modifier_pool.get_eligible_mods(
                 item.base_category, item.item_level, mod_type, item
             )
 
-            # Prioritize mods with matching tags (10x weight)
-            weighted_mods = []
+            # Build weighted list based on catalyst tag matching
+            weighted_entries = []
             for mod in eligible_mods:
-                if mod.tags and any(tag in existing_tags for tag in mod.tags):
-                    # Add 10 copies for 10x weight
-                    weighted_mods.extend([mod] * 10)
+                base_weight = int(mod.weight) if isinstance(mod.weight, str) else mod.weight
+                if mod.tags and any(tag in catalyst_tags for tag in mod.tags):
+                    # Multiply weight by catalyst boost
+                    weighted_entries.append((mod, base_weight * weight_multiplier))
                 else:
-                    weighted_mods.append(mod)
+                    weighted_entries.append((mod, base_weight))
 
-            if weighted_mods:
-                selected_mod = random.choice(weighted_mods)
-                if manager.add_modifier(selected_mod):
-                    return True, f"Added catalysed {mod_type}: {selected_mod.name}", item
+            if weighted_entries:
+                # Weighted random selection
+                total_weight = sum(w for _, w in weighted_entries)
+                if total_weight > 0:
+                    rand_value = random.uniform(0, total_weight)
+                    cumulative = 0
+                    selected_mod = weighted_entries[-1][0]  # Default fallback
+                    for mod, weight in weighted_entries:
+                        cumulative += weight
+                        if rand_value <= cumulative:
+                            selected_mod = mod
+                            break
 
-        # Fallback to normal behavior
+                    # CONSUME the catalyst quality
+                    consumed_quality = item.catalyst_quality
+                    consumed_type = item.catalyst_type
+                    manager.item.catalyst_quality = 0
+                    manager.item.catalyst_type = None
+
+                    if manager.add_modifier(selected_mod):
+                        return True, f"Consumed {consumed_quality}% {consumed_type} quality, added {mod_type}: {selected_mod.name}", manager.item
+
+        # Fallback to normal behavior (no catalyst or no matching mods)
         new_mod = modifier_pool.roll_random_modifier(
             mod_type, item.base_category, item.item_level, item=item
         )
 
         if new_mod and manager.add_modifier(new_mod):
-            return True, f"Added {mod_type}: {new_mod.name}", item
+            return True, f"Added {mod_type}: {new_mod.name}", manager.item
         else:
             return False, "Failed to add modifier", item
 

@@ -4037,6 +4037,33 @@
   gap: 4px;
 }
 
+/* Catalysts Section - Below Omens in Right Column */
+.catalysts-section {
+  padding-top: 8px;
+  border-top: 1px solid rgba(170, 158, 130, 0.2);
+}
+
+.catalysts-section .currency-section-header {
+  color: #d4af37;
+  font-size: 0.75rem;
+  margin-bottom: 6px;
+}
+
+.catalysts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(36px, 1fr));
+  gap: 4px;
+}
+
+.catalyst-slot {
+  position: relative;
+}
+
+/* Catalysts inside right column */
+.currency-right-column .catalysts-section {
+  padding: 8px 0 0 0;
+}
+
 /* Essences Section - Full Width, Collapsible */
 .essences-section {
   grid-column: 1 / -1;
@@ -4115,11 +4142,18 @@
   align-self: start;
 }
 
-/* Omens section spans both rows in col 2 - MUST start at same position as Special */
-.currency-middle-row .omens-section {
+/* Right column wrapper spans both rows in col 2 */
+.currency-middle-row .currency-right-column {
   grid-column: 2;
   grid-row: 1 / span 2;
   align-self: start;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Omens section inside the right column */
+.currency-right-column .omens-section {
   padding: 0 !important;
   border-top: none !important;
 }

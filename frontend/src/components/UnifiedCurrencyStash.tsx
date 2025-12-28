@@ -10,6 +10,7 @@ interface UnifiedCurrencyStashProps {
     orbs: { implemented: string[], disabled: string[] }
     essences: { implemented: string[], disabled: string[] }
     bones: { implemented: string[], disabled: string[] }
+    catalysts: { implemented: string[], disabled: string[] }
   }
   availableCurrencies: string[]
   availableOmens: string[]
@@ -170,70 +171,116 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
             </div>
           </div>
 
-          {/* Right Column - Omens */}
-          {versionFilteredOmens.length > 0 && (
-            <div className="currency-section omens-section">
-              <div className="currency-section-header">Omens</div>
-              <div className="currency-section-content omens-grid">
-                {[
-                  // Exalted Omens
-                  'Omen of Greater Exaltation', 'Omen of Sinistral Exaltation', 'Omen of Dextral Exaltation',
-                  'Omen of Homogenising Exaltation', 'Omen of Catalysing Exaltation',
-                  // Regal Omens
-                  'Omen of Sinistral Coronation', 'Omen of Dextral Coronation', 'Omen of Homogenising Coronation',
-                  // Chaos Omens
-                  'Omen of Whittling', 'Omen of Sinistral Erasure', 'Omen of Dextral Erasure',
-                  // Annulment Omens
-                  'Omen of Greater Annulment', 'Omen of Sinistral Annulment', 'Omen of Dextral Annulment',
-                  // Alchemy Omens
-                  'Omen of Sinistral Alchemy', 'Omen of Dextral Alchemy',
-                  // Essence Omens
-                  'Omen of Sinistral Crystallisation', 'Omen of Dextral Crystallisation',
-                  // Desecration/Abyssal Omens
-                  'Omen of Abyssal Echoes', 'Omen of Sinistral Necromancy', 'Omen of Dextral Necromancy',
-                  'Omen of the Sovereign', 'Omen of the Liege', 'Omen of the Blackblooded',
-                  'Omen of Putrefaction', 'Omen of Light',
-                  // Corruption
-                  'Omen of Corruption'
-                ].filter(omen => versionFilteredOmens.includes(omen) && searchFilter(omen)).map((omen) => {
-                  const isActive = selectedOmens.includes(omen)
-                  return (
-                    <Tooltip
-                      key={omen}
-                      content={
-                        <CurrencyTooltipWrapper
-                          currencyName={omen}
-                          additionalMechanics={isActive ? "Click to deselect" : "Click to select"}
-                        />
-                      }
-                      delay={0}
-                      position="right"
-                    >
-                      <div
-                        className={`currency-slot omen-slot ${isActive ? 'omen-active' : ''}`}
-                        onClick={() => {
-                          setSelectedOmens(prev =>
-                            prev.includes(omen)
-                              ? prev.filter(o => o !== omen)
-                              : [...prev, omen]
-                          )
-                        }}
+          {/* Right Column - Omens and Catalysts */}
+          <div className="currency-right-column">
+            {versionFilteredOmens.length > 0 && (
+              <div className="currency-section omens-section">
+                <div className="currency-section-header">Omens</div>
+                <div className="currency-section-content omens-grid">
+                  {[
+                    // Exalted Omens
+                    'Omen of Greater Exaltation', 'Omen of Sinistral Exaltation', 'Omen of Dextral Exaltation',
+                    'Omen of Homogenising Exaltation', 'Omen of Catalysing Exaltation',
+                    // Regal Omens
+                    'Omen of Sinistral Coronation', 'Omen of Dextral Coronation', 'Omen of Homogenising Coronation',
+                    // Chaos Omens
+                    'Omen of Whittling', 'Omen of Sinistral Erasure', 'Omen of Dextral Erasure',
+                    // Annulment Omens
+                    'Omen of Greater Annulment', 'Omen of Sinistral Annulment', 'Omen of Dextral Annulment',
+                    // Alchemy Omens
+                    'Omen of Sinistral Alchemy', 'Omen of Dextral Alchemy',
+                    // Essence Omens
+                    'Omen of Sinistral Crystallisation', 'Omen of Dextral Crystallisation',
+                    // Desecration/Abyssal Omens
+                    'Omen of Abyssal Echoes', 'Omen of Sinistral Necromancy', 'Omen of Dextral Necromancy',
+                    'Omen of the Sovereign', 'Omen of the Liege', 'Omen of the Blackblooded',
+                    'Omen of Putrefaction', 'Omen of Light',
+                    // Corruption
+                    'Omen of Corruption'
+                  ].filter(omen => versionFilteredOmens.includes(omen) && searchFilter(omen)).map((omen) => {
+                    const isActive = selectedOmens.includes(omen)
+                    return (
+                      <Tooltip
+                        key={omen}
+                        content={
+                          <CurrencyTooltipWrapper
+                            currencyName={omen}
+                            additionalMechanics={isActive ? "Click to deselect" : "Click to select"}
+                          />
+                        }
+                        delay={0}
+                        position="right"
                       >
-                        <img
-                          src={getOmenIconUrl(omen)}
-                          alt={omen}
-                          className="currency-icon omen-icon"
-                          onError={(e) => {
-                            (e.target as HTMLImageElement).src = "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
+                        <div
+                          className={`currency-slot omen-slot ${isActive ? 'omen-active' : ''}`}
+                          onClick={() => {
+                            setSelectedOmens(prev =>
+                              prev.includes(omen)
+                                ? prev.filter(o => o !== omen)
+                                : [...prev, omen]
+                            )
                           }}
-                        />
-                      </div>
-                    </Tooltip>
-                  )
-                })}
+                        >
+                          <img
+                            src={getOmenIconUrl(omen)}
+                            alt={omen}
+                            className="currency-icon omen-icon"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
+                            }}
+                          />
+                        </div>
+                      </Tooltip>
+                    )
+                  })}
+                </div>
               </div>
-            </div>
-          )}
+            )}
+
+            {/* Catalysts Section - Below Omens */}
+            {categorizedCurrencies.catalysts.implemented.length > 0 && (
+              <div className="currency-section catalysts-section">
+                <div className="currency-section-header">Catalysts</div>
+                <div className="currency-section-content catalysts-grid">
+                  {categorizedCurrencies.catalysts.implemented.filter(searchFilter).map((catalyst) => {
+                    const isAvailable = availableCurrencies.includes(catalyst)
+                    if (hideUnavailable && !isAvailable) return null
+                    return (
+                      <Tooltip
+                        key={catalyst}
+                        content={
+                          <CurrencyTooltipWrapper
+                            currencyName={catalyst}
+                            additionalMechanics={isAvailable ? "Double-click to apply" : "Only for rings and amulets"}
+                          />
+                        }
+                        delay={0}
+                        position="right"
+                      >
+                        <div
+                          className={`currency-slot catalyst-slot ${!isAvailable ? 'currency-disabled' : ''}`}
+                          onClick={() => isAvailable && handleCraft(catalyst)}
+                          draggable={isAvailable}
+                          onDragStart={() => isAvailable && onCurrencyDragStart?.(catalyst)}
+                          onDragEnd={() => onCurrencyDragEnd?.()}
+                          style={{ cursor: isAvailable ? 'grab' : 'not-allowed' }}
+                        >
+                          <img
+                            src={getCurrencyIconUrl(catalyst)}
+                            alt={catalyst}
+                            className="currency-icon catalyst-icon"
+                            onError={(e) => {
+                              (e.target as HTMLImageElement).src = "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
+                            }}
+                          />
+                        </div>
+                      </Tooltip>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
+          </div>
         </div>
 
         {/* Row 3: Essences - Full Width */}

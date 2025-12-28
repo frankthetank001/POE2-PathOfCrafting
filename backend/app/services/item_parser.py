@@ -26,6 +26,8 @@ class ItemParser:
 
         item_level: Optional[int] = None
         quality: Optional[int] = None
+        catalyst_type: Optional[str] = None
+        catalyst_quality: Optional[int] = None
         sockets: List[ItemSocket] = []
         requirements = {}
         implicits: List[ItemMod] = []
@@ -46,6 +48,11 @@ class ItemParser:
 
             if any("Quality:" in line for line in lines):
                 quality = ItemParser._parse_quality(section)
+                # Also check for catalyst quality on jewelry
+                cat_type, cat_qual = ItemParser._parse_catalyst_quality(section)
+                if cat_type and cat_qual:
+                    catalyst_type = cat_type
+                    catalyst_quality = cat_qual
 
             if any("Sockets:" in line for line in lines):
                 sockets = ItemParser._parse_sockets(section)
@@ -114,6 +121,8 @@ class ItemParser:
             runes=runes,
             corrupted=corrupted,
             raw_text=item_text,
+            catalyst_type=catalyst_type,
+            catalyst_quality=catalyst_quality,
         )
 
     @staticmethod
@@ -198,8 +207,45 @@ class ItemParser:
 
     @staticmethod
     def _parse_quality(section: str) -> Optional[int]:
-        match = re.search(r"Quality:\s*\+?(\d+)", section)
+        # Match regular quality (without parentheses) - e.g. "Quality: +20%"
+        # Skip catalyst quality lines which have (xxx Modifiers) in them
+        match = re.search(r"Quality:\s*\+?(\d+)%?(?!\s*\()", section)
+        if match:
+            return int(match.group(1))
+        # Fallback - also check for plain "Quality: +20" without % and without catalyst
+        match = re.search(r"Quality:\s*\+?(\d+)(?!\s*%?\s*\()", section)
         return int(match.group(1)) if match else None
+
+    @staticmethod
+    def _parse_catalyst_quality(section: str) -> Tuple[Optional[str], Optional[int]]:
+        """Parse catalyst quality from jewelry items.
+
+        Format: "Quality (Life Modifiers): +15%"
+        Returns: (catalyst_type, quality) e.g. ("flesh", 15)
+        """
+        # Map display names to catalyst IDs
+        catalyst_display_to_id = {
+            "Life Modifiers": "flesh",
+            "Mana Modifiers": "neural",
+            "Defence Modifiers": "carapace",
+            "Physical Damage Modifiers": "uul_netol",
+            "Fire Damage Modifiers": "xoph",
+            "Cold Damage Modifiers": "tul",
+            "Lightning Damage Modifiers": "esh",
+            "Chaos Damage Modifiers": "chayula",
+            "Attack Modifiers": "reaver",
+            "Caster Modifiers": "sibilant",
+            "Speed Modifiers": "skittering",
+            "Attribute Modifiers": "adaptive",
+        }
+
+        match = re.search(r"Quality\s*\(([^)]+)\):\s*\+?(\d+)%?", section)
+        if match:
+            display_name = match.group(1).strip()
+            quality = int(match.group(2))
+            catalyst_type = catalyst_display_to_id.get(display_name)
+            return (catalyst_type, quality)
+        return (None, None)
 
     @staticmethod
     def _parse_sockets(section: str) -> List[ItemSocket]:

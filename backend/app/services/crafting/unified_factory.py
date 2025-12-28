@@ -166,6 +166,10 @@ class UnifiedCraftingFactory:
         """Get all available bone names."""
         return crafting_config_service.get_all_bone_names()
 
+    def get_all_available_catalysts(self) -> List[str]:
+        """Get all available catalyst names."""
+        return crafting_config_service.get_all_catalyst_names()
+
     def get_omens_for_currency(self, currency_name: str) -> List[str]:
         """Get omen names that can be applied to a specific currency."""
         omens = crafting_config_service.get_omens_for_currency(currency_name)

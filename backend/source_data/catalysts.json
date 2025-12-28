@@ -1,0 +1,113 @@
+{
+  "description": "Catalyst currencies for enhancing specific modifier types on jewelry (rings/amulets)",
+  "catalysts": [
+    {
+      "id": "flesh",
+      "name": "Flesh Catalyst",
+      "description": "Enhances Life modifiers on rings/amulets",
+      "category_display": "Life Modifiers",
+      "matching_tags": ["life", "maximum_life"],
+      "stack_size": 10,
+      "quality_per_use": 5
+    },
+    {
+      "id": "neural",
+      "name": "Neural Catalyst",
+      "description": "Enhances Mana modifiers on rings/amulets",
+      "category_display": "Mana Modifiers",
+      "matching_tags": ["mana", "maximum_mana", "resource"],
+      "stack_size": 10,
+      "quality_per_use": 5
+    },
+    {
+      "id": "carapace",
+      "name": "Carapace Catalyst",
+      "description": "Enhances Defence modifiers on rings/amulets",
+      "category_display": "Defence Modifiers",
+      "matching_tags": ["defences", "armour", "evasion", "energy_shield"],
+      "stack_size": 10,
+      "quality_per_use": 5
+    },
+    {
+      "id": "uul_netol",
+      "name": "Uul-Netol's Catalyst",
+      "description": "Enhances Physical Damage modifiers on rings/amulets",
+      "category_display": "Physical Damage Modifiers",
+      "matching_tags": ["physical", "physical_damage"],
+      "stack_size": 10,
+      "quality_per_use": 5
+    },
+    {
+      "id": "xoph",
+      "name": "Xoph's Catalyst",
+      "description": "Enhances Fire Damage modifiers on rings/amulets",
+      "category_display": "Fire Damage Modifiers",
+      "matching_tags": ["fire", "fire_damage"],
+      "stack_size": 10,
+      "quality_per_use": 5
+    },
+    {
+      "id": "tul",
+      "name": "Tul's Catalyst",
+      "description": "Enhances Cold Damage modifiers on rings/amulets",
+      "category_display": "Cold Damage Modifiers",
+      "matching_tags": ["cold", "cold_damage"],
+      "stack_size": 10,
+      "quality_per_use": 5
+    },
+    {
+      "id": "esh",
+      "name": "Esh's Catalyst",
+      "description": "Enhances Lightning Damage modifiers on rings/amulets",
+      "category_display": "Lightning Damage Modifiers",
+      "matching_tags": ["lightning", "lightning_damage"],
+      "stack_size": 10,
+      "quality_per_use": 5
+    },
+    {
+      "id": "chayula",
+      "name": "Chayula's Catalyst",
+      "description": "Enhances Chaos Damage modifiers on rings/amulets",
+      "category_display": "Chaos Damage Modifiers",
+      "matching_tags": ["chaos", "chaos_damage"],
+      "stack_size": 10,
+      "quality_per_use": 5
+    },
+    {
+      "id": "reaver",
+      "name": "Reaver Catalyst",
+      "description": "Enhances Attack modifiers on rings/amulets",
+      "category_display": "Attack Modifiers",
+      "matching_tags": ["attack"],
+      "stack_size": 10,
+      "quality_per_use": 5
+    },
+    {
+      "id": "sibilant",
+      "name": "Sibilant Catalyst",
+      "description": "Enhances Caster/Spell modifiers on rings/amulets",
+      "category_display": "Caster Modifiers",
+      "matching_tags": ["caster", "spell"],
+      "stack_size": 10,
+      "quality_per_use": 5
+    },
+    {
+      "id": "skittering",
+      "name": "Skittering Catalyst",
+      "description": "Enhances Speed modifiers on rings/amulets",
+      "category_display": "Speed Modifiers",
+      "matching_tags": ["speed", "attack_speed", "cast_speed"],
+      "stack_size": 10,
+      "quality_per_use": 5
+    },
+    {
+      "id": "adaptive",
+      "name": "Adaptive Catalyst",
+      "description": "Enhances Attribute modifiers on rings/amulets",
+      "category_display": "Attribute Modifiers",
+      "matching_tags": ["attribute", "strength", "dexterity", "intelligence"],
+      "stack_size": 10,
+      "quality_per_use": 5
+    }
+  ]
+}

@@ -47,6 +47,9 @@ class ParsedItem(BaseModel):
     corrupted: bool = False
     identified: bool = True
     raw_text: str
+    # Catalyst quality for jewelry (rings/amulets)
+    catalyst_type: Optional[str] = None  # "flesh", "neural", "carapace", etc.
+    catalyst_quality: Optional[int] = None  # 0-20%
 
 
 class ItemParseRequest(BaseModel):

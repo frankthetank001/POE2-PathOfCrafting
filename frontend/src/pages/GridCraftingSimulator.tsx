@@ -99,6 +99,26 @@ function getExclusionGroupColor(groupId: string): { bg: string; border: string; 
   }
 }
 
+// Map catalyst type IDs to their display names (matching in-game text)
+const CATALYST_DISPLAY_NAMES: Record<string, string> = {
+  flesh: 'Life Modifiers',
+  neural: 'Mana Modifiers',
+  carapace: 'Defence Modifiers',
+  'uul-netol': 'Physical Modifiers',
+  xoph: 'Fire Modifiers',
+  tul: 'Cold Modifiers',
+  esh: 'Lightning Modifiers',
+  chayula: 'Chaos Modifiers',
+  reaver: 'Attack Modifiers',
+  sibilant: 'Caster Modifiers',
+  skittering: 'Speed Modifiers',
+  adaptive: 'Attribute Modifiers',
+}
+
+function getCatalystDisplayName(catalystType: string): string {
+  return CATALYST_DISPLAY_NAMES[catalystType] || `${catalystType} Modifiers`
+}
+
 // Get defence display string from listing
 function getDefenceDisplay(listing: { armour?: number | null; evasion?: number | null; energy_shield?: number | null }): string {
   const parts: string[] = [];
@@ -829,6 +849,7 @@ function GridCraftingSimulator() {
     orbs: { implemented: string[], disabled: string[] }
     essences: { implemented: string[], disabled: string[] }
     bones: { implemented: string[], disabled: string[] }
+    catalysts: { implemented: string[], disabled: string[] }
     omens: string[]
     total: number
     implemented_count: number
@@ -837,6 +858,7 @@ function GridCraftingSimulator() {
     orbs: { implemented: [], disabled: [] },
     essences: { implemented: [], disabled: [] },
     bones: { implemented: [], disabled: [] },
+    catalysts: { implemented: [], disabled: [] },
     omens: [],
     total: 0,
     implemented_count: 0,
@@ -1954,6 +1976,10 @@ function GridCraftingSimulator() {
       categorizedCurrencies.bones.implemented.forEach(name => allCurrencyNames.add(name))
       categorizedCurrencies.bones.disabled.forEach(name => allCurrencyNames.add(name))
 
+      // Add all catalysts
+      categorizedCurrencies.catalysts.implemented.forEach(name => allCurrencyNames.add(name))
+      categorizedCurrencies.catalysts.disabled.forEach(name => allCurrencyNames.add(name))
+
       // Add all omens
       categorizedCurrencies.omens.forEach(name => allCurrencyNames.add(name))
 
@@ -2106,7 +2132,10 @@ function GridCraftingSimulator() {
   const loadCategorizedCurrencies = async () => {
     try {
       const currencies = await craftingApi.getCategorizedCurrencies()
-      setCategorizedCurrencies(currencies)
+      setCategorizedCurrencies({
+        ...currencies,
+        catalysts: currencies.catalysts || { implemented: [], disabled: [] }
+      })
       setAvailableOmens(currencies.omens)
     } catch (err) {
       console.error('Failed to load currencies:', err)
@@ -4494,6 +4523,13 @@ function GridCraftingSimulator() {
                         </div>
                         {item.quality > 0 && (
                           <PoE2Property label="Quality" value={`+${item.quality}%`} augmented />
+                        )}
+                        {item.catalyst_type && item.catalyst_quality && item.catalyst_quality > 0 && (
+                          <PoE2Property
+                            label={`Quality (${getCatalystDisplayName(item.catalyst_type)})`}
+                            value={`+${item.catalyst_quality}%`}
+                            augmented
+                          />
                         )}
                       </PoE2Section>
 
