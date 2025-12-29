@@ -401,10 +401,11 @@ class TestBossSpecificModifiers:
 
     def test_omen_of_sovereign_guarantees_ulaman(self, create_test_item, create_test_modifier, mock_modifier_pool):
         """Omen of the Sovereign should guarantee Ulaman modifier."""
-        from app.services.crafting.omens import OmenFactory
+        from app.services.crafting.mechanics import OmenModifiedMechanic, DesecrationMechanic
+        from app.schemas.crafting import OmenInfo
 
-        # Create item with room for mods
-        item = create_test_item(rarity=ItemRarity.RARE)
+        # Create jewelry item with room for mods (desecration requires jewelry)
+        item = create_test_item(rarity=ItemRarity.RARE, base_category="ring")
 
         # Create Ulaman-tagged modifier for the pool
         ulaman_mod = create_test_modifier(
@@ -417,22 +418,33 @@ class TestBossSpecificModifiers:
         # Mock weighted random choice to return the ulaman mod
         mock_modifier_pool._weighted_random_choice.return_value = ulaman_mod
 
-        # Create and apply the omen
-        omen = OmenFactory.create("Omen of the Sovereign")
-        success, message, result = omen.modify_currency_behavior(
-            item, lambda i, p: (True, "Applied", i), mock_modifier_pool
+        # Create omen-wrapped desecration mechanic
+        base_mechanic = DesecrationMechanic({'bone_type': 'ancient', 'bone_part': 'collarbone'})
+        sovereign_omen = OmenInfo(
+            id=1,
+            name="Omen of the Sovereign",
+            effect_description="Guarantees Ulaman modifier",
+            affected_currency="Desecration",
+            effect_type="sovereign",
+            stack_size=10,
         )
+        omen_mechanic = OmenModifiedMechanic(base_mechanic, sovereign_omen)
+
+        success, message, result = omen_mechanic.apply(item, mock_modifier_pool)
 
         assert success is True, f"Expected success but got: {message}"
-        assert "Ulaman" in message
-        assert any("ulaman" in (mod.tags or []) for mod in result.prefix_mods + result.suffix_mods)
+        assert "sovereign" in message.lower(), f"Expected 'Sovereign' in message: {message}"
+        # Check the mod was added to unrevealed_mods with ulaman boss tag
+        assert any(mod.required_boss_tag == "ulaman" for mod in result.unrevealed_mods), \
+            f"Expected unrevealed mod with required_boss_tag='ulaman': {result.unrevealed_mods}"
 
     def test_omen_of_liege_guarantees_amanamu(self, create_test_item, create_test_modifier, mock_modifier_pool):
         """Omen of the Liege should guarantee Amanamu modifier."""
-        from app.services.crafting.omens import OmenFactory
+        from app.services.crafting.mechanics import OmenModifiedMechanic, DesecrationMechanic
+        from app.schemas.crafting import OmenInfo
 
-        # Create item with room for mods
-        item = create_test_item(rarity=ItemRarity.RARE)
+        # Create jewelry item with room for mods (desecration requires jewelry)
+        item = create_test_item(rarity=ItemRarity.RARE, base_category="ring")
 
         # Create Amanamu-tagged modifier for the pool
         amanamu_mod = create_test_modifier(
@@ -445,22 +457,33 @@ class TestBossSpecificModifiers:
         # Mock weighted random choice to return the amanamu mod
         mock_modifier_pool._weighted_random_choice.return_value = amanamu_mod
 
-        # Create and apply the omen
-        omen = OmenFactory.create("Omen of the Liege")
-        success, message, result = omen.modify_currency_behavior(
-            item, lambda i, p: (True, "Applied", i), mock_modifier_pool
+        # Create omen-wrapped desecration mechanic
+        base_mechanic = DesecrationMechanic({'bone_type': 'ancient', 'bone_part': 'collarbone'})
+        liege_omen = OmenInfo(
+            id=1,
+            name="Omen of the Liege",
+            effect_description="Guarantees Amanamu modifier",
+            affected_currency="Desecration",
+            effect_type="liege",
+            stack_size=10,
         )
+        omen_mechanic = OmenModifiedMechanic(base_mechanic, liege_omen)
+
+        success, message, result = omen_mechanic.apply(item, mock_modifier_pool)
 
         assert success is True, f"Expected success but got: {message}"
-        assert "Amanamu" in message
-        assert any("amanamu" in (mod.tags or []) for mod in result.prefix_mods + result.suffix_mods)
+        assert "liege" in message.lower(), f"Expected 'Liege' in message: {message}"
+        # Check the mod was added to unrevealed_mods with amanamu boss tag
+        assert any(mod.required_boss_tag == "amanamu" for mod in result.unrevealed_mods), \
+            f"Expected unrevealed mod with required_boss_tag='amanamu': {result.unrevealed_mods}"
 
     def test_omen_of_blackblooded_guarantees_kurgal(self, create_test_item, create_test_modifier, mock_modifier_pool):
         """Omen of the Blackblooded should guarantee Kurgal modifier."""
-        from app.services.crafting.omens import OmenFactory
+        from app.services.crafting.mechanics import OmenModifiedMechanic, DesecrationMechanic
+        from app.schemas.crafting import OmenInfo
 
-        # Create item with room for mods
-        item = create_test_item(rarity=ItemRarity.RARE)
+        # Create jewelry item with room for mods (desecration requires jewelry)
+        item = create_test_item(rarity=ItemRarity.RARE, base_category="ring")
 
         # Create Kurgal-tagged modifier for the pool
         kurgal_mod = create_test_modifier(
@@ -473,15 +496,25 @@ class TestBossSpecificModifiers:
         # Mock weighted random choice to return the kurgal mod
         mock_modifier_pool._weighted_random_choice.return_value = kurgal_mod
 
-        # Create and apply the omen
-        omen = OmenFactory.create("Omen of the Blackblooded")
-        success, message, result = omen.modify_currency_behavior(
-            item, lambda i, p: (True, "Applied", i), mock_modifier_pool
+        # Create omen-wrapped desecration mechanic
+        base_mechanic = DesecrationMechanic({'bone_type': 'ancient', 'bone_part': 'collarbone'})
+        blackblooded_omen = OmenInfo(
+            id=1,
+            name="Omen of the Blackblooded",
+            effect_description="Guarantees Kurgal modifier",
+            affected_currency="Desecration",
+            effect_type="blackblooded",
+            stack_size=10,
         )
+        omen_mechanic = OmenModifiedMechanic(base_mechanic, blackblooded_omen)
+
+        success, message, result = omen_mechanic.apply(item, mock_modifier_pool)
 
         assert success is True, f"Expected success but got: {message}"
-        assert "Kurgal" in message
-        assert any("kurgal" in (mod.tags or []) for mod in result.prefix_mods + result.suffix_mods)
+        assert "blackblooded" in message.lower(), f"Expected 'Blackblooded' in message: {message}"
+        # Check the mod was added to unrevealed_mods with kurgal boss tag
+        assert any(mod.required_boss_tag == "kurgal" for mod in result.unrevealed_mods), \
+            f"Expected unrevealed mod with required_boss_tag='kurgal': {result.unrevealed_mods}"
 
 
 # ============================================================================

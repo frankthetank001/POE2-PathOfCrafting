@@ -20,9 +20,10 @@ from app.schemas.crafting import CraftableItem, ItemRarity, ModType, ItemModifie
 from app.services.crafting.modifier_pool import ModifierPool
 from app.services.crafting.modifier_loader import ModifierLoader
 from app.services.crafting.mechanics import (
-    FracturingMechanic, ChaosMechanic, AnnulmentMechanic, DivineMechanic, DesecrationMechanic
+    FracturingMechanic, ChaosMechanic, AnnulmentMechanic, DivineMechanic, DesecrationMechanic,
+    OmenModifiedMechanic
 )
-from app.services.crafting.omens import OmenOfWhittling, OmenOfSinistralErasure
+from app.schemas.crafting import OmenInfo
 from app.services.crafting.config_service import crafting_config_service
 
 
@@ -367,16 +368,19 @@ def test_omen_of_whittling_respects_fractured_mods(modifier_pool, rare_item_4_mo
     rare_item_4_mods.suffix_mods[0].required_ilvl = 50
     rare_item_4_mods.suffix_mods[1].required_ilvl = 50
 
-    omen = OmenOfWhittling()
-
-    # Create a mock currency function that would normally add a mod
-    def mock_currency_func(item, mod_pool):
-        # Just return success without actually modifying
-        return True, "Applied mock currency", item
-
-    success, message, result_item = omen.modify_currency_behavior(
-        rare_item_4_mods, mock_currency_func, modifier_pool
+    # Create omen-wrapped chaos mechanic via OmenModifiedMechanic
+    base_mechanic = ChaosMechanic({})
+    whittling_omen = OmenInfo(
+        id=1,
+        name="Omen of Whittling",
+        effect_description="Removes lowest level modifier",
+        affected_currency="Chaos Orb",
+        effect_type="whittling",
+        stack_size=10,
     )
+    omen_mechanic = OmenModifiedMechanic(base_mechanic, whittling_omen)
+
+    success, message, result_item = omen_mechanic.apply(rare_item_4_mods, modifier_pool)
 
     assert success
 
@@ -394,14 +398,19 @@ def test_omen_of_sinistral_erasure_respects_fractured_prefixes(modifier_pool, ra
     rare_item_4_mods.prefix_mods[0].is_fractured = True
     rare_item_4_mods.prefix_mods[1].is_fractured = True
 
-    omen = OmenOfSinistralErasure()
-
-    def mock_currency_func(item, mod_pool):
-        return True, "Applied mock currency", item
-
-    success, message, result_item = omen.modify_currency_behavior(
-        rare_item_4_mods, mock_currency_func, modifier_pool
+    # Create omen-wrapped chaos mechanic
+    base_mechanic = ChaosMechanic({})
+    sinistral_omen = OmenInfo(
+        id=1,
+        name="Omen of Sinistral Erasure",
+        effect_description="Removes only prefix modifiers",
+        affected_currency="Chaos Orb",
+        effect_type="sinistral",
+        stack_size=10,
     )
+    omen_mechanic = OmenModifiedMechanic(base_mechanic, sinistral_omen)
+
+    success, message, result_item = omen_mechanic.apply(rare_item_4_mods, modifier_pool)
 
     # Should fail because no non-fractured prefixes available
     assert not success

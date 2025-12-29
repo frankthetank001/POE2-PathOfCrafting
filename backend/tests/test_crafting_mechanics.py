@@ -623,6 +623,84 @@ class TestOmenModifiedExalted:
         assert result.total_explicit_mods == initial_count + 2
         assert "2 modifiers" in message or "Greater Exaltation" in message
 
+    def test_greater_plus_dextral_adds_two_suffixes(self, create_test_item, create_test_modifier, mock_modifier_pool):
+        """Greater Exaltation + Dextral should add TWO suffixes only."""
+        prefix = create_test_modifier("Prefix", ModType.PREFIX)
+        item = create_test_item(rarity=ItemRarity.RARE, prefix_mods=[prefix])
+
+        base_mechanic = ExaltedMechanic({})
+
+        greater_omen = OmenInfo(
+            id=1,
+            name="Omen of Greater Exaltation",
+            effect_description="Adds TWO random modifiers",
+            affected_currency="Exalted Orb",
+            effect_type="greater",
+            stack_size=10,
+        )
+
+        dextral_omen = OmenInfo(
+            id=2,
+            name="Omen of Dextral Exaltation",
+            effect_description="Adds only suffix modifier",
+            affected_currency="Exalted Orb",
+            effect_type="dextral",
+            stack_size=10,
+        )
+
+        # Wrap with both omens
+        omen_mechanic = OmenModifiedMechanic(base_mechanic, greater_omen)
+        omen_mechanic = OmenModifiedMechanic(omen_mechanic, dextral_omen)
+
+        initial_prefix_count = item.prefix_count
+        initial_suffix_count = item.suffix_count
+        success, message, result = omen_mechanic.apply(item, mock_modifier_pool)
+
+        # Should add 2 suffixes only, no new prefixes
+        assert success is True
+        assert result.prefix_count == initial_prefix_count  # No new prefixes
+        assert result.suffix_count == initial_suffix_count + 2  # Two new suffixes
+        assert "2 modifiers" in message or "Greater Exaltation" in message
+
+    def test_greater_plus_sinistral_adds_two_prefixes(self, create_test_item, create_test_modifier, mock_modifier_pool):
+        """Greater Exaltation + Sinistral should add TWO prefixes only."""
+        suffix = create_test_modifier("Suffix", ModType.SUFFIX)
+        item = create_test_item(rarity=ItemRarity.RARE, suffix_mods=[suffix])
+
+        base_mechanic = ExaltedMechanic({})
+
+        greater_omen = OmenInfo(
+            id=1,
+            name="Omen of Greater Exaltation",
+            effect_description="Adds TWO random modifiers",
+            affected_currency="Exalted Orb",
+            effect_type="greater",
+            stack_size=10,
+        )
+
+        sinistral_omen = OmenInfo(
+            id=2,
+            name="Omen of Sinistral Exaltation",
+            effect_description="Adds only prefix modifier",
+            affected_currency="Exalted Orb",
+            effect_type="sinistral",
+            stack_size=10,
+        )
+
+        # Wrap with both omens
+        omen_mechanic = OmenModifiedMechanic(base_mechanic, greater_omen)
+        omen_mechanic = OmenModifiedMechanic(omen_mechanic, sinistral_omen)
+
+        initial_prefix_count = item.prefix_count
+        initial_suffix_count = item.suffix_count
+        success, message, result = omen_mechanic.apply(item, mock_modifier_pool)
+
+        # Should add 2 prefixes only, no new suffixes
+        assert success is True
+        assert result.prefix_count == initial_prefix_count + 2  # Two new prefixes
+        assert result.suffix_count == initial_suffix_count  # No new suffixes
+        assert "2 modifiers" in message or "Greater Exaltation" in message
+
     def test_dextral_takes_priority_over_homogenising(self, create_test_item, create_test_modifier, mock_modifier_pool):
         """Dextral Exaltation should take priority over Homogenising when both present."""
         prefix1 = create_test_modifier("Prefix1", ModType.PREFIX)

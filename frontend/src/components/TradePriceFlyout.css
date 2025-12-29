@@ -1,0 +1,796 @@
+/* Trade Price Flyout Panel */
+.trade-price-flyout {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: 420px;
+  max-width: 95vw;
+  background: linear-gradient(180deg, #1a1814 0%, #0c0a08 100%);
+  border-left: 1px solid var(--poe2-border-dark, #27211f);
+  font-family: var(--poe2-font-main, 'Fontin', Georgia, serif);
+  display: flex;
+  flex-direction: column;
+  z-index: 1000;
+  box-shadow: -5px 0 30px rgba(0, 0, 0, 0.8);
+  animation: tradeFlyoutSlideIn 0.2s ease-out;
+}
+
+@keyframes tradeFlyoutSlideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.trade-flyout-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 16px;
+  background: linear-gradient(180deg, rgba(136, 136, 255, 0.1) 0%, transparent 100%);
+  border-bottom: 1px solid var(--poe2-border-light, #433c38);
+}
+
+.trade-flyout-header h3 {
+  font-family: var(--poe2-font-header, 'FontinSmallCaps', Georgia, serif);
+  color: var(--poe2-magic, #8888ff);
+  margin: 0;
+  font-size: 1.1rem;
+  font-weight: normal;
+  letter-spacing: 0.5px;
+}
+
+.trade-flyout-close {
+  background: transparent;
+  border: 1px solid var(--poe2-border-light, #433c38);
+  color: var(--poe2-text-default, #7f7f7f);
+  width: 28px;
+  height: 28px;
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s;
+}
+
+.trade-flyout-close:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: #666;
+}
+
+.trade-flyout-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 12px 0;
+}
+
+.trade-flyout-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.trade-flyout-content::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+.trade-flyout-content::-webkit-scrollbar-thumb {
+  background: var(--poe2-border-light, #433c38);
+  border-radius: 3px;
+}
+
+/* Loading State */
+.trade-loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  gap: 16px;
+}
+
+.trade-loading-spinner {
+  width: 32px;
+  height: 32px;
+  border: 3px solid rgba(170, 158, 130, 0.2);
+  border-top-color: var(--poe2-currency, #aa9e82);
+  border-radius: 50%;
+  animation: tradeSpin 0.8s linear infinite;
+}
+
+@keyframes tradeSpin {
+  to { transform: rotate(360deg); }
+}
+
+.trade-loading-status {
+  color: var(--poe2-text-default, #7f7f7f);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.trade-loading-cancel {
+  background: transparent;
+  border: 1px solid var(--poe2-border-light, #433c38);
+  color: var(--poe2-text-default, #7f7f7f);
+  padding: 6px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.15s ease;
+}
+
+.trade-loading-cancel:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border-color: #666;
+}
+
+/* Filter Controls */
+.trade-filter-controls {
+  padding: 0 12px;
+}
+
+/* Error State */
+.trade-error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 20px;
+  gap: 16px;
+}
+
+.trade-error-message {
+  color: var(--poe2-fire, #c44);
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+.trade-retry-btn {
+  background: transparent;
+  border: 1px solid var(--poe2-border-light, #433c38);
+  color: var(--poe2-text-default, #7f7f7f);
+  padding: 6px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.85rem;
+  transition: all 0.15s ease;
+}
+
+.trade-retry-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
+  border-color: #666;
+}
+
+/* Price Summary */
+.trade-summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  margin: 0 0 8px;
+  background: rgba(136, 136, 255, 0.05);
+  border-top: 1px solid var(--poe2-border-light, #433c38);
+  border-bottom: 1px solid var(--poe2-border-light, #433c38);
+}
+
+.trade-summary-main {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.trade-summary-value {
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+  font-size: 1.5rem;
+  color: var(--poe2-currency, #aa9e82);
+  font-weight: 600;
+}
+
+.trade-confidence {
+  font-size: 0.7rem;
+  padding: 2px 6px;
+  border-radius: 2px;
+  text-transform: uppercase;
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+}
+
+.trade-confidence.high {
+  background: rgba(100, 200, 100, 0.15);
+  color: #6c6;
+  border: 1px solid rgba(100, 200, 100, 0.3);
+}
+
+.trade-confidence.medium {
+  background: rgba(255, 200, 100, 0.15);
+  color: #fc8;
+  border: 1px solid rgba(255, 200, 100, 0.3);
+}
+
+.trade-confidence.low {
+  background: rgba(255, 100, 100, 0.15);
+  color: #f88;
+  border: 1px solid rgba(255, 100, 100, 0.3);
+}
+
+/* Enhanced Stats Row */
+.trade-enhanced-stats {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin: 8px 0 12px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  border-radius: 4px;
+}
+
+.enhanced-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.enhanced-stat-label {
+  font-size: 0.65rem;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.enhanced-stat-value {
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #ccc;
+}
+
+.enhanced-stat-value.good {
+  color: #6c6;
+}
+
+.enhanced-stat-value.medium {
+  color: #fc8;
+}
+
+.enhanced-stat-value.low {
+  color: #f88;
+}
+
+.enhanced-stat-value.warning {
+  color: #f88;
+  font-size: 0.75rem;
+}
+
+.enhanced-stat.outliers {
+  opacity: 0.8;
+}
+
+/* Unmatched Mods Warning */
+.trade-unmatched-warning {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px;
+  padding: 8px;
+  margin: 8px 12px;
+  background: rgba(180, 100, 40, 0.15);
+  border: 1px solid rgba(180, 100, 40, 0.4);
+  border-radius: 3px;
+  font-size: 0.8rem;
+}
+
+.trade-unmatched-warning .warning-icon {
+  color: #e8a040;
+}
+
+.trade-unmatched-warning .warning-text {
+  color: #ccc;
+}
+
+.unmatched-mods-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-left: 4px;
+}
+
+.unmatched-mod {
+  padding: 2px 6px;
+  background: rgba(180, 100, 40, 0.3);
+  border-radius: 2px;
+  color: #e8a040;
+  font-size: 0.75rem;
+  cursor: help;
+}
+
+/* Equipment Filters */
+.trade-equipment-filters {
+  margin: 12px;
+  padding: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(100, 80, 60, 0.3);
+  border-radius: 3px;
+}
+
+.trade-filters-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 0.75rem;
+  color: var(--poe2-text-default, #7f7f7f);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  letter-spacing: 0.5px;
+}
+
+.trade-refresh-btn {
+  background: rgba(100, 80, 60, 0.3);
+  border: 1px solid rgba(100, 80, 60, 0.5);
+  color: var(--poe2-currency, #aa9e82);
+  padding: 2px 8px;
+  border-radius: 2px;
+  cursor: pointer;
+  font-size: 0.8rem;
+  transition: all 0.15s ease;
+}
+
+.trade-refresh-btn:hover:not(:disabled) {
+  background: rgba(100, 80, 60, 0.5);
+  border-color: var(--poe2-currency, #aa9e82);
+}
+
+.trade-refresh-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.trade-filter-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 4px 0;
+}
+
+.trade-filter-row.disabled {
+  opacity: 0.5;
+}
+
+.trade-filter-checkbox {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 100px;
+  cursor: pointer;
+}
+
+.trade-filter-checkbox input[type="checkbox"] {
+  accent-color: var(--poe2-currency, #aa9e82);
+  width: 14px;
+  height: 14px;
+  cursor: pointer;
+}
+
+.trade-filter-label {
+  font-size: 0.8rem;
+  color: var(--poe2-text-light, #c8c8c8);
+}
+
+.trade-filter-slider {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.trade-filter-slider input[type="range"] {
+  flex: 1;
+  height: 4px;
+  -webkit-appearance: none;
+  appearance: none;
+  background: rgba(100, 80, 60, 0.4);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.trade-filter-slider input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  width: 12px;
+  height: 12px;
+  background: var(--poe2-currency, #aa9e82);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.trade-filter-slider input[type="range"]:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.trade-filter-slider input[type="range"]:disabled::-webkit-slider-thumb {
+  cursor: not-allowed;
+}
+
+.trade-filter-value {
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+  font-size: 0.75rem;
+  color: var(--poe2-currency, #aa9e82);
+  min-width: 35px;
+  text-align: right;
+}
+
+/* Global Strictness Slider - Compact */
+.trade-strictness-compact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: rgba(40, 40, 50, 0.4);
+  border-radius: 4px;
+  margin: 8px 0;
+}
+
+.trade-strictness-compact .strictness-label {
+  font-size: 0.7rem;
+  color: #888;
+  white-space: nowrap;
+}
+
+.trade-strictness-compact .strictness-slider-compact {
+  flex: 1;
+  height: 4px;
+  background: rgba(100, 100, 120, 0.4);
+  border-radius: 2px;
+  outline: none;
+  cursor: pointer;
+  -webkit-appearance: none;
+}
+
+.trade-strictness-compact .strictness-slider-compact::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 12px;
+  height: 12px;
+  background: var(--poe2-currency, #aa9e82);
+  border-radius: 50%;
+  cursor: pointer;
+}
+
+.trade-strictness-compact .strictness-value {
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+  font-size: 0.75rem;
+  color: var(--poe2-currency, #aa9e82);
+  font-weight: bold;
+  min-width: 32px;
+  text-align: right;
+}
+
+/* Purchase Type Dropdown */
+.trade-purchase-type {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  background: rgba(40, 40, 50, 0.4);
+  border-radius: 4px;
+  margin-bottom: 8px;
+}
+
+.trade-purchase-type .purchase-type-label {
+  font-size: 0.7rem;
+  color: #888;
+  white-space: nowrap;
+}
+
+.trade-purchase-type .purchase-type-select {
+  flex: 1;
+  padding: 4px 8px;
+  font-size: 0.75rem;
+  background: rgba(30, 30, 40, 0.8);
+  border: 1px solid rgba(100, 100, 120, 0.4);
+  border-radius: 3px;
+  color: var(--poe2-text-default, #c8b59a);
+  cursor: pointer;
+  outline: none;
+}
+
+.trade-purchase-type .purchase-type-select:hover {
+  border-color: rgba(150, 150, 170, 0.5);
+}
+
+.trade-purchase-type .purchase-type-select:focus {
+  border-color: var(--poe2-currency, #aa9e82);
+}
+
+.trade-purchase-type .purchase-type-select option {
+  background: #1a1a24;
+  color: var(--poe2-text-default, #c8b59a);
+}
+
+/* Listings Table */
+.trade-listings-table {
+  width: 100%;
+  font-size: 0.8rem;
+  border-collapse: collapse;
+}
+
+.trade-listings-table th {
+  text-align: left;
+  padding: 6px 8px;
+  color: var(--poe2-text-default, #7f7f7f);
+  font-weight: normal;
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  border-bottom: 1px solid var(--poe2-border-dark, #27211f);
+  background: rgba(0, 0, 0, 0.3);
+  position: sticky;
+  top: 0;
+}
+
+.trade-listings-table th:first-child {
+  padding-left: 16px;
+}
+
+.trade-listings-table th:last-child {
+  padding-right: 16px;
+}
+
+.trade-listings-table td {
+  padding: 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+  vertical-align: middle;
+}
+
+.trade-listings-table td:first-child {
+  padding-left: 16px;
+}
+
+.trade-listings-table td:last-child {
+  padding-right: 16px;
+}
+
+.trade-listings-table tr:hover td {
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.listing-price-cell {
+  white-space: nowrap;
+}
+
+.price-with-comparison {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.listing-comparison {
+  font-size: 0.7rem;
+  padding: 1px 4px;
+  border-radius: 3px;
+  font-weight: 500;
+  cursor: help;
+}
+
+.listing-comparison.comparison-better {
+  color: #7dcea0;
+  background: rgba(125, 206, 160, 0.15);
+}
+
+.listing-comparison.comparison-worse {
+  color: #e57373;
+  background: rgba(229, 115, 115, 0.15);
+}
+
+.listing-comparison.comparison-similar {
+  color: #90a4ae;
+  background: rgba(144, 164, 174, 0.15);
+}
+
+.listing-price-amount {
+  color: var(--poe2-currency, #aa9e82);
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+  font-weight: 600;
+}
+
+.listing-price-currency {
+  margin-left: 2px;
+}
+
+.listing-price-currency img {
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  opacity: 0.8;
+}
+
+/* Eye icon for preview */
+.listing-preview-btn {
+  background: transparent;
+  border: none;
+  color: var(--poe2-text-default, #7f7f7f);
+  cursor: pointer;
+  padding: 4px;
+  font-size: 1rem;
+  opacity: 0.6;
+  transition: all 0.15s;
+}
+
+.listing-preview-btn:hover {
+  opacity: 1;
+  color: var(--poe2-magic, #8888ff);
+}
+
+.listing-preview-btn.pinned {
+  opacity: 1;
+  color: var(--poe2-currency, #aa9e82);
+  text-shadow: 0 0 4px rgba(170, 158, 130, 0.5);
+}
+
+.listing-ilvl {
+  color: var(--poe2-text-value, #fff);
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+}
+
+.listing-quality {
+  color: var(--poe2-magic, #8888ff);
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+}
+
+.listing-account {
+  color: var(--poe2-text-default, #7f7f7f);
+  max-width: 100px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.listing-age {
+  color: var(--poe2-text-default, #7f7f7f);
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+/* Dynamic listing columns */
+.listing-defence {
+  color: var(--poe2-text-value, #fff);
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.listing-ms {
+  color: var(--poe2-augmented, #8888ff);
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+  font-weight: 500;
+}
+
+.listing-res {
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+  font-size: 0.75rem;
+}
+
+.listing-ele-res {
+  color: #88ccaa;
+}
+
+.listing-chaos-res {
+  color: #cc88cc;
+}
+
+.listing-life {
+  color: #ff8888;
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+}
+
+.listing-dps {
+  color: var(--poe2-text-value, #fff);
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+}
+
+.listing-aps {
+  color: var(--poe2-text-default, #7f7f7f);
+  font-family: var(--poe2-font-numbers, 'Exo2', sans-serif);
+}
+
+/* Listing row status indicators */
+.listing-row.listing-outlier {
+  opacity: 0.4;
+  background: rgba(255, 100, 100, 0.05);
+}
+
+.listing-row.listing-outlier td {
+  text-decoration: line-through;
+  text-decoration-color: rgba(255, 100, 100, 0.3);
+}
+
+.listing-row.listing-stale-cheap {
+  opacity: 0.5;
+  background: rgba(255, 200, 100, 0.05);
+}
+
+.listing-row.listing-stale-cheap td:first-child::before {
+  content: '';
+  margin-right: 4px;
+  font-size: 0.7rem;
+}
+
+.listing-row.listing-better {
+  background: rgba(100, 200, 100, 0.08);
+}
+
+.listing-row.listing-better td:first-child {
+  border-left: 2px solid rgba(100, 200, 100, 0.6);
+}
+
+.listing-row.listing-worse {
+  background: rgba(200, 100, 100, 0.05);
+}
+
+.listing-row.listing-worse td:first-child {
+  border-left: 2px solid rgba(200, 100, 100, 0.4);
+}
+
+/* Hover overrides for marked rows */
+.listing-row.listing-outlier:hover td,
+.listing-row.listing-stale-cheap:hover td {
+  background: rgba(255, 255, 255, 0.02);
+}
+
+/* Item Preview Tooltip */
+.item-preview-tooltip {
+  position: fixed;
+  z-index: 1100;
+  pointer-events: none;
+  min-width: 280px;
+  max-width: 380px;
+}
+
+.item-preview-tooltip .poe2-frame {
+  box-shadow: 0 0 30px rgba(0, 0, 0, 0.9);
+}
+
+/* Footer */
+.trade-flyout-footer {
+  padding: 12px 16px;
+  border-top: 1px solid var(--poe2-border-light, #433c38);
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.trade-site-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  width: 100%;
+  padding: 10px;
+  background: rgba(136, 136, 255, 0.1);
+  border: 1px solid rgba(136, 136, 255, 0.3);
+  border-radius: 2px;
+  color: var(--poe2-magic, #8888ff);
+  font-family: var(--poe2-font-main, 'Fontin', Georgia, serif);
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: all 0.15s;
+}
+
+.trade-site-link:hover {
+  background: rgba(136, 136, 255, 0.2);
+  border-color: rgba(136, 136, 255, 0.5);
+  color: #aaf;
+}
+
+/* No listings message */
+.trade-no-listings {
+  text-align: center;
+  padding: 24px 16px;
+  color: var(--poe2-text-default, #7f7f7f);
+  font-style: italic;
+}

@@ -122,24 +122,13 @@ async def get_omen_filter_info(omen_name: str) -> dict:
         if not omen:
             raise HTTPException(status_code=404, detail=f"Omen '{omen_name}' not found")
 
-        # Check if it's a boss-specific omen with required tags
-        filter_info = {
-            "name": omen_name,
-            "required_tag": None,
-            "forces_prefix": False,
-            "forces_suffix": False,
+        return {
+            "name": omen.name,
+            "required_tag": omen.required_tag,
+            "forces_prefix": omen.forces_prefix,
+            "forces_suffix": omen.forces_suffix,
+            "description": omen.description,
         }
-
-        if hasattr(omen, 'required_tag'):
-            filter_info["required_tag"] = omen.required_tag
-
-        # Check for directional omens
-        if "Sinistral" in omen_name:
-            filter_info["forces_prefix"] = True
-        elif "Dextral" in omen_name:
-            filter_info["forces_suffix"] = True
-
-        return filter_info
 
     except HTTPException:
         raise

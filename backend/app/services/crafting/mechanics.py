@@ -28,6 +28,22 @@ from app.core.item_classification import (
 
 logger = get_logger(__name__)
 
+# Catalyst type to matching mod tags mapping
+CATALYST_TAG_MAPPING = {
+    "flesh": ["life", "maximum_life"],
+    "neural": ["mana", "maximum_mana", "resource"],
+    "carapace": ["defences", "armour", "evasion", "energy_shield"],
+    "uul_netol": ["physical", "physical_damage"],
+    "xoph": ["fire", "fire_damage"],
+    "tul": ["cold", "cold_damage"],
+    "esh": ["lightning", "lightning_damage"],
+    "chayula": ["chaos", "chaos_damage"],
+    "reaver": ["attack"],
+    "sibilant": ["caster", "spell"],
+    "skittering": ["speed", "attack_speed", "cast_speed"],
+    "adaptive": ["attribute", "strength", "dexterity", "intelligence"],
+}
+
 
 class CraftingMechanic(ABC):
     """Base class for all crafting mechanics."""
@@ -1343,6 +1359,7 @@ class OmenModifiedMechanic(CraftingMechanic):
         force_suffix = False
         force_homogenising = False
         add_two_mods = False
+        force_catalysing = False
 
         for omen in self.omen_chain:
             if "Sinistral Exaltation" in omen.name:
@@ -1353,6 +1370,15 @@ class OmenModifiedMechanic(CraftingMechanic):
                 force_homogenising = True
             elif "Greater Exaltation" in omen.name:
                 add_two_mods = True
+            elif "Catalysing Exaltation" in omen.name:
+                force_catalysing = True
+
+        # Handle Catalysing Exaltation (boost matching mod weights, consume catalyst quality)
+        if force_catalysing and item.catalyst_type and item.catalyst_quality > 0:
+            return self._apply_catalysing_exaltation(
+                item, modifier_pool, base, min_mod_level,
+                force_suffix, force_prefix, add_two_mods, force_homogenising
+            )
 
         # Handle Greater Exaltation (add two modifiers)
         if add_two_mods:
@@ -1414,17 +1440,30 @@ class OmenModifiedMechanic(CraftingMechanic):
                     new_mod = modifier_pool._weighted_random_choice(matching_mods)
                     logger.info(f"[Greater+Homogenising] Mod {i+1}: Selected {new_mod.name if new_mod else 'None'} ({new_mod.mod_type if new_mod else 'N/A'})")
                 else:
-                    # Not homogenising - pick random type and roll
-                    available_types = []
-                    if manager.item.can_add_prefix:
-                        available_types.append("prefix")
-                    if manager.item.can_add_suffix:
-                        available_types.append("suffix")
+                    # Not homogenising - respect Dextral/Sinistral if present, otherwise random
+                    if force_suffix:
+                        if not manager.item.can_add_suffix:
+                            logger.warning(f"[Greater+Dextral] No room for suffix, skipping mod {i+1}")
+                            continue
+                        mod_type = "suffix"
+                    elif force_prefix:
+                        if not manager.item.can_add_prefix:
+                            logger.warning(f"[Greater+Sinistral] No room for prefix, skipping mod {i+1}")
+                            continue
+                        mod_type = "prefix"
+                    else:
+                        # Neither Dextral nor Sinistral - pick random type
+                        available_types = []
+                        if manager.item.can_add_prefix:
+                            available_types.append("prefix")
+                        if manager.item.can_add_suffix:
+                            available_types.append("suffix")
 
-                    if not available_types:
-                        break
+                        if not available_types:
+                            break
 
-                    mod_type = random.choice(available_types)
+                        mod_type = random.choice(available_types)
+
                     new_mod = modifier_pool.roll_random_modifier(
                         mod_type, item.base_category, item.item_level,
                         min_mod_level=min_mod_level, item=manager.item
@@ -1553,6 +1592,150 @@ class OmenModifiedMechanic(CraftingMechanic):
                 return True, f"Added {mod.name}{tier_text}{omen_text}", manager.item
 
             return False, "Failed to generate modifier", item
+
+    def _apply_catalysing_exaltation(
+        self, item: CraftableItem, modifier_pool: ModifierPool, base: ExaltedMechanic,
+        min_mod_level: Optional[int], force_suffix: bool, force_prefix: bool,
+        add_two_mods: bool = False, force_homogenising: bool = False
+    ) -> Tuple[bool, str, CraftableItem]:
+        """Apply Exalted Orb with Catalysing Exaltation - boosts matching mod weights.
+
+        Also supports Greater Exaltation (add_two_mods) and Homogenising Exaltation.
+        """
+        manager = ItemStateManager(item)
+
+        # Get catalyst matching tags
+        catalyst_tags = CATALYST_TAG_MAPPING.get(item.catalyst_type, [])
+        if not catalyst_tags:
+            logger.warning(f"[Catalysing] Unknown catalyst type: {item.catalyst_type}")
+
+        # Calculate weight multiplier: 1 + (quality / 20) * 10
+        # At 20% quality: 11x weight for matching mods
+        weight_multiplier = 1 + (item.catalyst_quality / 20.0) * 10.0
+
+        # Record consumed catalyst info for message (consume early so it's not used for next mod)
+        consumed_quality = item.catalyst_quality
+        consumed_type = item.catalyst_type
+
+        # CONSUME the catalyst quality immediately
+        manager.item.catalyst_quality = 0
+        manager.item.catalyst_type = None
+
+        # If homogenising, capture tags from existing mods
+        homogenising_tags = None
+        if force_homogenising:
+            existing_mods = item.prefix_mods + item.suffix_mods
+            all_visible_tags = set()
+            for mod in existing_mods:
+                if mod.tags:
+                    visible_tags = [tag for tag in mod.tags if tag.lower() not in HIDDEN_TAGS_FOR_HOMOGENISING]
+                    all_visible_tags.update(visible_tags)
+            if all_visible_tags:
+                homogenising_tags = list(all_visible_tags)
+                logger.info(f"[Catalysing+Homogenising] Captured tags: {homogenising_tags}")
+            else:
+                return False, "No visible tags to match for Homogenising Exaltation", item
+
+        # Determine how many mods to add
+        num_mods_to_add = 2 if add_two_mods else 1
+        added_mods = []
+
+        for i in range(num_mods_to_add):
+            if manager.item.total_explicit_mods >= 6:
+                break
+
+            # Determine mod type based on directional omens or random
+            if force_suffix:
+                if not manager.item.can_add_suffix:
+                    if i == 0:
+                        return False, "No room for suffix modifiers", item
+                    break  # Already added one mod, stop here
+                mod_type = "suffix"
+            elif force_prefix:
+                if not manager.item.can_add_prefix:
+                    if i == 0:
+                        return False, "No room for prefix modifiers", item
+                    break
+                mod_type = "prefix"
+            else:
+                available_types = []
+                if manager.item.can_add_prefix:
+                    available_types.append("prefix")
+                if manager.item.can_add_suffix:
+                    available_types.append("suffix")
+                if not available_types:
+                    if i == 0:
+                        return False, "No open affix slots", item
+                    break
+                mod_type = random.choice(available_types)
+
+            # Get eligible mods
+            eligible_mods = modifier_pool.get_eligible_mods(
+                item.base_category, item.item_level, mod_type, manager.item,
+                min_mod_level=min_mod_level
+            )
+
+            if not eligible_mods:
+                if i == 0:
+                    return False, f"No eligible {mod_type} modifiers", item
+                break
+
+            # Filter by homogenising tags if active
+            if homogenising_tags:
+                eligible_mods = [
+                    m for m in eligible_mods
+                    if m.tags and any(tag in m.tags for tag in homogenising_tags)
+                ]
+                if not eligible_mods:
+                    if i == 0:
+                        return False, "No modifiers matching homogenising tags", item
+                    break
+
+            # Build weighted list based on catalyst tag matching
+            weighted_entries = []
+            for mod in eligible_mods:
+                base_weight = int(mod.weight) if isinstance(mod.weight, str) else mod.weight
+                if catalyst_tags and mod.tags and any(tag in catalyst_tags for tag in mod.tags):
+                    # Boost weight for matching mods
+                    weighted_entries.append((mod, base_weight * weight_multiplier))
+                    logger.debug(f"[Catalysing] Boosted {mod.name}: {base_weight} -> {base_weight * weight_multiplier}")
+                else:
+                    weighted_entries.append((mod, float(base_weight)))
+
+            # Weighted random selection
+            total_weight = sum(w for _, w in weighted_entries)
+            if total_weight <= 0:
+                if i == 0:
+                    return False, "No valid modifiers to add", item
+                break
+
+            rand_value = random.uniform(0, total_weight)
+            cumulative = 0.0
+            selected_mod = weighted_entries[-1][0]  # Default fallback
+
+            for mod, weight in weighted_entries:
+                cumulative += weight
+                if rand_value <= cumulative:
+                    selected_mod = mod
+                    break
+
+            # Add the modifier
+            if manager.add_modifier(selected_mod):
+                added_mods.append(selected_mod.name)
+            else:
+                if i == 0:
+                    return False, "Failed to add modifier", item
+                break
+
+        if not added_mods:
+            return False, "Failed to add any modifiers", item
+
+        # Build success message
+        tier_text = f" (ilvl {min_mod_level}+)" if min_mod_level else ""
+        omen_text = f" with {', '.join([o.name for o in self.omen_chain])}"
+        catalyst_text = f" (consumed {consumed_quality}% {consumed_type} catalyst)"
+        mods_text = ", ".join(added_mods)
+        return True, f"Added {mods_text}{tier_text}{omen_text}{catalyst_text}", manager.item
 
     def _apply_regal_with_omens(
         self, item: CraftableItem, modifier_pool: ModifierPool, base: RegalMechanic
@@ -1691,21 +1874,28 @@ class OmenModifiedMechanic(CraftingMechanic):
             elif "Whittling" in omen.name:
                 force_lowest = True
 
-        # Remove modifier based on omen
+        # Remove modifier based on omen (never remove fractured mods)
         all_mods = manager.item.prefix_mods + manager.item.suffix_mods
+        non_fractured_mods = [m for m in all_mods if not getattr(m, 'is_fractured', False)]
+        non_fractured_prefixes = [m for m in manager.item.prefix_mods if not getattr(m, 'is_fractured', False)]
+        non_fractured_suffixes = [m for m in manager.item.suffix_mods if not getattr(m, 'is_fractured', False)]
 
         if force_lowest:
-            mod_to_replace = min(all_mods, key=lambda m: m.required_ilvl or 0)
+            if not non_fractured_mods:
+                return False, "No non-fractured modifiers to remove", item
+            mod_to_replace = min(non_fractured_mods, key=lambda m: m.required_ilvl or 0)
         elif force_prefix:
-            if not manager.item.prefix_mods:
-                return False, "No prefix modifiers to remove", item
-            mod_to_replace = random.choice(manager.item.prefix_mods)
+            if not non_fractured_prefixes:
+                return False, "No non-fractured prefix modifiers to remove", item
+            mod_to_replace = random.choice(non_fractured_prefixes)
         elif force_suffix:
-            if not manager.item.suffix_mods:
-                return False, "No suffix modifiers to remove", item
-            mod_to_replace = random.choice(manager.item.suffix_mods)
+            if not non_fractured_suffixes:
+                return False, "No non-fractured suffix modifiers to remove", item
+            mod_to_replace = random.choice(non_fractured_suffixes)
         else:
-            mod_to_replace = random.choice(all_mods)
+            if not non_fractured_mods:
+                return False, "No non-fractured modifiers to remove", item
+            mod_to_replace = random.choice(non_fractured_mods)
 
         mod_type_enum = mod_to_replace.mod_type
         mod_type = mod_to_replace.mod_type.value

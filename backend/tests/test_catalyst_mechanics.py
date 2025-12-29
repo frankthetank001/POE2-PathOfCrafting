@@ -19,9 +19,10 @@ from app.schemas.crafting import (
     ItemModifier,
     ItemRarity,
     ModType,
+    OmenInfo,
 )
-from app.services.crafting.mechanics import CatalystMechanic
-from app.services.crafting.omens import OmenOfCatalysingExaltation
+from app.services.crafting.mechanics import CatalystMechanic, OmenModifiedMechanic, ExaltedMechanic, CATALYST_TAG_MAPPING
+from app.services.crafting.omens import OmenFactory, OmenMetadata
 from app.services.crafting.modifier_pool import ModifierPool
 
 
@@ -258,26 +259,22 @@ class TestCatalystTypeReplacement:
 class TestOmenOfCatalysingExaltation:
     """Test Omen of Catalysing Exaltation mechanics."""
 
-    def test_omen_applies_to_exalted_orb(self):
-        """Omen should apply to Exalted Orb currency."""
-        omen = OmenOfCatalysingExaltation()
+    def test_omen_metadata_exists(self):
+        """Omen metadata should exist for Catalysing Exaltation."""
+        omen = OmenFactory.create("Omen of Catalysing Exaltation")
+        assert omen is not None
+        assert omen.affected_currency == "Exalted Orb"
 
-        assert omen.can_apply_to_currency("Exalted Orb") is True
-        assert omen.can_apply_to_currency("Lesser Exalted Orb") is True
-        assert omen.can_apply_to_currency("Greater Exalted Orb") is True
+    def test_omen_applies_to_exalted_orb_variants(self):
+        """Omen should apply to all Exalted Orb variants."""
+        applicable = OmenFactory.get_omens_for_currency("Perfect Exalted Orb")
+        assert "Omen of Catalysing Exaltation" in applicable
 
-    def test_omen_does_not_apply_to_other_currency(self):
-        """Omen should not apply to non-Exalted currencies."""
-        omen = OmenOfCatalysingExaltation()
-
-        assert omen.can_apply_to_currency("Chaos Orb") is False
-        assert omen.can_apply_to_currency("Alchemy Orb") is False
-        assert omen.can_apply_to_currency("Divine Orb") is False
+        applicable = OmenFactory.get_omens_for_currency("Greater Exalted Orb")
+        assert "Omen of Catalysing Exaltation" in applicable
 
     def test_catalyst_tag_mapping_exists(self):
         """All catalyst types should have tag mappings."""
-        omen = OmenOfCatalysingExaltation()
-
         expected_catalyst_types = [
             "flesh", "neural", "carapace", "uul_netol",
             "xoph", "tul", "esh", "chayula",
@@ -285,16 +282,14 @@ class TestOmenOfCatalysingExaltation:
         ]
 
         for catalyst_type in expected_catalyst_types:
-            assert catalyst_type in omen.CATALYST_TAG_MAPPING
-            assert len(omen.CATALYST_TAG_MAPPING[catalyst_type]) > 0
+            assert catalyst_type in CATALYST_TAG_MAPPING
+            assert len(CATALYST_TAG_MAPPING[catalyst_type]) > 0
 
-    def test_weight_multiplier_formula(self, create_jewelry_item, mock_modifier_pool):
+    def test_weight_multiplier_formula(self):
         """Weight multiplier should be 1 + (quality/20) * 10."""
         # At 20% quality: 1 + (20/20) * 10 = 11x
         # At 10% quality: 1 + (10/20) * 10 = 6x
         # At 0% quality: 1x (no boost)
-
-        omen = OmenOfCatalysingExaltation()
 
         # Test the formula directly
         quality_20_multiplier = 1 + (20 / 20.0) * 10.0
@@ -307,55 +302,131 @@ class TestOmenOfCatalysingExaltation:
         assert quality_5_multiplier == 3.5
 
     def test_omen_consumes_catalyst_quality(self, create_jewelry_item, create_test_modifier, mock_modifier_pool):
-        """Omen should consume all catalyst quality when used."""
+        """Omen should consume all catalyst quality when used via OmenModifiedMechanic."""
+        prefix = create_test_modifier("Test Prefix", ModType.PREFIX, tags=["life"])
         item = create_jewelry_item(
             base_category="ring",
             rarity=ItemRarity.RARE,
             catalyst_type="flesh",
             catalyst_quality=15,
-            prefix_mods=[],  # Room for prefix
+            prefix_mods=[prefix],
         )
 
-        omen = OmenOfCatalysingExaltation()
+        # Create omen-wrapped exalted mechanic
+        base_mechanic = ExaltedMechanic({})
+        omen_info = OmenInfo(
+            id=1,
+            name="Omen of Catalysing Exaltation",
+            effect_description="Consumes catalyst quality",
+            affected_currency="Exalted Orb",
+            effect_type="catalysing",
+            stack_size=10,
+        )
+        omen_mechanic = OmenModifiedMechanic(base_mechanic, omen_info)
 
-        # Apply the omen
-        with patch('app.services.crafting.omens.random.choice', return_value="prefix"):
-            with patch('app.services.crafting.omens.random.uniform', return_value=1.0):
-                success, message, result_item = omen.modify_currency_behavior(
-                    item,
-                    lambda i, mp: (True, "Applied", i),
-                    mock_modifier_pool
-                )
+        success, message, result_item = omen_mechanic.apply(item, mock_modifier_pool)
 
         # Check quality was consumed
-        if success:
-            assert result_item.catalyst_quality == 0
-            assert result_item.catalyst_type is None
-            assert "Consumed" in message
+        assert success is True
+        assert result_item.catalyst_quality == 0
+        assert result_item.catalyst_type is None
+        assert "consumed" in message.lower()
 
     def test_omen_works_without_catalyst(self, create_jewelry_item, create_test_modifier, mock_modifier_pool):
-        """Omen should still work on items without catalyst quality."""
+        """Omen should fall back to normal behavior without catalyst quality."""
+        prefix = create_test_modifier("Test Prefix", ModType.PREFIX)
         item = create_jewelry_item(
             base_category="ring",
             rarity=ItemRarity.RARE,
             catalyst_type=None,
             catalyst_quality=0,
-            prefix_mods=[],
+            prefix_mods=[prefix],
         )
 
-        omen = OmenOfCatalysingExaltation()
+        # Create omen-wrapped exalted mechanic
+        base_mechanic = ExaltedMechanic({})
+        omen_info = OmenInfo(
+            id=1,
+            name="Omen of Catalysing Exaltation",
+            effect_description="Consumes catalyst quality",
+            affected_currency="Exalted Orb",
+            effect_type="catalysing",
+            stack_size=10,
+        )
+        omen_mechanic = OmenModifiedMechanic(base_mechanic, omen_info)
 
-        # Apply the omen - it should fall through to normal exalted behavior
-        with patch('app.services.crafting.omens.random.choice', return_value="prefix"):
-            success, message, result_item = omen.modify_currency_behavior(
-                item,
-                lambda i, mp: (True, "Normal exalted applied", i),
-                mock_modifier_pool
-            )
+        success, message, result_item = omen_mechanic.apply(item, mock_modifier_pool)
 
-        # Should still work without catalyst boost
-        # The item still has no catalyst quality since there was none to consume
+        # Should still work, just without catalyst boost
+        assert success is True
         assert result_item.catalyst_quality == 0
+
+    def test_catalysing_with_greater_and_dextral_adds_two_suffixes(self, create_jewelry_item, create_test_modifier):
+        """Catalysing + Greater + Dextral should add TWO suffix mods with boosted weights."""
+        from unittest.mock import Mock
+        from app.services.crafting.modifier_pool import ModifierPool
+
+        prefix = create_test_modifier("Test Prefix", ModType.PREFIX, tags=["life"])
+        item = create_jewelry_item(
+            base_category="ring",
+            rarity=ItemRarity.RARE,
+            catalyst_type="flesh",
+            catalyst_quality=20,
+            prefix_mods=[prefix],
+        )
+
+        # Create suffix mods for the pool
+        suffix1 = create_test_modifier("Suffix1", ModType.SUFFIX, tags=["life"], mod_group="suffix1_group")
+        suffix2 = create_test_modifier("Suffix2", ModType.SUFFIX, tags=["mana"], mod_group="suffix2_group")
+        suffix3 = create_test_modifier("Suffix3", ModType.SUFFIX, tags=["speed"], mod_group="suffix3_group")
+
+        # Create mock that returns suffix mods when suffix is requested
+        modifier_pool = Mock(spec=ModifierPool)
+        modifier_pool.get_eligible_mods = Mock(return_value=[suffix1, suffix2, suffix3])
+
+        # Create omen chain: Catalysing + Greater + Dextral
+        base_mechanic = ExaltedMechanic({})
+
+        # Build omen chain by wrapping multiple times
+        catalysing_omen = OmenInfo(
+            id=1,
+            name="Omen of Catalysing Exaltation",
+            effect_description="Boosts matching mod weights",
+            affected_currency="Exalted Orb",
+            effect_type="catalysing",
+            stack_size=10,
+        )
+        greater_omen = OmenInfo(
+            id=2,
+            name="Omen of Greater Exaltation",
+            effect_description="Adds two mods",
+            affected_currency="Exalted Orb",
+            effect_type="greater",
+            stack_size=10,
+        )
+        dextral_omen = OmenInfo(
+            id=3,
+            name="Omen of Dextral Exaltation",
+            effect_description="Suffix only",
+            affected_currency="Exalted Orb",
+            effect_type="dextral",
+            stack_size=10,
+        )
+
+        # Wrap omens around base mechanic (order matters - inner to outer)
+        omen_mechanic = OmenModifiedMechanic(base_mechanic, catalysing_omen)
+        omen_mechanic = OmenModifiedMechanic(omen_mechanic, greater_omen)
+        omen_mechanic = OmenModifiedMechanic(omen_mechanic, dextral_omen)
+
+        success, message, result_item = omen_mechanic.apply(item, modifier_pool)
+
+        assert success is True, f"Expected success but got: {message}"
+        # Should have original prefix + 2 new suffixes
+        assert len(result_item.prefix_mods) == 1, "Should still have 1 prefix"
+        assert len(result_item.suffix_mods) == 2, f"Should have 2 suffixes, got {len(result_item.suffix_mods)}"
+        assert result_item.catalyst_quality == 0, "Catalyst quality should be consumed"
+        assert result_item.catalyst_type is None, "Catalyst type should be cleared"
+        assert "consumed" in message.lower(), f"Message should mention consumed catalyst: {message}"
 
 
 class TestCatalystTypes:

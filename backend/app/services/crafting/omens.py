@@ -1,1076 +1,219 @@
-from abc import ABC, abstractmethod
-from typing import List, Optional, Tuple, Callable, Any
-from enum import Enum
-import random
+"""
+Omen Data and Metadata
+
+This module provides omen metadata for the API. The actual omen behavior
+is implemented in OmenModifiedMechanic in mechanics.py.
+"""
+
+from typing import Optional, List, Dict, Any
+from dataclasses import dataclass
+
+# Re-export CATALYST_TAG_MAPPING from mechanics for backwards compatibility
+from app.services.crafting.mechanics import CATALYST_TAG_MAPPING
+
+
+@dataclass
+class OmenMetadata:
+    """Metadata about an omen for API responses."""
+    name: str
+    affected_currency: str
+    forces_prefix: bool = False
+    forces_suffix: bool = False
+    required_tag: Optional[str] = None  # For boss-specific omens
+    description: str = ""
+
+
+# All omen metadata - this is the single source of truth
+OMEN_METADATA: Dict[str, OmenMetadata] = {
+    # Exaltation Omens
+    "Omen of Greater Exaltation": OmenMetadata(
+        name="Omen of Greater Exaltation",
+        affected_currency="Exalted Orb",
+        description="Adds TWO random modifiers instead of one"
+    ),
+    "Omen of Sinistral Exaltation": OmenMetadata(
+        name="Omen of Sinistral Exaltation",
+        affected_currency="Exalted Orb",
+        forces_prefix=True,
+        description="Forces addition of prefix modifier only"
+    ),
+    "Omen of Dextral Exaltation": OmenMetadata(
+        name="Omen of Dextral Exaltation",
+        affected_currency="Exalted Orb",
+        forces_suffix=True,
+        description="Forces addition of suffix modifier only"
+    ),
+    "Omen of Homogenising Exaltation": OmenMetadata(
+        name="Omen of Homogenising Exaltation",
+        affected_currency="Exalted Orb",
+        description="Added modifier matches tags of existing modifiers"
+    ),
+    "Omen of Catalysing Exaltation": OmenMetadata(
+        name="Omen of Catalysing Exaltation",
+        affected_currency="Exalted Orb",
+        description="Consumes catalyst quality to boost matching mod weights"
+    ),
+
+    # Coronation Omens (Regal)
+    "Omen of Sinistral Coronation": OmenMetadata(
+        name="Omen of Sinistral Coronation",
+        affected_currency="Regal Orb",
+        forces_prefix=True,
+        description="Forces Regal to add prefix only"
+    ),
+    "Omen of Dextral Coronation": OmenMetadata(
+        name="Omen of Dextral Coronation",
+        affected_currency="Regal Orb",
+        forces_suffix=True,
+        description="Forces Regal to add suffix only"
+    ),
+    "Omen of Homogenising Coronation": OmenMetadata(
+        name="Omen of Homogenising Coronation",
+        affected_currency="Regal Orb",
+        description="Added modifier matches tags of existing modifiers"
+    ),
+
+    # Chaos/Erasure Omens
+    "Omen of Whittling": OmenMetadata(
+        name="Omen of Whittling",
+        affected_currency="Chaos Orb",
+        description="Removes lowest level modifier"
+    ),
+    "Omen of Sinistral Erasure": OmenMetadata(
+        name="Omen of Sinistral Erasure",
+        affected_currency="Chaos Orb",
+        forces_prefix=True,
+        description="Removes only prefix modifiers"
+    ),
+    "Omen of Dextral Erasure": OmenMetadata(
+        name="Omen of Dextral Erasure",
+        affected_currency="Chaos Orb",
+        forces_suffix=True,
+        description="Removes only suffix modifiers"
+    ),
+
+    # Annulment Omens
+    "Omen of Greater Annulment": OmenMetadata(
+        name="Omen of Greater Annulment",
+        affected_currency="Orb of Annulment",
+        description="Removes TWO modifiers instead of one"
+    ),
+    "Omen of Sinistral Annulment": OmenMetadata(
+        name="Omen of Sinistral Annulment",
+        affected_currency="Orb of Annulment",
+        forces_prefix=True,
+        description="Removes only prefix modifiers"
+    ),
+    "Omen of Dextral Annulment": OmenMetadata(
+        name="Omen of Dextral Annulment",
+        affected_currency="Orb of Annulment",
+        forces_suffix=True,
+        description="Removes only suffix modifiers"
+    ),
+
+    # Alchemy Omens
+    "Omen of Sinistral Alchemy": OmenMetadata(
+        name="Omen of Sinistral Alchemy",
+        affected_currency="Orb of Alchemy",
+        forces_prefix=True,
+        description="Results in maximum number of prefix modifiers (3P/1S)"
+    ),
+    "Omen of Dextral Alchemy": OmenMetadata(
+        name="Omen of Dextral Alchemy",
+        affected_currency="Orb of Alchemy",
+        forces_suffix=True,
+        description="Results in maximum number of suffix modifiers (1P/3S)"
+    ),
+
+    # Essence/Crystallisation Omens
+    "Omen of Sinistral Crystallisation": OmenMetadata(
+        name="Omen of Sinistral Crystallisation",
+        affected_currency="Perfect Essence",
+        forces_prefix=True,
+        description="Removes only prefix modifiers when applying essence"
+    ),
+    "Omen of Dextral Crystallisation": OmenMetadata(
+        name="Omen of Dextral Crystallisation",
+        affected_currency="Perfect Essence",
+        forces_suffix=True,
+        description="Removes only suffix modifiers when applying essence"
+    ),
+
+    # Desecration/Necromancy Omens
+    "Omen of Abyssal Echoes": OmenMetadata(
+        name="Omen of Abyssal Echoes",
+        affected_currency="Desecration",
+        description="Can reroll desecrated options once when revealing"
+    ),
+    "Omen of Sinistral Necromancy": OmenMetadata(
+        name="Omen of Sinistral Necromancy",
+        affected_currency="Desecration",
+        forces_prefix=True,
+        description="Adds only prefix desecrated modifiers"
+    ),
+    "Omen of Dextral Necromancy": OmenMetadata(
+        name="Omen of Dextral Necromancy",
+        affected_currency="Desecration",
+        forces_suffix=True,
+        description="Adds only suffix desecrated modifiers"
+    ),
+    "Omen of the Sovereign": OmenMetadata(
+        name="Omen of the Sovereign",
+        affected_currency="Desecration",
+        required_tag="ulaman",
+        description="Guarantees random Ulaman modifier"
+    ),
+    "Omen of the Liege": OmenMetadata(
+        name="Omen of the Liege",
+        affected_currency="Desecration",
+        required_tag="amanamu",
+        description="Guarantees random Amanamu modifier"
+    ),
+    "Omen of the Blackblooded": OmenMetadata(
+        name="Omen of the Blackblooded",
+        affected_currency="Desecration",
+        required_tag="kurgal",
+        description="Guarantees random Kurgal modifier"
+    ),
+    "Omen of Putrefaction": OmenMetadata(
+        name="Omen of Putrefaction",
+        affected_currency="Desecration",
+        description="Increases chance of higher-tier desecrated modifiers"
+    ),
+    "Omen of Light": OmenMetadata(
+        name="Omen of Light",
+        affected_currency="Orb of Annulment",
+        description="Only removes desecrated modifiers"
+    ),
+
+    # Corruption Omen
+    "Omen of Corruption": OmenMetadata(
+        name="Omen of Corruption",
+        affected_currency="Vaal Orb",
+        description="Always results in change (removes 'no change' outcome)"
+    ),
+}
 
-from app.schemas.crafting import CraftableItem, ItemModifier, ItemRarity, ModType
-from app.services.crafting.item_state import ItemStateManager
-from app.services.crafting.modifier_pool import ModifierPool
-from app.services.crafting.constants import HIDDEN_TAGS_FOR_HOMOGENISING
-from app.core.logging import get_logger
-
-logger = get_logger(__name__)
-
-
-class OmenCategory(str, Enum):
-    """Categories of omens based on their visual color/type."""
-    YELLOW = "yellow"      # Exaltation omens
-    RED = "red"            # Coronation omens
-    PURPLE = "purple"      # Annulment omens
-    DARK = "dark"          # Erasure/Whittling omens
-    GREEN = "green"        # Alchemy omens
-    CORRUPTION = "corruption"  # Vaal-related omens
-
-
-class OmenTarget(str, Enum):
-    """What the omen targets."""
-    PREFIX = "prefix"
-    SUFFIX = "suffix"
-    ANY = "any"
-    LOWEST_LEVEL = "lowest_level"
-
-
-class BaseOmen(ABC):
-    """Base class for all omens."""
-
-    def __init__(self, name: str, category: OmenCategory, rarity: str = "rare"):
-        self.name = name
-        self.category = category
-        self.rarity = rarity
-        self.tribute_cost = self._calculate_tribute_cost()
-
-    def _calculate_tribute_cost(self) -> int:
-        """Calculate Ritual tribute cost (200-500 range)."""
-        cost_by_category = {
-            OmenCategory.DARK: 200,
-            OmenCategory.GREEN: 250,
-            OmenCategory.YELLOW: 300,
-            OmenCategory.RED: 350,
-            OmenCategory.PURPLE: 400,
-            OmenCategory.CORRUPTION: 450,
-        }
-        return cost_by_category.get(self.category, 300)
-
-    @abstractmethod
-    def can_apply_to_currency(self, currency_name: str) -> bool:
-        """Check if this omen can modify the given currency type."""
-        pass
-
-    @abstractmethod
-    def modify_currency_behavior(
-        self,
-        item: CraftableItem,
-        currency_apply_func: Callable,
-        modifier_pool: ModifierPool
-    ) -> Tuple[bool, str, CraftableItem]:
-        """Modify the currency's behavior when applied to an item."""
-        pass
-
-    def get_description(self) -> str:
-        """Get human-readable description of omen effect."""
-        return f"{self.name} - {self.category.value}"
-
-
-# ===== REMOVAL OMENS =====
-
-class OmenOfWhittling(BaseOmen):
-    """Remove the lowest level modifier."""
-
-    def __init__(self):
-        super().__init__("Omen of Whittling", OmenCategory.DARK)
-
-    def can_apply_to_currency(self, currency_name: str) -> bool:
-        # Can be used with any removal-capable currency (Chaos, Annulment)
-        removal_currencies = ["Chaos Orb", "Greater Chaos Orb", "Perfect Chaos Orb"]
-        return currency_name in removal_currencies
-
-    def modify_currency_behavior(
-        self,
-        item: CraftableItem,
-        currency_apply_func: Callable,
-        modifier_pool: ModifierPool
-    ) -> Tuple[bool, str, CraftableItem]:
-        """Remove lowest level modifier before applying currency."""
-
-        if item.total_explicit_mods == 0:
-            return False, "No modifiers to remove", item
-
-        # Find lowest level modifier (exclude fractured mods)
-        all_mods = item.prefix_mods + item.suffix_mods
-        removable_mods = [mod for mod in all_mods if not mod.is_fractured]
-
-        if not removable_mods:
-            return False, "No modifiers available to remove (all are fractured)", item
-
-        lowest_mod = min(removable_mods, key=lambda m: m.required_ilvl or 0)
-
-        # Remove it
-        manager = ItemStateManager(item)
-        if lowest_mod in item.prefix_mods:
-            mod_index = item.prefix_mods.index(lowest_mod)
-            manager.remove_modifier(ModType.PREFIX, mod_index)
-        else:
-            mod_index = item.suffix_mods.index(lowest_mod)
-            manager.remove_modifier(ModType.SUFFIX, mod_index)
-
-        # Now apply the original currency
-        return currency_apply_func(item, modifier_pool)
-
-
-class OmenOfSinistralErasure(BaseOmen):
-    """Remove only prefix modifiers."""
-
-    def __init__(self):
-        super().__init__("Omen of Sinistral Erasure", OmenCategory.DARK)
-
-    def can_apply_to_currency(self, currency_name: str) -> bool:
-        removal_currencies = ["Chaos Orb", "Greater Chaos Orb", "Perfect Chaos Orb"]
-        return currency_name in removal_currencies
-
-    def modify_currency_behavior(
-        self,
-        item: CraftableItem,
-        currency_apply_func: Callable,
-        modifier_pool: ModifierPool
-    ) -> Tuple[bool, str, CraftableItem]:
-        """Force removal to target only prefixes."""
-
-        if not item.prefix_mods:
-            return False, "No prefix modifiers to remove", item
-
-        # Remove a random prefix (exclude fractured)
-        removable_prefixes = [mod for mod in item.prefix_mods if not mod.is_fractured]
-
-        if not removable_prefixes:
-            return False, "No prefix modifiers available to remove (all are fractured)", item
-
-        manager = ItemStateManager(item)
-        prefix_to_remove = random.choice(removable_prefixes)
-        mod_index = item.prefix_mods.index(prefix_to_remove)
-        manager.remove_modifier(ModType.PREFIX, mod_index)
-
-        # Apply currency for addition
-        return currency_apply_func(item, modifier_pool)
-
-
-class OmenOfDextralErasure(BaseOmen):
-    """Remove only suffix modifiers."""
-
-    def __init__(self):
-        super().__init__("Omen of Dextral Erasure", OmenCategory.DARK)
-
-    def can_apply_to_currency(self, currency_name: str) -> bool:
-        removal_currencies = ["Chaos Orb", "Greater Chaos Orb", "Perfect Chaos Orb"]
-        return currency_name in removal_currencies
-
-    def modify_currency_behavior(
-        self,
-        item: CraftableItem,
-        currency_apply_func: Callable,
-        modifier_pool: ModifierPool
-    ) -> Tuple[bool, str, CraftableItem]:
-        """Force removal to target only suffixes."""
-
-        if not item.suffix_mods:
-            return False, "No suffix modifiers to remove", item
-
-        # Remove a random suffix (exclude fractured)
-        removable_suffixes = [mod for mod in item.suffix_mods if not mod.is_fractured]
-
-        if not removable_suffixes:
-            return False, "No suffix modifiers available to remove (all are fractured)", item
-
-        manager = ItemStateManager(item)
-        suffix_to_remove = random.choice(removable_suffixes)
-        mod_index = item.suffix_mods.index(suffix_to_remove)
-        manager.remove_modifier(ModType.SUFFIX, mod_index)
-
-        # Apply currency for addition
-        return currency_apply_func(item, modifier_pool)
-
-
-class OmenOfGreaterAnnulment(BaseOmen):
-    """Remove two modifiers."""
-
-    def __init__(self):
-        super().__init__("Omen of Greater Annulment", OmenCategory.PURPLE)
-
-    def can_apply_to_currency(self, currency_name: str) -> bool:
-        # Works with Chaos Orb primarily
-        return "Chaos" in currency_name or "Annulment" in currency_name
-
-    def modify_currency_behavior(
-        self,
-        item: CraftableItem,
-        currency_apply_func: Callable,
-        modifier_pool: ModifierPool
-    ) -> Tuple[bool, str, CraftableItem]:
-        """Remove two random modifiers."""
-
-        if item.total_explicit_mods < 2:
-            return False, "Need at least 2 modifiers to remove", item
-
-        manager = ItemStateManager(item)
-        all_mods = item.prefix_mods + item.suffix_mods
-        removable_mods = [mod for mod in all_mods if not mod.is_fractured]
-
-        if len(removable_mods) < 2:
-            return False, "Need at least 2 non-fractured modifiers to remove", item
-
-        # Remove two random modifiers
-        mods_to_remove = random.sample(removable_mods, 2)
-        for mod in mods_to_remove:
-            if mod in item.prefix_mods:
-                mod_index = item.prefix_mods.index(mod)
-                manager.remove_modifier(ModType.PREFIX, mod_index)
-            else:
-                mod_index = item.suffix_mods.index(mod)
-                manager.remove_modifier(ModType.SUFFIX, mod_index)
-
-        # Apply currency for addition
-        return currency_apply_func(item, modifier_pool)
-
-
-class OmenOfSinistralAnnulment(BaseOmen):
-    """Remove only prefix modifiers (Annulment variant)."""
-
-    def __init__(self):
-        super().__init__("Omen of Sinistral Annulment", OmenCategory.PURPLE)
-
-    def can_apply_to_currency(self, currency_name: str) -> bool:
-        return "Chaos" in currency_name or "Annulment" in currency_name
-
-    def modify_currency_behavior(
-        self,
-        item: CraftableItem,
-        currency_apply_func: Callable,
-        modifier_pool: ModifierPool
-    ) -> Tuple[bool, str, CraftableItem]:
-        """Remove only prefix modifiers."""
-        return OmenOfSinistralErasure().modify_currency_behavior(item, currency_apply_func, modifier_pool)
-
-
-class OmenOfDextralAnnulment(BaseOmen):
-    """Remove only suffix modifiers (Annulment variant)."""
-
-    def __init__(self):
-        super().__init__("Omen of Dextral Annulment", OmenCategory.PURPLE)
-
-    def can_apply_to_currency(self, currency_name: str) -> bool:
-        return "Chaos" in currency_name or "Annulment" in currency_name
-
-    def modify_currency_behavior(
-        self,
-        item: CraftableItem,
-        currency_apply_func: Callable,
-        modifier_pool: ModifierPool
-    ) -> Tuple[bool, str, CraftableItem]:
-        """Remove only suffix modifiers."""
-        return OmenOfDextralErasure().modify_currency_behavior(item, currency_apply_func, modifier_pool)
-
-
-# ===== ADDITION OMENS (EXALTATION) =====
-
-class OmenOfGreaterExaltation(BaseOmen):
-    """Add two random modifiers instead of one."""
-
-    def __init__(self):
-        super().__init__("Omen of Greater Exaltation", OmenCategory.YELLOW)
-
-    def can_apply_to_currency(self, currency_name: str) -> bool:
-        return "Exalted" in currency_name
-
-    def modify_currency_behavior(
-        self,
-        item: CraftableItem,
-        currency_apply_func: Callable,
-        modifier_pool: ModifierPool
-    ) -> Tuple[bool, str, CraftableItem]:
-        """Add two modifiers instead of one."""
-
-        if item.total_explicit_mods >= 6:
-            return False, "Item already has maximum modifiers", item
-
-        manager = ItemStateManager(item)
-        added_mods = []
-
-        # Add two modifiers
-        for i in range(2):
-            if item.total_explicit_mods >= 6:
-                break
-
-            # Determine which type to add
-            available_types = []
-            if item.can_add_prefix:
-                available_types.append("prefix")
-            if item.can_add_suffix:
-                available_types.append("suffix")
-
-            if not available_types:
-                break
-
-            mod_type = random.choice(available_types)
-            new_mod = modifier_pool.roll_random_modifier(
-                mod_type, item.base_category, item.item_level
-            )
-
-            if new_mod and manager.add_modifier(new_mod):
-                added_mods.append(new_mod.name)
-
-        if added_mods:
-            return True, f"Added {len(added_mods)} modifiers: {', '.join(added_mods)}", item
-        else:
-            return False, "Failed to add modifiers", item
-
-
-class OmenOfSinistralExaltation(BaseOmen):
-    """Add only prefix modifiers."""
-
-    def __init__(self):
-        super().__init__("Omen of Sinistral Exaltation", OmenCategory.YELLOW)
-
-    def can_apply_to_currency(self, currency_name: str) -> bool:
-        return "Exalted" in currency_name
-
-    def modify_currency_behavior(
-        self,
-        item: CraftableItem,
-        currency_apply_func: Callable,
-        modifier_pool: ModifierPool
-    ) -> Tuple[bool, str, CraftableItem]:
-        """Force addition of prefix only."""
-
-        if not item.can_add_prefix:
-            return False, "No room for prefix modifiers", item
-
-        manager = ItemStateManager(item)
-        new_mod = modifier_pool.roll_random_modifier(
-            "prefix", item.base_category, item.item_level
-        )
-
-        if new_mod and manager.add_modifier(new_mod):
-            return True, f"Added prefix: {new_mod.name}", item
-        else:
-            return False, "Failed to add prefix modifier", item
-
-
-class OmenOfDextralExaltation(BaseOmen):
-    """Add only suffix modifiers."""
-
-    def __init__(self):
-        super().__init__("Omen of Dextral Exaltation", OmenCategory.YELLOW)
-
-    def can_apply_to_currency(self, currency_name: str) -> bool:
-        return "Exalted" in currency_name
-
-    def modify_currency_behavior(
-        self,
-        item: CraftableItem,
-        currency_apply_func: Callable,
-        modifier_pool: ModifierPool
-    ) -> Tuple[bool, str, CraftableItem]:
-        """Force addition of suffix only."""
-
-        if not item.can_add_suffix:
-            return False, "No room for suffix modifiers", item
-
-        manager = ItemStateManager(item)
-        new_mod = modifier_pool.roll_random_modifier(
-            "suffix", item.base_category, item.item_level
-        )
-
-        if new_mod and manager.add_modifier(new_mod):
-            return True, f"Added suffix: {new_mod.name}", item
-        else:
-            return False, "Failed to add suffix modifier", item
-
-
-class OmenOfCatalysingExaltation(BaseOmen):
-    """Exalted Orb consumes Catalyst Quality to increase modifier chance.
-
-    Consumes ALL catalyst quality from jewelry and boosts the weight of mods
-    matching the catalyst's mod category (life, attack, etc.).
-    """
-
-    # Mapping of catalyst types to their matching mod tags
-    CATALYST_TAG_MAPPING = {
-        "flesh": ["life", "maximum_life"],
-        "neural": ["mana", "maximum_mana", "resource"],
-        "carapace": ["defences", "armour", "evasion", "energy_shield"],
-        "uul_netol": ["physical", "physical_damage"],
-        "xoph": ["fire", "fire_damage"],
-        "tul": ["cold", "cold_damage"],
-        "esh": ["lightning", "lightning_damage"],
-        "chayula": ["chaos", "chaos_damage"],
-        "reaver": ["attack"],
-        "sibilant": ["caster", "spell"],
-        "skittering": ["speed", "attack_speed", "cast_speed"],
-        "adaptive": ["attribute", "strength", "dexterity", "intelligence"],
-    }
-
-    def __init__(self):
-        super().__init__("Omen of Catalysing Exaltation", OmenCategory.YELLOW)
-
-    def can_apply_to_currency(self, currency_name: str) -> bool:
-        return "Exalted" in currency_name
-
-    def modify_currency_behavior(
-        self,
-        item: CraftableItem,
-        currency_apply_func: Callable,
-        modifier_pool: ModifierPool
-    ) -> Tuple[bool, str, CraftableItem]:
-        """Add modifier with increased chance for mods matching catalyst type."""
-
-        manager = ItemStateManager(item)
-
-        # Determine which type to add
-        available_types = []
-        if item.can_add_prefix:
-            available_types.append("prefix")
-        if item.can_add_suffix:
-            available_types.append("suffix")
-
-        if not available_types:
-            return False, "No space for additional modifiers", item
-
-        mod_type = random.choice(available_types)
-
-        # Check if item has catalyst quality to consume
-        has_catalyst = item.catalyst_type and item.catalyst_quality > 0
-        catalyst_tags = []
-        weight_multiplier = 1.0
-
-        if has_catalyst:
-            # Get matching tags for this catalyst type
-            catalyst_tags = self.CATALYST_TAG_MAPPING.get(item.catalyst_type, [])
-            # Calculate weight multiplier based on catalyst quality
-            # Formula: 1 + (quality / 20) * 10, so 20% quality = 11x weight
-            weight_multiplier = 1 + (item.catalyst_quality / 20.0) * 10.0
-
-        if catalyst_tags:
-            # Get eligible mods
-            eligible_mods = modifier_pool.get_eligible_mods(
-                item.base_category, item.item_level, mod_type, item
-            )
-
-            # Build weighted list based on catalyst tag matching
-            weighted_entries = []
-            for mod in eligible_mods:
-                base_weight = int(mod.weight) if isinstance(mod.weight, str) else mod.weight
-                if mod.tags and any(tag in catalyst_tags for tag in mod.tags):
-                    # Multiply weight by catalyst boost
-                    weighted_entries.append((mod, base_weight * weight_multiplier))
-                else:
-                    weighted_entries.append((mod, base_weight))
-
-            if weighted_entries:
-                # Weighted random selection
-                total_weight = sum(w for _, w in weighted_entries)
-                if total_weight > 0:
-                    rand_value = random.uniform(0, total_weight)
-                    cumulative = 0
-                    selected_mod = weighted_entries[-1][0]  # Default fallback
-                    for mod, weight in weighted_entries:
-                        cumulative += weight
-                        if rand_value <= cumulative:
-                            selected_mod = mod
-                            break
-
-                    # CONSUME the catalyst quality
-                    consumed_quality = item.catalyst_quality
-                    consumed_type = item.catalyst_type
-                    manager.item.catalyst_quality = 0
-                    manager.item.catalyst_type = None
-
-                    if manager.add_modifier(selected_mod):
-                        return True, f"Consumed {consumed_quality}% {consumed_type} quality, added {mod_type}: {selected_mod.name}", manager.item
-
-        # Fallback to normal behavior (no catalyst or no matching mods)
-        new_mod = modifier_pool.roll_random_modifier(
-            mod_type, item.base_category, item.item_level, item=item
-        )
-
-        if new_mod and manager.add_modifier(new_mod):
-            return True, f"Added {mod_type}: {new_mod.name}", manager.item
-        else:
-            return False, "Failed to add modifier", item
-
-
-# ===== CORONATION OMENS (REGAL ORB) =====
-
-class OmenOfSinistralCoronation(BaseOmen):
-    """Add only prefix modifiers (for Regal Orb)."""
-
-    def __init__(self):
-        super().__init__("Omen of Sinistral Coronation", OmenCategory.RED)
-
-    def can_apply_to_currency(self, currency_name: str) -> bool:
-        return "Regal" in currency_name
-
-    def modify_currency_behavior(
-        self,
-        item: CraftableItem,
-        currency_apply_func: Callable,
-        modifier_pool: ModifierPool
-    ) -> Tuple[bool, str, CraftableItem]:
-        """Force Regal to add prefix only."""
-
-        if item.rarity != ItemRarity.MAGIC:
-            return False, "Omen of Coronation requires Magic item", item
-
-        manager = ItemStateManager(item)
-        manager.upgrade_rarity(ItemRarity.RARE)
-
-        new_mod = modifier_pool.roll_random_modifier(
-            "prefix", item.base_category, item.item_level
-        )
-
-        if new_mod and manager.add_modifier(new_mod):
-            return True, f"Upgraded to Rare and added prefix: {new_mod.name}", item
-        else:
-            return False, "Failed to add prefix modifier", item
-
-
-class OmenOfDextralCoronation(BaseOmen):
-    """Add only suffix modifiers (for Regal Orb)."""
-
-    def __init__(self):
-        super().__init__("Omen of Dextral Coronation", OmenCategory.RED)
-
-    def can_apply_to_currency(self, currency_name: str) -> bool:
-        return "Regal" in currency_name
-
-    def modify_currency_behavior(
-        self,
-        item: CraftableItem,
-        currency_apply_func: Callable,
-        modifier_pool: ModifierPool
-    ) -> Tuple[bool, str, CraftableItem]:
-        """Force Regal to add suffix only."""
-
-        if item.rarity != ItemRarity.MAGIC:
-            return False, "Omen of Coronation requires Magic item", item
-
-        manager = ItemStateManager(item)
-        manager.upgrade_rarity(ItemRarity.RARE)
-
-        new_mod = modifier_pool.roll_random_modifier(
-            "suffix", item.base_category, item.item_level
-        )
-
-        if new_mod and manager.add_modifier(new_mod):
-            return True, f"Upgraded to Rare and added suffix: {new_mod.name}", item
-        else:
-            return False, "Failed to add suffix modifier", item
-
-
-# ===== ALCHEMY OMENS =====
-
-class OmenOfSinistralAlchemy(BaseOmen):
-    """Result in maximum number of prefix modifiers."""
-
-    def __init__(self):
-        super().__init__("Omen of Sinistral Alchemy", OmenCategory.GREEN)
-
-    def can_apply_to_currency(self, currency_name: str) -> bool:
-        return "Alchemy" in currency_name
-
-    def modify_currency_behavior(
-        self,
-        item: CraftableItem,
-        currency_apply_func: Callable,
-        modifier_pool: ModifierPool
-    ) -> Tuple[bool, str, CraftableItem]:
-        """Create rare with maximum prefixes (3 prefixes)."""
-
-        if item.rarity != ItemRarity.NORMAL:
-            return False, "Alchemy requires Normal item", item
-
-        manager = ItemStateManager(item)
-        manager.upgrade_rarity(ItemRarity.RARE)
-
-        # Add 3 prefixes
-        added_prefixes = []
-        for _ in range(3):
-            new_mod = modifier_pool.roll_random_modifier(
-                "prefix", item.base_category, item.item_level
-            )
-            if new_mod and manager.add_modifier(new_mod):
-                added_prefixes.append(new_mod.name)
-
-        # Add 1 suffix for typical 4-mod rare
-        suffix_mod = modifier_pool.roll_random_modifier(
-            "suffix", item.base_category, item.item_level
-        )
-        if suffix_mod:
-            manager.add_modifier(suffix_mod)
-
-        return True, f"Created Rare with {len(added_prefixes)} prefixes", item
-
-
-class OmenOfDextralAlchemy(BaseOmen):
-    """Result in maximum number of suffix modifiers."""
-
-    def __init__(self):
-        super().__init__("Omen of Dextral Alchemy", OmenCategory.GREEN)
-
-    def can_apply_to_currency(self, currency_name: str) -> bool:
-        return "Alchemy" in currency_name
-
-    def modify_currency_behavior(
-        self,
-        item: CraftableItem,
-        currency_apply_func: Callable,
-        modifier_pool: ModifierPool
-    ) -> Tuple[bool, str, CraftableItem]:
-        """Create rare with maximum suffixes (3 suffixes)."""
-
-        if item.rarity != ItemRarity.NORMAL:
-            return False, "Alchemy requires Normal item", item
-
-        manager = ItemStateManager(item)
-        manager.upgrade_rarity(ItemRarity.RARE)
-
-        # Add 3 suffixes
-        added_suffixes = []
-        for _ in range(3):
-            new_mod = modifier_pool.roll_random_modifier(
-                "suffix", item.base_category, item.item_level
-            )
-            if new_mod and manager.add_modifier(new_mod):
-                added_suffixes.append(new_mod.name)
-
-        # Add 1 prefix for typical 4-mod rare
-        prefix_mod = modifier_pool.roll_random_modifier(
-            "prefix", item.base_category, item.item_level
-        )
-        if prefix_mod:
-            manager.add_modifier(prefix_mod)
-
-        return True, f"Created Rare with {len(added_suffixes)} suffixes", item
-
-
-# ===== DESECRATION OMENS =====
-
-class OmenOfAbyssalEchoes(BaseOmen):
-    """Can reroll desecrated options once when revealing."""
-
-    def __init__(self):
-        super().__init__("Omen of Abyssal Echoes", OmenCategory.DARK)
-
-    def can_apply_to_currency(self, currency_name: str) -> bool:
-        # Works with all bone currencies (desecration)
-        return "bone" in currency_name.lower() or "Jawbone" in currency_name or "Rib" in currency_name or "Collarbone" in currency_name
-
-    def modify_currency_behavior(
-        self,
-        item: CraftableItem,
-        currency_apply_func: Callable,
-        modifier_pool: ModifierPool
-    ) -> Tuple[bool, str, CraftableItem]:
-        """Allow reroll of desecrated options (simulation: try twice, pick best)."""
-        # Simulate by rolling twice and picking better result
-        result1 = currency_apply_func(item.model_copy(), modifier_pool)
-        result2 = currency_apply_func(item.model_copy(), modifier_pool)
-
-        # Pick the result with more mods or better quality
-        if result1[0] and result2[0]:
-            item1 = result1[2]
-            item2 = result2[2]
-            if item2.total_explicit_mods > item1.total_explicit_mods:
-                return True, "Rerolled desecrated options (better result)", item2
-            return True, "Rerolled desecrated options", item1
-        elif result1[0]:
-            return result1
-        return result2
-
-
-class OmenOfSinistralNecromancy(BaseOmen):
-    """Adds only prefix desecrated modifiers."""
-
-    def __init__(self):
-        super().__init__("Omen of Sinistral Necromancy", OmenCategory.DARK)
-
-    def can_apply_to_currency(self, currency_name: str) -> bool:
-        return "bone" in currency_name.lower() or "Jawbone" in currency_name or "Rib" in currency_name or "Collarbone" in currency_name
-
-    def modify_currency_behavior(
-        self,
-        item: CraftableItem,
-        currency_apply_func: Callable,
-        modifier_pool: ModifierPool
-    ) -> Tuple[bool, str, CraftableItem]:
-        """Force desecration to add prefix only."""
-
-        if not item.can_add_prefix:
-            return False, "No room for prefix modifiers", item
-
-        # Get desecrated prefix mods only
-        desecrated_mods = modifier_pool.get_desecrated_only_mods(
-            item.base_category, "prefix", item.item_level, item
-        )
-
-        if not desecrated_mods:
-            return False, "No desecrated prefix modifiers available", item
-
-        manager = ItemStateManager(item)
-        selected_mod = modifier_pool._weighted_random_choice(desecrated_mods)
-
-        if selected_mod and manager.add_modifier(selected_mod):
-            return True, f"Added desecrated prefix: {selected_mod.name}", item
-        return False, "Failed to add desecrated prefix", item
-
-
-class OmenOfDextralNecromancy(BaseOmen):
-    """Adds only suffix desecrated modifiers."""
-
-    def __init__(self):
-        super().__init__("Omen of Dextral Necromancy", OmenCategory.DARK)
-
-    def can_apply_to_currency(self, currency_name: str) -> bool:
-        return "bone" in currency_name.lower() or "Jawbone" in currency_name or "Rib" in currency_name or "Collarbone" in currency_name
-
-    def modify_currency_behavior(
-        self,
-        item: CraftableItem,
-        currency_apply_func: Callable,
-        modifier_pool: ModifierPool
-    ) -> Tuple[bool, str, CraftableItem]:
-        """Force desecration to add suffix only."""
-
-        if not item.can_add_suffix:
-            return False, "No room for suffix modifiers", item
-
-        # Get desecrated suffix mods only
-        desecrated_mods = modifier_pool.get_desecrated_only_mods(
-            item.base_category, "suffix", item.item_level, item
-        )
-
-        if not desecrated_mods:
-            return False, "No desecrated suffix modifiers available", item
-
-        manager = ItemStateManager(item)
-        selected_mod = modifier_pool._weighted_random_choice(desecrated_mods)
-
-        if selected_mod and manager.add_modifier(selected_mod):
-            return True, f"Added desecrated suffix: {selected_mod.name}", item
-        return False, "Failed to add desecrated suffix", item
-
-
-class OmenOfTheSovereign(BaseOmen):
-    """Guarantees random Ulaman modifier."""
-
-    def __init__(self):
-        super().__init__("Omen of the Sovereign", OmenCategory.DARK)
-        self.required_tag = "ulaman"
-
-    def can_apply_to_currency(self, currency_name: str) -> bool:
-        return "bone" in currency_name.lower() or "Jawbone" in currency_name or "Rib" in currency_name or "Collarbone" in currency_name
-
-    def modify_currency_behavior(
-        self,
-        item: CraftableItem,
-        currency_apply_func: Callable,
-        modifier_pool: ModifierPool
-    ) -> Tuple[bool, str, CraftableItem]:
-        """Add a random Ulaman-tagged desecrated modifier."""
-
-        if not item.has_open_affix:
-            return False, "No room for modifiers", item
-
-        # Get all desecrated mods with ulaman tag
-        all_desecrated_prefix = modifier_pool.get_desecrated_only_mods(
-            item.base_category, "prefix", item.item_level, item
-        )
-        all_desecrated_suffix = modifier_pool.get_desecrated_only_mods(
-            item.base_category, "suffix", item.item_level, item
-        )
-
-        ulaman_mods = [m for m in (all_desecrated_prefix + all_desecrated_suffix)
-                       if m.tags and self.required_tag in m.tags]
-
-        if not ulaman_mods:
-            return False, f"No {self.required_tag} desecrated modifiers available", item
-
-        manager = ItemStateManager(item)
-        selected_mod = modifier_pool._weighted_random_choice(ulaman_mods)
-
-        if selected_mod and manager.add_modifier(selected_mod):
-            return True, f"Added Ulaman modifier: {selected_mod.name}", item
-        return False, "Failed to add Ulaman modifier", item
-
-
-class OmenOfTheLiege(BaseOmen):
-    """Guarantees random Amanamu modifier."""
-
-    def __init__(self):
-        super().__init__("Omen of the Liege", OmenCategory.DARK)
-        self.required_tag = "amanamu"
-
-    def can_apply_to_currency(self, currency_name: str) -> bool:
-        return "bone" in currency_name.lower() or "Jawbone" in currency_name or "Rib" in currency_name or "Collarbone" in currency_name
-
-    def modify_currency_behavior(
-        self,
-        item: CraftableItem,
-        currency_apply_func: Callable,
-        modifier_pool: ModifierPool
-    ) -> Tuple[bool, str, CraftableItem]:
-        """Add a random Amanamu-tagged desecrated modifier."""
-
-        if not item.has_open_affix:
-            return False, "No room for modifiers", item
-
-        # Get all desecrated mods with amanamu tag
-        all_desecrated_prefix = modifier_pool.get_desecrated_only_mods(
-            item.base_category, "prefix", item.item_level, item
-        )
-        all_desecrated_suffix = modifier_pool.get_desecrated_only_mods(
-            item.base_category, "suffix", item.item_level, item
-        )
-
-        amanamu_mods = [m for m in (all_desecrated_prefix + all_desecrated_suffix)
-                        if m.tags and self.required_tag in m.tags]
-
-        if not amanamu_mods:
-            return False, f"No {self.required_tag} desecrated modifiers available", item
-
-        manager = ItemStateManager(item)
-        selected_mod = modifier_pool._weighted_random_choice(amanamu_mods)
-
-        if selected_mod and manager.add_modifier(selected_mod):
-            return True, f"Added Amanamu modifier: {selected_mod.name}", item
-        return False, "Failed to add Amanamu modifier", item
-
-
-class OmenOfTheBlackblooded(BaseOmen):
-    """Guarantees random Kurgal modifier."""
-
-    def __init__(self):
-        super().__init__("Omen of the Blackblooded", OmenCategory.DARK)
-        self.required_tag = "kurgal"
-
-    def can_apply_to_currency(self, currency_name: str) -> bool:
-        return "bone" in currency_name.lower() or "Jawbone" in currency_name or "Rib" in currency_name or "Collarbone" in currency_name
-
-    def modify_currency_behavior(
-        self,
-        item: CraftableItem,
-        currency_apply_func: Callable,
-        modifier_pool: ModifierPool
-    ) -> Tuple[bool, str, CraftableItem]:
-        """Add a random Kurgal-tagged desecrated modifier."""
-
-        if not item.has_open_affix:
-            return False, "No room for modifiers", item
-
-        # Get all desecrated mods with kurgal tag
-        all_desecrated_prefix = modifier_pool.get_desecrated_only_mods(
-            item.base_category, "prefix", item.item_level, item
-        )
-        all_desecrated_suffix = modifier_pool.get_desecrated_only_mods(
-            item.base_category, "suffix", item.item_level, item
-        )
-
-        kurgal_mods = [m for m in (all_desecrated_prefix + all_desecrated_suffix)
-                       if m.tags and self.required_tag in m.tags]
-
-        if not kurgal_mods:
-            return False, f"No {self.required_tag} desecrated modifiers available", item
-
-        manager = ItemStateManager(item)
-        selected_mod = modifier_pool._weighted_random_choice(kurgal_mods)
-
-        if selected_mod and manager.add_modifier(selected_mod):
-            return True, f"Added Kurgal modifier: {selected_mod.name}", item
-        return False, "Failed to add Kurgal modifier", item
-
-
-# ===== CORRUPTION OMENS =====
-
-class OmenOfCorruption(BaseOmen):
-    """Always result in change (removes 'no change' outcome from Vaal Orb)."""
-
-    def __init__(self):
-        super().__init__("Omen of Corruption", OmenCategory.CORRUPTION)
-
-    def can_apply_to_currency(self, currency_name: str) -> bool:
-        return "Vaal" in currency_name
-
-    def modify_currency_behavior(
-        self,
-        item: CraftableItem,
-        currency_apply_func: Callable,
-        modifier_pool: ModifierPool
-    ) -> Tuple[bool, str, CraftableItem]:
-        """
-        Force Vaal Orb to always change the item.
-        Normal: 25% each (no change, enchant, socket/quality, reroll)
-        With Omen: 33.3% each (enchant, socket/quality, reroll) - no "no change"
-        """
-
-        # Vaal Orb outcomes (excluding "no change")
-        outcomes = ["add_implicit", "modify_sockets", "reroll_values"]
-        chosen_outcome = random.choice(outcomes)
-
-        item.corrupted = True
-
-        if chosen_outcome == "add_implicit":
-            # Add a corruption implicit (simplified)
-            return True, "Corrupted: Added corruption implicit modifier", item
-
-        elif chosen_outcome == "modify_sockets":
-            # Modify sockets or quality (simplified)
-            quality_change = random.randint(-5, 10)
-            item.quality = max(0, min(23, item.quality + quality_change))
-            return True, f"Corrupted: Quality changed to {item.quality}%", item
-
-        elif chosen_outcome == "reroll_values":
-            # Reroll all modifier values (rounded to integers)
-            rerolled = 0
-            for mod in item.prefix_mods + item.suffix_mods:
-                if mod.stat_ranges and len(mod.stat_ranges) > 0:
-                    mod.current_values = [
-                        round(random.uniform(stat_range.min, stat_range.max))
-                        for stat_range in mod.stat_ranges
-                    ]
-                    mod.current_value = mod.current_values[0]
-                    rerolled += 1
-                elif mod.stat_min is not None and mod.stat_max is not None:
-                    mod.current_value = round(random.uniform(mod.stat_min, mod.stat_max))
-                    rerolled += 1
-
-            return True, f"Corrupted: Rerolled {rerolled} modifier values", item
-
-        return True, "Item corrupted", item
-
-
-# ===== OMEN FACTORY =====
 
 class OmenFactory:
-    """Factory for creating omen instances."""
-
-    _omens = {
-        # Removal Omens
-        "Omen of Whittling": OmenOfWhittling,
-        "Omen of Sinistral Erasure": OmenOfSinistralErasure,
-        "Omen of Dextral Erasure": OmenOfDextralErasure,
-        "Omen of Greater Annulment": OmenOfGreaterAnnulment,
-        "Omen of Sinistral Annulment": OmenOfSinistralAnnulment,
-        "Omen of Dextral Annulment": OmenOfDextralAnnulment,
-
-        # Addition Omens (Exaltation)
-        "Omen of Greater Exaltation": OmenOfGreaterExaltation,
-        "Omen of Sinistral Exaltation": OmenOfSinistralExaltation,
-        "Omen of Dextral Exaltation": OmenOfDextralExaltation,
-        "Omen of Catalysing Exaltation": OmenOfCatalysingExaltation,
-
-        # Coronation Omens (Regal)
-        "Omen of Sinistral Coronation": OmenOfSinistralCoronation,
-        "Omen of Dextral Coronation": OmenOfDextralCoronation,
-
-        # Alchemy Omens
-        "Omen of Sinistral Alchemy": OmenOfSinistralAlchemy,
-        "Omen of Dextral Alchemy": OmenOfDextralAlchemy,
-
-        # Desecration Omens
-        "Omen of Abyssal Echoes": OmenOfAbyssalEchoes,
-        "Omen of Sinistral Necromancy": OmenOfSinistralNecromancy,
-        "Omen of Dextral Necromancy": OmenOfDextralNecromancy,
-        "Omen of the Sovereign": OmenOfTheSovereign,
-        "Omen of the Liege": OmenOfTheLiege,
-        "Omen of the Blackblooded": OmenOfTheBlackblooded,
-
-        # Corruption Omens
-        "Omen of Corruption": OmenOfCorruption,
-    }
+    """Factory for accessing omen metadata."""
 
     @classmethod
-    def create(cls, omen_name: str) -> Optional[BaseOmen]:
-        """Create an omen instance by name."""
-        omen_class = cls._omens.get(omen_name)
-        if omen_class:
-            return omen_class()
-        return None
+    def create(cls, omen_name: str) -> Optional[OmenMetadata]:
+        """Get omen metadata by name."""
+        return OMEN_METADATA.get(omen_name)
 
     @classmethod
     def get_all_omens(cls) -> List[str]:
         """Get all available omen names."""
-        return list(cls._omens.keys())
+        return list(OMEN_METADATA.keys())
 
     @classmethod
     def get_omens_for_currency(cls, currency_name: str) -> List[str]:
         """Get all omens that can modify a specific currency."""
-        applicable_omens = []
-
-        for omen_name, omen_class in cls._omens.items():
-            omen_instance = omen_class()
-            if omen_instance.can_apply_to_currency(currency_name):
-                applicable_omens.append(omen_name)
-
-        return applicable_omens
-
-
-# ===== OMEN APPLICATOR =====
-
-class OmenApplicator:
-    """Handles application of omens to currency usage."""
-
-    @staticmethod
-    def apply_currency_with_omens(
-        item: CraftableItem,
-        currency_name: str,
-        omens: List[BaseOmen],
-        modifier_pool: ModifierPool,
-        base_currency_apply_func: Callable
-    ) -> Tuple[bool, str, CraftableItem]:
-        """
-        Apply a currency with omen modifiers.
-
-        Args:
-            item: The item to craft
-            currency_name: Name of the currency to apply
-            omens: List of omens to modify behavior (applied in order)
-            modifier_pool: Pool of available modifiers
-            base_currency_apply_func: The original currency application function
-
-        Returns:
-            Tuple of (success, message, modified_item)
-        """
-
-        if not omens:
-            # No omens, apply currency normally
-            return base_currency_apply_func(item, modifier_pool)
-
-        # Check if all omens can apply to this currency
-        for omen in omens:
-            if not omen.can_apply_to_currency(currency_name):
-                return False, f"{omen.name} cannot modify {currency_name}", item
-
-        # Apply omens in sequence
-        current_item = item
-        omen_messages = []
-
-        for omen in omens:
-            success, message, current_item = omen.modify_currency_behavior(
-                current_item, base_currency_apply_func, modifier_pool
-            )
-
-            if not success:
-                return False, f"{omen.name} failed: {message}", current_item
-
-            omen_messages.append(f"{omen.name}: {message}")
-
-        combined_message = " | ".join(omen_messages)
-        return True, combined_message, current_item
-
-    @staticmethod
-    def stack_omens(omens: List[BaseOmen]) -> List[BaseOmen]:
-        """
-        Validate and stack omens for compound effects.
-        Returns the validated list of omens that can work together.
-        """
-        # For now, allow all omen stacking
-        # In a more sophisticated implementation, could check for conflicts
-        return omens
+        applicable = []
+        for name, meta in OMEN_METADATA.items():
+            # Check if affected_currency matches (supports variants like "Perfect Exalted Orb")
+            if meta.affected_currency in currency_name or meta.affected_currency == currency_name:
+                applicable.append(name)
+        return applicable
