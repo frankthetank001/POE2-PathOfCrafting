@@ -587,6 +587,11 @@ class ItemClassification:
         if weight_key == self.slot:
             return True
 
+        # Check if weight_key matches any of the item's tags
+        # Critical for armor defense types (e.g., dex_int_armour on a helmet)
+        if weight_key in self.tags:
+            return True
+
         # === Generic weapon tags ===
 
         # "ranged" - bow, crossbow only

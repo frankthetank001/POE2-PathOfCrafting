@@ -339,6 +339,15 @@ class ItemPricer:
 
         return results
 
+    def extract_pseudo_stats(self, item: CraftableItem) -> List[PseudoStatInfo]:
+        """
+        Extract pseudo stats from an item without calling the trade API.
+
+        This is useful for getting pseudo stat aggregations even when rate limited.
+        """
+        _, pseudo_stats, _ = self._extract_mod_filters(item)
+        return pseudo_stats
+
     async def estimate_price(
         self,
         item: CraftableItem,
@@ -363,7 +372,7 @@ class ItemPricer:
             ilvl_enabled: Whether to filter by item level (min ilvl)
             mod_min_values: Custom min values for mods by string index (0-based, prefixes first then suffixes)
             use_pseudo_stats: Which pseudo stats to use (stat_id -> bool). True = use pseudo, False = use individual mods
-            purchase_type: Purchase type filter ('any', 'buyout', 'priced', 'online', 'onlineleague')
+            purchase_type: Purchase type filter ('securable', 'available', 'onlineleague', 'online', 'any')
 
         Returns:
             PriceEstimate or None if unable to price
@@ -380,40 +389,30 @@ class ItemPricer:
         # Use default league if not specified
         search_league = league or "Fate of the Vaal"
 
-        # Try progressively relaxed searches
-        for strictness in [0.9, 0.8, 0.7, 0.5]:
-            query = self._build_query(item, mod_filters, strictness, equipment_filters, equipment_enabled, rarity_enabled, ilvl_enabled, mod_min_values, use_pseudo_stats, purchase_type)
+        # Single search using user-controlled min values (default 80% of rolled value)
+        # The strictness parameter is now mainly for display/logging - actual mins come from mod_min_values
+        strictness = 0.8
+        query = self._build_query(item, mod_filters, strictness, equipment_filters, equipment_enabled, rarity_enabled, ilvl_enabled, mod_min_values, use_pseudo_stats, purchase_type)
 
-            # Dump trade request to file for debugging
-            with open("trade_request_debug.json", "w") as f:
-                json.dump({
-                    "query": query,
-                    "league": league,
-                    "strictness": strictness,
-                    "mod_filters": {k: {kk: vv for kk, vv in v.items() if kk != "individual_mods"} for k, v in mod_filters.items()},
-                    "use_pseudo_stats": use_pseudo_stats,
-                    "mod_min_values": mod_min_values,
-                    "unmatched_mods": unmatched_mods,
-                }, f, indent=2, default=str)
-            logger.debug(f"Dumped trade request to trade_request_debug.json (strictness={strictness})")
+        # Dump trade request to file for debugging
+        with open("trade_request_debug.json", "w") as f:
+            json.dump({
+                "query": query,
+                "league": league,
+                "strictness": strictness,
+                "mod_filters": {k: {kk: vv for kk, vv in v.items() if kk != "individual_mods"} for k, v in mod_filters.items()},
+                "use_pseudo_stats": use_pseudo_stats,
+                "mod_min_values": mod_min_values,
+                "unmatched_mods": unmatched_mods,
+            }, f, indent=2, default=str)
+        logger.debug(f"Dumped trade request to trade_request_debug.json")
 
-            listings, query_id = await self._trade_client.search_and_fetch(query, league, max_results=20)
-            logger.info(f"search_and_fetch returned {len(listings)} listings, query_id={query_id}")
-
-            if len(listings) >= 5:
-                trade_url = self._trade_client.build_trade_url(query_id, search_league) if query_id else None
-                result = await self._calculate_price(listings, mod_filters, strictness, trade_url, item, pseudo_stats)
-                if result:
-                    result.unmatched_mods = unmatched_mods
-                return result
-
-        # If we still don't have enough results, try one more with very relaxed criteria
-        query = self._build_query(item, mod_filters, 0.3, equipment_filters, equipment_enabled, rarity_enabled, ilvl_enabled, mod_min_values, use_pseudo_stats, purchase_type)
         listings, query_id = await self._trade_client.search_and_fetch(query, league, max_results=20)
+        logger.info(f"search_and_fetch returned {len(listings)} listings, query_id={query_id}")
 
         if listings:
             trade_url = self._trade_client.build_trade_url(query_id, search_league) if query_id else None
-            result = await self._calculate_price(listings, mod_filters, 0.3, trade_url, item, pseudo_stats)
+            result = await self._calculate_price(listings, mod_filters, strictness, trade_url, item, pseudo_stats)
             if result:
                 result.unmatched_mods = unmatched_mods
             return result
@@ -617,10 +616,17 @@ class ItemPricer:
         return filters, pseudo_stats, unmatched_mods
 
     def _get_mod_value(self, mod: ItemModifier) -> Optional[float]:
-        """Get the rolled value from a mod."""
+        """Get the rolled value from a mod.
+
+        For mods with multiple values (e.g., damage ranges like "Adds X to Y"),
+        returns the average to give a meaningful comparison value.
+        """
         # First check current_values (for multi-stat mods)
         if mod.current_values and len(mod.current_values) > 0:
-            # For multi-stat, return the first (main) value
+            if len(mod.current_values) == 2:
+                # For damage ranges (min to max), use average for fair comparison
+                return sum(mod.current_values) / 2
+            # For single or 3+ values, return the first (main) value
             return mod.current_values[0]
         # Then check current_value (legacy)
         if mod.current_value is not None:
@@ -656,7 +662,7 @@ class ItemPricer:
             ilvl_enabled: Whether to filter by item level (min ilvl)
             mod_min_values: Custom min values for mods by string index
             use_pseudo_stats: Which pseudo stats to use (stat_id -> bool)
-            purchase_type: Purchase type filter ('any', 'buyout', 'priced', 'online', 'onlineleague')
+            purchase_type: Purchase type filter ('securable', 'available', 'onlineleague', 'online', 'any')
         """
         filters = []
         count_filters = []  # For stats with multiple variants (global + local)
@@ -1337,14 +1343,23 @@ class ItemPricer:
         if listing.prefix_mods:
             for mod in listing.prefix_mods:
                 if mod.get("stat_id") and mod.get("values"):
-                    # Use the first value (current rolled value)
-                    listing_stat_values[mod["stat_id"]] = mod["values"][0]
+                    values = mod["values"]
+                    # For 2-value mods (damage ranges), use average for fair comparison
+                    if len(values) == 2:
+                        listing_stat_values[mod["stat_id"]] = sum(values) / 2
+                    else:
+                        listing_stat_values[mod["stat_id"]] = values[0]
                     listing_stat_names[mod["stat_id"]] = mod.get("name", "")
 
         if listing.suffix_mods:
             for mod in listing.suffix_mods:
                 if mod.get("stat_id") and mod.get("values"):
-                    listing_stat_values[mod["stat_id"]] = mod["values"][0]
+                    values = mod["values"]
+                    # For 2-value mods (damage ranges), use average for fair comparison
+                    if len(values) == 2:
+                        listing_stat_values[mod["stat_id"]] = sum(values) / 2
+                    else:
+                        listing_stat_values[mod["stat_id"]] = values[0]
                     listing_stat_names[mod["stat_id"]] = mod.get("name", "")
 
         for stat_id, filter_info in mod_filters.items():

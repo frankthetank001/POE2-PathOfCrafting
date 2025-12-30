@@ -172,12 +172,23 @@ class TradeListing:
     is_desecrated: bool = False
 
     # Computed aggregate stats for easy access
+    @staticmethod
+    def _clean_mod_text(text: str) -> str:
+        """Clean mod text by extracting second value from [A|B] patterns."""
+        import re
+        # Replace [A|B] with B (the display text)
+        cleaned = re.sub(r'\[([^\]|]+)\|([^\]]+)\]', r'\2', text)
+        # Also handle [single] brackets
+        cleaned = re.sub(r'\[([^\]]+)\]', r'\1', cleaned)
+        return cleaned.lower()
+
     @property
     def total_elemental_resistance(self) -> float:
         """Sum of fire + cold + lightning resistance."""
         total = 0.0
         for mod_dict in (self.prefix_mods or []) + (self.suffix_mods or []):
-            text = mod_dict.get('text', '').lower()
+            raw_text = mod_dict.get('text', '')
+            text = self._clean_mod_text(raw_text)
             values = mod_dict.get('values', [])
             if not values:
                 continue
@@ -193,7 +204,7 @@ class TradeListing:
         """Total chaos resistance."""
         total = 0.0
         for mod_dict in (self.prefix_mods or []) + (self.suffix_mods or []):
-            text = mod_dict.get('text', '').lower()
+            text = self._clean_mod_text(mod_dict.get('text', ''))
             values = mod_dict.get('values', [])
             if values and 'chaos resistance' in text:
                 total += values[0]
@@ -203,7 +214,7 @@ class TradeListing:
     def total_movement_speed(self) -> float:
         """Total movement speed."""
         for mod_dict in (self.prefix_mods or []) + (self.suffix_mods or []):
-            text = mod_dict.get('text', '').lower()
+            text = self._clean_mod_text(mod_dict.get('text', ''))
             values = mod_dict.get('values', [])
             if values and 'movement speed' in text:
                 return values[0]
@@ -214,7 +225,7 @@ class TradeListing:
         """Total flat life."""
         total = 0.0
         for mod_dict in (self.prefix_mods or []) + (self.suffix_mods or []):
-            text = mod_dict.get('text', '').lower()
+            text = self._clean_mod_text(mod_dict.get('text', ''))
             values = mod_dict.get('values', [])
             if values and 'maximum life' in text and 'leech' not in text:
                 total += values[0]
@@ -533,6 +544,25 @@ class TradeAPIClient:
                             }
                 return hash_to_info
 
+            def extract_damage_values_from_text(text: str) -> List[float]:
+                """Extract damage values from "Adds X to Y damage" mod text.
+
+                Only handles damage mods specifically - returns empty list for other mod types.
+                This is needed because the API returns tier bounds instead of rolled values for damage mods.
+                """
+                import re
+                # Clean bracket patterns first
+                cleaned = re.sub(r'\[([^\]|]+)\|([^\]]+)\]', r'\2', text)
+                cleaned = re.sub(r'\[([^\]]+)\]', r'\1', cleaned)
+
+                # Only handle "Adds X to Y" damage mods - these have unreliable API values
+                adds_match = re.search(r'[Aa]dds\s+(\d+(?:\.\d+)?)\s+to\s+(\d+(?:\.\d+)?)', cleaned)
+                if adds_match:
+                    return [float(adds_match.group(1)), float(adds_match.group(2))]
+
+                # For all other mods, return empty to use API values
+                return []
+
             def process_mods_in_order(mod_texts: List[str], hash_entries: List, hash_to_info: Dict, is_desecrated: bool = False):
                 """Process mods - hashes and mod_texts are in same display order.
 
@@ -551,11 +581,16 @@ class TradeAPIClient:
                         info = hash_to_info.get(stat_hash, {})
                         tier_str = info.get("tier", "")
                         mod_name = info.get("name", "")
-                        values = info.get("values", [])
+                        api_values = info.get("values", [])
                         stat_id = info.get("stat_id")
 
                         if not mod_text:
                             continue
+
+                        # For damage mods, extract values from text (API returns tier bounds, not rolled values)
+                        damage_values = extract_damage_values_from_text(mod_text)
+                        # Use extracted damage values if found, otherwise use API values
+                        values = damage_values if damage_values else api_values
 
                         # Determine mod type from tier
                         mod_type = "prefix" if tier_str.startswith("P") else "suffix" if tier_str.startswith("S") else "unknown"

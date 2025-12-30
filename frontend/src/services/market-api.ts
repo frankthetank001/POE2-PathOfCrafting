@@ -144,6 +144,8 @@ export interface ItemPriceEstimate {
   currency: string
   num_listings: number
   confidence: 'high' | 'medium' | 'low'
+  rate_limited?: boolean  // Whether the search was rate limited
+  rate_limit_wait?: number | null  // Seconds to wait before retry
   exalted_value: number | null
   divine_value: number | null
   search_criteria: Record<string, number>

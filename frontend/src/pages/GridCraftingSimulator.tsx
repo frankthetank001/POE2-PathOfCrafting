@@ -1255,19 +1255,31 @@ function GridCraftingSimulator() {
   // Clear price estimate when item changes and reset mod selection
   useEffect(() => {
     setItemPrice(null)
+    // Reset pseudo stats state for fresh calculation
+    setUsePseudoStats({})
+    setEnabledHiddenMods(new Set())
+    setPseudoStatsExpanded(false)
     // Initialize all mods as selected for price search
     const allMods = new Set<string>()
     const modMinValues: Record<string, number> = {}
 
+    // Helper to get mod value - uses average for 2-value mods (like damage ranges)
+    const getModValue = (mod: ItemModifier): number => {
+      if (mod.current_values && mod.current_values.length === 2) {
+        // For damage mods "Adds X to Y", use average
+        return (mod.current_values[0] + mod.current_values[1]) / 2
+      }
+      return mod.current_values?.[0] ?? mod.current_value ?? mod.stat_min ?? 0
+    }
+
     item.prefix_mods.forEach((mod, idx) => {
       allMods.add(`prefix-${idx}`)
-      // Get the mod's current value for the min slider
-      const value = mod.current_values?.[0] ?? mod.current_value ?? mod.stat_min ?? 0
+      const value = getModValue(mod)
       modMinValues[`prefix-${idx}`] = Math.floor(value * 0.8) // Default to 80% of rolled value
     })
     item.suffix_mods.forEach((mod, idx) => {
       allMods.add(`suffix-${idx}`)
-      const value = mod.current_values?.[0] ?? mod.current_value ?? mod.stat_min ?? 0
+      const value = getModValue(mod)
       modMinValues[`suffix-${idx}`] = Math.floor(value * 0.8)
     })
     setPriceSearchMods(allMods)
@@ -4133,22 +4145,30 @@ function GridCraftingSimulator() {
                           ) : (
                             <button
                               className="mini-price-btn"
-                              onClick={() => priceFlyoutRef.current?.handlePriceCheck(false)}
-                              disabled={priceFlyoutRef.current?.priceCheckLoading || (item.prefix_mods.length === 0 && item.suffix_mods.length === 0)}
+                              onClick={openPriceModal}
+                              disabled={item.prefix_mods.length === 0 && item.suffix_mods.length === 0}
                               title="Check market value"
                             >
-                              {priceFlyoutRef.current?.priceCheckLoading ? '...' : '?'}
+                              ?
                             </button>
                           )}
                           {itemPrice && (
                             <>
                               <button
                                 className="mini-price-btn refresh"
-                                onClick={() => priceFlyoutRef.current?.handlePriceCheck(false)}
+                                onClick={() => {
+                                  if (priceModalOpen) {
+                                    // Modal already open - trigger refresh directly
+                                    priceFlyoutRef.current?.handlePriceCheck(true)
+                                  } else {
+                                    // Open modal (which auto-starts search)
+                                    openPriceModal()
+                                  }
+                                }}
                                 disabled={priceFlyoutRef.current?.priceCheckLoading}
                                 title="Refresh price"
                               >
-                                {priceFlyoutRef.current?.priceCheckLoading ? '...' : '↻'}
+                                ↻
                               </button>
                               {itemPrice.num_listings > 0 && (
                                 <button
@@ -4451,23 +4471,12 @@ function GridCraftingSimulator() {
                                       type="range"
                                       min={0}
                                       max={(() => {
-                                        // Find T1 max for this mod group from all available mods
-                                        const allMods = [
-                                          ...availableMods.prefixes, ...availableMods.suffixes,
-                                          ...availableMods.essence_prefixes, ...availableMods.essence_suffixes,
-                                          ...availableMods.desecrated_prefixes, ...availableMods.desecrated_suffixes
-                                        ]
-                                        // Get mod_group - either from mod directly or by finding it in pool by mod_id
-                                        let modGroup = mod.mod_group
-                                        if (!modGroup && mod.mod_id) {
-                                          const poolMod = allMods.find(m => m.mod_id === mod.mod_id)
-                                          modGroup = poolMod?.mod_group
+                                        // For 2-value mods (damage ranges), use average of rolled values
+                                        if (mod.current_values && mod.current_values.length === 2) {
+                                          return Math.floor((mod.current_values[0] + mod.current_values[1]) / 2)
                                         }
-                                        // Find T1 version
-                                        const t1Mod = modGroup
-                                          ? allMods.find(m => m.mod_group === modGroup && m.tier === 1)
-                                          : null
-                                        return t1Mod?.stat_max ?? mod.stat_max ?? 100
+                                        // For single value mods, use the rolled value
+                                        return mod.current_values?.[0] ?? mod.current_value ?? mod.stat_max ?? 100
                                       })()}
                                       value={priceModMinValues[`prefix-${idx}`] ?? 0}
                                       onChange={(e) => {
@@ -4508,7 +4517,6 @@ function GridCraftingSimulator() {
                           {/* Compute which suffix mods contribute to pseudo stats (for visual indication) */}
                           {(() => {
                             const suffixPseudoStats: NonNullable<typeof itemPrice>['pseudo_stats'] = []
-
                             if (priceModalOpen && itemPrice?.pseudo_stats) {
                               itemPrice.pseudo_stats.forEach(ps => {
                                 // Check if this pseudo has suffix contributors
@@ -4755,23 +4763,12 @@ function GridCraftingSimulator() {
                                       type="range"
                                       min={0}
                                       max={(() => {
-                                        // Find T1 max for this mod group from all available mods
-                                        const allMods = [
-                                          ...availableMods.prefixes, ...availableMods.suffixes,
-                                          ...availableMods.essence_prefixes, ...availableMods.essence_suffixes,
-                                          ...availableMods.desecrated_prefixes, ...availableMods.desecrated_suffixes
-                                        ]
-                                        // Get mod_group - either from mod directly or by finding it in pool by mod_id
-                                        let modGroup = mod.mod_group
-                                        if (!modGroup && mod.mod_id) {
-                                          const poolMod = allMods.find(m => m.mod_id === mod.mod_id)
-                                          modGroup = poolMod?.mod_group
+                                        // For 2-value mods (damage ranges), use average of rolled values
+                                        if (mod.current_values && mod.current_values.length === 2) {
+                                          return Math.floor((mod.current_values[0] + mod.current_values[1]) / 2)
                                         }
-                                        // Find T1 version
-                                        const t1Mod = modGroup
-                                          ? allMods.find(m => m.mod_group === modGroup && m.tier === 1)
-                                          : null
-                                        return t1Mod?.stat_max ?? mod.stat_max ?? 100
+                                        // For single value mods, use the rolled value
+                                        return mod.current_values?.[0] ?? mod.current_value ?? mod.stat_max ?? 100
                                       })()}
                                       value={priceModMinValues[modKey] ?? 0}
                                       onChange={(e) => {
@@ -5027,7 +5024,9 @@ function GridCraftingSimulator() {
         isOpen={priceModalOpen}
         onClose={() => setPriceModalOpen(false)}
         onMessage={setMessage}
-        onPriceResult={setItemPrice}
+        onPriceResult={(result) => {
+          setItemPrice(result)
+        }}
         selectedMods={priceSearchMods}
         onSelectedModsChange={setPriceSearchMods}
         priceRarityEnabled={priceRarityEnabled}

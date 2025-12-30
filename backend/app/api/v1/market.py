@@ -257,7 +257,7 @@ class ItemPriceRequest(BaseModel):
     ilvl_enabled: Optional[bool] = Field(False, description="Whether to filter by item level (min ilvl)")
     mod_min_values: Optional[Dict[str, float]] = Field(None, description="Custom min values for mods by index (0-based, prefixes first then suffixes, keys are string indices)")
     use_pseudo_stats: Optional[Dict[str, bool]] = Field(None, description="Which pseudo stats to use (stat_id -> bool). True = use aggregated pseudo, False = use individual mods")
-    purchase_type: Optional[str] = Field("any", description="Purchase type filter: 'any', 'buyout', 'priced', 'online', 'onlineleague'")
+    purchase_type: Optional[str] = Field("any", description="Purchase type filter: 'securable' (instant buyout only), 'available' (instant buyout + in person), 'onlineleague' (in person, online in league), 'online' (in person, online), 'any'")
 
 
 class PriceListingResponse(BaseModel):
@@ -336,6 +336,8 @@ class ItemPriceResponse(BaseModel):
     currency: str = Field(..., description="Price currency (chaos)")
     num_listings: int = Field(..., description="Number of comparable listings found")
     confidence: str = Field(..., description="Confidence level: high, medium, low")
+    rate_limited: bool = Field(False, description="Whether the search was rate limited")
+    rate_limit_wait: Optional[int] = Field(None, description="Seconds to wait before retry if rate limited")
 
     # Normalized values
     exalted_value: Optional[float] = Field(None, description="Median price in Exalted Orbs")
@@ -383,9 +385,24 @@ async def estimate_item_price(request: ItemPriceRequest) -> ItemPriceResponse:
     normalization. Returns price statistics and confidence level.
 
     Note: This endpoint makes external API calls and may be rate limited.
+    If rate limited, returns pseudo_stats but no listings/prices.
     """
+    pricer = await get_item_pricer()
+
+    # Extract pseudo stats first - this doesn't require trade API
+    pseudo_stats = pricer.extract_pseudo_stats(request.item)
+    pseudo_stats_response = [
+        PseudoStatInfo(
+            stat_id=ps.stat_id,
+            display_name=ps.display_name,
+            total_value=ps.total_value,
+            contributing_mod_indices=ps.contributing_mod_indices,
+            mod_type=ps.mod_type,
+        )
+        for ps in pseudo_stats
+    ]
+
     try:
-        pricer = await get_item_pricer()
         estimate = await pricer.estimate_price(
             request.item,
             request.league,
@@ -485,10 +502,28 @@ async def estimate_item_price(request: ItemPriceRequest) -> ItemPriceResponse:
     except HTTPException:
         raise
     except RateLimitError as e:
-        logger.warning(f"Rate limited: {e.message} (wait {e.wait_seconds}s)")
-        raise HTTPException(
-            status_code=429,
-            detail=f"Rate limited. Please wait {e.wait_seconds} seconds before trying again."
+        # Rate limited by trade API - return pseudo_stats anyway so UI can still show aggregations
+        logger.warning(f"Rate limited: {e.message} (wait {e.wait_seconds}s) - returning pseudo_stats only")
+        return ItemPriceResponse(
+            min_price=0,
+            max_price=0,
+            median_price=0,
+            average_price=0,
+            currency="chaos",
+            num_listings=0,
+            confidence="low",
+            rate_limited=True,
+            rate_limit_wait=e.wait_seconds,
+            exalted_value=None,
+            divine_value=None,
+            search_criteria={},
+            pseudo_stats=pseudo_stats_response,  # Include the pre-computed pseudo stats
+            trade_url=None,
+            listings=[],
+            outliers_removed=0,
+            avg_similarity=None,
+            price_spread=None,
+            unmatched_mods=[],
         )
     except Exception as e:
         logger.error(f"Error estimating item price: {e}")

@@ -383,6 +383,117 @@ def filter_item_tags(item: CraftableItem):
     return item_dict
 
 
+def _renumber_item_mod_tiers(item: CraftableItem) -> None:
+    """
+    Renumber the tiers of mods on an imported item based on what's available for that item type.
+
+    When importing an item, the tiers come from the global mod pool. But for display purposes,
+    we want tiers relative to what's actually available for this specific item type.
+    E.g., if T6-T8 are blocked for helmets, what was globally T5 becomes T1 for helmets.
+    """
+    if not item.base_category:
+        return
+
+    # Create an empty item to get available mods without existing mod exclusions
+    # We need all mods in the group to determine tier ordering
+    empty_item = CraftableItem(
+        base_name=item.base_name,
+        base_category=item.base_category,
+        item_level=item.item_level,
+        rarity=item.rarity,
+        prefix_mods=[],
+        suffix_mods=[],
+    )
+
+    # Get available mods for this item type (without existing mod exclusions)
+    available_prefixes = simulator.modifier_pool.get_all_mods_for_category(
+        item.base_category, "prefix", empty_item
+    )
+    available_suffixes = simulator.modifier_pool.get_all_mods_for_category(
+        item.base_category, "suffix", empty_item
+    )
+
+    # Build tier lookup: mod_group -> list of (stat_max, ilvl) sorted descending
+    # Then we can find where a mod's values rank to determine its tier
+    from collections import defaultdict
+    prefix_groups: Dict[str, List[ItemModifier]] = defaultdict(list)
+    suffix_groups: Dict[str, List[ItemModifier]] = defaultdict(list)
+
+    for mod in available_prefixes:
+        if mod.mod_group:
+            prefix_groups[mod.mod_group].append(mod)
+    for mod in available_suffixes:
+        if mod.mod_group:
+            suffix_groups[mod.mod_group].append(mod)
+
+    # Sort each group by stat_max descending
+    for group_mods in prefix_groups.values():
+        group_mods.sort(key=lambda m: (m.stat_max or 0, m.required_ilvl or 0), reverse=True)
+    for group_mods in suffix_groups.values():
+        group_mods.sort(key=lambda m: (m.stat_max or 0, m.required_ilvl or 0), reverse=True)
+
+    # Renumber item's prefix mods
+    for mod in item.prefix_mods:
+        if mod.mod_group and mod.mod_group in prefix_groups:
+            group_mods = prefix_groups[mod.mod_group]
+            # Find the position of this mod's stat_max in the sorted list
+            for i, pool_mod in enumerate(group_mods, start=1):
+                if pool_mod.mod_id == mod.mod_id:
+                    mod.tier = i
+                    break
+
+    # Renumber item's suffix mods
+    for mod in item.suffix_mods:
+        if mod.mod_group and mod.mod_group in suffix_groups:
+            group_mods = suffix_groups[mod.mod_group]
+            for i, pool_mod in enumerate(group_mods, start=1):
+                if pool_mod.mod_id == mod.mod_id:
+                    mod.tier = i
+                    break
+
+
+def _renumber_tiers_for_available_mods(mods: List[ItemModifier]) -> List[ItemModifier]:
+    """
+    Renumber tiers based on what's actually available for this item type.
+
+    After filtering by item tags, some tiers may be missing (e.g., T6-T8 blocked for helmets).
+    This renumbers so the best available tier is T1, next is T2, etc.
+    """
+    from collections import defaultdict
+
+    # Group by mod_group
+    groups: Dict[str, List[ItemModifier]] = defaultdict(list)
+    for mod in mods:
+        if mod.mod_group:
+            groups[mod.mod_group].append(mod)
+        else:
+            # Mods without mod_group keep their tier
+            pass
+
+    # For each group, sort by stat_max descending and renumber
+    for group_mods in groups.values():
+        if len(group_mods) <= 1:
+            if group_mods:
+                group_mods[0].tier = 1
+            continue
+
+        # Sort by stat_max descending (highest = best = T1)
+        sorted_mods = sorted(
+            group_mods,
+            key=lambda m: (
+                m.stat_max if m.stat_max is not None else 0,
+                m.required_ilvl or 0
+            ),
+            reverse=True
+        )
+
+        # Assign T1, T2, T3...
+        for i, mod in enumerate(sorted_mods, start=1):
+            mod.tier = i
+
+    return mods
+
+
 @router.post("/available-mods")
 async def get_available_mods(item: CraftableItem) -> dict:
     try:
@@ -422,6 +533,15 @@ async def get_available_mods(item: CraftableItem) -> dict:
         regular_suffixes = [mod for mod in available_suffixes if "essence_only" not in mod.tags and "desecrated_only" not in mod.tags]
         essence_suffixes = [mod for mod in available_suffixes if "essence_only" in mod.tags]
         desecrated_suffixes = [mod for mod in available_suffixes if "desecrated_only" in mod.tags and "utzaal" not in mod.tags]
+
+        # Renumber tiers based on what's actually available for this item type
+        # (e.g., if T6-T8 are blocked for helmets, T5 becomes T1)
+        _renumber_tiers_for_available_mods(regular_prefixes)
+        _renumber_tiers_for_available_mods(regular_suffixes)
+        _renumber_tiers_for_available_mods(essence_prefixes)
+        _renumber_tiers_for_available_mods(essence_suffixes)
+        _renumber_tiers_for_available_mods(desecrated_prefixes)
+        _renumber_tiers_for_available_mods(desecrated_suffixes)
 
         # Get essence guarantees for regular mods (mod_id -> essence info)
         from app.services.crafting.modifier_loader import ModifierLoader
@@ -529,6 +649,9 @@ async def parse_item(request: ItemParseRequest) -> dict:
 
         if not craftable_item:
             raise HTTPException(status_code=400, detail="Could not convert item")
+
+        # Renumber tiers based on what's actually available for this item type
+        _renumber_item_mod_tiers(craftable_item)
 
         # Filter tags before returning
         filtered_item_dict = filter_item_tags(craftable_item)

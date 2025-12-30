@@ -27,6 +27,43 @@ def _get_item_slot(base_name: str) -> Optional[str]:
     return None
 
 
+def _get_item_tags(item) -> List[str]:
+    """
+    Get item tags from the item's base.
+
+    This includes the defense type (e.g., dex_int_armour) which is needed
+    for weight key matching on armor pieces.
+    """
+    if not item or not hasattr(item, 'base_name'):
+        return []
+
+    # Try to get the base item info which has the actual category (defense type)
+    try:
+        from app.services.crafting.pob_data_loader import get_pob_data_loader
+        loader = get_pob_data_loader()
+        base_items = loader.get_base_items()
+        base_info = base_items.get(item.base_name)
+
+        if base_info:
+            tags = []
+            # The category field contains the defense type (e.g., dex_int_armour)
+            if base_info.category:
+                tags.append(base_info.category)
+            # The subcategory/slot is the item type (e.g., helmet)
+            if base_info.subcategory:
+                tags.append(base_info.subcategory.lower())
+            if hasattr(base_info, '_slot') and base_info._slot:
+                tags.append(base_info._slot)
+            # Add generic 'armour' tag if this is an armor piece
+            if base_info.category in ALL_ARMOR_CATEGORIES:
+                tags.append('armour')
+            return list(set(tags))
+    except Exception:
+        pass
+
+    return []
+
+
 class ModifierPool:
     def __init__(self, modifiers: List[ItemModifier]) -> None:
         self.modifiers = modifiers
@@ -600,7 +637,9 @@ class ModifierPool:
             return weight_key in exclusions
 
         # Use centralized classification system for all other checks
-        classification = classify_item(item_category, item_slot)
+        # Get item tags from base - critical for armor defense type matching (e.g., dex_int_armour)
+        item_tags = _get_item_tags(item) if item else None
+        classification = classify_item(item_category, item_slot, tags=item_tags)
         return classification.matches_weight_key(weight_key)
 
     def _check_weight_condition(self, weight_conditions: dict, item_category: str, item_slot: str, item=None) -> bool:

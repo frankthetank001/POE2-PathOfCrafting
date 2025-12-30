@@ -554,8 +554,10 @@ class POBDataLoader:
             applicable_items = self._calculate_applicable_items(weight_key, weight_val)
             tier = self._extract_tier_from_id(mod_id)
 
-            stat_min = stat_ranges[0].min if stat_ranges else None
-            stat_max = stat_ranges[0].max if stat_ranges else None
+            # For damage mods like "Adds X to Y", use max of all ranges for tier sorting
+            # e.g., "Adds (1-2) to (33-40)" should use 40, not 2
+            stat_min = min(r.min for r in stat_ranges) if stat_ranges else None
+            stat_max = max(r.max for r in stat_ranges) if stat_ranges else None
 
             # Get mod group and base tags
             mod_group = mod_info.get("group")

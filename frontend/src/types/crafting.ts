@@ -82,6 +82,7 @@ export interface ItemBasesBySlot {
 export interface CraftableItem {
   base_name: string
   base_category: string
+  slot?: string  // Equipment slot (helmet, body_armour, boots, gloves, weapons - 1 hand, etc.)
   rarity: ItemRarity
   item_level: number
   quality: number

@@ -159,6 +159,9 @@ export const TradePriceFlyout = forwardRef<TradePriceFlyoutHandle, TradePriceFly
   const [priceCheckStatus, setPriceCheckStatus] = useState<string>('')
   const priceCheckAbortRef = useRef<AbortController | null>(null)
   const [pinnedListingTooltip, setPinnedListingTooltip] = useState<number | null>(null)
+  const [hoveredListingTooltip, setHoveredListingTooltip] = useState<number | null>(null)
+  // Use ref to track pseudo_stats synchronously (avoid stale closure issues)
+  const pseudoStatsRef = useRef<ItemPriceEstimate['pseudo_stats'] | null>(null)
 
   // Filter states that are internal to the flyout (not used in parent mod display)
   const [priceEquipmentFilters, setPriceEquipmentFilters] = useState<Record<string, number>>({})
@@ -245,8 +248,9 @@ export const TradePriceFlyout = forwardRef<TradePriceFlyoutHandle, TradePriceFly
       }
 
       const hiddenModIndices = new Set<string>()
-      if (itemPrice?.pseudo_stats) {
-        itemPrice.pseudo_stats.forEach(ps => {
+      // Use ref for synchronous access to pseudo_stats (avoids stale closure)
+      if (pseudoStatsRef.current) {
+        pseudoStatsRef.current.forEach(ps => {
           const isEnabled = usePseudoStats[ps.stat_id] ?? true
           if (isEnabled) {
             ps.contributing_mod_indices.forEach(i => {
@@ -336,26 +340,38 @@ export const TradePriceFlyout = forwardRef<TradePriceFlyoutHandle, TradePriceFly
         purchaseType
       )
 
-      if (itemPrice?.pseudo_stats) {
-        const updatedEstimate = {
-          ...estimate,
-          pseudo_stats: itemPrice.pseudo_stats,
-        }
-        setItemPrice(updatedEstimate)
-        onPriceResult?.(updatedEstimate)
+      // Always use fresh results from API
+      console.log('[TradePriceFlyout] API estimate received:', {
+        num_listings: estimate.num_listings,
+        pseudo_stats: estimate.pseudo_stats,
+        pseudo_stats_length: estimate.pseudo_stats?.length ?? 0
+      })
+      setItemPrice(estimate)
+      onPriceResult?.(estimate)
+
+      // Update ref synchronously for next check
+      pseudoStatsRef.current = estimate.pseudo_stats || null
+
+      // Initialize pseudo stats from fresh results
+      if (estimate.pseudo_stats && estimate.pseudo_stats.length > 0) {
+        const initialPseudoState: Record<string, boolean> = {}
+        estimate.pseudo_stats.forEach(ps => {
+          initialPseudoState[ps.stat_id] = true
+        })
+        console.log('[TradePriceFlyout] Initializing usePseudoStats:', initialPseudoState)
+        onUsePseudoStatsChange(initialPseudoState)
       } else {
-        setItemPrice(estimate)
-        onPriceResult?.(estimate)
-        if (estimate.pseudo_stats && estimate.pseudo_stats.length > 0) {
-          const initialPseudoState: Record<string, boolean> = {}
-          estimate.pseudo_stats.forEach(ps => {
-            initialPseudoState[ps.stat_id] = true
-          })
-          onUsePseudoStatsChange(initialPseudoState)
-        }
-        onEnabledHiddenModsChange(new Set())
+        console.log('[TradePriceFlyout] No pseudo_stats in estimate, skipping usePseudoStats init')
       }
-      setPriceCheckStatus('')
+      onEnabledHiddenModsChange(new Set())
+
+      // Check if rate limited
+      if (estimate.rate_limited) {
+        const waitTime = estimate.rate_limit_wait || 60
+        setPriceCheckStatus(`Rate limited (wait ${waitTime}s) - showing mod aggregations only`)
+      } else {
+        setPriceCheckStatus('')
+      }
     } catch (error: any) {
       if (error.name === 'AbortError' || error.name === 'CanceledError') {
         return
@@ -402,10 +418,16 @@ export const TradePriceFlyout = forwardRef<TradePriceFlyoutHandle, TradePriceFly
   useImperativeHandle(ref, () => ({
     handlePriceCheck,
     priceCheckLoading,
-  }), [priceCheckLoading])
+  }), [handlePriceCheck, priceCheckLoading])
 
-  // Initialize equipment filters when item changes
+  // Clear internal state when item changes (to avoid stale pseudo_stats)
   useEffect(() => {
+    setItemPrice(null)
+    setPinnedListingTooltip(null)
+    setHoveredListingTooltip(null)
+    pseudoStatsRef.current = null  // Clear synchronously
+
+    // Initialize equipment filters from calculated stats
     const equipFilters: Record<string, number> = {}
     const equipEnabled: Record<string, boolean> = {}
     if (item.calculated_stats) {
@@ -422,8 +444,22 @@ export const TradePriceFlyout = forwardRef<TradePriceFlyoutHandle, TradePriceFly
 
   // Start search when flyout opens with selected mods
   useEffect(() => {
-    if (isOpen && selectedMods.size > 0 && !itemPrice && !priceCheckLoading) {
+    console.log('[TradePriceFlyout] Auto-start effect:', {
+      isOpen,
+      selectedModsSize: selectedMods.size,
+      priceCheckLoading,
+      conditionsMet: isOpen && selectedMods.size > 0 && !priceCheckLoading
+    })
+    if (isOpen && selectedMods.size > 0 && !priceCheckLoading) {
+      // Always start a new search when opening (acts as refresh too)
+      console.log('[TradePriceFlyout] Auto-starting price check NOW')
       handlePriceCheck(false)
+    } else {
+      console.log('[TradePriceFlyout] NOT auto-starting, conditions:', {
+        isOpenCheck: isOpen,
+        selectedModsCheck: selectedMods.size > 0,
+        loadingCheck: !priceCheckLoading
+      })
     }
   }, [isOpen])
 
@@ -507,8 +543,8 @@ export const TradePriceFlyout = forwardRef<TradePriceFlyoutHandle, TradePriceFly
                 className="purchase-type-select"
               >
                 <option value="any">Any</option>
-                <option value="buyout">Instant Buyout Only</option>
-                <option value="priced">Buyout + In Person</option>
+                <option value="securable">Instant Buyout Only</option>
+                <option value="available">Buyout + In Person</option>
                 <option value="online">In Person (Online)</option>
                 <option value="onlineleague">In Person (Online in League)</option>
               </select>
@@ -529,6 +565,21 @@ export const TradePriceFlyout = forwardRef<TradePriceFlyoutHandle, TradePriceFly
         {/* Results */}
         {itemPrice && (
           <>
+            {/* Rate Limited Notice */}
+            {itemPrice.rate_limited && (
+              <div className="trade-rate-limited-notice">
+                <span className="rate-limit-icon">⏳</span>
+                <span>Rate limited - wait {itemPrice.rate_limit_wait || 60}s to search</span>
+                <button
+                  className="trade-retry-btn"
+                  onClick={() => handlePriceCheck(true)}
+                  disabled={priceCheckLoading}
+                >
+                  Retry
+                </button>
+              </div>
+            )}
+
             {/* Price Summary */}
             <div className="trade-summary">
               <div className="trade-summary-main">
@@ -672,19 +723,22 @@ export const TradePriceFlyout = forwardRef<TradePriceFlyoutHandle, TradePriceFly
                           {columns.map(col => {
                             switch (col.key) {
                               case 'preview':
+                                const showPreview = pinnedListingTooltip === idx || hoveredListingTooltip === idx
                                 return (
                                   <td key={col.key}>
                                     <button
                                       className={`listing-preview-btn ${pinnedListingTooltip === idx ? 'pinned' : ''}`}
-                                      title={pinnedListingTooltip === idx ? "Click to unpin preview" : "Click to pin preview"}
+                                      title={pinnedListingTooltip === idx ? "Click to unpin preview" : "Hover to preview, click to pin"}
                                       onClick={(e) => {
                                         e.stopPropagation()
                                         setPinnedListingTooltip(pinnedListingTooltip === idx ? null : idx)
                                       }}
+                                      onMouseEnter={() => setHoveredListingTooltip(idx)}
+                                      onMouseLeave={() => setHoveredListingTooltip(null)}
                                     >
                                       👁
                                     </button>
-                                    {pinnedListingTooltip === idx && (
+                                    {showPreview && (
                                       <div
                                         className="item-preview-tooltip"
                                         style={{
