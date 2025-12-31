@@ -326,6 +326,7 @@ async def create_base_item(slot: str, category: str, item_level: int = 65):
     item = CraftableItem(
         base_name=base.name,
         base_category=base.category,
+        slot=base.slot,
         rarity='Normal',
         item_level=item_level,
         quality=20,
@@ -399,6 +400,7 @@ def _renumber_item_mod_tiers(item: CraftableItem) -> None:
     empty_item = CraftableItem(
         base_name=item.base_name,
         base_category=item.base_category,
+        slot=item.slot,
         item_level=item.item_level,
         rarity=item.rarity,
         prefix_mods=[],

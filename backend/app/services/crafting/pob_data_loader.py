@@ -738,6 +738,15 @@ class POBDataLoader:
 
     def _determine_category(self, tags: List[str], item_type: str) -> str:
         """Determine item category from tags."""
+        # Check offhand items FIRST - they may also have armour tags (e.g., focus has int_armour)
+        if "quiver" in tags:
+            return "quiver"
+        if "shield" in tags:
+            return "shield"
+        if "focus" in tags:
+            return "focus"
+
+        # Then check armour types
         if "str_armour" in tags:
             return "str_armour"
         if "dex_armour" in tags:
@@ -776,12 +785,7 @@ class POBDataLoader:
         if "spear" in tags:
             return "spear"
 
-        if "quiver" in tags:
-            return "quiver"
-        if "shield" in tags:
-            return "shield"
-        if "focus" in tags:
-            return "focus"
+        # Offhand items already checked at top of function
 
         if "ring" in tags:
             return "ring"

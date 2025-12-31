@@ -87,6 +87,7 @@ class SocketedRune(BaseModel):
 class CraftableItem(BaseModel):
     base_name: str
     base_category: str
+    slot: Optional[str] = None  # Equipment slot (helmet, body_armour, boots, etc.)
     rarity: ItemRarity
     item_level: int
     quality: int = 0
@@ -153,7 +154,9 @@ class CraftableItem(BaseModel):
     # These delegate to the centralized ItemClassification system
 
     def _get_slot(self) -> str:
-        """Get the item slot from the item base, falling back to category."""
+        """Get the item slot from the slot field, item base, or falling back to category."""
+        if self.slot:
+            return self.slot
         from app.schemas.item_bases import get_item_base_by_name
         base = get_item_base_by_name(self.base_name)
         return base.slot if base else self.base_category

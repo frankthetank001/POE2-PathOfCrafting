@@ -264,6 +264,7 @@ function ItemTab({ setItem, onHistoryReset, setMessage, onItemCreated }: TabCont
       const newItem: CraftableItem = {
         base_name: selectedBase,
         base_category: selectedCategory,
+        slot: selectedSlot,
         rarity: 'Normal' as ItemRarity,
         item_level: selectedItemLevel,
         quality: 20,
@@ -736,6 +737,7 @@ function GridCraftingSimulator() {
   const [item, setItem] = useState<CraftableItem>({
     base_name: "Vile Robe",
     base_category: 'int_armour',
+    slot: 'body',
     rarity: 'Normal' as ItemRarity,
     item_level: 65,
     quality: 20,
@@ -1121,40 +1123,153 @@ function GridCraftingSimulator() {
     return tags.filter(tag => !shouldHideTag(tag))
   }, [hiddenTagsConfig])
 
-  // Convert item to PoE2 text format
+  // Convert item to PoE2 text format (POB-compatible)
   const exportItemToText = (item: CraftableItem, format: 'detailed' | 'simple'): string => {
     const lines: string[] = []
+    const separator = '--------'
 
-    // Header
-    lines.push('Item Class: ' + (item.base_category.includes('armour') ? 'Armours' :
-                item.base_category === 'amulet' ? 'Amulets' :
-                item.base_category === 'ring' ? 'Rings' :
-                item.base_category === 'belt' ? 'Belts' :
-                item.base_category.includes('weapon') ? 'Weapons' : 'Items'))
+    // Helper to get POB Item Class name from slot
+    const getItemClass = (): string => {
+      const slot = item.slot || ''
+      const category = item.base_category
+
+      // Armor slots
+      if (slot === 'helmet') return 'Helmets'
+      if (slot === 'body' || slot === 'body_armour') return 'Body Armours'
+      if (slot === 'gloves') return 'Gloves'
+      if (slot === 'boots') return 'Boots'
+
+      // Weapons - need to determine 1h vs 2h
+      if (slot === 'weapon - 1 hand' || slot === 'weapons - 1 hand') {
+        const weaponClassMap: Record<string, string> = {
+          'sword': 'One Hand Swords',
+          'axe': 'One Hand Axes',
+          'mace': 'One Hand Maces',
+          'dagger': 'Daggers',
+          'claw': 'Claws',
+          'wand': 'Wands',
+          'sceptre': 'Sceptres',
+          'flail': 'Flails',
+        }
+        return weaponClassMap[category] || 'One Hand Weapons'
+      }
+      if (slot === 'weapon - 2 hand' || slot === 'weapons - 2 hand') {
+        const weaponClassMap: Record<string, string> = {
+          'sword': 'Two Hand Swords',
+          'axe': 'Two Hand Axes',
+          'mace': 'Two Hand Maces',
+          'bow': 'Bows',
+          'crossbow': 'Crossbows',
+          'staff': 'Staves',
+          'warstaff': 'Warstaves',
+          'spear': 'Spears',
+        }
+        return weaponClassMap[category] || 'Two Hand Weapons'
+      }
+
+      // Offhand
+      if (slot === 'offhand') {
+        if (category === 'quiver') return 'Quivers'
+        if (category === 'focus') return 'Foci'
+        if (category.includes('shield')) return 'Shields'
+        return 'Shields'
+      }
+
+      // Jewelry
+      if (slot === 'jewellery' || category === 'amulet') return 'Amulets'
+      if (category === 'ring') return 'Rings'
+      if (category === 'belt') return 'Belts'
+
+      // Fallback based on category patterns
+      if (category.includes('armour')) return 'Body Armours'
+      if (category.includes('shield')) return 'Shields'
+
+      return 'Items'
+    }
+
+    // Generate a random rare name (simple version)
+    const generateRareName = (): string => {
+      const prefixes = ['Grim', 'Dusk', 'Storm', 'Doom', 'Rune', 'Soul', 'Blight', 'Havoc', 'Woe', 'Rage']
+      const suffixes = ['Dome', 'Mark', 'Bane', 'Keep', 'Ward', 'Roar', 'Veil', 'Song', 'Bite', 'Edge']
+      const prefix = prefixes[Math.floor(Math.random() * prefixes.length)]
+      const suffix = suffixes[Math.floor(Math.random() * suffixes.length)]
+      return `${prefix} ${suffix}`
+    }
+
+    // Item Class header
+    lines.push(`Item Class: ${getItemClass()}`)
     lines.push(`Rarity: ${item.rarity}`)
 
-    // Item name - keep it simple for now (just base name)
-    // TODO: Generate proper rare/magic item names later
+    // Item name(s) - Rare items have generated name + base name
+    if (item.rarity === 'Rare') {
+      lines.push(generateRareName())
+    }
     lines.push(item.base_name)
 
-    lines.push('--------')
-    lines.push(`Item Level: ${item.item_level}`)
-    lines.push('--------')
+    // Quality and defense stats section
+    lines.push(separator)
+    const hasQuality = item.quality > 0
+    const stats = item.calculated_stats || {}
+    const baseStats = item.base_stats || {}
 
-    // Implicit mods
+    if (hasQuality) {
+      lines.push(`Quality: +${item.quality}% (augmented)`)
+    }
+
+    // Defense stats (Armour, Evasion, Energy Shield)
+    if (stats.Armour != null && stats.Armour > 0) {
+      const isAugmented = baseStats.Armour != null && stats.Armour > baseStats.Armour
+      lines.push(`Armour: ${Math.floor(stats.Armour)}${isAugmented ? ' (augmented)' : ''}`)
+    }
+    if (stats.Evasion != null && stats.Evasion > 0) {
+      const isAugmented = baseStats.Evasion != null && stats.Evasion > baseStats.Evasion
+      lines.push(`Evasion Rating: ${Math.floor(stats.Evasion)}${isAugmented ? ' (augmented)' : ''}`)
+    }
+    if (stats.EnergyShield != null && stats.EnergyShield > 0) {
+      const isAugmented = baseStats.EnergyShield != null && stats.EnergyShield > baseStats.EnergyShield
+      lines.push(`Energy Shield: ${Math.floor(stats.EnergyShield)}${isAugmented ? ' (augmented)' : ''}`)
+    }
+
+    // Weapon stats
+    if (stats.PhysicalMin != null && stats.PhysicalMax != null) {
+      lines.push(`Physical Damage: ${Math.floor(stats.PhysicalMin)}-${Math.floor(stats.PhysicalMax)}`)
+    }
+    if (stats.CritChance != null) {
+      lines.push(`Critical Hit Chance: ${stats.CritChance.toFixed(2)}%`)
+    }
+    if (stats.AttacksPerSecond != null) {
+      lines.push(`Attacks per Second: ${stats.AttacksPerSecond.toFixed(2)}`)
+    }
+
+    // Requirements section (simplified - would need base data for accurate reqs)
+    lines.push(separator)
+    lines.push(`Requires: Level ${Math.max(1, item.item_level - 10)}`)
+
+    // Sockets section
+    if (item.socketed_runes && item.socketed_runes.length > 0) {
+      lines.push(separator)
+      lines.push(`Sockets: ${item.socketed_runes.map(() => 'S').join(' ')}`)
+    }
+
+    // Item Level
+    lines.push(separator)
+    lines.push(`Item Level: ${item.item_level}`)
+
+    // Implicit mods section (no annotation in POB format)
     if (item.implicit_mods && item.implicit_mods.length > 0) {
+      lines.push(separator)
       if (format === 'detailed') {
         lines.push('{ Implicit Modifier }')
       }
       item.implicit_mods.forEach(mod => {
         const modText = renderModifierAsText(mod, format === 'detailed')
-        lines.push(`${modText} (implicit)`)
+        lines.push(modText)
       })
-      lines.push('--------')
     }
 
-    // Socketed rune mods
+    // Rune mods section (with (rune) annotation)
     if (item.socketed_runes && item.socketed_runes.length > 0) {
+      lines.push(separator)
       item.socketed_runes.forEach(rune => {
         if (format === 'detailed') {
           lines.push(`{ Rune "${rune.name}" }`)
@@ -1168,10 +1283,10 @@ function GridCraftingSimulator() {
           })
         }
       })
-      lines.push('--------')
     }
 
-    // Explicit mods
+    // Explicit mods section
+    lines.push(separator)
     const allMods: { mod: ItemModifier; type: 'prefix' | 'suffix' }[] = [
       ...item.prefix_mods.map(m => ({ mod: m, type: 'prefix' as const })),
       ...item.suffix_mods.map(m => ({ mod: m, type: 'suffix' as const }))
@@ -1186,7 +1301,15 @@ function GridCraftingSimulator() {
       }
 
       const modText = renderModifierAsText(mod, format === 'detailed')
-      lines.push(modText)
+
+      // Add annotations for special mod types
+      if (mod.is_desecrated) {
+        lines.push(`${modText} (desecrated)`)
+      } else if (mod.is_fractured) {
+        lines.push(`${modText} (fractured)`)
+      } else {
+        lines.push(modText)
+      }
     })
 
     return lines.join('\n')

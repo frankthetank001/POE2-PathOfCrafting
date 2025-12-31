@@ -109,6 +109,31 @@ PSEUDO_MOD_GROUPS = {
     "AllAttributes": "pseudo.pseudo_total_attributes",
 }
 
+# Stat text patterns that should route to pseudo stats (for hybrid mod splitting)
+# These patterns match the individual stat lines after splitting hybrid mods
+PSEUDO_STAT_PATTERNS = {
+    "maximum life": "pseudo.pseudo_total_life",
+    "to fire resistance": "pseudo.pseudo_total_elemental_resistance",
+    "to cold resistance": "pseudo.pseudo_total_elemental_resistance",
+    "to lightning resistance": "pseudo.pseudo_total_elemental_resistance",
+    "to all elemental resistances": "pseudo.pseudo_total_elemental_resistance",
+    "to chaos resistance": "pseudo.pseudo_total_chaos_resistance",
+    "to maximum mana": "pseudo.pseudo_total_mana",
+    "to strength": "pseudo.pseudo_total_strength",
+    "to dexterity": "pseudo.pseudo_total_dexterity",
+    "to intelligence": "pseudo.pseudo_total_intelligence",
+    "to all attributes": "pseudo.pseudo_total_attributes",
+}
+
+
+def _get_pseudo_for_stat_text(stat_text: str) -> Optional[str]:
+    """Check if a stat text pattern should be routed to a pseudo stat."""
+    stat_lower = stat_text.lower()
+    for pattern, pseudo_id in PSEUDO_STAT_PATTERNS.items():
+        if pattern in stat_lower:
+            return pseudo_id
+    return None
+
 # Human-readable names for pseudo stats
 PSEUDO_DISPLAY_NAMES = {
     "pseudo.pseudo_total_elemental_resistance": "Total Elemental Resistance",
@@ -398,7 +423,7 @@ class ItemPricer:
         with open("trade_request_debug.json", "w") as f:
             json.dump({
                 "query": query,
-                "league": league,
+                "league": search_league,
                 "strictness": strictness,
                 "mod_filters": {k: {kk: vv for kk, vv in v.items() if kk != "individual_mods"} for k, v in mod_filters.items()},
                 "use_pseudo_stats": use_pseudo_stats,
@@ -407,7 +432,7 @@ class ItemPricer:
             }, f, indent=2, default=str)
         logger.debug(f"Dumped trade request to trade_request_debug.json")
 
-        listings, query_id = await self._trade_client.search_and_fetch(query, league, max_results=20)
+        listings, query_id = await self._trade_client.search_and_fetch(query, search_league, max_results=20)
         logger.info(f"search_and_fetch returned {len(listings)} listings, query_id={query_id}")
 
         if listings:
@@ -519,19 +544,36 @@ class ItemPricer:
                         for i, part in enumerate(parts):
                             part = part.strip()
                             if "#" in part:
+                                part_value = all_values[i] if i < len(all_values) else value
+
+                                # Check if this part should go to a pseudo stat
+                                pseudo_id = _get_pseudo_for_stat_text(part)
+                                if pseudo_id:
+                                    # Route to pseudo total instead of explicit filter
+                                    pseudo_totals[pseudo_id] = pseudo_totals.get(pseudo_id, 0) + part_value
+                                    if mod_index is not None:
+                                        if pseudo_id not in pseudo_indices:
+                                            pseudo_indices[pseudo_id] = []
+                                        if mod_index not in pseudo_indices[pseudo_id]:
+                                            pseudo_indices[pseudo_id].append(mod_index)
+                                    logger.debug(f"Mod '{mod.name}' hybrid part {i}: '{part}' -> pseudo {pseudo_id} += {part_value}")
+                                    stat_ids.append(pseudo_id)  # Mark as handled
+                                    continue
+
+                                # Not a pseudo stat - add as explicit filter
                                 part_stat_ids = self._match_stat_to_trade_ids(part, mod_type)
                                 if part_stat_ids:
-                                    part_value = all_values[i] if i < len(all_values) else value
-                                    for part_stat_id in part_stat_ids:
-                                        if part_stat_id not in filters or part_value > filters[part_stat_id]["value"]:
-                                            filters[part_stat_id] = {
-                                                "value": part_value,
-                                                "name": mod.name,
-                                                "stat_text": part,
-                                                "is_pseudo": False,
-                                                "mod_index": mod_index,
-                                                "stat_ids": [part_stat_id],
-                                            }
+                                    # Use first stat_id as key, but store ALL variants for count filter
+                                    primary_stat_id = part_stat_ids[0]
+                                    if primary_stat_id not in filters or part_value > filters[primary_stat_id]["value"]:
+                                        filters[primary_stat_id] = {
+                                            "value": part_value,
+                                            "name": mod.name,
+                                            "stat_text": part,
+                                            "is_pseudo": False,
+                                            "mod_index": mod_index,
+                                            "stat_ids": part_stat_ids,  # All variants for count filter
+                                        }
                                     logger.debug(f"Mod '{mod.name}' hybrid part {i}: '{part}' -> {part_stat_ids} = {part_value}")
                                     stat_ids.extend(part_stat_ids)
                         if stat_ids:
@@ -1337,8 +1379,16 @@ class ItemPricer:
         }
 
         # Build a map of stat_id -> value from listing's parsed mods
+        # Also build a map by stat hash (the numeric part) to match across prefixes
         listing_stat_values: Dict[str, float] = {}
         listing_stat_names: Dict[str, str] = {}
+        listing_stat_by_hash: Dict[str, tuple[float, str]] = {}  # hash -> (value, full_stat_id)
+
+        def extract_stat_hash(stat_id: str) -> str:
+            """Extract the numeric hash from a stat_id like 'explicit.stat_123' -> '123'"""
+            if ".stat_" in stat_id:
+                return stat_id.split(".stat_")[-1]
+            return stat_id
 
         if listing.prefix_mods:
             for mod in listing.prefix_mods:
@@ -1346,10 +1396,14 @@ class ItemPricer:
                     values = mod["values"]
                     # For 2-value mods (damage ranges), use average for fair comparison
                     if len(values) == 2:
-                        listing_stat_values[mod["stat_id"]] = sum(values) / 2
+                        val = sum(values) / 2
                     else:
-                        listing_stat_values[mod["stat_id"]] = values[0]
+                        val = values[0]
+                    listing_stat_values[mod["stat_id"]] = val
                     listing_stat_names[mod["stat_id"]] = mod.get("name", "")
+                    # Also index by hash for cross-prefix matching
+                    stat_hash = extract_stat_hash(mod["stat_id"])
+                    listing_stat_by_hash[stat_hash] = (val, mod["stat_id"])
 
         if listing.suffix_mods:
             for mod in listing.suffix_mods:
@@ -1357,10 +1411,14 @@ class ItemPricer:
                     values = mod["values"]
                     # For 2-value mods (damage ranges), use average for fair comparison
                     if len(values) == 2:
-                        listing_stat_values[mod["stat_id"]] = sum(values) / 2
+                        val = sum(values) / 2
                     else:
-                        listing_stat_values[mod["stat_id"]] = values[0]
+                        val = values[0]
+                    listing_stat_values[mod["stat_id"]] = val
                     listing_stat_names[mod["stat_id"]] = mod.get("name", "")
+                    # Also index by hash for cross-prefix matching
+                    stat_hash = extract_stat_hash(mod["stat_id"])
+                    listing_stat_by_hash[stat_hash] = (val, mod["stat_id"])
 
         for stat_id, filter_info in mod_filters.items():
             user_value = filter_info.get("value", 0)
@@ -1383,8 +1441,29 @@ class ItemPricer:
                 listing_value = listing_stat_values[stat_id]
                 match_method = f"stat_id:{stat_id}"
 
+            # Try to match any of the stat_ids variants (global/local)
+            elif filter_info.get("stat_ids"):
+                for variant_id in filter_info["stat_ids"]:
+                    if variant_id in listing_stat_values:
+                        listing_value = listing_stat_values[variant_id]
+                        match_method = f"variant:{variant_id}"
+                        break
+                    # Also try matching by hash (handles desecrated/fractured prefixes)
+                    variant_hash = extract_stat_hash(variant_id)
+                    if variant_hash in listing_stat_by_hash:
+                        listing_value, matched_id = listing_stat_by_hash[variant_hash]
+                        match_method = f"hash:{variant_hash}:{matched_id}"
+                        break
+
+            # If still no match, try matching by hash directly
+            if listing_value is None:
+                stat_hash = extract_stat_hash(stat_id)
+                if stat_hash in listing_stat_by_hash:
+                    listing_value, matched_id = listing_stat_by_hash[stat_hash]
+                    match_method = f"hash_fallback:{stat_hash}:{matched_id}"
+
             # Check for movement speed specially (common stat)
-            elif "movement speed" in filter_info.get("stat_text", "").lower():
+            if listing_value is None and "movement speed" in filter_info.get("stat_text", "").lower():
                 listing_value = listing.movement_speed
                 stat_display_name = "Move Speed"
                 match_method = "pattern:movement_speed"

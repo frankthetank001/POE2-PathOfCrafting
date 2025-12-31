@@ -92,7 +92,7 @@ class ItemConverter:
 
             # Convert implicits
             for implicit in parsed_item.implicits:
-                mod = self._convert_mod_to_modifier(implicit, base.category, parsed_item.item_level or 65, "implicit")
+                mod = self._convert_mod_to_modifier(implicit, base.category, parsed_item.item_level or 65, "implicit", base.tags)
                 if mod:
                     implicit_mods.append(mod)
                 else:
@@ -104,7 +104,7 @@ class ItemConverter:
 
             # Convert explicits - need to determine if prefix or suffix
             for explicit in parsed_item.explicits:
-                mod = self._convert_mod_to_modifier(explicit, base.category, parsed_item.item_level or 65)
+                mod = self._convert_mod_to_modifier(explicit, base.category, parsed_item.item_level or 65, None, base.tags)
                 if mod:
                     if mod.mod_type == ModType.PREFIX:
                         prefix_mods.append(mod)
@@ -132,6 +132,7 @@ class ItemConverter:
             item = CraftableItem(
                 base_name=base.name,
                 base_category=base.category,
+                slot=base.slot,
                 rarity=parsed_item.rarity,
                 item_level=parsed_item.item_level or 65,
                 quality=parsed_item.quality or 20,
@@ -174,12 +175,20 @@ class ItemConverter:
         item_mod: ItemMod,
         base_category: str,
         item_level: int,
-        force_type: Optional[str] = None
+        force_type: Optional[str] = None,
+        base_tags: Optional[List[str]] = None
     ) -> Optional[ItemModifier]:
         """Convert an ItemMod to an ItemModifier by matching with the database"""
 
         # Helper function to check if a mod is applicable to this item
         def is_mod_applicable(mod):
+            # Check if any of the item's tags match the mod's applicable_items
+            # This handles cases like focus items which have both 'focus' and 'int_armour' tags
+            if base_tags:
+                for tag in base_tags:
+                    if tag in mod.applicable_items:
+                        return True
+
             if base_category in mod.applicable_items:
                 return True
             if 'jewellery' in mod.applicable_items and base_category in JEWELRY_CATEGORIES:

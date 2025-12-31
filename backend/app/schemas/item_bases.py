@@ -12,6 +12,7 @@ class ItemBase(BaseModel):
     name: str
     category: str
     slot: str  # body_armour, helmet, gloves, boots, weapon, etc.
+    tags: List[str] = []  # All applicable tags (e.g., ['focus', 'int_armour', 'armour'])
     attribute_requirements: List[str] = []  # str, dex, int
     default_ilvl: int = 65
     description: Optional[str] = None
@@ -31,12 +32,14 @@ def load_item_bases() -> List[ItemBase]:
             # Get extended attributes stored during loading
             slot = getattr(base_info, '_slot', base_info.category)
             attr_reqs = getattr(base_info, '_attribute_requirements', [])
+            tags = getattr(base_info, '_tags', [])
 
             item_bases.append(
                 ItemBase(
                     name=base_info.name,
                     category=base_info.category,
                     slot=slot,
+                    tags=tags,
                     attribute_requirements=attr_reqs,
                     default_ilvl=base_info.required_level or 65,
                     description=None,
