@@ -1696,11 +1696,17 @@ function GridCraftingSimulator() {
 
     setItem(newItem)
 
-    // Consume Omen of Abyssal Echoes if it was used
+    // Consume Omen of Abyssal Echoes when reveal is completed (mod selected)
+    // The omen is consumed regardless of whether reroll was used
     const hasAbyssalEchoes = selectedOmens.some(omen => omen.includes('Abyssal Echoes'))
     if (hasAbyssalEchoes) {
       const newOmens = selectedOmens.filter(omen => !omen.includes('Abyssal Echoes'))
       setSelectedOmens(newOmens)
+      // Track Abyssal Echoes cost
+      setCurrencySpent(prev => ({
+        ...prev,
+        'Omen of Abyssal Echoes': (prev['Omen of Abyssal Echoes'] || 0) + 1
+      }))
       setMessage(`Revealed: ${choice.name} (Omen of Abyssal Echoes consumed)`)
     } else {
       setMessage(`Revealed: ${choice.name}`)
@@ -1742,7 +1748,7 @@ function GridCraftingSimulator() {
       const data = await response.json()
       setRevealChoices(data.choices)
       setRerollUsed(true)
-      setMessage('Rerolled modifier choices (Omen of Abyssal Echoes consumed)')
+      setMessage('Rerolled modifier choices')
     } catch (error) {
       console.error('Error rerolling choices:', error)
       setMessage('Error rerolling choices')
@@ -2345,7 +2351,7 @@ function GridCraftingSimulator() {
     if (mod.current_values && mod.current_values.length > 0) {
       // Use rolled values for each stat
       values.push(...mod.current_values.map(v => Math.round(v)))
-    } else if (mod.current_value !== undefined) {
+    } else if (mod.current_value !== undefined && mod.current_value !== null) {
       // Legacy: single value, duplicate for all placeholders
       const roundedValue = Math.round(mod.current_value)
       const placeholderCount = (mod.stat_text.match(/#/g) || []).length

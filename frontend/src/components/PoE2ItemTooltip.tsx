@@ -22,7 +22,7 @@ export function PoE2ItemTooltip({ item, showTiers = false, compact = false }: Po
         valueIndex++
         return `<span class="poe2-mod-value">${value}</span>`
       })
-    } else if (mod.current_value !== undefined && text.includes('#')) {
+    } else if (mod.current_value !== undefined && mod.current_value !== null && text.includes('#')) {
       text = text.replace('#', `<span class="poe2-mod-value">${mod.current_value}</span>`)
     }
 

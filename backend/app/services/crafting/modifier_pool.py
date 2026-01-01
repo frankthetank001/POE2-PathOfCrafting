@@ -315,7 +315,21 @@ class ModifierPool:
                 return rolled_mod
 
         # Fallback to last weighted modifier if we somehow didn't select one
-        return weighted_mods[-1].model_copy() if weighted_mods else None
+        if weighted_mods:
+            fallback_mod = weighted_mods[-1].model_copy()
+            # Roll values for fallback mod too
+            if fallback_mod.stat_ranges and len(fallback_mod.stat_ranges) > 0:
+                fallback_mod.current_values = [
+                    round(random.uniform(stat_range.min, stat_range.max))
+                    for stat_range in fallback_mod.stat_ranges
+                ]
+                fallback_mod.current_value = fallback_mod.current_values[0]
+            elif fallback_mod.stat_min is not None and fallback_mod.stat_max is not None:
+                fallback_mod.current_value = round(random.uniform(
+                    fallback_mod.stat_min, fallback_mod.stat_max
+                ))
+            return fallback_mod
+        return None
 
     def _is_unique_only_mod_group(self, mod_group: Optional[str], item_category: str = "") -> bool:
         """Check if a mod group is known to be unique-only"""

@@ -41,7 +41,7 @@ export function PoE2ModLine({
         valueIndex++
         return String(value)
       })
-    } else if (mod.current_value !== undefined && text.includes('#')) {
+    } else if (mod.current_value !== undefined && mod.current_value !== null && text.includes('#')) {
       text = text.replace('#', String(mod.current_value))
     }
 
