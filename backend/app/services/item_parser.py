@@ -15,6 +15,10 @@ class ItemParser:
         if not item_text or not item_text.strip():
             raise ValueError("Item text cannot be empty")
 
+        # Check if this is an alternative format (no separators, has tier prefixes like P1, S2)
+        if SECTION_SEPARATOR not in item_text and ItemParser._is_alternative_format(item_text):
+            return ItemParser._parse_alternative_format(item_text)
+
         sections = item_text.split(SECTION_SEPARATOR)
         sections = [s.strip() for s in sections if s.strip()]
 
@@ -431,3 +435,211 @@ class ItemParser:
                 bonded_mods=bonded_mods
             )
         return None
+
+    @staticmethod
+    def _is_alternative_format(item_text: str) -> bool:
+        """
+        Detect if the item text is in the alternative format used by some tools.
+
+        Format characteristics:
+        - No "--------" separators
+        - Has "Item Rarity:" instead of "Rarity:"
+        - Has tier prefixes like P1, P2, S0, S1, S2 on their own lines before mods
+        - May have "Tiering" section header
+        """
+        lines = [line.strip() for line in item_text.split("\n") if line.strip()]
+
+        # Check for characteristic markers
+        has_item_rarity = any("Item Rarity:" in line for line in lines)
+        has_tier_prefix = any(re.match(r'^[PS]\d+$', line) for line in lines)
+        has_tiering_header = any(line == "Tiering" for line in lines)
+
+        return has_item_rarity or has_tier_prefix or has_tiering_header
+
+    @staticmethod
+    def _parse_alternative_format(item_text: str) -> ParsedItem:
+        """
+        Parse item text in the alternative format.
+
+        Format example:
+        ```
+        Pandemonium March
+        Sandsworn Sandals
+        Boots
+        Quality: +20%
+        Energy Shield: 386
+        Item Rarity: Rare
+        Item Level: 80
+        Requires Level: 75, 101 Int
+        Tiering
+        56% increased Armour, Evasion and Energy Shield
+        Bonded: +32 to maximum Life
+        P1
+        97% increased Energy Shield
+        S2
+        +38% to Lightning Resistance
+        ```
+        """
+        lines = [line.strip() for line in item_text.split("\n") if line.strip()]
+
+        # Parse basic info
+        name = lines[0] if len(lines) > 0 else "Unknown"
+        base_type = lines[1] if len(lines) > 1 else "Unknown"
+
+        # Initialize values
+        rarity = ItemRarity.NORMAL
+        item_level: Optional[int] = None
+        quality: Optional[int] = None
+        requirements = {}
+        implicits: List[ItemMod] = []
+        explicits: List[ItemMod] = []
+        runes: List[ParsedRune] = []
+        corrupted = False
+        catalyst_type: Optional[str] = None
+        catalyst_quality: Optional[int] = None
+
+        # Track parsing state
+        in_mods_section = False
+        seen_tier_marker = False  # True after first P/S tier marker
+        current_mod_type: Optional[str] = None  # 'prefix' or 'suffix'
+        current_tier: Optional[int] = None
+        rune_mods: List[str] = []
+        bonded_mods: List[str] = []
+
+        for line in lines[2:]:  # Skip name and base_type
+            # Parse rarity
+            if line.startswith("Item Rarity:"):
+                rarity_text = line.replace("Item Rarity:", "").strip()
+                try:
+                    rarity = ItemRarity(rarity_text)
+                except ValueError:
+                    rarity = ItemRarity.NORMAL
+                continue
+
+            # Parse item level
+            if line.startswith("Item Level:"):
+                match = re.search(r"Item Level:\s*(\d+)", line)
+                if match:
+                    item_level = int(match.group(1))
+                continue
+
+            # Parse quality
+            if line.startswith("Quality:") and "Modifiers" not in line:
+                match = re.search(r"Quality:\s*\+?(\d+)", line)
+                if match:
+                    quality = int(match.group(1))
+                continue
+
+            # Parse requirements (format: "Requires Level: 75, 101 Int")
+            if line.startswith("Requires Level:") or line.startswith("Requires:"):
+                req_text = line.replace("Requires Level:", "").replace("Requires:", "").strip()
+                # Parse level
+                level_match = re.match(r"(\d+)", req_text)
+                if level_match:
+                    requirements["Level"] = int(level_match.group(1))
+                # Parse attributes
+                if "Str" in req_text:
+                    str_match = re.search(r"(\d+)\s*Str", req_text)
+                    if str_match:
+                        requirements["Strength"] = int(str_match.group(1))
+                if "Dex" in req_text:
+                    dex_match = re.search(r"(\d+)\s*Dex", req_text)
+                    if dex_match:
+                        requirements["Dexterity"] = int(dex_match.group(1))
+                if "Int" in req_text:
+                    int_match = re.search(r"(\d+)\s*Int", req_text)
+                    if int_match:
+                        requirements["Intelligence"] = int(int_match.group(1))
+                continue
+
+            # Skip item class and stat lines
+            if line in ["Boots", "Helmet", "Gloves", "Body Armour", "Belt", "Ring", "Amulet",
+                        "One Hand Sword", "Two Hand Sword", "Bow", "Staff", "Wand", "Shield", "Quiver", "Focus"]:
+                continue
+            if any(line.startswith(stat) for stat in ["Armour:", "Evasion:", "Energy Shield:", "Ward:",
+                                                       "Physical Damage:", "Elemental Damage:", "Critical Hit Chance:",
+                                                       "Attacks per Second:", "Weapon Range:"]):
+                continue
+
+            # Tiering section header marks start of mods
+            if line == "Tiering":
+                in_mods_section = True
+                continue
+
+            # Check for tier prefix (P0, P1, P2, S0, S1, S2, etc.)
+            tier_match = re.match(r'^([PS])(\d+)$', line)
+            if tier_match:
+                in_mods_section = True
+                seen_tier_marker = True
+                mod_letter = tier_match.group(1)
+                current_mod_type = "prefix" if mod_letter == "P" else "suffix"
+                current_tier = int(tier_match.group(2))
+                continue
+
+            # Check for corrupted
+            if line == "Corrupted":
+                corrupted = True
+                continue
+
+            # Parse bonded mods (from runes)
+            if line.startswith("Bonded:"):
+                mod_text = line.replace("Bonded:", "").strip()
+                bonded_mods.append(mod_text)
+                continue
+
+            # If we're in mods section, parse as mod
+            if in_mods_section:
+                # Skip empty lines and non-mod lines
+                if not line or line.startswith("Quality") or line.startswith("Item"):
+                    continue
+
+                # Check if this looks like a mod
+                mod_indicators = ["+", "increased", "reduced", "Adds", "to ", "%", "Grants", "Bears"]
+                if any(indicator in line for indicator in mod_indicators):
+                    values = re.findall(r"\d+(?:\.\d+)?", line)
+
+                    if current_mod_type:
+                        # We have a tier marker, this is an explicit mod
+                        mod = ItemMod(
+                            text=line,
+                            values=values,
+                            mod_type=current_mod_type,
+                            tier=current_tier
+                        )
+                        explicits.append(mod)
+                        # Reset tier after consuming the mod
+                        current_mod_type = None
+                        current_tier = None
+                    elif not seen_tier_marker:
+                        # In mods section but before any tier markers = rune mod
+                        rune_mods.append(line)
+                    else:
+                        # After tier markers but no current type = shouldn't happen
+                        # Treat as explicit without type info
+                        mod = ItemMod(text=line, values=values)
+                        explicits.append(mod)
+
+        # Create rune from rune mods and bonded mods if any
+        if rune_mods or bonded_mods:
+            runes.append(ParsedRune(
+                name="Unknown Rune",
+                mods=rune_mods,
+                bonded_mods=bonded_mods
+            ))
+
+        return ParsedItem(
+            rarity=rarity,
+            name=name,
+            base_type=base_type,
+            item_level=item_level,
+            quality=quality,
+            sockets=[],
+            requirements=requirements,
+            implicits=implicits,
+            explicits=explicits,
+            runes=runes,
+            corrupted=corrupted,
+            raw_text=item_text,
+            catalyst_type=catalyst_type,
+            catalyst_quality=catalyst_quality,
+        )
