@@ -817,8 +817,8 @@ export const TradePriceFlyout = forwardRef<TradePriceFlyoutHandle, TradePriceFly
         )}
       </div>
 
-      {/* Footer with trade link */}
-      {itemPrice && itemPrice.trade_url && (
+      {/* Footer with trade link - always show if we have a URL, even with 0 results */}
+      {itemPrice?.trade_url && (
         <div className="trade-flyout-footer">
           <a
             href={itemPrice.trade_url}

@@ -4,13 +4,16 @@ Test suite for catalyst mechanics.
 Tests cover:
 - Catalyst application to jewelry (rings/amulets)
 - Catalyst rejection for non-jewelry items
-- Catalyst quality stacking (5% per use, max 20%)
+- Catalyst quality stacking (1-2% per use, max 20%)
 - Catalyst type replacement (different catalyst resets quality)
 - Omen of Catalysing Exaltation weight boosting
 - Quality consumption after omen use
+
+Note: In-game, catalysts add 1% quality with 15% chance for 2%.
 """
 
 import pytest
+import random
 from typing import List
 from unittest.mock import Mock, patch
 
@@ -134,10 +137,12 @@ class TestCatalystApplication:
         assert can_apply is True
         assert error is None
 
-        success, message, result_item = mechanic.apply(item, mock_modifier_pool)
+        # Mock random to return > 0.15 (no bonus, so +1%)
+        with patch('app.services.crafting.mechanics.random.random', return_value=0.5):
+            success, message, result_item = mechanic.apply(item, mock_modifier_pool)
         assert success is True
         assert result_item.catalyst_type == "flesh"
-        assert result_item.catalyst_quality == 5
+        assert result_item.catalyst_quality == 1  # 1% per use (no bonus)
 
     def test_apply_catalyst_to_amulet(self, create_jewelry_item, mock_modifier_pool):
         """Catalyst should apply to amulets."""
@@ -147,10 +152,12 @@ class TestCatalystApplication:
         can_apply, error = mechanic.can_apply(item)
         assert can_apply is True
 
-        success, message, result_item = mechanic.apply(item, mock_modifier_pool)
+        # Mock random to return < 0.15 (bonus, so +2%)
+        with patch('app.services.crafting.mechanics.random.random', return_value=0.1):
+            success, message, result_item = mechanic.apply(item, mock_modifier_pool)
         assert success is True
         assert result_item.catalyst_type == "neural"
-        assert result_item.catalyst_quality == 5
+        assert result_item.catalyst_quality == 2  # 2% bonus roll
 
     def test_catalyst_rejected_on_belt(self, mock_modifier_pool):
         """Catalyst should not apply to belts."""
@@ -203,29 +210,48 @@ class TestCatalystQualityStacking:
     """Test catalyst quality accumulation."""
 
     def test_quality_stacks_to_max(self, create_jewelry_item, mock_modifier_pool):
-        """Quality should stack 5% per use up to 20%."""
+        """Quality should stack 1-2% per use up to 20%."""
         item = create_jewelry_item(base_category="ring", catalyst_type="flesh", catalyst_quality=0)
         mechanic = CatalystMechanic({"catalyst_type": "flesh"})
 
-        # Apply 4 times (5% each)
-        for expected_quality in [5, 10, 15, 20]:
-            success, message, item = mechanic.apply(item, mock_modifier_pool)
-            assert success is True
-            assert item.catalyst_quality == expected_quality
+        # Apply multiple times with +1% each (mocked to no bonus)
+        with patch('app.services.crafting.mechanics.random.random', return_value=0.5):
+            for expected_quality in range(1, 21):
+                success, message, item = mechanic.apply(item, mock_modifier_pool)
+                assert success is True
+                assert item.catalyst_quality == expected_quality
 
-        # Fifth application should be rejected (already at max)
+        # Next application should be rejected (already at max)
         can_apply, error = mechanic.can_apply(item)
         assert can_apply is False
         assert "maximum" in error
 
     def test_quality_partial_addition_at_cap(self, create_jewelry_item, mock_modifier_pool):
-        """Quality should cap at 20% even if partial would exceed."""
-        item = create_jewelry_item(base_category="ring", catalyst_type="flesh", catalyst_quality=18)
+        """Quality should cap at 20% even if roll would exceed."""
+        item = create_jewelry_item(base_category="ring", catalyst_type="flesh", catalyst_quality=19)
         mechanic = CatalystMechanic({"catalyst_type": "flesh"})
 
-        success, message, item = mechanic.apply(item, mock_modifier_pool)
+        # Even with +2% bonus roll, should cap at 20%
+        with patch('app.services.crafting.mechanics.random.random', return_value=0.1):  # Bonus roll
+            success, message, item = mechanic.apply(item, mock_modifier_pool)
         assert success is True
-        assert item.catalyst_quality == 20  # Capped, not 23
+        assert item.catalyst_quality == 20  # Capped at max, not 21
+
+    def test_quality_bonus_roll_probability(self, create_jewelry_item, mock_modifier_pool):
+        """15% chance for +2%, 85% chance for +1%."""
+        item = create_jewelry_item(base_category="ring", catalyst_type="flesh", catalyst_quality=0)
+        mechanic = CatalystMechanic({"catalyst_type": "flesh"})
+
+        # Test bonus roll (random < 0.15)
+        with patch('app.services.crafting.mechanics.random.random', return_value=0.10):
+            success, message, result = mechanic.apply(item, mock_modifier_pool)
+        assert result.catalyst_quality == 2  # +2% bonus
+
+        # Test normal roll (random >= 0.15)
+        item2 = create_jewelry_item(base_category="ring", catalyst_type="flesh", catalyst_quality=0)
+        with patch('app.services.crafting.mechanics.random.random', return_value=0.20):
+            success, message, result = mechanic.apply(item2, mock_modifier_pool)
+        assert result.catalyst_quality == 1  # +1% normal
 
 
 class TestCatalystTypeReplacement:
@@ -236,20 +262,22 @@ class TestCatalystTypeReplacement:
         item = create_jewelry_item(base_category="ring", catalyst_type="flesh", catalyst_quality=15)
         mechanic = CatalystMechanic({"catalyst_type": "reaver"})  # Different type
 
-        success, message, item = mechanic.apply(item, mock_modifier_pool)
+        with patch('app.services.crafting.mechanics.random.random', return_value=0.5):
+            success, message, item = mechanic.apply(item, mock_modifier_pool)
         assert success is True
         assert item.catalyst_type == "reaver"
-        assert item.catalyst_quality == 5  # Reset to 5%, not 15+5
+        assert item.catalyst_quality == 1  # Reset to 0, then +1%
 
     def test_same_catalyst_adds_quality(self, create_jewelry_item, mock_modifier_pool):
         """Applying same catalyst type should add to existing quality."""
         item = create_jewelry_item(base_category="ring", catalyst_type="flesh", catalyst_quality=10)
         mechanic = CatalystMechanic({"catalyst_type": "flesh"})  # Same type
 
-        success, message, item = mechanic.apply(item, mock_modifier_pool)
+        with patch('app.services.crafting.mechanics.random.random', return_value=0.5):
+            success, message, item = mechanic.apply(item, mock_modifier_pool)
         assert success is True
         assert item.catalyst_type == "flesh"
-        assert item.catalyst_quality == 15  # 10 + 5
+        assert item.catalyst_quality == 11  # 10 + 1
 
 
 # ============================================================================

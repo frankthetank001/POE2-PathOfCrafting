@@ -83,8 +83,9 @@ logger = get_logger(__name__)
 # Cache for mod data lookups
 _mod_data_cache: dict = {}
 
-# Cache for PoE2 trade API stat IDs (text pattern -> stat_id)
-_trade_stats_cache: Dict[str, str] = {}
+# Cache for PoE2 trade API stat IDs (text pattern -> list of stat_ids)
+# Some stats have duplicates with same text but different IDs - we store all of them
+_trade_stats_cache: Dict[str, List[str]] = {}
 
 
 # Mod groups that should use pseudo stats instead of explicit
@@ -102,6 +103,7 @@ PSEUDO_MOD_GROUPS = {
     "IncreasedLife": "pseudo.pseudo_total_life",
     # Mana - flat mana goes to pseudo total
     "IncreasedMana": "pseudo.pseudo_total_mana",
+    # Note: Spirit does NOT have a pseudo stat in PoE2 trade API - use explicit matching
     # Attributes - use totals
     "Strength": "pseudo.pseudo_total_strength",
     "Dexterity": "pseudo.pseudo_total_dexterity",
@@ -250,8 +252,8 @@ class ItemPricer:
                 label = group.get("label", "").lower()
                 groups_by_label[label] = group
 
-            # Process groups in priority order (lowest to highest, so explicit is last and wins)
-            for label in priority_order:
+            # Process groups in priority order (explicit first so it's at front of list)
+            for label in reversed(priority_order):
                 group = groups_by_label.get(label)
                 if not group:
                     continue
@@ -260,7 +262,14 @@ class ItemPricer:
                     text = entry.get("text", "")
                     if stat_id and text:
                         # Normalize to uppercase for consistent matching
-                        _trade_stats_cache[text.upper()] = stat_id
+                        cache_key = text.upper()
+                        if cache_key not in _trade_stats_cache:
+                            _trade_stats_cache[cache_key] = []
+                        # Add to front if explicit (preferred), else append
+                        if label == "explicit" and stat_id not in _trade_stats_cache[cache_key]:
+                            _trade_stats_cache[cache_key].insert(0, stat_id)
+                        elif stat_id not in _trade_stats_cache[cache_key]:
+                            _trade_stats_cache[cache_key].append(stat_id)
 
             # Process any remaining groups not in our priority list
             for label, group in groups_by_label.items():
@@ -270,7 +279,11 @@ class ItemPricer:
                     stat_id = entry.get("id", "")
                     text = entry.get("text", "")
                     if stat_id and text:
-                        _trade_stats_cache[text.upper()] = stat_id
+                        cache_key = text.upper()
+                        if cache_key not in _trade_stats_cache:
+                            _trade_stats_cache[cache_key] = []
+                        if stat_id not in _trade_stats_cache[cache_key]:
+                            _trade_stats_cache[cache_key].append(stat_id)
 
             logger.info(f"Loaded {len(_trade_stats_cache)} trade stats from API (explicit-prioritized)")
             # Dump cache to file for debugging
@@ -307,29 +320,37 @@ class ItemPricer:
         found_with_fallback = False
 
         def add_stat_id(cache_key: str, use_fallback: bool = False) -> bool:
-            """Try to add a stat ID from the cache key.
+            """Try to add stat IDs from the cache key.
 
             Args:
                 cache_key: The key to look up in the cache
-                use_fallback: If True, use the full ID from cache as-is instead of
-                             constructing with mod_type prefix
+                use_fallback: If True, use stat IDs that don't match mod_type prefix
             """
             nonlocal found_with_fallback
             if cache_key in _trade_stats_cache:
-                full_id = _trade_stats_cache[cache_key]
-                stat_hash = full_id.split(".")[-1]
+                # Cache stores a list of stat IDs for each text pattern
+                stat_ids_list = _trade_stats_cache[cache_key]
+                added_any = False
 
-                if use_fallback:
-                    # Use the full ID as-is from cache (e.g., desecrated.stat_xxx)
-                    stat_id = full_id
-                    found_with_fallback = True
-                else:
-                    # Construct ID with requested prefix
-                    stat_id = f"{mod_type}.{stat_hash}"
+                # First pass: only add IDs that match the requested mod_type prefix
+                # This avoids using desecrated.stat_xxx when we want explicit.stat_xxx
+                for full_id in stat_ids_list:
+                    prefix = full_id.split(".")[0] if "." in full_id else ""
 
-                if stat_id not in results:
-                    results.append(stat_id)
-                return True
+                    if not use_fallback:
+                        # Only use IDs matching the requested prefix
+                        if prefix == mod_type:
+                            if full_id not in results:
+                                results.append(full_id)
+                                added_any = True
+                    else:
+                        # Fallback: use any ID as-is
+                        if full_id not in results:
+                            results.append(full_id)
+                            added_any = True
+                            found_with_fallback = True
+
+                return added_any
             return False
 
         # Direct lookup - try exact match and local variant with requested prefix
@@ -435,14 +456,30 @@ class ItemPricer:
         listings, query_id = await self._trade_client.search_and_fetch(query, search_league, max_results=20)
         logger.info(f"search_and_fetch returned {len(listings)} listings, query_id={query_id}")
 
+        # Always build trade_url if we have a query_id (for debugging even with 0 results)
+        trade_url = self._trade_client.build_trade_url(query_id, search_league) if query_id else None
+
         if listings:
-            trade_url = self._trade_client.build_trade_url(query_id, search_league) if query_id else None
             result = await self._calculate_price(listings, mod_filters, strictness, trade_url, item, pseudo_stats)
             if result:
                 result.unmatched_mods = unmatched_mods
             return result
 
-        return None
+        # Return minimal result with trade_url even when no listings found
+        return PriceEstimate(
+            min_price=0,
+            max_price=0,
+            median_price=0,
+            average_price=0,
+            currency="chaos",
+            num_listings=0,
+            confidence="none",
+            search_criteria={},
+            trade_url=trade_url,
+            listings=[],
+            pseudo_stats=pseudo_stats,
+            unmatched_mods=unmatched_mods,
+        )
 
     def _extract_mod_filters(self, item: CraftableItem) -> tuple[Dict[str, Dict[str, Any]], List[PseudoStatInfo], List[Dict[str, Any]]]:
         """
@@ -497,6 +534,13 @@ class ItemPricer:
                     if '#' not in pseudo_stat_text_normalized:
                         pseudo_stat_text_normalized = re.sub(r'\d+(?:\.\d+)?(?=%)', '#', pseudo_stat_text_normalized)
                 stat_ids = self._match_stat_to_trade_ids(pseudo_stat_text_normalized, mod_type)
+
+                # Fallback to trade_hash if stat_text matching failed
+                if not stat_ids and mod.trade_hash:
+                    stat_id = f"{mod_type}.stat_{mod.trade_hash}"
+                    stat_ids = [stat_id]
+                    logger.debug(f"Pseudo mod '{mod.name}' using trade_hash fallback -> {stat_id}")
+
                 if stat_ids:
                     if pseudo_id not in pseudo_individual_mods:
                         pseudo_individual_mods[pseudo_id] = []
@@ -580,8 +624,8 @@ class ItemPricer:
                             logger.debug(f"Mod '{mod.name}' matched via hybrid split -> {stat_ids}")
                             continue
 
+                # Fallback to trade_hash only if no cache matches (trade_hash may be from PoE1)
                 if not stat_ids and mod.trade_hash:
-                    # Fallback to trade_hash if stat_text matching failed
                     stat_id = f"{mod_type}.stat_{mod.trade_hash}"
                     stat_ids = [stat_id]
                     logger.debug(f"Mod '{mod.name}' using trade_hash fallback -> {stat_id}")
@@ -707,7 +751,7 @@ class ItemPricer:
             purchase_type: Purchase type filter ('securable', 'available', 'onlineleague', 'online', 'any')
         """
         filters = []
-        count_filters = []  # For stats with multiple variants (global + local)
+        count_filters = []  # For stats with multiple variants - use count(min=1)
 
         # Add mod filters
         for stat_id, filter_info in mod_filters.items():
@@ -739,12 +783,15 @@ class ItemPricer:
                                 min_val = int(ind_value * strictness)
                         else:
                             min_val = int(ind_value * strictness)
-                        filters.append({
-                            "id": ind_mod["stat_id"],
-                            "value": {"min": min_val},
-                            "_value": ind_value,
-                        })
-                        logger.debug(f"  Individual mod (pseudo disabled): {ind_mod['stat_id']} min={min_val}")
+                        # Use first stat_id from the list
+                        ind_stat_id = ind_mod["stat_ids"][0] if ind_mod.get("stat_ids") else None
+                        if ind_stat_id:
+                            filters.append({
+                                "id": ind_stat_id,
+                                "value": {"min": min_val},
+                                "_value": ind_value,
+                            })
+                            logger.debug(f"  Individual mod (pseudo disabled): {ind_stat_id} min={min_val}")
                     logger.debug(f"Pseudo {stat_id} disabled - using {len(individual_mods)} individual mods")
                     continue
                 else:
@@ -761,13 +808,16 @@ class ItemPricer:
                                 # User explicitly enabled this individual mod alongside the pseudo
                                 ind_value = ind_mod["value"]
                                 min_val = int(mod_min_values[hidden_key])
-                                filters.append({
-                                    "id": ind_mod["stat_id"],
-                                    "value": {"min": min_val},
-                                    "_value": ind_value,
-                                })
-                                added_individual += 1
-                                logger.debug(f"  Individual mod (with pseudo): {ind_mod['stat_id']} min={min_val}")
+                                # Use first stat_id from the list
+                                ind_stat_id = ind_mod["stat_ids"][0] if ind_mod.get("stat_ids") else None
+                                if ind_stat_id:
+                                    filters.append({
+                                        "id": ind_stat_id,
+                                        "value": {"min": min_val},
+                                        "_value": ind_value,
+                                    })
+                                    added_individual += 1
+                                    logger.debug(f"  Individual mod (with pseudo): {ind_stat_id} min={min_val}")
                     if added_individual > 0:
                         logger.debug(f"Pseudo {stat_id} enabled + {added_individual} individual mods")
                     else:
@@ -795,23 +845,27 @@ class ItemPricer:
             if min_value is None:
                 min_value = int(value * strictness)
 
-            # Check if this filter has multiple stat_ids (global + local variants)
+            # Get all matching stat_ids for this mod
             stat_ids = filter_info.get("stat_ids", [stat_id])
+
             if len(stat_ids) > 1:
-                # Multiple variants - use a "count" group with min=1
+                # Multiple stat IDs (e.g., duplicate entries in trade API) - use count filter with min=1
+                # This tries all variants and succeeds if at least one matches
                 count_filters.append({
                     "stat_ids": stat_ids,
                     "min_value": min_value,
                     "_value": value,
                 })
-                logger.debug(f"  Multi-stat filter: {stat_ids} min={min_value} (count=1)")
+                logger.debug(f"  Count filter (min=1): {stat_ids} min={min_value}")
             else:
-                # Single stat - add to normal filters
+                # Single stat ID - use normal filter
+                primary_stat_id = stat_ids[0] if stat_ids else stat_id
                 filters.append({
-                    "id": stat_id,
+                    "id": primary_stat_id,
                     "value": {"min": min_value},
                     "_value": value,  # For sorting
                 })
+                logger.debug(f"  Filter: {primary_stat_id} min={min_value}")
 
         # Limit to most important stats to avoid over-filtering
         # Sort by value descending and take top 6
@@ -843,11 +897,12 @@ class ItemPricer:
                 "filters": filters
             })
 
-        # Add "count" groups for multi-stat filters (global/local variants)
+        # Add "count" groups for multi-stat filters (duplicate stat entries)
+        # Uses min=1 so query succeeds if ANY of the stat IDs is valid
         for cf in count_filters:
             stats_groups.append({
                 "type": "count",
-                "value": {"min": 1},  # Match at least one variant
+                "value": {"min": 1},
                 "filters": [
                     {"id": sid, "value": {"min": cf["min_value"]}}
                     for sid in cf["stat_ids"]

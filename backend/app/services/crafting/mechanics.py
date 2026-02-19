@@ -2515,8 +2515,9 @@ class CatalystMechanic(CraftingMechanic):
     def __init__(self, config: Dict[str, Any]):
         super().__init__(config)
         self.catalyst_type = config.get('catalyst_type', 'flesh')  # Default to flesh
-        self.quality_per_use = config.get('quality_per_use', 5)
         self.max_quality = config.get('max_quality', 20)
+        # In-game: 85% chance for +1%, 15% chance for +2%
+        self.bonus_chance = config.get('bonus_chance', 0.15)
 
     def can_apply(self, item: CraftableItem) -> Tuple[bool, Optional[str]]:
         # Can only apply to rings and amulets (not belts)
@@ -2545,9 +2546,12 @@ class CatalystMechanic(CraftingMechanic):
         # Set catalyst type
         manager.item.catalyst_type = self.catalyst_type
 
+        # Roll for quality gain: 85% chance for +1%, 15% chance for +2%
+        quality_gain = 2 if random.random() < self.bonus_chance else 1
+
         # Add quality (capped at max)
         old_quality = manager.item.catalyst_quality
-        new_quality = min(self.max_quality, old_quality + self.quality_per_use)
+        new_quality = min(self.max_quality, old_quality + quality_gain)
         manager.item.catalyst_quality = new_quality
 
         quality_added = new_quality - old_quality

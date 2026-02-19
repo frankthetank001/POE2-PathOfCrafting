@@ -737,8 +737,12 @@ class TradeAPIClient:
         search_result = await self.search(query, league)
         logger.info(f"search_and_fetch: search returned {search_result}")
 
-        if not search_result or not search_result.item_hashes:
+        if not search_result:
             return [], None
+
+        # Return query_id even if no results (for debugging via trade link)
+        if not search_result.item_hashes:
+            return [], search_result.query_id
 
         # Limit to max_results
         hashes_to_fetch = search_result.item_hashes[:max_results]
