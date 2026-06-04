@@ -1,6 +1,14 @@
 import { useEffect, useMemo, useState } from 'react'
 import { buildsApi } from '@/services/builds-api'
-import type { BuildsMeta, TrendingBase, BaseDetail, TrendingMod, BasePricing } from '@/types/builds'
+import type {
+  BuildsMeta,
+  TrendingBase,
+  BaseDetail,
+  TrendingMod,
+  BasePricing,
+  PricingTargetMod,
+  MarketInfo,
+} from '@/types/builds'
 import './PopularBuilds.css'
 
 const ORIGIN_LABELS: Record<string, string> = {
@@ -28,6 +36,64 @@ function TierDistribution({ dist }: { dist: Record<string, number> }) {
         </span>
       ))}
     </span>
+  )
+}
+
+const VERDICT_LABELS: Record<string, string> = {
+  buy: 'Buy',
+  craft_candidate: 'Craft candidate',
+  available: 'Available',
+  pricing_unavailable: 'Pricing unavailable',
+  unknown: 'Unknown',
+}
+
+function fillMod(m: PricingTargetMod): string {
+  return m.stat_text.replace('#', String(Math.round(m.value)))
+}
+
+function PriceLadderRow({
+  label,
+  hint,
+  market,
+  url,
+  highlight,
+}: {
+  label: string
+  hint: string
+  market?: MarketInfo | null
+  url?: string | null
+  highlight?: boolean
+}) {
+  return (
+    <div className={`ladder-row ${highlight ? 'ladder-row-hl' : ''}`}>
+      <div className="ladder-main">
+        <span className="ladder-label">{label}</span>
+        <span className="ladder-hint">{hint}</span>
+      </div>
+      <div className="ladder-price">
+        {market && (market.divine != null || market.chaos_floor != null) ? (
+          <>
+            {market.divine != null ? (
+              <span className="price-tag">{market.divine} div</span>
+            ) : (
+              <span className="price-tag chaos">{market.chaos_floor} chaos</span>
+            )}
+            {market.num_listings != null && (
+              <span className="ladder-liq">
+                {market.num_listings} · {market.confidence}
+              </span>
+            )}
+          </>
+        ) : (
+          <span className="ladder-na">price in browser</span>
+        )}
+        {url && (
+          <a className="ladder-link" href={url} target="_blank" rel="noreferrer" title="Search on trade">
+            ↗
+          </a>
+        )}
+      </div>
+    </div>
   )
 }
 
@@ -215,49 +281,64 @@ function PopularBuilds({ embedded = false }: { embedded?: boolean }) {
                     {pricing && (
                       <div className="pricing-result">
                         <div className={`verdict verdict-${pricing.verdict}`}>
-                          {pricing.verdict === 'buy'
-                            ? 'Buy'
-                            : pricing.verdict === 'craft_candidate'
-                            ? 'Craft candidate'
-                            : pricing.verdict === 'available'
-                            ? 'Available'
-                            : pricing.verdict === 'pricing_unavailable'
-                            ? 'Pricing unavailable'
-                            : 'Unknown'}
+                          {VERDICT_LABELS[pricing.verdict] || 'Unknown'}
                         </div>
                         {pricing.message && <span className="pricing-msg">{pricing.message}</span>}
-                        {pricing.priced && pricing.market && (
-                          <div className="pricing-numbers">
-                            {pricing.market.divine != null && (
-                              <span className="price-tag">{pricing.market.divine} div</span>
-                            )}
-                            {pricing.market.chaos_floor != null && (
-                              <span className="price-tag chaos">{pricing.market.chaos_floor} chaos</span>
-                            )}
-                            {pricing.market.num_listings != null && (
-                              <span className="pb-muted">
-                                {pricing.market.num_listings} listings · {pricing.market.confidence}
-                              </span>
-                            )}
+
+                        <div className="buy-ladder">
+                          <div className="ladder-title">Buy vs craft</div>
+                          <PriceLadderRow
+                            label="White base"
+                            hint="buy cheap, slam it yourself"
+                            url={pricing.base_trade_url}
+                          />
+                          <PriceLadderRow
+                            label="Magic partial"
+                            hint={
+                              pricing.magic_mods.length > 0
+                                ? pricing.magic_mods.map((m) => fillMod(m)).join(' + ')
+                                : 'blue base, top prefix + suffix'
+                            }
+                            market={pricing.magic_market}
+                            url={pricing.magic_trade_url}
+                          />
+                          <PriceLadderRow
+                            label="Finished rare"
+                            hint={`${pricing.prefixes}p / ${pricing.suffixes}s meta mods`}
+                            market={pricing.market}
+                            url={pricing.market?.trade_url || pricing.trade_search_url}
+                            highlight
+                          />
+                        </div>
+
+                        {pricing.target_mods.length > 0 && (
+                          <div className="priced-item">
+                            <div className="priced-item-head">
+                              The rare it priced
+                              {pricing.item_level ? ` · ilvl ${pricing.item_level}` : ''}
+                            </div>
+                            {pricing.target_mods.map((m, i) => (
+                              <div key={i} className={`priced-mod origin-${m.origin}`}>
+                                <span className="pm-tier">T{m.tier}</span>
+                                <span className="pm-text">{fillMod(m)}</span>
+                                <span className="pm-usage" title="share of builds using this mod">
+                                  {pct(m.usage_pct)}
+                                </span>
+                                {m.trade_url && (
+                                  <a
+                                    className="pm-trade"
+                                    href={m.trade_url}
+                                    target="_blank"
+                                    rel="noreferrer"
+                                  >
+                                    trade ↗
+                                  </a>
+                                )}
+                              </div>
+                            ))}
                           </div>
                         )}
-                        <div className="pricing-craft pb-muted">
-                          {pricing.craftable
-                            ? `Craftable as a Rare (${pricing.prefixes} prefix / ${pricing.suffixes} suffix from the meta)`
-                            : 'These meta mods do not fit one Rare item'}
-                          {(pricing.trade_search_url || pricing.market?.trade_url) && (
-                            <>
-                              {' · '}
-                              <a
-                                href={(pricing.trade_search_url || pricing.market?.trade_url) as string}
-                                target="_blank"
-                                rel="noreferrer"
-                              >
-                                Search on trade
-                              </a>
-                            </>
-                          )}
-                        </div>
+
                         {pricing.note && <div className="pricing-note">{pricing.note}</div>}
                       </div>
                     )}

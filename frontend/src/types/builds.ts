@@ -60,6 +60,7 @@ export interface PricingTargetMod {
   mod_type: string
   origin: string
   usage_pct: number
+  trade_url?: string | null
 }
 
 export interface MarketInfo {
@@ -79,12 +80,16 @@ export interface BasePricing {
   slot?: string | null
   item_level?: number | null
   trade_search_url?: string | null
+  base_trade_url?: string | null
+  magic_trade_url?: string | null
   target_mods: PricingTargetMod[]
+  magic_mods: PricingTargetMod[]
   prefixes: number
   suffixes: number
   craftable: boolean
   priced: boolean
   market?: MarketInfo | null
+  magic_market?: MarketInfo | null
   verdict: string
   message?: string | null
   note?: string | null
