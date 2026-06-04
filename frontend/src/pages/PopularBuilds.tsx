@@ -44,6 +44,7 @@ const VERDICT_LABELS: Record<string, string> = {
   craft_candidate: 'Craft candidate',
   available: 'Available',
   pricing_unavailable: 'Pricing unavailable',
+  no_meta_data: 'No meta data',
   unknown: 'Unknown',
 }
 
