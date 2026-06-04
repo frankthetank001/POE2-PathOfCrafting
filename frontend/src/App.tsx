@@ -15,6 +15,17 @@ declare const __APP_VERSION__: string
 
 // Patch notes for each version (changes from previous version)
 const PATCH_NOTES: Record<GameVersion, { title: string; changes: string[] }> = {
+  '0.5': {
+    title: 'Patch 0.5 Changes (Runes of Aldur)',
+    changes: [
+      'Removed: Omen of Recombination',
+      'Removed: Omen of Corruption',
+      'Crafted modifiers: max 1 per item',
+      'Desecrated modifiers: max 1 per item',
+      'Essences: only 1 essence modifier per item',
+      'Added: Verisium Runeforging + new runes',
+    ],
+  },
   '0.4': {
     title: 'Patch 0.4 Changes',
     changes: [
@@ -57,6 +68,7 @@ function Navigation() {
               onChange={(e) => setGameVersion(e.target.value as GameVersion)}
               title="Select PoE2 patch version"
             >
+              <option value="0.5">Patch 0.5</option>
               <option value="0.4">Patch 0.4</option>
               <option value="0.3">Patch 0.3</option>
             </select>
