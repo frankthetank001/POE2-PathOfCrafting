@@ -467,7 +467,10 @@ class BuildsService:
             pricer = await get_item_pricer()
             trade_ready = bool(getattr(ip_module, "_trade_stats_cache", None))
             if trade_ready:
-                est = await pricer.estimate_price(item, league=league_name)
+                # "securable" = instant-buyout-only listings. The default "any" includes
+                # offline / unpriced / bait listings which, sorted by price asc, crater the
+                # floor (a good-mod Gold Ring read 0.01 div under "any", ~0.04 div securable).
+                est = await pricer.estimate_price(item, league=league_name, purchase_type="securable")
                 if est is not None:
                     market = self._market_from_estimate(est, trade_search_url)
                 if magic_prefix or magic_suffix:
@@ -476,7 +479,9 @@ class BuildsService:
                         rarity=ItemRarity.MAGIC, item_level=ilvl,
                         prefix_mods=magic_prefix, suffix_mods=magic_suffix,
                     )
-                    mest = await pricer.estimate_price(magic_item, league=league_name)
+                    mest = await pricer.estimate_price(
+                        magic_item, league=league_name, purchase_type="securable"
+                    )
                     if mest is not None:
                         magic_market = self._market_from_estimate(mest, magic_trade_url)
                 # Per-mod trade deep-links: reuse the SAME stat-text -> trade stat id matching
