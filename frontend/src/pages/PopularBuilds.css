@@ -232,6 +232,86 @@
   color: #7c766c;
 }
 
+/* pricing panel */
+.pricing-panel {
+  padding: 0.7rem 1rem;
+  border-bottom: 1px solid #332f29;
+  background: #19170f;
+}
+.pb-muted {
+  color: #8c867c;
+  font-size: 0.8rem;
+}
+.price-btn {
+  background: #4a3f24;
+  border: 1px solid #a08b4f;
+  color: #f0e6c8;
+  border-radius: 6px;
+  padding: 0.4rem 0.8rem;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+.price-btn:hover {
+  background: #5a4d2c;
+}
+.pricing-result {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+.verdict {
+  align-self: flex-start;
+  font-size: 0.74rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.15rem 0.5rem;
+  border-radius: 4px;
+}
+.verdict-buy {
+  background: #234a23;
+  color: #8fd98f;
+}
+.verdict-craft_candidate {
+  background: #4a3a23;
+  color: #d9b46a;
+}
+.verdict-available {
+  background: #23354a;
+  color: #8fb6d9;
+}
+.verdict-unknown {
+  background: #333029;
+  color: #9a948a;
+}
+.pricing-msg {
+  color: #c8c2b6;
+  font-size: 0.85rem;
+}
+.pricing-numbers {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+.price-tag {
+  font-weight: 700;
+  color: #e6c873;
+  background: #2a2418;
+  border-radius: 4px;
+  padding: 0.1rem 0.45rem;
+}
+.price-tag.chaos {
+  color: #c8a98a;
+}
+.pricing-craft a {
+  color: #7fa3c9;
+}
+.pricing-note {
+  font-size: 0.72rem;
+  color: #6f6a60;
+  font-style: italic;
+}
+
 .pb-disclaimer {
   margin-top: 1.5rem;
   font-size: 0.72rem;

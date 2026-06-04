@@ -55,6 +55,7 @@ class ResolvedMod:
     resolved: bool
     mod_group: Optional[str] = None
     mod_type: Optional[str] = None
+    stat_text: Optional[str] = None  # the app's stat_text (e.g. "+# to maximum Mana"), for trade matching
     tiers: List[ResolvedTier] = field(default_factory=list)
     tier_distribution: Dict[int, int] = field(default_factory=dict)  # tier -> count of value_samples
 
@@ -136,6 +137,7 @@ class BuildResolver:
             resolved=True,
             mod_group=getattr(first, "mod_group", None),
             mod_type=getattr(getattr(first, "mod_type", None), "value", None),
+            stat_text=getattr(first, "stat_text", None),
             tiers=tiers,
             tier_distribution=distribution,
         )

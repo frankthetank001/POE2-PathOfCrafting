@@ -10,6 +10,7 @@ Singleton, mirroring app.services.market.service.get_market_service().
 
 from __future__ import annotations
 
+import statistics
 from typing import Dict, List, Optional
 
 from app.core.config import settings
@@ -17,6 +18,7 @@ from app.core.logging import get_logger
 from app.services.builds.build_data_loader import load_build_stats
 from app.services.builds.models import BuildStats
 from app.services.builds.resolver import BuildResolver, ResolvedBase
+from app.services.market.cache import TTLCache
 
 logger = get_logger(__name__)
 
@@ -26,6 +28,7 @@ class BuildsService:
         self._stats: Optional[BuildStats] = None
         self._resolver: Optional[BuildResolver] = None
         self._base_cache: Dict[str, ResolvedBase] = {}
+        self._price_cache: TTLCache = TTLCache(default_ttl=settings.builds_cache_ttl)
         self._initialized = False
 
     async def initialize(self) -> None:
@@ -146,6 +149,130 @@ class BuildsService:
             "common_skills": base_row.common_skills,
             "mods": mods,
         }
+
+    def _mods_for_base(self, base_name: str):
+        return sorted(
+            (m for m in self._stats.mod_usage if m.base_name == base_name),
+            key=lambda m: -m.usage_count,
+        )
+
+    async def price_base(self, base_name: str, max_mods: int = 4, league: Optional[str] = None) -> Optional[dict]:
+        """Buy-vs-craft signal for a popular base: price a Rare with its top meta mods on
+        the live market, plus craftability. NOTE: the buy price is real market data; the
+        craft (gamble) cost is not modelled - listing scarcity is the craft-vs-buy signal.
+        """
+        if not self.available:
+            return None
+        cache_key = f"{base_name}|{max_mods}"
+        cached = self._price_cache.get(cache_key)
+        if cached is not None:
+            return cached
+
+        # Local imports: heavy crafting/market modules, only needed when pricing.
+        from app.schemas.crafting import CraftableItem, ItemModifier, ItemRarity, ModType
+        from app.schemas.item_bases import get_item_base_by_name
+        from app.services.market.item_pricer import get_item_pricer
+
+        rb = self._resolve_base(base_name)
+        if not rb.resolved or not rb.category:
+            result = {"base_name": base_name, "priced": False, "craftable": False,
+                      "verdict": "unknown", "note": "Base not matched to a craftable item.",
+                      "target_mods": [], "market": None}
+            self._price_cache.set(cache_key, result)
+            return result
+
+        prefix_mods: List = []
+        suffix_mods: List = []
+        implicit_mods: List = []
+        target_mods: List[dict] = []
+        ilvl = 81
+
+        for mu in self._mods_for_base(base_name):
+            if mu.mod_origin not in ("explicit", "implicit"):
+                continue
+            if len(prefix_mods) + len(suffix_mods) + len(implicit_mods) >= max_mods:
+                break
+            rm = self._resolver.resolve_mod(mu.mod_template, rb.category, rb.tags, mu.value_samples)
+            if not rm.resolved or not rm.tiers or not rm.stat_text:
+                continue
+            value = statistics.median(mu.value_samples) if mu.value_samples else rm.tiers[0].stat_min
+            if value is None:
+                continue
+            modal = (max(rm.tier_distribution, key=rm.tier_distribution.get)
+                     if rm.tier_distribution else rm.tiers[0].tier)
+            tier_obj = next((t for t in rm.tiers if t.tier == modal), rm.tiers[0])
+            if tier_obj.required_ilvl:
+                ilvl = max(ilvl, tier_obj.required_ilvl)
+            mtype = rm.mod_type if rm.mod_type in ("prefix", "suffix", "implicit") else "prefix"
+            mod_obj = ItemModifier(
+                mod_id=tier_obj.mod_id, name=rm.stat_text, mod_type=ModType(mtype),
+                tier=tier_obj.tier, stat_text=rm.stat_text, current_value=float(value),
+                mod_group=rm.mod_group, required_ilvl=tier_obj.required_ilvl,
+            )
+            bucket = {"prefix": prefix_mods, "suffix": suffix_mods, "implicit": implicit_mods}[mtype]
+            cap = 1 if mtype == "implicit" else 3
+            if len(bucket) >= cap:
+                continue
+            bucket.append(mod_obj)
+            target_mods.append({
+                "stat_text": rm.stat_text, "value": float(value), "tier": tier_obj.tier,
+                "mod_type": mtype, "origin": mu.mod_origin, "usage_pct": mu.usage_pct,
+            })
+
+        item = CraftableItem(
+            base_name=rb.resolved_name or base_name, base_category=rb.category, slot=rb.slot,
+            rarity=ItemRarity.RARE, item_level=ilvl,
+            implicit_mods=implicit_mods, prefix_mods=prefix_mods, suffix_mods=suffix_mods,
+        )
+
+        market = None
+        try:
+            pricer = await get_item_pricer()
+            est = await pricer.estimate_price(item, league=league or self._stats.league)
+            if est is not None:
+                market = {
+                    "chaos_floor": round(est.median_price, 1),
+                    "divine": round(est.divine_value, 2) if est.divine_value else None,
+                    "exalted": round(est.exalted_value, 1) if est.exalted_value else None,
+                    "num_listings": est.num_listings,
+                    "confidence": est.confidence,
+                    "trade_url": est.trade_url,
+                }
+        except Exception as e:  # rate limits, trade-API hiccups - best-effort
+            logger.warning("builds: pricing failed for %s: %s", base_name, e)
+            market = {"error": str(e)}
+
+        craftable = bool(target_mods) and len(prefix_mods) <= 3 and len(suffix_mods) <= 3
+        n_listings = (market or {}).get("num_listings", 0) if market else 0
+        if not market or market.get("error") or not n_listings:
+            verdict, message = "craft_candidate", (
+                "Few/no market listings for this mod combination - a craft candidate "
+                "(the meta mods fit a Rare). Click through to verify on trade."
+            )
+        elif n_listings >= 8 and (market.get("confidence") in ("high", "medium")):
+            verdict, message = "buy", "Plentiful on the market - buying is straightforward."
+        else:
+            verdict, message = "available", "Listed, but limited supply."
+
+        result = {
+            "base_name": base_name,
+            "resolved_name": rb.resolved_name,
+            "category": rb.category,
+            "slot": rb.slot,
+            "item_level": ilvl,
+            "target_mods": target_mods,
+            "prefixes": len(prefix_mods),
+            "suffixes": len(suffix_mods),
+            "craftable": craftable,
+            "priced": bool(market and not market.get("error") and n_listings),
+            "market": market,
+            "verdict": verdict,
+            "message": message,
+            "note": ("Buy price is live market data. Precise craft (gamble) cost is not yet "
+                     "modelled; use price + listing scarcity as the buy-vs-craft signal."),
+        }
+        self._price_cache.set(cache_key, result)
+        return result
 
 
 # -----------------------------------------------------------------------------

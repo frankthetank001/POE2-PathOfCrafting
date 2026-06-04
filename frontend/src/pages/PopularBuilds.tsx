@@ -1,6 +1,6 @@
 import { useEffect, useMemo, useState } from 'react'
 import { buildsApi } from '@/services/builds-api'
-import type { BuildsMeta, TrendingBase, BaseDetail, TrendingMod } from '@/types/builds'
+import type { BuildsMeta, TrendingBase, BaseDetail, TrendingMod, BasePricing } from '@/types/builds'
 import './PopularBuilds.css'
 
 const ORIGIN_LABELS: Record<string, string> = {
@@ -58,6 +58,8 @@ function PopularBuilds() {
   const [loading, setLoading] = useState(true)
   const [detailLoading, setDetailLoading] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [pricing, setPricing] = useState<BasePricing | null>(null)
+  const [pricingLoading, setPricingLoading] = useState(false)
 
   useEffect(() => {
     let cancelled = false
@@ -97,12 +99,26 @@ function PopularBuilds() {
   const selectBase = (name: string) => {
     setSelected(name)
     setDetail(null)
+    setPricing(null)
     setDetailLoading(true)
     buildsApi
       .getBaseDetail(name)
       .then(setDetail)
       .catch((err) => console.error(err))
       .finally(() => setDetailLoading(false))
+  }
+
+  const checkPrice = () => {
+    if (!selected) return
+    setPricingLoading(true)
+    buildsApi
+      .priceBase(selected)
+      .then(setPricing)
+      .catch((err) => {
+        console.error(err)
+        setPricing(null)
+      })
+      .finally(() => setPricingLoading(false))
   }
 
   return (
@@ -187,6 +203,57 @@ function PopularBuilds() {
                       <span className="detail-skills">
                         Common skills: {detail.common_skills.join(', ')}
                       </span>
+                    )}
+                  </div>
+                  <div className="pricing-panel">
+                    {!pricing && !pricingLoading && (
+                      <button className="price-btn" onClick={checkPrice}>
+                        Check market price (buy vs craft)
+                      </button>
+                    )}
+                    {pricingLoading && <span className="pb-muted">Pricing on the live market…</span>}
+                    {pricing && (
+                      <div className="pricing-result">
+                        <div className={`verdict verdict-${pricing.verdict}`}>
+                          {pricing.verdict === 'buy'
+                            ? 'Buy'
+                            : pricing.verdict === 'craft_candidate'
+                            ? 'Craft candidate'
+                            : pricing.verdict === 'available'
+                            ? 'Available'
+                            : 'Unknown'}
+                        </div>
+                        {pricing.message && <span className="pricing-msg">{pricing.message}</span>}
+                        {pricing.priced && pricing.market && (
+                          <div className="pricing-numbers">
+                            {pricing.market.divine != null && (
+                              <span className="price-tag">{pricing.market.divine} div</span>
+                            )}
+                            {pricing.market.chaos_floor != null && (
+                              <span className="price-tag chaos">{pricing.market.chaos_floor} chaos</span>
+                            )}
+                            {pricing.market.num_listings != null && (
+                              <span className="pb-muted">
+                                {pricing.market.num_listings} listings · {pricing.market.confidence}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        <div className="pricing-craft pb-muted">
+                          {pricing.craftable
+                            ? `Craftable as a Rare (${pricing.prefixes} prefix / ${pricing.suffixes} suffix from the meta)`
+                            : 'These meta mods do not fit one Rare item'}
+                          {pricing.market?.trade_url && (
+                            <>
+                              {' · '}
+                              <a href={pricing.market.trade_url} target="_blank" rel="noreferrer">
+                                View on trade
+                              </a>
+                            </>
+                          )}
+                        </div>
+                        {pricing.note && <div className="pricing-note">{pricing.note}</div>}
+                      </div>
                     )}
                   </div>
                   <div className="mod-list">

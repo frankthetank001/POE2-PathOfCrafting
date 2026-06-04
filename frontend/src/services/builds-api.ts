@@ -1,5 +1,5 @@
 import axios from 'axios'
-import type { BuildsMeta, TrendingBase, TrendingMod, BaseDetail } from '@/types/builds'
+import type { BuildsMeta, TrendingBase, TrendingMod, BaseDetail, BasePricing } from '@/types/builds'
 
 // Same runtime-config pattern as the other API services (config.js -> env -> localhost).
 const getApiBaseUrl = () => {
@@ -46,6 +46,13 @@ export const buildsApi = {
 
   getBaseDetail: async (baseName: string): Promise<BaseDetail> => {
     const response = await api.get<BaseDetail>(`/base/${encodeURIComponent(baseName)}`)
+    return response.data
+  },
+
+  priceBase: async (baseName: string, maxMods = 4): Promise<BasePricing> => {
+    const response = await api.get<BasePricing>(`/price/${encodeURIComponent(baseName)}`, {
+      params: { max_mods: maxMods },
+    })
     return response.data
   },
 }

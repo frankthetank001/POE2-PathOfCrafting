@@ -52,3 +52,39 @@ export interface BaseDetail {
   common_skills: string[]
   mods: TrendingMod[]
 }
+
+export interface PricingTargetMod {
+  stat_text: string
+  value: number
+  tier: number
+  mod_type: string
+  origin: string
+  usage_pct: number
+}
+
+export interface MarketInfo {
+  chaos_floor?: number | null
+  divine?: number | null
+  exalted?: number | null
+  num_listings?: number | null
+  confidence?: string | null
+  trade_url?: string | null
+  error?: string | null
+}
+
+export interface BasePricing {
+  base_name: string
+  resolved_name?: string | null
+  category?: string | null
+  slot?: string | null
+  item_level?: number | null
+  target_mods: PricingTargetMod[]
+  prefixes: number
+  suffixes: number
+  craftable: boolean
+  priced: boolean
+  market?: MarketInfo | null
+  verdict: string
+  message?: string | null
+  note?: string | null
+}
