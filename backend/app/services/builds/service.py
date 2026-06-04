@@ -25,12 +25,32 @@ from app.services.market.cache import TTLCache
 logger = get_logger(__name__)
 
 
-def _trade_search_url(league: str, base_name: str) -> str:
-    """A pathofexile.com/trade2 deep-link pre-filtered to a base type. Built as a plain
-    string (no GGG call), so it works even though the trade API 403s our datacenter IP -
-    the user's browser opens it from their own IP/session.
+def _trade_search_url(league: str, base_name: str, rarity: Optional[str] = None) -> str:
+    """A pathofexile.com/trade2 deep-link pre-filtered to a base type (and optionally a
+    rarity: 'normal' for a raw white base, 'magic' for a partial). Built as a plain string
+    (no GGG call), so it works even though the trade API 403s our datacenter IP - the user's
+    browser opens it from their own IP/session.
     """
-    query = {"query": {"status": {"option": "online"}, "type": base_name}, "sort": {"price": "asc"}}
+    query: dict = {"query": {"status": {"option": "online"}, "type": base_name}, "sort": {"price": "asc"}}
+    if rarity:
+        query["query"]["filters"] = {"type_filters": {"filters": {"rarity": {"option": rarity}}}}
+    return (
+        f"https://www.pathofexile.com/trade2/search/poe2/{quote(league)}"
+        f"?q={quote(json.dumps(query))}"
+    )
+
+
+def _mod_trade_url(league: str, base_name: str, stat_id: str, min_value: Optional[float] = None) -> str:
+    """A trade2 deep-link for a base filtered to ONE mod (by its trade stat id), with an
+    optional min-roll. Pure string, so it works despite the datacenter IP block."""
+    flt: dict = {"id": stat_id}
+    if min_value is not None:
+        flt["value"] = {"min": round(min_value * 0.8)}
+    query = {
+        "query": {"status": {"option": "online"}, "type": base_name,
+                  "stats": [{"type": "and", "filters": [flt]}]},
+        "sort": {"price": "asc"},
+    }
     return (
         f"https://www.pathofexile.com/trade2/search/poe2/{quote(league)}"
         f"?q={quote(json.dumps(query))}"
@@ -337,6 +357,17 @@ class BuildsService:
             key=lambda m: -m.usage_count,
         )
 
+    @staticmethod
+    def _market_from_estimate(est, fallback_url: str) -> dict:
+        return {
+            "chaos_floor": round(est.median_price, 1),
+            "divine": round(est.divine_value, 2) if est.divine_value else None,
+            "exalted": round(est.exalted_value, 1) if est.exalted_value else None,
+            "num_listings": est.num_listings,
+            "confidence": est.confidence,
+            "trade_url": est.trade_url or fallback_url,
+        }
+
     async def price_base(self, base_name: str, max_mods: int = 4, league: Optional[str] = None) -> Optional[dict]:
         """Buy-vs-craft signal for a popular base: price a Rare with its top meta mods on
         the live market, plus craftability. NOTE: the buy price is real market data; the
@@ -408,15 +439,29 @@ class BuildsService:
         )
 
         league_name = league or self._stats.league
-        # Always available (plain URL, no GGG call) so the buy path works despite the IP block.
-        trade_search_url = _trade_search_url(league_name, rb.resolved_name or base_name)
+        resolved_base = rb.resolved_name or base_name
+        # Always available (plain URLs, no GGG call) so the buy paths work despite the IP block.
+        trade_search_url = _trade_search_url(league_name, resolved_base)
+        base_trade_url = _trade_search_url(league_name, resolved_base, "normal")  # raw white base
+        magic_trade_url = _trade_search_url(league_name, resolved_base, "magic")  # partial / blue base
 
         # The trade2 API 403s datacenter IPs, so server-side pricing only works off a
         # non-blocked IP. An empty trade-stats cache means we couldn't reach it - in that
         # case report "pricing unavailable" honestly rather than faking a scarcity verdict.
         from app.services.market import item_pricer as ip_module
 
+        # The buy ladder: the finished meta Rare, and the cheaper Magic "partial" (its single
+        # highest-usage prefix + suffix) - the "buy a blue base and finish it" rung.
+        magic_prefix = prefix_mods[:1]
+        magic_suffix = suffix_mods[:1]
+        magic_mods = [
+            tm for tm in target_mods
+            if (tm["mod_type"] == "prefix" and magic_prefix and tm["stat_text"] == magic_prefix[0].stat_text)
+            or (tm["mod_type"] == "suffix" and magic_suffix and tm["stat_text"] == magic_suffix[0].stat_text)
+        ]
+
         market = None
+        magic_market = None
         trade_ready = False
         try:
             pricer = await get_item_pricer()
@@ -424,17 +469,32 @@ class BuildsService:
             if trade_ready:
                 est = await pricer.estimate_price(item, league=league_name)
                 if est is not None:
-                    market = {
-                        "chaos_floor": round(est.median_price, 1),
-                        "divine": round(est.divine_value, 2) if est.divine_value else None,
-                        "exalted": round(est.exalted_value, 1) if est.exalted_value else None,
-                        "num_listings": est.num_listings,
-                        "confidence": est.confidence,
-                        "trade_url": est.trade_url or trade_search_url,
-                    }
+                    market = self._market_from_estimate(est, trade_search_url)
+                if magic_prefix or magic_suffix:
+                    magic_item = CraftableItem(
+                        base_name=resolved_base, base_category=rb.category, slot=rb.slot,
+                        rarity=ItemRarity.MAGIC, item_level=ilvl,
+                        prefix_mods=magic_prefix, suffix_mods=magic_suffix,
+                    )
+                    mest = await pricer.estimate_price(magic_item, league=league_name)
+                    if mest is not None:
+                        magic_market = self._market_from_estimate(mest, magic_trade_url)
+                # Per-mod trade deep-links: reuse the SAME stat-text -> trade stat id matching
+                # that price-checking uses (_match_stat_to_trade_ids) to link each meta mod to
+                # a "this base + this mod" search. Pure URL (no extra API call).
+                for tm in target_mods:
+                    ids = pricer._match_stat_to_trade_ids(tm["stat_text"])
+                    if ids:
+                        tm["trade_url"] = _mod_trade_url(
+                            league_name, resolved_base, ids[0], tm.get("value")
+                        )
         except Exception as e:  # rate limits, trade-API hiccups - best-effort
             logger.warning("builds: pricing failed for %s: %s", base_name, e)
             market = {"error": str(e)}
+
+        # Every meta mod gets at least the base-type search as a fallback link.
+        for tm in target_mods:
+            tm.setdefault("trade_url", trade_search_url)
 
         craftable = bool(target_mods) and len(prefix_mods) <= 3 and len(suffix_mods) <= 3
         n_listings = (market or {}).get("num_listings", 0) if market else 0
@@ -460,12 +520,16 @@ class BuildsService:
             "slot": rb.slot,
             "item_level": ilvl,
             "trade_search_url": trade_search_url,
+            "base_trade_url": base_trade_url,
+            "magic_trade_url": magic_trade_url,
             "target_mods": target_mods,
+            "magic_mods": magic_mods,
             "prefixes": len(prefix_mods),
             "suffixes": len(suffix_mods),
             "craftable": craftable,
             "priced": bool(market and not market.get("error") and n_listings),
             "market": market,
+            "magic_market": magic_market,
             "verdict": verdict,
             "message": message,
             "note": ("Buy price is live market data. Precise craft (gamble) cost is not yet "

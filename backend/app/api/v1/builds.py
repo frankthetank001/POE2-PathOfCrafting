@@ -81,6 +81,7 @@ class TargetMod(BaseModel):
     mod_type: str
     origin: str
     usage_pct: float
+    trade_url: Optional[str] = None  # base + this specific mod (live listings for it)
 
 
 class MarketInfo(BaseModel):
@@ -100,12 +101,16 @@ class BasePricingResponse(BaseModel):
     slot: Optional[str] = None
     item_level: Optional[int] = None
     trade_search_url: Optional[str] = None
+    base_trade_url: Optional[str] = None  # raw white base (rarity=normal) trade search
+    magic_trade_url: Optional[str] = None  # magic "partial" (rarity=magic) trade search
     target_mods: List[TargetMod] = Field(default_factory=list)
+    magic_mods: List[TargetMod] = Field(default_factory=list)  # the 1 prefix + 1 suffix of the partial
     prefixes: int = 0
     suffixes: int = 0
     craftable: bool = False
     priced: bool = False
-    market: Optional[MarketInfo] = None
+    market: Optional[MarketInfo] = None  # finished meta Rare
+    magic_market: Optional[MarketInfo] = None  # magic partial ("buy a blue base and finish")
     verdict: str
     message: Optional[str] = None
     note: Optional[str] = None

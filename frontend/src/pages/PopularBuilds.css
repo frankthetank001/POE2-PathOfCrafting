@@ -316,6 +316,125 @@
   font-style: italic;
 }
 
+/* Buy-vs-craft ladder */
+.buy-ladder {
+  margin-top: 0.7rem;
+  border: 1px solid #2c2820;
+  border-radius: 5px;
+  overflow: hidden;
+}
+.ladder-title {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #8a8275;
+  background: #17140f;
+  padding: 0.3rem 0.6rem;
+}
+.ladder-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.6rem;
+  border-top: 1px solid #211d17;
+}
+.ladder-row-hl {
+  background: rgba(230, 200, 115, 0.06);
+}
+.ladder-main {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+.ladder-label {
+  color: #cdc4b0;
+  font-size: 0.85rem;
+}
+.ladder-hint {
+  color: #6f6a60;
+  font-size: 0.72rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 200px;
+}
+.ladder-price {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+.ladder-liq {
+  font-size: 0.72rem;
+  color: #6f6a60;
+}
+.ladder-na {
+  font-size: 0.72rem;
+  color: #6f6a60;
+  font-style: italic;
+}
+.ladder-link {
+  color: #7fa3c9;
+  text-decoration: none;
+  font-size: 0.95rem;
+}
+.ladder-link:hover {
+  color: #a9c4e0;
+}
+
+/* The legible meta rare it priced */
+.priced-item {
+  margin-top: 0.7rem;
+  border: 1px solid #2c2820;
+  border-radius: 5px;
+  background: linear-gradient(180deg, #16130f 0%, #100d0a 100%);
+  padding: 0.4rem 0;
+}
+.priced-item-head {
+  font-size: 0.7rem;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: #8a8275;
+  padding: 0 0.6rem 0.3rem;
+}
+.priced-mod {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.18rem 0.6rem;
+  font-size: 0.83rem;
+}
+.priced-mod .pm-tier {
+  flex-shrink: 0;
+  font-size: 0.68rem;
+  color: #e6c873;
+  background: #2a2418;
+  border-radius: 3px;
+  padding: 0 0.3rem;
+}
+.priced-mod .pm-text {
+  flex: 1;
+  color: inherit;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.priced-mod .pm-usage {
+  flex-shrink: 0;
+  font-size: 0.72rem;
+  color: #8a8275;
+}
+.priced-mod .pm-trade {
+  flex-shrink: 0;
+  font-size: 0.72rem;
+  color: #7fa3c9;
+  text-decoration: none;
+}
+.priced-mod .pm-trade:hover {
+  color: #a9c4e0;
+}
+
 .pb-disclaimer {
   margin-top: 1.5rem;
   font-size: 0.72rem;
