@@ -10,8 +10,10 @@ Singleton, mirroring app.services.market.service.get_market_service().
 
 from __future__ import annotations
 
+import json
 import statistics
 from typing import Dict, List, Optional
+from urllib.parse import quote
 
 from app.core.config import settings
 from app.core.logging import get_logger
@@ -21,6 +23,18 @@ from app.services.builds.resolver import BuildResolver, ResolvedBase
 from app.services.market.cache import TTLCache
 
 logger = get_logger(__name__)
+
+
+def _trade_search_url(league: str, base_name: str) -> str:
+    """A pathofexile.com/trade2 deep-link pre-filtered to a base type. Built as a plain
+    string (no GGG call), so it works even though the trade API 403s our datacenter IP -
+    the user's browser opens it from their own IP/session.
+    """
+    query = {"query": {"status": {"option": "online"}, "type": base_name}, "sort": {"price": "asc"}}
+    return (
+        f"https://www.pathofexile.com/trade2/search/poe2/{quote(league)}"
+        f"?q={quote(json.dumps(query))}"
+    )
 
 
 class BuildsService:
@@ -177,7 +191,8 @@ class BuildsService:
         if not rb.resolved or not rb.category:
             result = {"base_name": base_name, "priced": False, "craftable": False,
                       "verdict": "unknown", "note": "Base not matched to a craftable item.",
-                      "target_mods": [], "market": None}
+                      "target_mods": [], "market": None,
+                      "trade_search_url": _trade_search_url(league or self._stats.league, base_name)}
             self._price_cache.set(cache_key, result)
             return result
 
@@ -225,26 +240,43 @@ class BuildsService:
             implicit_mods=implicit_mods, prefix_mods=prefix_mods, suffix_mods=suffix_mods,
         )
 
+        league_name = league or self._stats.league
+        # Always available (plain URL, no GGG call) so the buy path works despite the IP block.
+        trade_search_url = _trade_search_url(league_name, rb.resolved_name or base_name)
+
+        # The trade2 API 403s datacenter IPs, so server-side pricing only works off a
+        # non-blocked IP. An empty trade-stats cache means we couldn't reach it - in that
+        # case report "pricing unavailable" honestly rather than faking a scarcity verdict.
+        from app.services.market import item_pricer as ip_module
+
         market = None
+        trade_ready = False
         try:
             pricer = await get_item_pricer()
-            est = await pricer.estimate_price(item, league=league or self._stats.league)
-            if est is not None:
-                market = {
-                    "chaos_floor": round(est.median_price, 1),
-                    "divine": round(est.divine_value, 2) if est.divine_value else None,
-                    "exalted": round(est.exalted_value, 1) if est.exalted_value else None,
-                    "num_listings": est.num_listings,
-                    "confidence": est.confidence,
-                    "trade_url": est.trade_url,
-                }
+            trade_ready = bool(getattr(ip_module, "_trade_stats_cache", None))
+            if trade_ready:
+                est = await pricer.estimate_price(item, league=league_name)
+                if est is not None:
+                    market = {
+                        "chaos_floor": round(est.median_price, 1),
+                        "divine": round(est.divine_value, 2) if est.divine_value else None,
+                        "exalted": round(est.exalted_value, 1) if est.exalted_value else None,
+                        "num_listings": est.num_listings,
+                        "confidence": est.confidence,
+                        "trade_url": est.trade_url or trade_search_url,
+                    }
         except Exception as e:  # rate limits, trade-API hiccups - best-effort
             logger.warning("builds: pricing failed for %s: %s", base_name, e)
             market = {"error": str(e)}
 
         craftable = bool(target_mods) and len(prefix_mods) <= 3 and len(suffix_mods) <= 3
         n_listings = (market or {}).get("num_listings", 0) if market else 0
-        if not market or market.get("error") or not n_listings:
+        if not trade_ready:
+            verdict, message = "pricing_unavailable", (
+                "Live market pricing isn't reachable from the server (the trade API blocks "
+                "datacenter IPs). Open the trade search to check current prices in your browser."
+            )
+        elif not market or market.get("error") or not n_listings:
             verdict, message = "craft_candidate", (
                 "Few/no market listings for this mod combination - a craft candidate "
                 "(the meta mods fit a Rare). Click through to verify on trade."
@@ -260,6 +292,7 @@ class BuildsService:
             "category": rb.category,
             "slot": rb.slot,
             "item_level": ilvl,
+            "trade_search_url": trade_search_url,
             "target_mods": target_mods,
             "prefixes": len(prefix_mods),
             "suffixes": len(suffix_mods),

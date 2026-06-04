@@ -284,6 +284,10 @@
   background: #333029;
   color: #9a948a;
 }
+.verdict-pricing_unavailable {
+  background: #2a2a33;
+  color: #9aa0c0;
+}
 .pricing-msg {
   color: #c8c2b6;
   font-size: 0.85rem;

@@ -99,6 +99,7 @@ class BasePricingResponse(BaseModel):
     category: Optional[str] = None
     slot: Optional[str] = None
     item_level: Optional[int] = None
+    trade_search_url: Optional[str] = None
     target_mods: List[TargetMod] = Field(default_factory=list)
     prefixes: int = 0
     suffixes: int = 0

@@ -78,6 +78,7 @@ export interface BasePricing {
   category?: string | null
   slot?: string | null
   item_level?: number | null
+  trade_search_url?: string | null
   target_mods: PricingTargetMod[]
   prefixes: number
   suffixes: number

@@ -221,6 +221,8 @@ function PopularBuilds() {
                             ? 'Craft candidate'
                             : pricing.verdict === 'available'
                             ? 'Available'
+                            : pricing.verdict === 'pricing_unavailable'
+                            ? 'Pricing unavailable'
                             : 'Unknown'}
                         </div>
                         {pricing.message && <span className="pricing-msg">{pricing.message}</span>}
@@ -243,11 +245,15 @@ function PopularBuilds() {
                           {pricing.craftable
                             ? `Craftable as a Rare (${pricing.prefixes} prefix / ${pricing.suffixes} suffix from the meta)`
                             : 'These meta mods do not fit one Rare item'}
-                          {pricing.market?.trade_url && (
+                          {(pricing.trade_search_url || pricing.market?.trade_url) && (
                             <>
                               {' · '}
-                              <a href={pricing.market.trade_url} target="_blank" rel="noreferrer">
-                                View on trade
+                              <a
+                                href={(pricing.trade_search_url || pricing.market?.trade_url) as string}
+                                target="_blank"
+                                rel="noreferrer"
+                              >
+                                Search on trade
                               </a>
                             </>
                           )}
