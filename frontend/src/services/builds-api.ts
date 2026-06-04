@@ -1,5 +1,14 @@
 import axios from 'axios'
-import type { BuildsMeta, TrendingBase, TrendingMod, BaseDetail, BasePricing } from '@/types/builds'
+import type {
+  BuildsMeta,
+  TrendingBase,
+  TrendingMod,
+  BaseDetail,
+  BasePricing,
+  BuildsListResponse,
+  BuildDetail,
+  ListBuildsParams,
+} from '@/types/builds'
 
 // Same runtime-config pattern as the other API services (config.js -> env -> localhost).
 const getApiBaseUrl = () => {
@@ -53,6 +62,26 @@ export const buildsApi = {
     const response = await api.get<BasePricing>(`/price/${encodeURIComponent(baseName)}`, {
       params: { max_mods: maxMods },
     })
+    return response.data
+  },
+
+  // --- builds browser ---
+  listBuilds: async (params: ListBuildsParams = {}): Promise<BuildsListResponse> => {
+    const response = await api.get<BuildsListResponse>('/browser', {
+      params: {
+        ascendancy: params.ascendancy || undefined,
+        base_class: params.base_class || undefined,
+        skill: params.skill || undefined,
+        q: params.q || undefined,
+        limit: params.limit ?? 60,
+        offset: params.offset ?? 0,
+      },
+    })
+    return response.data
+  },
+
+  getBuild: async (id: string): Promise<BuildDetail> => {
+    const response = await api.get<BuildDetail>(`/browser/${encodeURIComponent(id)}`)
     return response.data
   },
 }

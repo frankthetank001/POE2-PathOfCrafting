@@ -34,6 +34,9 @@ class Settings(BaseSettings):
     builds_artifact_dir: str = Field(default="source_data/builds")  # local cache / fallback
     builds_league_slug: str = Field(default="runesofaldur")
     builds_cache_ttl: int = Field(default=21600)  # 6 hours
+    # Builds-browser artifact (the per-build sample, builds-{slug}.json). If empty it is
+    # derived from builds_artifact_url by swapping the "latest-" filename for "builds-".
+    builds_browser_url: str = Field(default="")
 
     # Optional HTTP proxy for ONLY the PoE2 trade API client, e.g. "http://localhost:1055"
     # to route trade2 calls out a Tailscale exit node (residential IP) past Cloudflare's

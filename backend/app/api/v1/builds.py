@@ -111,7 +111,101 @@ class BasePricingResponse(BaseModel):
     note: Optional[str] = None
 
 
+# ---------------------------------------------------------------------------
+# Builds-browser schemas (the per-build sample)
+# ---------------------------------------------------------------------------
+class BuildsBrowserMeta(BaseModel):
+    league: str
+    league_slug: str
+    snapshot_version: str
+    scraped_at: str
+    sample_size: int
+    roster_size: int
+    disclaimer: str
+
+
+class MainSkillBrief(BaseModel):
+    name: str
+    dps: int = 0
+
+
+class BuildSummaryResponse(BaseModel):
+    id: str
+    character: str
+    account: str
+    level: int
+    base_class: Optional[str] = None
+    ascendancy: Optional[str] = None
+    main_skill: Optional[MainSkillBrief] = None
+    life: int = 0
+    energy_shield: int = 0
+    ehp: int = 0
+    item_count: int = 0
+    notable_uniques: List[str] = Field(default_factory=list)
+    poeninja_url: str = ""
+    has_pob: bool = False
+
+
+class BuildsListResponse(BaseModel):
+    meta: BuildsBrowserMeta
+    total: int
+    builds: List[BuildSummaryResponse] = Field(default_factory=list)
+    ascendancies: List[str] = Field(default_factory=list)
+    skills: List[str] = Field(default_factory=list)
+
+
+class BuildSkillResponse(BaseModel):
+    name: str
+    dps: int = 0
+    supports: List[str] = Field(default_factory=list)
+
+
+class ResolvedBuildMod(BaseModel):
+    text: str
+    origin: str
+    values: List[float] = Field(default_factory=list)
+    resolved: bool = False
+    mod_group: Optional[str] = None
+    mod_type: Optional[str] = None
+    tier: Optional[int] = None
+    mod_id: Optional[str] = None
+
+
+class ResolvedBuildItem(BaseModel):
+    slot: str
+    name: Optional[str] = None
+    base_type: str
+    resolved_base: Optional[str] = None
+    category: Optional[str] = None
+    resolves_in_app: bool = False
+    rarity: str
+    item_level: int = 0
+    icon: Optional[str] = None
+    corrupted: bool = False
+    runes: List[str] = Field(default_factory=list)
+    mods: List[ResolvedBuildMod] = Field(default_factory=list)
+
+
+class BuildDetailResponse(BaseModel):
+    id: str
+    account: str
+    character: str
+    level: int
+    base_class: Optional[str] = None
+    ascendancy: Optional[str] = None
+    main_skills: List[BuildSkillResponse] = Field(default_factory=list)
+    defense: Dict[str, int] = Field(default_factory=dict)
+    items: List[ResolvedBuildItem] = Field(default_factory=list)
+    poeninja_url: str = ""
+    pob_export: Optional[str] = None
+    updated_utc: str = ""
+
+
 _UNAVAILABLE = "Build data is not available. Configure BUILDS_ARTIFACT_URL or add a local artifact."
+_BUILDS_UNAVAILABLE = (
+    "Builds-browser data is not available. The scraper's builds-<slug>.json sample "
+    "has not been published/configured yet."
+)
 
 
 # ---------------------------------------------------------------------------
@@ -208,4 +302,54 @@ async def price_base(
         raise
     except Exception as e:
         logger.error(f"Error pricing base: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# ---------------------------------------------------------------------------
+# Builds browser  (served at /api/v1/builds/browser...)
+# Declared after the literal/2-segment routes above; the "browser" prefix keeps
+# /browser/{build_id} from shadowing /meta, /base/{name}, /price/{name}.
+# ---------------------------------------------------------------------------
+@router.get("/browser", response_model=BuildsListResponse)
+async def list_builds(
+    ascendancy: Optional[str] = Query(None, description="Filter to one ascendancy"),
+    base_class: Optional[str] = Query(None, description="Filter to one base class"),
+    skill: Optional[str] = Query(None, description="Filter to builds whose main skill matches"),
+    q: Optional[str] = Query(None, description="Free-text search (character, skill, unique items)"),
+    limit: int = Query(60, ge=1, le=200),
+    offset: int = Query(0, ge=0),
+) -> BuildsListResponse:
+    """Paginated, filterable list of real builds (summaries) from the scraped sample."""
+    try:
+        service = await get_builds_service()
+        if not service.builds_available:
+            raise HTTPException(status_code=503, detail=_BUILDS_UNAVAILABLE)
+        meta = service.builds_meta()
+        data = service.list_builds(
+            ascendancy=ascendancy, base_class=base_class, skill=skill, q=q,
+            limit=limit, offset=offset,
+        )
+        return BuildsListResponse(meta=meta, **data)
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error listing builds: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.get("/browser/{build_id}", response_model=BuildDetailResponse)
+async def build_detail(build_id: str) -> BuildDetailResponse:
+    """A single build's full loadout with each item's mods resolved to tier/mod_id."""
+    try:
+        service = await get_builds_service()
+        if not service.builds_available:
+            raise HTTPException(status_code=503, detail=_BUILDS_UNAVAILABLE)
+        detail = service.get_build(build_id)
+        if detail is None:
+            raise HTTPException(status_code=404, detail=f"Build '{build_id}' not found")
+        return BuildDetailResponse(**detail)
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error getting build detail: {e}")
         raise HTTPException(status_code=500, detail=str(e))

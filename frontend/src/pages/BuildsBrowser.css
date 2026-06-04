@@ -1,0 +1,262 @@
+.builds-browser {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+  color: #cdc4b0;
+}
+
+.bb-header {
+  margin-bottom: 18px;
+}
+
+.bb-header h1 {
+  font-family: 'FontinSmallCaps', 'Fontin', Georgia, serif;
+  font-size: 1.8rem;
+  color: #d6c8a0;
+  margin: 0 0 12px;
+  letter-spacing: 0.5px;
+}
+
+/* Tabs */
+.bb-tabs {
+  display: flex;
+  gap: 4px;
+  border-bottom: 1px solid #3a3530;
+}
+
+.bb-tab {
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid transparent;
+  color: #8a8275;
+  font-family: 'Exo2', sans-serif;
+  font-size: 0.95rem;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.bb-tab:hover {
+  color: #cdc4b0;
+}
+
+.bb-tab-active {
+  color: #d6c8a0;
+  border-bottom-color: #aa9e82;
+}
+
+.bb-subtitle {
+  color: #8a8275;
+  font-size: 0.9rem;
+  margin: 14px 0;
+}
+
+.bb-subtitle strong {
+  color: #cdc4b0;
+}
+
+/* Filters */
+.bb-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: center;
+}
+
+.bb-search,
+.bb-select {
+  background: #15120e;
+  border: 1px solid #3a3530;
+  color: #cdc4b0;
+  font-family: 'Exo2', sans-serif;
+  font-size: 0.9rem;
+  padding: 8px 12px;
+  border-radius: 3px;
+}
+
+.bb-search {
+  flex: 1;
+  min-width: 220px;
+}
+
+.bb-search:focus,
+.bb-select:focus {
+  outline: none;
+  border-color: #aa9e82;
+}
+
+.bb-clear {
+  background: rgba(170, 158, 130, 0.12);
+  border: 1px solid #3a3530;
+  color: #aa9e82;
+  font-family: 'Exo2', sans-serif;
+  font-size: 0.85rem;
+  padding: 8px 14px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.bb-clear:hover {
+  background: rgba(170, 158, 130, 0.2);
+}
+
+/* Card grid */
+.builds-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(290px, 1fr));
+  gap: 14px;
+}
+
+.build-card {
+  display: block;
+  background: linear-gradient(180deg, #1a1814 0%, #100e0b 100%);
+  border: 1px solid #3a3530;
+  border-radius: 4px;
+  padding: 14px 16px;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.15s ease, transform 0.1s ease, box-shadow 0.15s ease;
+}
+
+.build-card:hover {
+  border-color: #aa9e82;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
+}
+
+.build-card-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.build-char {
+  font-family: 'FontinSmallCaps', 'Fontin', Georgia, serif;
+  font-size: 1.05rem;
+  color: #d6c8a0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.build-level {
+  font-size: 0.8rem;
+  color: #8a8275;
+  flex-shrink: 0;
+}
+
+.build-class {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 2px;
+}
+
+.build-ascendancy {
+  color: #c9a86a;
+  font-size: 0.9rem;
+}
+
+.build-baseclass {
+  color: #6f6858;
+  font-size: 0.78rem;
+}
+
+.build-skill {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid #2a2620;
+}
+
+.build-skill-name {
+  color: #b9c8e8;
+  font-size: 0.92rem;
+}
+
+.build-skill-dps {
+  color: #e0b34d;
+  font-size: 0.85rem;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+.build-defense {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.build-defense .def {
+  font-size: 0.78rem;
+  padding: 1px 7px;
+  border-radius: 2px;
+  background: rgba(0, 0, 0, 0.3);
+}
+
+.def-life { color: #d98b8b; }
+.def-es { color: #8fb6e0; }
+.def-ehp { color: #9fae8a; }
+
+.build-uniques {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 10px;
+}
+
+.unique-chip {
+  font-size: 0.72rem;
+  color: #af6025;
+  background: rgba(175, 96, 37, 0.12);
+  border: 1px solid rgba(175, 96, 37, 0.3);
+  border-radius: 2px;
+  padding: 1px 6px;
+}
+
+/* Pagination */
+.bb-pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 26px;
+  color: #8a8275;
+  font-size: 0.9rem;
+}
+
+.bb-pagination button {
+  background: rgba(170, 158, 130, 0.12);
+  border: 1px solid #3a3530;
+  color: #cdc4b0;
+  font-family: 'Exo2', sans-serif;
+  padding: 6px 14px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.bb-pagination button:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+.bb-pagination button:not(:disabled):hover {
+  border-color: #aa9e82;
+}
+
+/* States */
+.bb-state {
+  padding: 40px 0;
+  text-align: center;
+  color: #8a8275;
+}
+
+.bb-error {
+  color: #d98b8b;
+}
