@@ -349,6 +349,16 @@
 .ladder-row-click:hover {
   background: rgba(170, 158, 130, 0.1);
 }
+.ladder-row-sel {
+  background: rgba(170, 158, 130, 0.16);
+  box-shadow: inset 2px 0 0 #aa9e82;
+}
+.ladder-row-sel:hover {
+  background: rgba(170, 158, 130, 0.2);
+}
+.ladder-link {
+  text-decoration: none;
+}
 .ladder-next {
   background: rgba(170, 158, 130, 0.14);
   border: 1px solid #3a3530;
@@ -425,6 +435,38 @@
   letter-spacing: 0.5px;
   color: #8a8275;
   padding: 0 0.6rem 0.3rem;
+}
+.priced-item.rarity-normal {
+  border-top: 2px solid #c8c8c8;
+}
+.priced-item.rarity-normal .priced-item-head {
+  color: #c8c8c8;
+}
+.priced-item.rarity-magic {
+  border-top: 2px solid #8888ff;
+}
+.priced-item.rarity-magic .priced-item-head {
+  color: #8aa9d6;
+}
+.priced-item.rarity-rare {
+  border-top: 2px solid #e6c873;
+}
+.priced-item.rarity-rare .priced-item-head {
+  color: #e6c873;
+}
+.preview-note {
+  padding: 0.4rem 0.6rem 0.2rem;
+  font-size: 0.72rem;
+  color: #8a8275;
+  font-style: italic;
+  border-top: 1px solid #211d17;
+  margin-top: 0.2rem;
+}
+.preview-empty {
+  padding: 0.5rem 0.6rem;
+  font-size: 0.8rem;
+  color: #6f6a60;
+  font-style: italic;
 }
 .priced-mod {
   display: flex;
