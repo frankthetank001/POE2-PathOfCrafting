@@ -2,11 +2,12 @@
 poe2scout.com Market Data Provider
 
 Fetches currency exchange rates from the poe2scout API.
-API Documentation: https://poe2scout.com/api/swagger
+API spec: https://poe2scout.com/api/openapi.json (realm-prefixed, PascalCase paths)
 """
 
 from datetime import datetime
 from typing import Any, Dict, List, Optional
+from urllib.parse import quote
 
 import httpx
 
@@ -71,16 +72,20 @@ class Poe2ScoutProvider(MarketDataProvider):
             List of leagues with divine/chaos price data.
         """
         try:
-            response = await self._client.get(f"{BASE_URL}/leagues")
+            # New API: GET /api/poe2/Leagues -> [{Value, ShortName, IsCurrent, DivinePrice, ChaosDivinePrice, ...}]
+            response = await self._client.get(f"{BASE_URL}/poe2/Leagues")
             response.raise_for_status()
             data = response.json()
 
             leagues = []
             for item in data:
+                name = item.get("Value") or item.get("value")
+                if not name:
+                    continue
                 leagues.append(League(
-                    name=item["value"],
-                    divine_price=item.get("divinePrice", 0.0),
-                    chaos_divine_ratio=item.get("chaosDivinePrice", 0.0),
+                    name=name,
+                    divine_price=item.get("DivinePrice", item.get("divinePrice", 0.0)) or 0.0,
+                    chaos_divine_ratio=item.get("ChaosDivinePrice", item.get("chaosDivinePrice", 0.0)) or 0.0,
                 ))
 
             logger.info(f"Fetched {len(leagues)} leagues from poe2scout")
@@ -112,48 +117,50 @@ class Poe2ScoutProvider(MarketDataProvider):
             divine_exalted_rate = league_data.divine_price if league_data else None
 
             rates: Dict[str, CurrencyPrice] = {}
+            league_path = quote(league, safe="")  # "Runes of Aldur" -> "Runes%20of%20Aldur"
 
-            # Fetch from all currency categories
+            # New API: GET /api/poe2/Leagues/{League}/Currencies/ByCategory?Category=&ReferenceCurrency=&Page=&PerPage=
+            # Paginated: {CurrentPage, Pages, Total, Items: [{ApiId, Text, CurrentPrice, IconUrl, ...}]}
             for category in self.CURRENCY_CATEGORIES:
-                params = {
-                    "league": league,
-                    "referenceCurrency": "exalted",
-                    "perPage": 250,  # Get all items in category
-                }
+                page = 1
+                fetched = 0
+                while page <= 20:  # safety cap (250/page -> up to 5000 items/category)
+                    params = {
+                        "Category": category,
+                        "ReferenceCurrency": "exalted",
+                        "PerPage": 250,
+                        "Page": page,
+                    }
+                    try:
+                        response = await self._client.get(
+                            f"{BASE_URL}/poe2/Leagues/{league_path}/Currencies/ByCategory",
+                            params=params,
+                        )
+                        response.raise_for_status()
+                        data = response.json()
+                    except httpx.HTTPError as e:
+                        logger.warning(f"Failed to fetch {category} category (page {page}): {e}")
+                        break
 
-                try:
-                    response = await self._client.get(
-                        f"{BASE_URL}/items/currency/{category}",
-                        params=params
-                    )
-                    response.raise_for_status()
-                    data = response.json()
-
-                    for item in data.get("items", []):
-                        api_id = item.get("apiId", "")
-                        display_name = item.get("text", "")
+                    items = data.get("Items", [])
+                    for item in items:
+                        api_id = item.get("ApiId", "")
+                        display_name = item.get("Text", "")
 
                         if not api_id:
                             continue
 
-                        # Normalize the ID for internal use
                         currency_id = self._normalize_currency_id(api_id)
-                        exalted_value = item.get("currentPrice", 0.0)
+                        exalted_value = item.get("CurrentPrice", 0.0) or 0.0
 
-                        # Calculate divine value if we have the rate
                         divine_value = None
                         if divine_exalted_rate and divine_exalted_rate > 0:
                             divine_value = exalted_value / divine_exalted_rate
 
-                        # Store chaos rate for later
-                        if currency_id == "chaos":
-                            self._chaos_rate = exalted_value
-
-                        # Store by normalized ID
                         rates[currency_id] = CurrencyPrice(
                             id=currency_id,
                             name=display_name or currency_id,
-                            icon_url=item.get("iconUrl"),
+                            icon_url=item.get("IconUrl"),
                             exalted_value=exalted_value,
                             divine_value=divine_value,
                             chaos_value=None,  # Will be calculated in post-processing
@@ -161,17 +168,18 @@ class Poe2ScoutProvider(MarketDataProvider):
                         )
 
                         # Also store by display name for easier frontend lookup
-                        # (e.g., "Greater Essence of Abrasion" -> same CurrencyPrice)
                         if display_name and display_name != currency_id:
                             normalized_display = self._normalize_display_name(display_name)
                             if normalized_display not in rates:
                                 rates[normalized_display] = rates[currency_id]
 
-                    logger.info(f"Fetched {len(data.get('items', []))} items from {category} category")
+                    fetched += len(items)
+                    total_pages = data.get("Pages", 1) or 1
+                    if not items or page >= total_pages:
+                        break
+                    page += 1
 
-                except httpx.HTTPError as e:
-                    logger.warning(f"Failed to fetch {category} category: {e}")
-                    continue
+                logger.info(f"Fetched {fetched} items from {category} category")
 
             # Post-process to add chaos values
             chaos_rate = rates.get("chaos", CurrencyPrice(

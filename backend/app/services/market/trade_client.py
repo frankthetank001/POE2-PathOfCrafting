@@ -25,8 +25,8 @@ DEFAULT_TIMEOUT = 30.0
 # User agent for API requests
 USER_AGENT = "POE2-PathOfCrafting/1.0 (github.com/POE2-PathOfCrafting)"
 
-# Default league
-DEFAULT_LEAGUE = "Fate of the Vaal"
+# Default league (current PoE2 league - update each league)
+DEFAULT_LEAGUE = "Runes of Aldur"
 
 
 class RateLimitError(Exception):

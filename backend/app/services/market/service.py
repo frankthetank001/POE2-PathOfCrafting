@@ -25,8 +25,9 @@ logger = get_logger(__name__)
 # Default cache TTL: 10 minutes for exchange rates
 DEFAULT_CACHE_TTL = 600
 
-# Default league if not specified
-DEFAULT_LEAGUE = "Fate of the Vaal"
+# Default league if not specified. Current PoE2 league - update each league
+# (or resolve dynamically from poe2scout's IsCurrent flag).
+DEFAULT_LEAGUE = "Runes of Aldur"
 
 
 class MarketService:

@@ -432,8 +432,8 @@ class ItemPricer:
             logger.info(f"No priceable mods found on {item.base_name}")
             return None
 
-        # Use default league if not specified
-        search_league = league or "Fate of the Vaal"
+        # Use default league if not specified (current PoE2 league)
+        search_league = league or "Runes of Aldur"
 
         # Single search using user-controlled min values (default 80% of rolled value)
         # The strictness parameter is now mainly for display/logging - actual mins come from mod_min_values
