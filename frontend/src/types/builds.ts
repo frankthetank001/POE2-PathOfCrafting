@@ -79,6 +79,7 @@ export interface BasePricing {
   category?: string | null
   slot?: string | null
   item_level?: number | null
+  base_ilvl?: number | null
   trade_search_url?: string | null
   base_trade_url?: string | null
   magic_trade_url?: string | null
@@ -89,7 +90,9 @@ export interface BasePricing {
   craftable: boolean
   priced: boolean
   market?: MarketInfo | null
+  market_typical?: MarketInfo | null
   magic_market?: MarketInfo | null
+  base_market?: MarketInfo | null
   verdict: string
   message?: string | null
   note?: string | null
