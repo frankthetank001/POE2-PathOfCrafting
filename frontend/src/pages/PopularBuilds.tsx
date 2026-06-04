@@ -286,11 +286,14 @@ function PopularBuilds({ embedded = false }: { embedded?: boolean }) {
                         {pricing.message && <span className="pricing-msg">{pricing.message}</span>}
 
                         <div className="buy-ladder">
-                          <div className="ladder-title">Buy vs craft</div>
+                          <div className="ladder-title">
+                            Buy vs craft{pricing.base_ilvl ? ` · base ilvl ${pricing.base_ilvl}+` : ''}
+                          </div>
                           <PriceLadderRow
                             label="White base"
-                            hint="buy cheap, slam it yourself"
-                            url={pricing.base_trade_url}
+                            hint={pricing.base_ilvl ? `ilvl ${pricing.base_ilvl}+ raw base` : 'raw base, slam it yourself'}
+                            market={pricing.base_market}
+                            url={pricing.base_market?.trade_url || pricing.base_trade_url}
                           />
                           <PriceLadderRow
                             label="Magic partial"
@@ -303,18 +306,23 @@ function PopularBuilds({ embedded = false }: { embedded?: boolean }) {
                             url={pricing.magic_trade_url}
                           />
                           <PriceLadderRow
-                            label="Finished rare"
-                            hint={`${pricing.prefixes}p / ${pricing.suffixes}s meta mods`}
+                            label="Finished rare (good)"
+                            hint={`${pricing.prefixes}p / ${pricing.suffixes}s top-tier meta mods`}
                             market={pricing.market}
                             url={pricing.market?.trade_url || pricing.trade_search_url}
                             highlight
                           />
+                          {pricing.market_typical?.divine != null && (
+                            <div className="ladder-typical">
+                              A typical roll floors around {pricing.market_typical.divine} div
+                            </div>
+                          )}
                         </div>
 
                         {pricing.target_mods.length > 0 && (
                           <div className="priced-item">
                             <div className="priced-item-head">
-                              The rare it priced
+                              A good roll (top meta tiers)
                               {pricing.item_level ? ` · ilvl ${pricing.item_level}` : ''}
                             </div>
                             {pricing.target_mods.map((m, i) => (

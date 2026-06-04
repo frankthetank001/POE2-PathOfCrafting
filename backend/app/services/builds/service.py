@@ -368,6 +368,76 @@ class BuildsService:
             "trade_url": est.trade_url or fallback_url,
         }
 
+    def _select_meta_mods(self, base_name: str, rb, max_mods: int, tier_mode: str = "modal"):
+        """The base's meta mods as ItemModifiers + target_mod dicts + the ilvl the set needs.
+        tier_mode 'modal' = the most common tier builds roll (a TYPICAL item); 'best' = the
+        best tier the meta actually rolls (a GOOD, craft-worthy item)."""
+        from app.schemas.crafting import ItemModifier, ModType
+
+        prefix_mods: List = []
+        suffix_mods: List = []
+        implicit_mods: List = []
+        target_mods: List[dict] = []
+        ilvl = 81
+        for mu in self._mods_for_base(base_name):
+            if mu.mod_origin not in ("explicit", "implicit"):
+                continue
+            if len(prefix_mods) + len(suffix_mods) + len(implicit_mods) >= max_mods:
+                break
+            rm = self._resolver.resolve_mod(mu.mod_template, rb.category, rb.tags, mu.value_samples)
+            if not rm.resolved or not rm.tiers or not rm.stat_text:
+                continue
+            if tier_mode == "best":
+                chosen = min(rm.tier_distribution) if rm.tier_distribution else min(t.tier for t in rm.tiers)
+            else:
+                chosen = (max(rm.tier_distribution, key=rm.tier_distribution.get)
+                          if rm.tier_distribution else rm.tiers[0].tier)
+            tier_obj = next((t for t in rm.tiers if t.tier == chosen), rm.tiers[0])
+            if tier_mode == "best" and tier_obj.stat_max is not None:
+                value = tier_obj.stat_max  # a good roll = the top of that tier
+            elif mu.value_samples:
+                value = statistics.median(mu.value_samples)
+            else:
+                value = tier_obj.stat_min
+            if value is None:
+                continue
+            if tier_obj.required_ilvl:
+                ilvl = max(ilvl, tier_obj.required_ilvl)
+            mtype = rm.mod_type if rm.mod_type in ("prefix", "suffix", "implicit") else "prefix"
+            bucket = {"prefix": prefix_mods, "suffix": suffix_mods, "implicit": implicit_mods}[mtype]
+            cap = 1 if mtype == "implicit" else 3
+            if len(bucket) >= cap:
+                continue
+            bucket.append(ItemModifier(
+                mod_id=tier_obj.mod_id, name=rm.stat_text, mod_type=ModType(mtype),
+                tier=tier_obj.tier, stat_text=rm.stat_text, current_value=float(value),
+                mod_group=rm.mod_group, required_ilvl=tier_obj.required_ilvl,
+            ))
+            target_mods.append({
+                "stat_text": rm.stat_text, "value": float(value), "tier": tier_obj.tier,
+                "mod_type": mtype, "origin": mu.mod_origin, "usage_pct": mu.usage_pct,
+            })
+        return prefix_mods, suffix_mods, implicit_mods, target_mods, ilvl
+
+    async def _price_white_base(self, pricer, resolved_base, rb, ilvl, league, fallback_url):
+        """Price the raw white base at a target ilvl (rarity=normal, buyout-only). estimate_price
+        bails on a mod-less item, so build the base query directly + reuse the price calc."""
+        from app.schemas.crafting import CraftableItem, ItemRarity
+        try:
+            item = CraftableItem(base_name=resolved_base, base_category=rb.category, slot=rb.slot,
+                                 rarity=ItemRarity.NORMAL, item_level=ilvl)
+            q = pricer._build_query(item, {}, 0.8, None, None, True, True, None, None, "securable")
+            q["query"]["type"] = resolved_base  # the specific base, not just the category
+            listings, qid = await pricer._trade_client.search_and_fetch(q, league, max_results=20)
+            if not listings:
+                return None
+            url = pricer._trade_client.build_trade_url(qid, league) if qid else fallback_url
+            est = await pricer._calculate_price(listings, {}, 0.8, url, item, {})
+            return self._market_from_estimate(est, fallback_url) if est else None
+        except Exception as e:
+            logger.warning("builds: white-base pricing failed for %s: %s", resolved_base, e)
+            return None
+
     async def price_base(self, base_name: str, max_mods: int = 4, league: Optional[str] = None) -> Optional[dict]:
         """Buy-vs-craft signal for a popular base: price a Rare with its top meta mods on
         the live market, plus craftability. NOTE: the buy price is real market data; the
@@ -394,49 +464,20 @@ class BuildsService:
             self._price_cache.set(cache_key, result)
             return result
 
-        prefix_mods: List = []
-        suffix_mods: List = []
-        implicit_mods: List = []
-        target_mods: List[dict] = []
-        ilvl = 81
+        from app.schemas.crafting import CraftableItem, ItemRarity
 
-        for mu in self._mods_for_base(base_name):
-            if mu.mod_origin not in ("explicit", "implicit"):
-                continue
-            if len(prefix_mods) + len(suffix_mods) + len(implicit_mods) >= max_mods:
-                break
-            rm = self._resolver.resolve_mod(mu.mod_template, rb.category, rb.tags, mu.value_samples)
-            if not rm.resolved or not rm.tiers or not rm.stat_text:
-                continue
-            value = statistics.median(mu.value_samples) if mu.value_samples else rm.tiers[0].stat_min
-            if value is None:
-                continue
-            modal = (max(rm.tier_distribution, key=rm.tier_distribution.get)
-                     if rm.tier_distribution else rm.tiers[0].tier)
-            tier_obj = next((t for t in rm.tiers if t.tier == modal), rm.tiers[0])
-            if tier_obj.required_ilvl:
-                ilvl = max(ilvl, tier_obj.required_ilvl)
-            mtype = rm.mod_type if rm.mod_type in ("prefix", "suffix", "implicit") else "prefix"
-            mod_obj = ItemModifier(
-                mod_id=tier_obj.mod_id, name=rm.stat_text, mod_type=ModType(mtype),
-                tier=tier_obj.tier, stat_text=rm.stat_text, current_value=float(value),
-                mod_group=rm.mod_group, required_ilvl=tier_obj.required_ilvl,
+        # Two target builds: a TYPICAL roll (modal tiers) and a GOOD roll (best meta tiers).
+        gd_pre, gd_suf, gd_imp, good_mods, gd_ilvl = self._select_meta_mods(base_name, rb, max_mods, "best")
+        tp_pre, tp_suf, tp_imp, _typical_mods, tp_ilvl = self._select_meta_mods(base_name, rb, max_mods, "modal")
+
+        def _rare(pre, suf, imp, lvl):
+            return CraftableItem(
+                base_name=rb.resolved_name or base_name, base_category=rb.category, slot=rb.slot,
+                rarity=ItemRarity.RARE, item_level=lvl, implicit_mods=imp, prefix_mods=pre, suffix_mods=suf,
             )
-            bucket = {"prefix": prefix_mods, "suffix": suffix_mods, "implicit": implicit_mods}[mtype]
-            cap = 1 if mtype == "implicit" else 3
-            if len(bucket) >= cap:
-                continue
-            bucket.append(mod_obj)
-            target_mods.append({
-                "stat_text": rm.stat_text, "value": float(value), "tier": tier_obj.tier,
-                "mod_type": mtype, "origin": mu.mod_origin, "usage_pct": mu.usage_pct,
-            })
 
-        item = CraftableItem(
-            base_name=rb.resolved_name or base_name, base_category=rb.category, slot=rb.slot,
-            rarity=ItemRarity.RARE, item_level=ilvl,
-            implicit_mods=implicit_mods, prefix_mods=prefix_mods, suffix_mods=suffix_mods,
-        )
+        good_item = _rare(gd_pre, gd_suf, gd_imp, gd_ilvl)
+        typical_item = _rare(tp_pre, tp_suf, tp_imp, tp_ilvl)
 
         league_name = league or self._stats.league
         resolved_base = rb.resolved_name or base_name
@@ -445,63 +486,61 @@ class BuildsService:
         base_trade_url = _trade_search_url(league_name, resolved_base, "normal")  # raw white base
         magic_trade_url = _trade_search_url(league_name, resolved_base, "magic")  # partial / blue base
 
-        # The trade2 API 403s datacenter IPs, so server-side pricing only works off a
-        # non-blocked IP. An empty trade-stats cache means we couldn't reach it - in that
-        # case report "pricing unavailable" honestly rather than faking a scarcity verdict.
         from app.services.market import item_pricer as ip_module
 
-        # The buy ladder: the finished meta Rare, and the cheaper Magic "partial" (its single
-        # highest-usage prefix + suffix) - the "buy a blue base and finish it" rung.
-        magic_prefix = prefix_mods[:1]
-        magic_suffix = suffix_mods[:1]
+        # Magic "partial": a blue base carrying the GOOD top prefix + suffix (pre-slammed).
+        magic_prefix = gd_pre[:1]
+        magic_suffix = gd_suf[:1]
         magic_mods = [
-            tm for tm in target_mods
+            tm for tm in good_mods
             if (tm["mod_type"] == "prefix" and magic_prefix and tm["stat_text"] == magic_prefix[0].stat_text)
             or (tm["mod_type"] == "suffix" and magic_suffix and tm["stat_text"] == magic_suffix[0].stat_text)
         ]
 
-        market = None
-        magic_market = None
+        market = None           # GOOD finished rare (headline)
+        market_typical = None   # typical/modal finished rare
+        magic_market = None     # magic partial
+        base_market = None      # raw white base at the target ilvl
         trade_ready = False
         try:
             pricer = await get_item_pricer()
             trade_ready = bool(getattr(ip_module, "_trade_stats_cache", None))
             if trade_ready:
                 # "securable" = instant-buyout-only listings. The default "any" includes
-                # offline / unpriced / bait listings which, sorted by price asc, crater the
-                # floor (a good-mod Gold Ring read 0.01 div under "any", ~0.04 div securable).
-                est = await pricer.estimate_price(item, league=league_name, purchase_type="securable")
+                # offline / unpriced / bait listings which, sorted by price asc, crater the floor.
+                est = await pricer.estimate_price(good_item, league=league_name, purchase_type="securable")
                 if est is not None:
                     market = self._market_from_estimate(est, trade_search_url)
+                tyest = await pricer.estimate_price(typical_item, league=league_name, purchase_type="securable")
+                if tyest is not None:
+                    market_typical = self._market_from_estimate(tyest, trade_search_url)
                 if magic_prefix or magic_suffix:
                     magic_item = CraftableItem(
                         base_name=resolved_base, base_category=rb.category, slot=rb.slot,
-                        rarity=ItemRarity.MAGIC, item_level=ilvl,
+                        rarity=ItemRarity.MAGIC, item_level=gd_ilvl,
                         prefix_mods=magic_prefix, suffix_mods=magic_suffix,
                     )
-                    mest = await pricer.estimate_price(
-                        magic_item, league=league_name, purchase_type="securable"
-                    )
+                    mest = await pricer.estimate_price(magic_item, league=league_name, purchase_type="securable")
                     if mest is not None:
                         magic_market = self._market_from_estimate(mest, magic_trade_url)
+                base_market = await self._price_white_base(
+                    pricer, resolved_base, rb, gd_ilvl, league_name, base_trade_url
+                )
                 # Per-mod trade deep-links: reuse the SAME stat-text -> trade stat id matching
-                # that price-checking uses (_match_stat_to_trade_ids) to link each meta mod to
-                # a "this base + this mod" search. Pure URL (no extra API call).
-                for tm in target_mods:
+                # that price-checking uses (_match_stat_to_trade_ids). Pure URL (no extra API call).
+                for tm in good_mods:
                     ids = pricer._match_stat_to_trade_ids(tm["stat_text"])
                     if ids:
-                        tm["trade_url"] = _mod_trade_url(
-                            league_name, resolved_base, ids[0], tm.get("value")
-                        )
+                        tm["trade_url"] = _mod_trade_url(league_name, resolved_base, ids[0], tm.get("value"))
         except Exception as e:  # rate limits, trade-API hiccups - best-effort
             logger.warning("builds: pricing failed for %s: %s", base_name, e)
             market = {"error": str(e)}
 
         # Every meta mod gets at least the base-type search as a fallback link.
-        for tm in target_mods:
+        for tm in good_mods:
             tm.setdefault("trade_url", trade_search_url)
 
-        craftable = bool(target_mods) and len(prefix_mods) <= 3 and len(suffix_mods) <= 3
+        craftable = bool(good_mods) and len(gd_pre) <= 3 and len(gd_suf) <= 3
         n_listings = (market or {}).get("num_listings", 0) if market else 0
         if not trade_ready:
             verdict, message = "pricing_unavailable", (
@@ -510,7 +549,7 @@ class BuildsService:
             )
         elif not market or market.get("error") or not n_listings:
             verdict, message = "craft_candidate", (
-                "Few/no market listings for this mod combination - a craft candidate "
+                "Few/no buyout listings for a good roll - a craft candidate "
                 "(the meta mods fit a Rare). Click through to verify on trade."
             )
         elif n_listings >= 8 and (market.get("confidence") in ("high", "medium")):
@@ -523,22 +562,25 @@ class BuildsService:
             "resolved_name": rb.resolved_name,
             "category": rb.category,
             "slot": rb.slot,
-            "item_level": ilvl,
+            "item_level": gd_ilvl,
+            "base_ilvl": gd_ilvl,
             "trade_search_url": trade_search_url,
             "base_trade_url": base_trade_url,
             "magic_trade_url": magic_trade_url,
-            "target_mods": target_mods,
+            "target_mods": good_mods,
             "magic_mods": magic_mods,
-            "prefixes": len(prefix_mods),
-            "suffixes": len(suffix_mods),
+            "prefixes": len(gd_pre),
+            "suffixes": len(gd_suf),
             "craftable": craftable,
             "priced": bool(market and not market.get("error") and n_listings),
             "market": market,
+            "market_typical": market_typical,
             "magic_market": magic_market,
+            "base_market": base_market,
             "verdict": verdict,
             "message": message,
-            "note": ("Buy price is live market data. Precise craft (gamble) cost is not yet "
-                     "modelled; use price + listing scarcity as the buy-vs-craft signal."),
+            "note": ("Prices are live buyout listings. 'Good' = the best tiers the meta rolls; "
+                     "'typical' = the most common roll. Craft (gamble) cost is not modelled."),
         }
         self._price_cache.set(cache_key, result)
         return result

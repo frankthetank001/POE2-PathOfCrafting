@@ -100,17 +100,20 @@ class BasePricingResponse(BaseModel):
     category: Optional[str] = None
     slot: Optional[str] = None
     item_level: Optional[int] = None
+    base_ilvl: Optional[int] = None  # the ilvl a base needs to hold the good-roll mods
     trade_search_url: Optional[str] = None
     base_trade_url: Optional[str] = None  # raw white base (rarity=normal) trade search
     magic_trade_url: Optional[str] = None  # magic "partial" (rarity=magic) trade search
-    target_mods: List[TargetMod] = Field(default_factory=list)
+    target_mods: List[TargetMod] = Field(default_factory=list)  # the GOOD roll's mods
     magic_mods: List[TargetMod] = Field(default_factory=list)  # the 1 prefix + 1 suffix of the partial
     prefixes: int = 0
     suffixes: int = 0
     craftable: bool = False
     priced: bool = False
-    market: Optional[MarketInfo] = None  # finished meta Rare
+    market: Optional[MarketInfo] = None  # GOOD finished meta Rare (headline)
+    market_typical: Optional[MarketInfo] = None  # typical/modal finished Rare
     magic_market: Optional[MarketInfo] = None  # magic partial ("buy a blue base and finish")
+    base_market: Optional[MarketInfo] = None  # raw white base at the target ilvl
     verdict: str
     message: Optional[str] = None
     note: Optional[str] = None
