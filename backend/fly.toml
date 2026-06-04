@@ -13,6 +13,9 @@ primary_region = 'syd'
   ENVIRONMENT = 'production'
   PYTHONUNBUFFERED = '1'
   BUILDS_ARTIFACT_URL = 'https://raw.githubusercontent.com/frankthetank001/POE2-Builds-Scraper/main/data/latest-{slug}.json'
+  # Route ONLY trade2 calls out the home residential exit node (TAILSCALE_AUTHKEY is a secret).
+  TRADE_PROXY = 'http://localhost:1055'
+  TS_EXIT_NODE = 'truenas-scale'
 
 [[mounts]]
   source = 'backend_data'

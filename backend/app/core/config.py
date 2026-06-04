@@ -35,6 +35,11 @@ class Settings(BaseSettings):
     builds_league_slug: str = Field(default="runesofaldur")
     builds_cache_ttl: int = Field(default=21600)  # 6 hours
 
+    # Optional HTTP proxy for ONLY the PoE2 trade API client, e.g. "http://localhost:1055"
+    # to route trade2 calls out a Tailscale exit node (residential IP) past Cloudflare's
+    # datacenter-IP 403. Empty = direct egress (normal). Everything else stays direct.
+    trade_proxy: str = Field(default="")
+
     api_v1_prefix: str = Field(default="/api/v1")
 
     # Security settings

@@ -67,6 +67,11 @@ RUN apt-get update && apt-get install -y \
 COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
 COPY --from=builder /usr/local/bin /usr/local/bin
 
+# Tailscale binaries (used only when TAILSCALE_AUTHKEY is set, to route trade2 calls out a
+# residential exit node in userspace mode - see docker-entrypoint.sh). Dormant otherwise.
+COPY --from=docker.io/tailscale/tailscale:stable /usr/local/bin/tailscaled /usr/local/bin/tailscaled
+COPY --from=docker.io/tailscale/tailscale:stable /usr/local/bin/tailscale /usr/local/bin/tailscale
+
 # Copy application code
 COPY . .
 

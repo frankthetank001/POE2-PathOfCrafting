@@ -12,6 +12,7 @@ from dataclasses import dataclass, field
 
 import httpx
 
+from app.core.config import settings
 from app.core.logging import get_logger
 
 logger = get_logger(__name__)
@@ -244,9 +245,12 @@ class TradeAPIClient:
         timeout: float = DEFAULT_TIMEOUT,
         default_league: str = DEFAULT_LEAGUE,
     ):
+        # Optional proxy (e.g. a local Tailscale HTTP proxy -> residential exit node) so
+        # ONLY trade2 calls bypass Cloudflare's datacenter-IP block. Empty -> direct.
         self._client = httpx.AsyncClient(
             timeout=timeout,
-            headers={"User-Agent": USER_AGENT}
+            headers={"User-Agent": USER_AGENT},
+            proxy=(settings.trade_proxy or None),
         )
         self._default_league = default_league
         self._rate_limit = RateLimitState()
