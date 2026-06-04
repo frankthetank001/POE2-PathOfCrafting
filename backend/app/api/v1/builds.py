@@ -94,6 +94,11 @@ class MarketInfo(BaseModel):
     error: Optional[str] = None
 
 
+class MagicVariant(BaseModel):
+    mods: List[str] = Field(default_factory=list)  # [prefix_text, suffix_text]
+    trade_url: str
+
+
 class BasePricingResponse(BaseModel):
     base_name: str
     resolved_name: Optional[str] = None
@@ -106,6 +111,7 @@ class BasePricingResponse(BaseModel):
     magic_trade_url: Optional[str] = None  # magic "partial" (rarity=magic) trade search
     target_mods: List[TargetMod] = Field(default_factory=list)  # the GOOD roll's mods
     magic_mods: List[TargetMod] = Field(default_factory=list)  # the 1 prefix + 1 suffix of the partial
+    magic_variants: List["MagicVariant"] = Field(default_factory=list)  # blue-base combos to flip through
     prefixes: int = 0
     suffixes: int = 0
     craftable: bool = False
@@ -293,7 +299,7 @@ async def base_detail(base_name: str) -> BaseDetailResponse:
 @router.get("/price/{base_name}", response_model=BasePricingResponse)
 async def price_base(
     base_name: str,
-    max_mods: int = Query(4, ge=1, le=6, description="How many top meta mods to price together"),
+    max_mods: int = Query(6, ge=1, le=6, description="How many top meta affixes to price together (3 prefix + 3 suffix)"),
 ) -> BasePricingResponse:
     """Buy-vs-craft signal for a base: prices a Rare with its top meta mods on the live
     market (rate-limited + cached), with craftability. Craft gamble-cost is not modelled;

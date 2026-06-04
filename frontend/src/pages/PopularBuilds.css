@@ -342,6 +342,27 @@
 .ladder-row-hl {
   background: rgba(230, 200, 115, 0.06);
 }
+.ladder-row-click {
+  cursor: pointer;
+  transition: background 0.12s ease;
+}
+.ladder-row-click:hover {
+  background: rgba(170, 158, 130, 0.1);
+}
+.ladder-next {
+  background: rgba(170, 158, 130, 0.14);
+  border: 1px solid #3a3530;
+  color: #cdc4b0;
+  font-family: 'Exo2', sans-serif;
+  font-size: 0.7rem;
+  padding: 1px 7px;
+  border-radius: 3px;
+  cursor: pointer;
+}
+.ladder-next:hover {
+  border-color: #aa9e82;
+  color: #e6c873;
+}
 .ladder-main {
   display: flex;
   flex-direction: column;

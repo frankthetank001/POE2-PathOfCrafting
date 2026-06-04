@@ -73,6 +73,11 @@ export interface MarketInfo {
   error?: string | null
 }
 
+export interface MagicVariant {
+  mods: string[] // [prefix_text, suffix_text]
+  trade_url: string
+}
+
 export interface BasePricing {
   base_name: string
   resolved_name?: string | null
@@ -85,6 +90,7 @@ export interface BasePricing {
   magic_trade_url?: string | null
   target_mods: PricingTargetMod[]
   magic_mods: PricingTargetMod[]
+  magic_variants: MagicVariant[]
   prefixes: number
   suffixes: number
   craftable: boolean
