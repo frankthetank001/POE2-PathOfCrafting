@@ -51,12 +51,24 @@ function fillMod(m: PricingTargetMod): string {
   return m.stat_text.replace('#', String(Math.round(m.value)))
 }
 
+type PreviewMod = {
+  stat_text: string
+  origin: string
+  mod_type?: string
+  tier?: number | null
+  value?: number
+  usage_pct?: number
+  trade_url?: string | null
+}
+
 function PriceLadderRow({
   label,
   hint,
   market,
   url,
   highlight,
+  selected,
+  onSelect,
   onNext,
 }: {
   label: string
@@ -64,17 +76,18 @@ function PriceLadderRow({
   market?: MarketInfo | null
   url?: string | null
   highlight?: boolean
+  selected?: boolean
+  onSelect?: () => void
   onNext?: () => void
 }) {
-  const open = () => {
-    if (url) window.open(url, '_blank', 'noopener')
-  }
   return (
     <div
-      className={`ladder-row ${highlight ? 'ladder-row-hl' : ''} ${url ? 'ladder-row-click' : ''}`}
-      onClick={open}
-      role={url ? 'button' : undefined}
-      title={url ? 'Open this search on trade' : undefined}
+      className={`ladder-row ${highlight ? 'ladder-row-hl' : ''} ${onSelect ? 'ladder-row-click' : ''} ${
+        selected ? 'ladder-row-sel' : ''
+      }`}
+      onClick={onSelect}
+      role={onSelect ? 'button' : undefined}
+      title={onSelect ? 'Preview this item' : undefined}
     >
       <div className="ladder-main">
         <span className="ladder-label">{label}</span>
@@ -110,9 +123,16 @@ function PriceLadderRow({
           </button>
         )}
         {url && (
-          <span className="ladder-link" title="Search on trade">
+          <a
+            className="ladder-link"
+            href={url}
+            target="_blank"
+            rel="noreferrer"
+            title="Open this search on trade"
+            onClick={(e) => e.stopPropagation()}
+          >
             ↗
-          </span>
+          </a>
         )}
       </div>
     </div>
@@ -149,6 +169,7 @@ function PopularBuilds({ embedded = false }: { embedded?: boolean }) {
   const [pricing, setPricing] = useState<BasePricing | null>(null)
   const [pricingLoading, setPricingLoading] = useState(false)
   const [magicIdx, setMagicIdx] = useState(0)
+  const [previewRung, setPreviewRung] = useState<'white' | 'magic' | 'rare'>('rare')
 
   useEffect(() => {
     let cancelled = false
@@ -201,6 +222,7 @@ function PopularBuilds({ embedded = false }: { embedded?: boolean }) {
     if (!selected) return
     setPricingLoading(true)
     setMagicIdx(0)
+    setPreviewRung('rare')
     buildsApi
       .priceBase(selected)
       .then(setPricing)
@@ -318,6 +340,8 @@ function PopularBuilds({ embedded = false }: { embedded?: boolean }) {
                             hint={pricing.base_ilvl ? `ilvl ${pricing.base_ilvl}+ raw base` : 'raw base, slam it yourself'}
                             market={pricing.base_market}
                             url={pricing.base_market?.trade_url || pricing.base_trade_url}
+                            selected={previewRung === 'white'}
+                            onSelect={() => setPreviewRung('white')}
                           />
                           {(() => {
                             const variants = pricing.magic_variants || []
@@ -337,6 +361,8 @@ function PopularBuilds({ embedded = false }: { embedded?: boolean }) {
                                 }
                                 market={pricing.magic_market}
                                 url={mv?.trade_url || pricing.magic_trade_url}
+                                selected={previewRung === 'magic'}
+                                onSelect={() => setPreviewRung('magic')}
                                 onNext={variants.length > 1 ? () => setMagicIdx((i) => i + 1) : undefined}
                               />
                             )
@@ -347,6 +373,8 @@ function PopularBuilds({ embedded = false }: { embedded?: boolean }) {
                             market={pricing.market}
                             url={pricing.market?.trade_url || pricing.trade_search_url}
                             highlight
+                            selected={previewRung === 'rare'}
+                            onSelect={() => setPreviewRung('rare')}
                           />
                           {pricing.market_typical?.divine != null && (
                             <div className="ladder-typical">
@@ -355,33 +383,63 @@ function PopularBuilds({ embedded = false }: { embedded?: boolean }) {
                           )}
                         </div>
 
-                        {pricing.target_mods.length > 0 && (
-                          <div className="priced-item">
-                            <div className="priced-item-head">
-                              A decked-out meta rare
-                              {pricing.item_level ? ` · ilvl ${pricing.item_level}` : ''}
-                            </div>
-                            {pricing.target_mods.map((m, i) => (
-                              <div key={i} className={`priced-mod origin-${m.origin}`}>
-                                <span className="pm-tier">T{m.tier}</span>
-                                <span className="pm-text">{fillMod(m)}</span>
-                                <span className="pm-usage" title="share of builds using this mod">
-                                  {pct(m.usage_pct)}
-                                </span>
-                                {m.trade_url && (
-                                  <a
-                                    className="pm-trade"
-                                    href={m.trade_url}
-                                    target="_blank"
-                                    rel="noreferrer"
-                                  >
-                                    trade ↗
-                                  </a>
-                                )}
+                        {(() => {
+                          const variants = pricing.magic_variants || []
+                          const mv = variants.length ? variants[magicIdx % variants.length] : null
+                          let rarity = 'rare'
+                          let headLabel = 'Decked-out rare'
+                          let note = ''
+                          let mods: PreviewMod[] = pricing.target_mods
+                          if (previewRung === 'white') {
+                            rarity = 'normal'
+                            headLabel = 'White base'
+                            note =
+                              'Raw, unmodified base - buy cheap and slam currency to gamble the meta mods. Exceptional variants come with an extra rune socket.'
+                            mods = []
+                          } else if (previewRung === 'magic') {
+                            rarity = 'magic'
+                            headLabel = 'Magic "partial"'
+                            note =
+                              'A blue base already carrying these mods - Regal it and finish into a rare. Use "next" on the row for other combos.'
+                            mods = mv
+                              ? mv.mods.map((t, i) => ({
+                                  stat_text: t,
+                                  origin: 'explicit',
+                                  mod_type: i === 0 ? 'prefix' : 'suffix',
+                                }))
+                              : pricing.magic_mods
+                          }
+                          return (
+                            <div className={`priced-item rarity-${rarity}`}>
+                              <div className="priced-item-head">
+                                {headLabel} · {pricing.resolved_name || pricing.base_name}
+                                {pricing.item_level ? ` · ilvl ${pricing.item_level}` : ''}
                               </div>
-                            ))}
-                          </div>
-                        )}
+                              {mods.map((m, i) => (
+                                <div key={i} className={`priced-mod origin-${m.origin}`}>
+                                  {m.tier != null && <span className="pm-tier">T{m.tier}</span>}
+                                  <span className="pm-text">
+                                    {m.value != null ? m.stat_text.replace('#', String(Math.round(m.value))) : m.stat_text}
+                                  </span>
+                                  {m.usage_pct != null && (
+                                    <span className="pm-usage" title="share of builds using this mod">
+                                      {pct(m.usage_pct)}
+                                    </span>
+                                  )}
+                                  {m.trade_url && (
+                                    <a className="pm-trade" href={m.trade_url} target="_blank" rel="noreferrer">
+                                      trade ↗
+                                    </a>
+                                  )}
+                                </div>
+                              ))}
+                              {mods.length === 0 && (
+                                <div className="preview-empty">no modifiers - a clean base</div>
+                              )}
+                              {note && <div className="preview-note">{note}</div>}
+                            </div>
+                          )
+                        })()}
 
                         {pricing.note && <div className="pricing-note">{pricing.note}</div>}
                       </div>
