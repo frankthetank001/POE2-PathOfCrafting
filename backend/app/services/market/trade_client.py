@@ -9,6 +9,7 @@ import asyncio
 import time
 from typing import Any, Dict, List, Optional
 from dataclasses import dataclass, field
+from urllib.parse import quote
 
 import httpx
 
@@ -755,8 +756,10 @@ class TradeAPIClient:
         return listings, search_result.query_id
 
     def build_trade_url(self, query_id: str, league: str) -> str:
-        """Build the public trade site URL for a search."""
-        return f"https://www.pathofexile.com/trade2/search/poe2/{league}/{query_id}"
+        """Build the public trade site URL for a search. The league is percent-encoded - an
+        unescaped space (e.g. "Runes of Aldur") makes an invalid URL that breaks copy/paste
+        and strict parsers."""
+        return f"https://www.pathofexile.com/trade2/search/poe2/{quote(league)}/{query_id}"
 
 
 # Singleton instance

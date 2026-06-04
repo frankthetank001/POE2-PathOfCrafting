@@ -40,12 +40,19 @@ def _trade_search_url(league: str, base_name: str, rarity: Optional[str] = None)
     )
 
 
+def _stat_filter(stat_id: str, value: Optional[float]) -> dict:
+    """A trade2 stat filter. Only emit a min when 0.8x the rolled value rounds to >=1 - a
+    min of 0 (or a too-tight value) needlessly excludes valid listings."""
+    f: dict = {"id": stat_id}
+    if value is not None and round(value * 0.8) >= 1:
+        f["value"] = {"min": round(value * 0.8)}
+    return f
+
+
 def _mod_trade_url(league: str, base_name: str, stat_id: str, min_value: Optional[float] = None) -> str:
     """A trade2 deep-link for a base filtered to ONE mod (by its trade stat id), with an
     optional min-roll. Pure string, so it works despite the datacenter IP block."""
-    flt: dict = {"id": stat_id}
-    if min_value is not None:
-        flt["value"] = {"min": round(min_value * 0.8)}
+    flt = _stat_filter(stat_id, min_value)
     query = {
         "query": {"status": {"option": "online"}, "type": base_name,
                   "stats": [{"type": "and", "filters": [flt]}]},
@@ -380,7 +387,10 @@ class BuildsService:
             "exalted": round(est.exalted_value, 1) if est.exalted_value else None,
             "num_listings": est.num_listings,
             "confidence": est.confidence,
-            "trade_url": est.trade_url or fallback_url,
+            # Prefer the self-contained ?q= deep-link over the pricer's search-id URL: search ids
+            # EXPIRE on GGG's side (a cached price's link goes dead) and the id URL also carries an
+            # unescaped league space. The ?q= link is durable and carries the same filters.
+            "trade_url": fallback_url or est.trade_url,
         }
 
     def _select_meta_mods(self, base_name: str, rb, max_mods: int, tier_mode: str = "modal"):
@@ -485,6 +495,10 @@ class BuildsService:
 
         # DISPLAY: the full decked-out meta rare (up to 6 affixes + implicit) at best tiers.
         _, _, _, good_mods, gd_ilvl = self._select_meta_mods(base_name, rb, max_mods, "best")
+        # Dedup: two mod templates can resolve to the same stat text (e.g. flat + hybrid both
+        # grant attributes), which would show the same line twice with different thresholds.
+        _seen_mods: set = set()
+        good_mods = [m for m in good_mods if not (m["stat_text"] in _seen_mods or _seen_mods.add(m["stat_text"]))]
         # PRICE: only the ~4 key affixes - a full 6-mod search is too strict (almost nobody lists
         # an item with those EXACT 6 mods) and returns no listings. GOOD = best tiers, TYPICAL = modal.
         gd_pre, gd_suf, gd_imp, _, _ = self._select_meta_mods(base_name, rb, 4, "best")
@@ -522,39 +536,28 @@ class BuildsService:
         magic_market = None     # magic partial
         base_market = None      # raw white base at the target ilvl
         magic_variants: List[dict] = []  # blue-base mod combos to flip through
+        rare_q_url = trade_search_url    # self-contained ?q= link for the rare, filled below
+        magic_link = magic_trade_url
         trade_ready = False
         try:
             pricer = await get_item_pricer()
             trade_ready = bool(getattr(ip_module, "_trade_stats_cache", None))
             if trade_ready:
-                # "securable" = instant-buyout-only listings. The default "any" includes
-                # offline / unpriced / bait listings which, sorted by price asc, crater the floor.
-                est = await pricer.estimate_price(good_item, league=league_name, purchase_type="securable")
-                if est is not None:
-                    market = self._market_from_estimate(est, trade_search_url)
-                tyest = await pricer.estimate_price(typical_item, league=league_name, purchase_type="securable")
-                if tyest is not None:
-                    market_typical = self._market_from_estimate(tyest, trade_search_url)
-                if magic_prefix or magic_suffix:
-                    magic_item = CraftableItem(
-                        base_name=resolved_base, base_category=rb.category, slot=rb.slot,
-                        rarity=ItemRarity.MAGIC, item_level=gd_ilvl,
-                        prefix_mods=magic_prefix, suffix_mods=magic_suffix,
-                    )
-                    mest = await pricer.estimate_price(magic_item, league=league_name, purchase_type="securable")
-                    if mest is not None:
-                        magic_market = self._market_from_estimate(mest, magic_trade_url)
-                base_market = await self._price_white_base(
-                    pricer, resolved_base, rb, gd_ilvl, league_name, base_trade_url
-                )
-                # Per-mod trade deep-links: reuse the SAME stat-text -> trade stat id matching
-                # that price-checking uses (_match_stat_to_trade_ids). Pure URL (no extra API call).
+                # 1) Build the self-contained ?q= deep-links FIRST (pure stat-id string work, no
+                #    network). These used to be built AFTER the price calls, so a single rate-limit
+                #    exception wiped every per-mod link and all magic variants.
+                rare_filters: List[dict] = []
                 for tm in good_mods:
                     ids = pricer._match_stat_to_trade_ids(tm["stat_text"])
-                    if ids:
-                        tm["trade_url"] = _mod_trade_url(league_name, resolved_base, ids[0], tm.get("value"))
-                # Magic "partial" variants: every good prefix x good suffix combo as its own
-                # magic-rarity trade search, so the UI can flip through real blue-base examples.
+                    if not ids:
+                        continue
+                    tm["trade_url"] = _mod_trade_url(league_name, resolved_base, ids[0], tm.get("value"))
+                    if len(rare_filters) < 4 and tm["origin"] in ("explicit", "implicit"):
+                        rare_filters.append(_stat_filter(ids[0], tm.get("value")))
+                if rare_filters:
+                    rare_q_url = _multi_mod_trade_url(league_name, resolved_base, rare_filters, "rare")
+                # Magic "partial" variants: each good prefix x good suffix combo as a magic-rarity
+                # search, so the UI can flip through real blue-base examples.
                 gp = [tm for tm in good_mods if tm["mod_type"] == "prefix"][:3]
                 gs = [tm for tm in good_mods if tm["mod_type"] == "suffix"][:3]
                 for p in gp:
@@ -563,18 +566,43 @@ class BuildsService:
                         pid = pricer._match_stat_to_trade_ids(p["stat_text"])
                         sid = pricer._match_stat_to_trade_ids(s["stat_text"])
                         if pid:
-                            filters.append({"id": pid[0], "value": {"min": round(p["value"] * 0.8)}})
+                            filters.append(_stat_filter(pid[0], p.get("value")))
                         if sid:
-                            filters.append({"id": sid[0], "value": {"min": round(s["value"] * 0.8)}})
+                            filters.append(_stat_filter(sid[0], s.get("value")))
                         if filters:
                             magic_variants.append({
                                 "mods": [p["stat_text"], s["stat_text"]],
                                 "trade_url": _multi_mod_trade_url(league_name, resolved_base, filters, "magic"),
                             })
                 magic_variants = magic_variants[:6]
+                if magic_variants:
+                    magic_link = magic_variants[0]["trade_url"]
+
+                # 2) Then price (best-effort). "securable" = instant-buyout-only listings (the
+                #    default "any" includes offline/bait listings that crater the floor). A
+                #    rate-limit here no longer destroys the links built above.
+                est = await pricer.estimate_price(good_item, league=league_name, purchase_type="securable")
+                if est is not None:
+                    market = self._market_from_estimate(est, rare_q_url)
+                tyest = await pricer.estimate_price(typical_item, league=league_name, purchase_type="securable")
+                if tyest is not None:
+                    market_typical = self._market_from_estimate(tyest, rare_q_url)
+                if magic_prefix or magic_suffix:
+                    magic_item = CraftableItem(
+                        base_name=resolved_base, base_category=rb.category, slot=rb.slot,
+                        rarity=ItemRarity.MAGIC, item_level=gd_ilvl,
+                        prefix_mods=magic_prefix, suffix_mods=magic_suffix,
+                    )
+                    mest = await pricer.estimate_price(magic_item, league=league_name, purchase_type="securable")
+                    if mest is not None:
+                        magic_market = self._market_from_estimate(mest, magic_link)
+                base_market = await self._price_white_base(
+                    pricer, resolved_base, rb, gd_ilvl, league_name, base_trade_url
+                )
         except Exception as e:  # rate limits, trade-API hiccups - best-effort
             logger.warning("builds: pricing failed for %s: %s", base_name, e)
-            market = {"error": str(e)}
+            if market is None:
+                market = {"error": str(e)}
 
         # Every meta mod gets at least the base-type search as a fallback link.
         for tm in good_mods:
@@ -582,12 +610,19 @@ class BuildsService:
 
         craftable = bool(good_mods) and len(gd_pre) <= 3 and len(gd_suf) <= 3
         n_listings = (market or {}).get("num_listings", 0) if market else 0
-        if not trade_ready:
-            verdict, message = "pricing_unavailable", (
-                "Live market pricing isn't reachable from the server (the trade API blocks "
-                "datacenter IPs). Open the trade search to check current prices in your browser."
+        market_errored = bool(market and market.get("error"))
+        if not good_mods:
+            # e.g. a base seen only as a unique in the sample - there is no rare meta-mod pool.
+            verdict, message = "no_meta_data", (
+                "Not enough rare-item data for this base in the current sample (it shows up "
+                "mostly as a unique), so there's no meta mod set to price or craft toward."
             )
-        elif not market or market.get("error") or not n_listings:
+        elif not trade_ready or market_errored:
+            verdict, message = "pricing_unavailable", (
+                "Live market pricing isn't reachable right now (the trade API blocks datacenter "
+                "IPs and is rate-limited). Use the trade links to check current prices in your browser."
+            )
+        elif not market or not n_listings:
             verdict, message = "craft_candidate", (
                 "Few/no buyout listings for a good roll - a craft candidate "
                 "(the meta mods fit a Rare). Click through to verify on trade."
