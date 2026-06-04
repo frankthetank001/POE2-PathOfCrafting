@@ -3,7 +3,8 @@ import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react
 import GridCraftingSimulator from './pages/GridCraftingSimulator'
 import CraftLibrary from './pages/CraftLibrary'
 import CraftDetail from './pages/CraftDetail'
-import PopularBuilds from './pages/PopularBuilds'
+import BuildsBrowser from './pages/BuildsBrowser'
+import BuildDetail from './pages/BuildDetail'
 import AdminLogin from './pages/AdminLogin'
 import AdminDashboard from './pages/AdminDashboard'
 import { VersionProvider, useGameVersion, GameVersion } from './contexts/VersionContext'
@@ -123,7 +124,8 @@ function App() {
                     <Route path="/" element={<GridCraftingSimulator />} />
                     <Route path="/crafts" element={<CraftLibrary />} />
                     <Route path="/craft/:shortId" element={<CraftDetail />} />
-                    <Route path="/builds" element={<PopularBuilds />} />
+                    <Route path="/builds" element={<BuildsBrowser />} />
+                    <Route path="/builds/:buildId" element={<BuildDetail />} />
                   </Routes>
                 </main>
               </div>

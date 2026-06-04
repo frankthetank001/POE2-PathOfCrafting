@@ -89,3 +89,113 @@ export interface BasePricing {
   message?: string | null
   note?: string | null
 }
+
+// --- Builds browser (the per-build sample) -----------------------------------
+
+export interface MainSkillBrief {
+  name: string
+  dps: number
+}
+
+export interface BuildsBrowserMeta {
+  league: string
+  league_slug: string
+  snapshot_version: string
+  scraped_at: string
+  sample_size: number
+  roster_size: number
+  disclaimer: string
+}
+
+export interface BuildSummary {
+  id: string
+  character: string
+  account: string
+  level: number
+  base_class: string | null
+  ascendancy: string | null
+  main_skill: MainSkillBrief | null
+  life: number
+  energy_shield: number
+  ehp: number
+  item_count: number
+  notable_uniques: string[]
+  poeninja_url: string
+  has_pob: boolean
+}
+
+export interface BuildsListResponse {
+  meta: BuildsBrowserMeta
+  total: number
+  builds: BuildSummary[]
+  ascendancies: string[]
+  skills: string[]
+}
+
+export interface BuildSkillFull {
+  name: string
+  dps: number
+  supports: string[]
+}
+
+export interface ResolvedBuildMod {
+  text: string
+  origin: string // explicit | implicit | rune | crafted | fractured | desecrated | enchant
+  values: number[]
+  resolved: boolean
+  mod_group: string | null
+  mod_type: string | null // prefix | suffix | implicit
+  tier: number | null
+  mod_id: string | null
+}
+
+export interface ResolvedBuildItem {
+  slot: string
+  name: string | null
+  base_type: string
+  resolved_base: string | null
+  category: string | null
+  resolves_in_app: boolean
+  rarity: string
+  item_level: number
+  icon: string | null
+  corrupted: boolean
+  runes: string[]
+  mods: ResolvedBuildMod[]
+}
+
+export interface BuildDefenseFull {
+  life: number
+  energy_shield: number
+  mana: number
+  spirit: number
+  ehp: number
+  fire_res: number
+  cold_res: number
+  lightning_res: number
+  chaos_res: number
+}
+
+export interface BuildDetail {
+  id: string
+  account: string
+  character: string
+  level: number
+  base_class: string | null
+  ascendancy: string | null
+  main_skills: BuildSkillFull[]
+  defense: BuildDefenseFull
+  items: ResolvedBuildItem[]
+  poeninja_url: string
+  pob_export: string | null
+  updated_utc: string
+}
+
+export interface ListBuildsParams {
+  ascendancy?: string
+  base_class?: string
+  skill?: string
+  q?: string
+  limit?: number
+  offset?: number
+}

@@ -1,0 +1,238 @@
+.build-detail {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 20px 60px;
+  color: #cdc4b0;
+}
+
+.bd-back {
+  display: inline-block;
+  color: #8a8275;
+  text-decoration: none;
+  font-size: 0.9rem;
+  margin-bottom: 18px;
+}
+
+.bd-back:hover {
+  color: #aa9e82;
+}
+
+/* Header */
+.bd-header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 16px;
+  border-bottom: 1px solid #3a3530;
+  padding-bottom: 16px;
+}
+
+.bd-id h1 {
+  font-family: 'FontinSmallCaps', 'Fontin', Georgia, serif;
+  font-size: 1.8rem;
+  color: #d6c8a0;
+  margin: 0 0 4px;
+}
+
+.bd-class {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+}
+
+.bd-ascendancy {
+  color: #c9a86a;
+  font-size: 1rem;
+}
+
+.bd-baseclass {
+  color: #6f6858;
+  font-size: 0.85rem;
+}
+
+.bd-level {
+  color: #8a8275;
+  font-size: 0.85rem;
+}
+
+.bd-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.bd-btn {
+  display: inline-block;
+  background: rgba(170, 158, 130, 0.12);
+  border: 1px solid #3a3530;
+  color: #cdc4b0;
+  font-family: 'Exo2', sans-serif;
+  font-size: 0.88rem;
+  padding: 8px 14px;
+  border-radius: 3px;
+  cursor: pointer;
+  text-decoration: none;
+  transition: border-color 0.15s ease, background 0.15s ease;
+}
+
+.bd-btn:hover {
+  border-color: #aa9e82;
+  background: rgba(170, 158, 130, 0.2);
+}
+
+.bd-btn-primary {
+  background: rgba(201, 168, 106, 0.18);
+  border-color: #6b5e3e;
+  color: #e0cf9a;
+}
+
+/* Defense strip */
+.bd-defense {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin: 18px 0;
+}
+
+.bd-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 72px;
+  padding: 8px 12px;
+  background: linear-gradient(180deg, #1a1814 0%, #100e0b 100%);
+  border: 1px solid #2a2620;
+  border-radius: 4px;
+}
+
+.bd-stat-value {
+  font-family: 'Exo2', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: #d6c8a0;
+}
+
+.bd-stat-label {
+  font-size: 0.72rem;
+  color: #7a7264;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+.bd-stat-life .bd-stat-value { color: #d98b8b; }
+.bd-stat-es .bd-stat-value { color: #8fb6e0; }
+.bd-stat-mana .bd-stat-value { color: #6e8fd0; }
+.bd-stat-ehp .bd-stat-value { color: #9fae8a; }
+.bd-stat-fire .bd-stat-value { color: var(--poe2-fire, #d35a3a); }
+.bd-stat-cold .bd-stat-value { color: var(--poe2-cold, #5aa9d3); }
+.bd-stat-lightning .bd-stat-value { color: var(--poe2-lightning, #e0c84d); }
+.bd-stat-chaos .bd-stat-value { color: var(--poe2-chaos, #c050b0); }
+
+/* Section headings */
+.build-detail h2 {
+  font-family: 'FontinSmallCaps', 'Fontin', Georgia, serif;
+  font-size: 1.2rem;
+  color: #c9bfa3;
+  margin: 24px 0 12px;
+}
+
+/* Skills */
+.bd-skills-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 10px;
+}
+
+.bd-skill {
+  background: #15120e;
+  border: 1px solid #2a2620;
+  border-radius: 4px;
+  padding: 10px 12px;
+}
+
+.bd-skill-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 8px;
+}
+
+.bd-skill-name {
+  color: #b9c8e8;
+  font-size: 0.98rem;
+}
+
+.bd-skill-dps {
+  color: #e0b34d;
+  font-weight: 600;
+  font-size: 0.85rem;
+}
+
+.bd-skill-supports {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 8px;
+}
+
+.support-chip {
+  font-size: 0.72rem;
+  color: #8a8fa0;
+  background: rgba(120, 130, 160, 0.1);
+  border: 1px solid rgba(120, 130, 160, 0.25);
+  border-radius: 2px;
+  padding: 1px 6px;
+}
+
+/* Gear grid */
+.bd-gear-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 14px;
+  align-items: start;
+}
+
+.build-item .bi-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  padding: 4px 12px;
+  font-size: 0.78rem;
+  color: #7a7264;
+}
+
+.build-item .bi-slot {
+  text-transform: capitalize;
+}
+
+.build-item .bi-corrupted {
+  color: var(--poe2-corrupted, #d20000);
+}
+
+/* Mod colours not already in PoE2ModLine.css */
+.poe2-mod-line.enchant .poe2-mod-text {
+  color: var(--poe2-mod-enchant, #b4b4ff);
+}
+
+.poe2-mod-line.crafted .poe2-mod-text {
+  color: var(--poe2-mod-crafted, #b4b4ff);
+}
+
+.poe2-mod-line.crafted .poe2-mod-tier,
+.poe2-mod-line.enchant .poe2-mod-tier {
+  color: var(--poe2-mod-crafted, #b4b4ff);
+  opacity: 0.8;
+}
+
+/* States */
+.bd-state {
+  padding: 40px 0;
+  text-align: center;
+  color: #8a8275;
+}
+
+.bd-error {
+  color: #d98b8b;
+}

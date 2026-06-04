@@ -49,7 +49,7 @@ function ModRow({ mod }: { mod: TrendingMod }) {
   )
 }
 
-function PopularBuilds() {
+function PopularBuilds({ embedded = false }: { embedded?: boolean }) {
   const [meta, setMeta] = useState<BuildsMeta | null>(null)
   const [bases, setBases] = useState<TrendingBase[]>([])
   const [slot, setSlot] = useState<string>('')
@@ -124,7 +124,7 @@ function PopularBuilds() {
   return (
     <div className="popular-builds">
       <div className="pb-header">
-        <h1>Popular Builds</h1>
+        {!embedded && <h1>Popular Builds</h1>}
         {meta && (
           <p className="pb-subtitle">
             What item bases and mods the meta uses in <strong>{meta.league}</strong> -

@@ -17,8 +17,8 @@ from urllib.parse import quote
 
 from app.core.config import settings
 from app.core.logging import get_logger
-from app.services.builds.build_data_loader import load_build_stats
-from app.services.builds.models import BuildStats
+from app.services.builds.build_data_loader import load_build_stats, load_builds_artifact
+from app.services.builds.models import Build, BuildItem, BuildsArtifact, BuildStats
 from app.services.builds.resolver import BuildResolver, ResolvedBase
 from app.services.market.cache import TTLCache
 
@@ -40,6 +40,8 @@ def _trade_search_url(league: str, base_name: str) -> str:
 class BuildsService:
     def __init__(self) -> None:
         self._stats: Optional[BuildStats] = None
+        self._builds_artifact: Optional[BuildsArtifact] = None
+        self._builds_by_id: Dict[str, Build] = {}
         self._resolver: Optional[BuildResolver] = None
         self._base_cache: Dict[str, ResolvedBase] = {}
         self._price_cache: TTLCache = TTLCache(default_ttl=settings.builds_cache_ttl)
@@ -49,13 +51,23 @@ class BuildsService:
         if self._initialized:
             return
         self._stats = load_build_stats(settings.builds_league_slug)
-        if self._stats is not None:
+        self._builds_artifact = load_builds_artifact(settings.builds_league_slug)
+        # The resolver indexes the crafting mod pool; it's useful for either artifact.
+        if self._stats is not None or self._builds_artifact is not None:
             self._resolver = BuildResolver()
+        if self._builds_artifact is not None:
+            self._builds_by_id = {b.id: b for b in self._builds_artifact.builds}
         self._initialized = True
 
     @property
     def available(self) -> bool:
+        """Aggregate meta endpoints (meta/trending/base/price) need the stats artifact."""
         return self._stats is not None and self._resolver is not None
+
+    @property
+    def builds_available(self) -> bool:
+        """The builds-browser endpoints need the per-build sample artifact."""
+        return self._builds_artifact is not None and self._resolver is not None
 
     def _resolve_base(self, name: str) -> ResolvedBase:
         cached = self._base_cache.get(name)
@@ -162,6 +174,161 @@ class BuildsService:
             "rarity_mix": base_row.rarity_mix,
             "common_skills": base_row.common_skills,
             "mods": mods,
+        }
+
+    # --- builds browser ----------------------------------------------------
+    def builds_meta(self) -> Optional[dict]:
+        if not self.builds_available:
+            return None
+        a = self._builds_artifact
+        return {
+            "league": a.league,
+            "league_slug": a.league_slug,
+            "snapshot_version": a.snapshot_version,
+            "scraped_at": a.scraped_at,
+            "sample_size": a.sample_size,
+            "roster_size": a.roster_size,
+            "disclaimer": a.disclaimer,
+        }
+
+    @staticmethod
+    def _top_skill(b: Build) -> Optional[dict]:
+        if not b.main_skills:
+            return None
+        s = max(b.main_skills, key=lambda x: x.dps)
+        return {"name": s.name, "dps": s.dps}
+
+    def _build_summary(self, b: Build) -> dict:
+        uniques = [it.name for it in b.items if it.rarity == "unique" and it.name]
+        return {
+            "id": b.id,
+            "character": b.character,
+            "account": b.account,
+            "level": b.level,
+            "base_class": b.base_class,
+            "ascendancy": b.ascendancy,
+            "main_skill": self._top_skill(b),
+            "life": b.defense.life,
+            "energy_shield": b.defense.energy_shield,
+            "ehp": b.defense.ehp,
+            "item_count": len(b.items),
+            "notable_uniques": uniques[:4],
+            "poeninja_url": b.poeninja_url,
+            "has_pob": bool(b.pob_export),
+        }
+
+    def list_builds(
+        self,
+        ascendancy: Optional[str] = None,
+        base_class: Optional[str] = None,
+        skill: Optional[str] = None,
+        q: Optional[str] = None,
+        limit: int = 60,
+        offset: int = 0,
+    ) -> dict:
+        """Paginated build summaries with optional class/skill/text filters."""
+        if not self.builds_available:
+            return {"total": 0, "builds": [], "ascendancies": [], "skills": []}
+
+        builds = self._builds_artifact.builds
+        ql = q.lower().strip() if q else None
+        sl = skill.lower().strip() if skill else None
+
+        def matches(b: Build) -> bool:
+            if ascendancy and b.ascendancy != ascendancy:
+                return False
+            if base_class and b.base_class != base_class:
+                return False
+            skill_names = [s.name.lower() for s in b.main_skills]
+            if sl and not any(sl in n for n in skill_names):
+                return False
+            if ql:
+                hay = " ".join([
+                    b.character.lower(), (b.ascendancy or "").lower(),
+                    (b.base_class or "").lower(), " ".join(skill_names),
+                    " ".join((it.name or "").lower() for it in b.items),
+                ])
+                if ql not in hay:
+                    return False
+            return True
+
+        filtered = [b for b in builds if matches(b)]
+        # Sort by level then top DPS so strong, complete builds lead.
+        filtered.sort(key=lambda b: (b.level, (self._top_skill(b) or {}).get("dps", 0)), reverse=True)
+
+        # Facets are computed over the FULL set so the filter UI stays stable.
+        ascendancies = sorted({b.ascendancy for b in builds if b.ascendancy})
+        skills = sorted({s.name for b in builds for s in b.main_skills})
+
+        page = filtered[offset:offset + limit]
+        return {
+            "total": len(filtered),
+            "builds": [self._build_summary(b) for b in page],
+            "ascendancies": ascendancies,
+            "skills": skills,
+        }
+
+    def _resolve_item(self, item: BuildItem) -> dict:
+        """A build item with each mod enriched (where it resolves) with mod_group/tier/mod_id."""
+        rb = self._resolve_base(item.base_type)
+        mods_out: List[dict] = []
+        for mod in item.mods:
+            entry = {
+                "text": mod.text, "origin": mod.origin, "values": mod.values,
+                "resolved": False, "mod_group": None, "mod_type": None,
+                "tier": None, "mod_id": None,
+            }
+            # Resolve against the crafting pool; pass the rolled value to pin the exact tier.
+            rm = self._resolver.resolve_mod(
+                mod.text, rb.category, rb.tags, mod.values or None
+            )
+            if rm.resolved:
+                if rm.tier_distribution:
+                    tier = max(rm.tier_distribution.items(), key=lambda kv: kv[1])[0]
+                else:
+                    tier = rm.tiers[0].tier if rm.tiers else None
+                tier_obj = next((t for t in rm.tiers if t.tier == tier), None)
+                entry.update({
+                    "resolved": True, "mod_group": rm.mod_group, "mod_type": rm.mod_type,
+                    "tier": tier, "mod_id": tier_obj.mod_id if tier_obj else None,
+                })
+            mods_out.append(entry)
+        return {
+            "slot": item.slot,
+            "name": item.name,
+            "base_type": item.base_type,
+            "resolved_base": rb.resolved_name,
+            "category": rb.category,
+            "resolves_in_app": rb.resolved,
+            "rarity": item.rarity,
+            "item_level": item.item_level,
+            "icon": item.icon,
+            "corrupted": item.corrupted,
+            "runes": item.runes,
+            "mods": mods_out,
+        }
+
+    def get_build(self, build_id: str) -> Optional[dict]:
+        if not self.builds_available:
+            return None
+        b = self._builds_by_id.get(build_id)
+        if b is None:
+            return None
+        return {
+            "id": b.id,
+            "account": b.account,
+            "character": b.character,
+            "level": b.level,
+            "base_class": b.base_class,
+            "ascendancy": b.ascendancy,
+            "main_skills": [
+                {"name": s.name, "dps": s.dps, "supports": s.supports} for s in b.main_skills
+            ],
+            "defense": b.defense.model_dump(),
+            "items": [self._resolve_item(it) for it in b.items],
+            "poeninja_url": b.poeninja_url,
+            "pob_export": b.pob_export,
+            "updated_utc": b.updated_utc,
         }
 
     def _mods_for_base(self, base_name: str):
