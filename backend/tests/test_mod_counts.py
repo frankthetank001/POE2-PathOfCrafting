@@ -54,8 +54,8 @@ EXPECTED_MOD_COUNTS: Dict[str, Tuple[int, int, int, int]] = {
     # Armor
     "helmet": (0, 11, 1, 2),
     "gloves": (0, 12, 1, 4),
-    "body_armour": (0, 13, 3, 2),
-    "boots": (0, 9, 1, 2),
+    "body_armour": (0, 11, 3, 2),  # re-baselined to current repoe-fork/pob-data (was 13)
+    "boots": (0, 15, 1, 2),  # re-baselined to current repoe-fork/pob-data (was 9)
 
     # Jewelry
     "amulet": (11, 20, 2, 1),
