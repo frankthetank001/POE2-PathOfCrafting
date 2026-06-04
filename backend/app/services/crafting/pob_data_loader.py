@@ -34,8 +34,12 @@ logger = get_logger(__name__)
 # Local cache path for pob-data files
 POB_DATA_CACHE_PATH = Path(__file__).parent.parent.parent.parent / "source_data" / "pob-data"
 
-# GitHub raw URLs for pob-data
-GITHUB_RAW_BASE = "https://raw.githubusercontent.com/repoe-fork/pob-data/master/pob-data/poe2"
+# Pinned to a fixed repoe-fork/pob-data commit (not `master`) so the mod/base data is
+# deterministic - upstream regenerates daily, which was silently breaking CI's mod-count
+# tests. This snapshot is PoE2 0.5 "Runes of Aldur". Bump deliberately to adopt new game
+# data (then re-run the count tests and update tests/test_mod_counts.py baselines).
+POB_DATA_REF = "ce289e6ec1765be4b88859dbe6a1df07b08b758e"  # repoe-fork/pob-data @ 2026-06-04 (0.5)
+GITHUB_RAW_BASE = f"https://raw.githubusercontent.com/repoe-fork/pob-data/{POB_DATA_REF}/pob-data/poe2"
 GITHUB_API_BASE = "https://api.github.com/repos/repoe-fork/pob-data/contents/pob-data/poe2"
 
 # Files to fetch
@@ -93,7 +97,7 @@ def fetch_pob_data_from_github(cache_path: Path) -> None:
         # Fetch Bases directory listing from GitHub API
         logger.info("Fetching Bases directory listing...")
         try:
-            response = client.get(f"{GITHUB_API_BASE}/Bases")
+            response = client.get(f"{GITHUB_API_BASE}/Bases", params={"ref": POB_DATA_REF})
             response.raise_for_status()
             files_list = response.json()
 

@@ -489,7 +489,7 @@ Item Level: 79
 160% increased Physical Damage
 Adds 34 to 49 Physical Damage
 19% increased Attack Speed
-+5 to Level of all Attack Skills
++3 to Level of all Attack Skills
 Gain 25% of Damage as Extra Physical Damage
 51% increased Critical Hit Chance against Marked Enemies (desecrated)
 """

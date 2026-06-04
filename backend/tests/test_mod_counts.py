@@ -53,13 +53,13 @@ CATEGORY_TO_BASE_NAME: Dict[str, str] = {
 EXPECTED_MOD_COUNTS: Dict[str, Tuple[int, int, int, int]] = {
     # Armor
     "helmet": (0, 11, 1, 2),
-    "gloves": (0, 12, 1, 4),
+    "gloves": (0, 11, 1, 4),  # 0.5: desecrated suffix 12 -> 11
     "body_armour": (0, 11, 3, 2),  # re-baselined to current repoe-fork/pob-data (was 13)
     "boots": (0, 15, 1, 2),  # re-baselined to current repoe-fork/pob-data (was 9)
 
     # Jewelry
-    "amulet": (11, 20, 2, 1),
-    "ring": (7, 15, 2, 1),
+    "amulet": (11, 20, 3, 1),  # 0.5: essence prefix 2 -> 3
+    "ring": (7, 15, 3, 1),  # 0.5: essence prefix 2 -> 3
     "belt": (9, 12, 1, 3),
 
     # Offhand
