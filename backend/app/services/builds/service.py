@@ -57,6 +57,21 @@ def _mod_trade_url(league: str, base_name: str, stat_id: str, min_value: Optiona
     )
 
 
+def _multi_mod_trade_url(league: str, base_name: str, stat_filters: list, rarity: Optional[str] = None) -> str:
+    """A trade2 deep-link for a base + several mod filters (and optional rarity). Pure string."""
+    query: dict = {
+        "query": {"status": {"option": "online"}, "type": base_name,
+                  "stats": [{"type": "and", "filters": stat_filters}]},
+        "sort": {"price": "asc"},
+    }
+    if rarity:
+        query["query"]["filters"] = {"type_filters": {"filters": {"rarity": {"option": rarity}}}}
+    return (
+        f"https://www.pathofexile.com/trade2/search/poe2/{quote(league)}"
+        f"?q={quote(json.dumps(query))}"
+    )
+
+
 class BuildsService:
     def __init__(self) -> None:
         self._stats: Optional[BuildStats] = None
@@ -382,7 +397,9 @@ class BuildsService:
         for mu in self._mods_for_base(base_name):
             if mu.mod_origin not in ("explicit", "implicit"):
                 continue
-            if len(prefix_mods) + len(suffix_mods) + len(implicit_mods) >= max_mods:
+            # max_mods caps EXPLICIT affixes (3 prefix + 3 suffix on a rare); the implicit is
+            # extra and doesn't consume a slot.
+            if len(prefix_mods) + len(suffix_mods) >= max_mods:
                 break
             rm = self._resolver.resolve_mod(mu.mod_template, rb.category, rb.tags, mu.value_samples)
             if not rm.resolved or not rm.tiers or not rm.stat_text:
@@ -438,7 +455,7 @@ class BuildsService:
             logger.warning("builds: white-base pricing failed for %s: %s", resolved_base, e)
             return None
 
-    async def price_base(self, base_name: str, max_mods: int = 4, league: Optional[str] = None) -> Optional[dict]:
+    async def price_base(self, base_name: str, max_mods: int = 6, league: Optional[str] = None) -> Optional[dict]:
         """Buy-vs-craft signal for a popular base: price a Rare with its top meta mods on
         the live market, plus craftability. NOTE: the buy price is real market data; the
         craft (gamble) cost is not modelled - listing scarcity is the craft-vs-buy signal.
@@ -466,9 +483,12 @@ class BuildsService:
 
         from app.schemas.crafting import CraftableItem, ItemRarity
 
-        # Two target builds: a TYPICAL roll (modal tiers) and a GOOD roll (best meta tiers).
-        gd_pre, gd_suf, gd_imp, good_mods, gd_ilvl = self._select_meta_mods(base_name, rb, max_mods, "best")
-        tp_pre, tp_suf, tp_imp, _typical_mods, tp_ilvl = self._select_meta_mods(base_name, rb, max_mods, "modal")
+        # DISPLAY: the full decked-out meta rare (up to 6 affixes + implicit) at best tiers.
+        _, _, _, good_mods, gd_ilvl = self._select_meta_mods(base_name, rb, max_mods, "best")
+        # PRICE: only the ~4 key affixes - a full 6-mod search is too strict (almost nobody lists
+        # an item with those EXACT 6 mods) and returns no listings. GOOD = best tiers, TYPICAL = modal.
+        gd_pre, gd_suf, gd_imp, _, _ = self._select_meta_mods(base_name, rb, 4, "best")
+        tp_pre, tp_suf, tp_imp, _, tp_ilvl = self._select_meta_mods(base_name, rb, 4, "modal")
 
         def _rare(pre, suf, imp, lvl):
             return CraftableItem(
@@ -501,6 +521,7 @@ class BuildsService:
         market_typical = None   # typical/modal finished rare
         magic_market = None     # magic partial
         base_market = None      # raw white base at the target ilvl
+        magic_variants: List[dict] = []  # blue-base mod combos to flip through
         trade_ready = False
         try:
             pricer = await get_item_pricer()
@@ -532,6 +553,25 @@ class BuildsService:
                     ids = pricer._match_stat_to_trade_ids(tm["stat_text"])
                     if ids:
                         tm["trade_url"] = _mod_trade_url(league_name, resolved_base, ids[0], tm.get("value"))
+                # Magic "partial" variants: every good prefix x good suffix combo as its own
+                # magic-rarity trade search, so the UI can flip through real blue-base examples.
+                gp = [tm for tm in good_mods if tm["mod_type"] == "prefix"][:3]
+                gs = [tm for tm in good_mods if tm["mod_type"] == "suffix"][:3]
+                for p in gp:
+                    for s in gs:
+                        filters = []
+                        pid = pricer._match_stat_to_trade_ids(p["stat_text"])
+                        sid = pricer._match_stat_to_trade_ids(s["stat_text"])
+                        if pid:
+                            filters.append({"id": pid[0], "value": {"min": round(p["value"] * 0.8)}})
+                        if sid:
+                            filters.append({"id": sid[0], "value": {"min": round(s["value"] * 0.8)}})
+                        if filters:
+                            magic_variants.append({
+                                "mods": [p["stat_text"], s["stat_text"]],
+                                "trade_url": _multi_mod_trade_url(league_name, resolved_base, filters, "magic"),
+                            })
+                magic_variants = magic_variants[:6]
         except Exception as e:  # rate limits, trade-API hiccups - best-effort
             logger.warning("builds: pricing failed for %s: %s", base_name, e)
             market = {"error": str(e)}
@@ -569,6 +609,7 @@ class BuildsService:
             "magic_trade_url": magic_trade_url,
             "target_mods": good_mods,
             "magic_mods": magic_mods,
+            "magic_variants": magic_variants,
             "prefixes": len(gd_pre),
             "suffixes": len(gd_suf),
             "craftable": craftable,

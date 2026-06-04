@@ -57,15 +57,25 @@ function PriceLadderRow({
   market,
   url,
   highlight,
+  onNext,
 }: {
   label: string
   hint: string
   market?: MarketInfo | null
   url?: string | null
   highlight?: boolean
+  onNext?: () => void
 }) {
+  const open = () => {
+    if (url) window.open(url, '_blank', 'noopener')
+  }
   return (
-    <div className={`ladder-row ${highlight ? 'ladder-row-hl' : ''}`}>
+    <div
+      className={`ladder-row ${highlight ? 'ladder-row-hl' : ''} ${url ? 'ladder-row-click' : ''}`}
+      onClick={open}
+      role={url ? 'button' : undefined}
+      title={url ? 'Open this search on trade' : undefined}
+    >
       <div className="ladder-main">
         <span className="ladder-label">{label}</span>
         <span className="ladder-hint">{hint}</span>
@@ -87,10 +97,22 @@ function PriceLadderRow({
         ) : (
           <span className="ladder-na">price in browser</span>
         )}
+        {onNext && (
+          <button
+            className="ladder-next"
+            onClick={(e) => {
+              e.stopPropagation()
+              onNext()
+            }}
+            title="Different mods"
+          >
+            next ›
+          </button>
+        )}
         {url && (
-          <a className="ladder-link" href={url} target="_blank" rel="noreferrer" title="Search on trade">
+          <span className="ladder-link" title="Search on trade">
             ↗
-          </a>
+          </span>
         )}
       </div>
     </div>
@@ -126,6 +148,7 @@ function PopularBuilds({ embedded = false }: { embedded?: boolean }) {
   const [error, setError] = useState<string | null>(null)
   const [pricing, setPricing] = useState<BasePricing | null>(null)
   const [pricingLoading, setPricingLoading] = useState(false)
+  const [magicIdx, setMagicIdx] = useState(0)
 
   useEffect(() => {
     let cancelled = false
@@ -177,6 +200,7 @@ function PopularBuilds({ embedded = false }: { embedded?: boolean }) {
   const checkPrice = () => {
     if (!selected) return
     setPricingLoading(true)
+    setMagicIdx(0)
     buildsApi
       .priceBase(selected)
       .then(setPricing)
@@ -295,19 +319,31 @@ function PopularBuilds({ embedded = false }: { embedded?: boolean }) {
                             market={pricing.base_market}
                             url={pricing.base_market?.trade_url || pricing.base_trade_url}
                           />
+                          {(() => {
+                            const variants = pricing.magic_variants || []
+                            const mv = variants.length ? variants[magicIdx % variants.length] : null
+                            return (
+                              <PriceLadderRow
+                                label={
+                                  variants.length > 1
+                                    ? `Magic partial (${(magicIdx % variants.length) + 1}/${variants.length})`
+                                    : 'Magic partial'
+                                }
+                                hint={
+                                  mv
+                                    ? mv.mods.join(' + ')
+                                    : pricing.magic_mods.map((m) => fillMod(m)).join(' + ') ||
+                                      'blue base, top prefix + suffix'
+                                }
+                                market={pricing.magic_market}
+                                url={mv?.trade_url || pricing.magic_trade_url}
+                                onNext={variants.length > 1 ? () => setMagicIdx((i) => i + 1) : undefined}
+                              />
+                            )
+                          })()}
                           <PriceLadderRow
-                            label="Magic partial"
-                            hint={
-                              pricing.magic_mods.length > 0
-                                ? pricing.magic_mods.map((m) => fillMod(m)).join(' + ')
-                                : 'blue base, top prefix + suffix'
-                            }
-                            market={pricing.magic_market}
-                            url={pricing.magic_trade_url}
-                          />
-                          <PriceLadderRow
-                            label="Finished rare (good)"
-                            hint={`${pricing.prefixes}p / ${pricing.suffixes}s top-tier meta mods`}
+                            label="Finished rare"
+                            hint={`a decked ${pricing.prefixes}p / ${pricing.suffixes}s meta rare`}
                             market={pricing.market}
                             url={pricing.market?.trade_url || pricing.trade_search_url}
                             highlight
@@ -322,7 +358,7 @@ function PopularBuilds({ embedded = false }: { embedded?: boolean }) {
                         {pricing.target_mods.length > 0 && (
                           <div className="priced-item">
                             <div className="priced-item-head">
-                              A good roll (top meta tiers)
+                              A decked-out meta rare
                               {pricing.item_level ? ` · ilvl ${pricing.item_level}` : ''}
                             </div>
                             {pricing.target_mods.map((m, i) => (
