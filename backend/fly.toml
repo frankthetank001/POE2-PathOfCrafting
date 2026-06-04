@@ -12,6 +12,7 @@ primary_region = 'syd'
 [env]
   ENVIRONMENT = 'production'
   PYTHONUNBUFFERED = '1'
+  BUILDS_ARTIFACT_URL = 'https://raw.githubusercontent.com/frankthetank001/POE2-Builds-Scraper/main/data/latest-{slug}.json'
 
 [[mounts]]
   source = 'backend_data'

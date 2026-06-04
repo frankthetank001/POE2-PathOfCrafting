@@ -25,6 +25,16 @@ class Settings(BaseSettings):
     poeninja_base_url: str = Field(default="https://poe.ninja/api/data")
     poeninja_cache_ttl: int = Field(default=3600)
 
+    # Popular-builds analysis (POE2-Builds-Scraper artifact). Fetched from
+    # builds_artifact_url (GitHub raw) if set, else loaded from the local dir -
+    # mirroring how pob-data is sourced. "{slug}" in the URL is replaced with the league.
+    builds_artifact_url: str = Field(
+        default=""  # e.g. https://raw.githubusercontent.com/<user>/POE2-Builds-Scraper/main/data/latest-{slug}.json
+    )
+    builds_artifact_dir: str = Field(default="source_data/builds")  # local cache / fallback
+    builds_league_slug: str = Field(default="runesofaldur")
+    builds_cache_ttl: int = Field(default=21600)  # 6 hours
+
     api_v1_prefix: str = Field(default="/api/v1")
 
     # Security settings

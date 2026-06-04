@@ -81,6 +81,9 @@ Desktop.ini
 # POB data cache (fetched from GitHub at runtime)
 backend/source_data/pob-data/
 
+# Popular-builds artifact cache (fetched from BUILDS_ARTIFACT_URL at runtime)
+backend/source_data/builds/
+
 nul
 backend/listings_debug.json
 backend/trade_request_debug.json

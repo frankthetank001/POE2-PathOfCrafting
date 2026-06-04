@@ -1,0 +1,240 @@
+.popular-builds {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1.5rem 1rem 3rem;
+  color: #d8d4c8;
+}
+
+.pb-header h1 {
+  margin: 0 0 0.25rem;
+  font-size: 1.6rem;
+  color: #e6d9b8;
+}
+.pb-subtitle {
+  margin: 0;
+  color: #9a948a;
+  font-size: 0.9rem;
+}
+
+.pb-state {
+  padding: 2rem 1rem;
+  text-align: center;
+  color: #9a948a;
+}
+.pb-error {
+  color: #d98a6a;
+}
+
+/* slot filter chips */
+.pb-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin: 1rem 0;
+}
+.pb-chip {
+  background: #2a2722;
+  border: 1px solid #3d3933;
+  color: #c8c2b6;
+  border-radius: 999px;
+  padding: 0.3rem 0.8rem;
+  font-size: 0.82rem;
+  cursor: pointer;
+  text-transform: capitalize;
+  transition: background 0.12s, border-color 0.12s;
+}
+.pb-chip:hover {
+  border-color: #6a5f44;
+}
+.pb-chip-active {
+  background: #4a3f24;
+  border-color: #a08b4f;
+  color: #f0e6c8;
+}
+
+/* two-pane layout */
+.pb-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 360px) 1fr;
+  gap: 1rem;
+  align-items: start;
+}
+@media (max-width: 760px) {
+  .pb-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.pb-bases {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+}
+
+.base-card {
+  text-align: left;
+  background: #211e1a;
+  border: 1px solid #332f29;
+  border-radius: 6px;
+  padding: 0.55rem 0.7rem;
+  cursor: pointer;
+  color: inherit;
+  transition: border-color 0.12s, background 0.12s;
+}
+.base-card:hover {
+  border-color: #6a5f44;
+  background: #262219;
+}
+.base-card-active {
+  border-color: #a08b4f;
+  background: #2c2718;
+}
+.base-card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+.base-name {
+  font-weight: 600;
+  color: #e6d9b8;
+}
+.base-usage {
+  color: #c9a227;
+  font-variant-numeric: tabular-nums;
+  font-size: 0.85rem;
+}
+.base-card-bottom {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.25rem;
+  font-size: 0.74rem;
+  color: #8c867c;
+  align-items: center;
+}
+.base-slot {
+  text-transform: capitalize;
+}
+.rarity-rare {
+  color: #d6c84a;
+}
+.rarity-unique {
+  color: #af6025;
+}
+.base-unresolved {
+  margin-left: auto;
+  color: #6a655c;
+  border: 1px solid #3d3933;
+  border-radius: 4px;
+  padding: 0 0.35rem;
+}
+
+/* detail pane */
+.pb-detail {
+  background: #1c1a16;
+  border: 1px solid #332f29;
+  border-radius: 8px;
+  min-height: 200px;
+}
+.detail-head {
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid #332f29;
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+}
+.detail-head h2 {
+  margin: 0;
+  font-size: 1.15rem;
+  color: #e6d9b8;
+}
+.detail-sub {
+  color: #9a948a;
+  font-size: 0.82rem;
+  text-transform: capitalize;
+}
+.detail-skills {
+  color: #7fa3c9;
+  font-size: 0.8rem;
+}
+
+.mod-list {
+  display: flex;
+  flex-direction: column;
+}
+.mod-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.5rem 1rem;
+  border-bottom: 1px solid #262320;
+}
+.mod-row:last-child {
+  border-bottom: none;
+}
+.mod-unresolved {
+  opacity: 0.62;
+}
+.mod-main {
+  display: flex;
+  gap: 0.5rem;
+  align-items: baseline;
+  min-width: 0;
+}
+.mod-text {
+  color: #cfc8bb;
+}
+.mod-origin {
+  font-size: 0.66rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  padding: 0.05rem 0.35rem;
+  border-radius: 4px;
+  background: #2a2722;
+  color: #9a948a;
+  white-space: nowrap;
+}
+.origin-explicit { color: #8aa9d6; }
+.origin-implicit { color: #7fc9c0; }
+.origin-rune { color: #c79a4f; }
+.origin-crafted { color: #b58ad6; }
+
+.mod-meta {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+  flex-shrink: 0;
+  font-size: 0.78rem;
+}
+.mod-usage {
+  color: #c9a227;
+  font-variant-numeric: tabular-nums;
+}
+.mod-tier {
+  color: #8c867c;
+  white-space: nowrap;
+}
+.tier-dist {
+  display: flex;
+  gap: 0.2rem;
+}
+.tier-chip {
+  background: #2a2722;
+  border-radius: 4px;
+  padding: 0.02rem 0.3rem;
+  color: #b6af9f;
+  font-size: 0.7rem;
+}
+.tier-count {
+  color: #7c766c;
+}
+
+.pb-disclaimer {
+  margin-top: 1.5rem;
+  font-size: 0.72rem;
+  color: #6a655c;
+  text-align: center;
+}

@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Link, useLocation } from 'react
 import GridCraftingSimulator from './pages/GridCraftingSimulator'
 import CraftLibrary from './pages/CraftLibrary'
 import CraftDetail from './pages/CraftDetail'
+import PopularBuilds from './pages/PopularBuilds'
 import AdminLogin from './pages/AdminLogin'
 import AdminDashboard from './pages/AdminDashboard'
 import { VersionProvider, useGameVersion, GameVersion } from './contexts/VersionContext'
@@ -45,6 +46,9 @@ function Navigation() {
           </Link>
           <Link to="/crafts" className={`nav-link ${location.pathname.startsWith('/craft') ? 'nav-link-active' : ''}`}>
             Craft Library
+          </Link>
+          <Link to="/builds" className={`nav-link ${location.pathname.startsWith('/builds') ? 'nav-link-active' : ''}`}>
+            Popular Builds
           </Link>
           <div className="version-selector">
             <select
@@ -107,6 +111,7 @@ function App() {
                     <Route path="/" element={<GridCraftingSimulator />} />
                     <Route path="/crafts" element={<CraftLibrary />} />
                     <Route path="/craft/:shortId" element={<CraftDetail />} />
+                    <Route path="/builds" element={<PopularBuilds />} />
                   </Routes>
                 </main>
               </div>
