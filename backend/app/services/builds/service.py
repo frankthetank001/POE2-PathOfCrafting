@@ -25,58 +25,53 @@ from app.services.market.cache import TTLCache
 logger = get_logger(__name__)
 
 
+# "securable" = instant-buyout-only, matching the price engine and the UI's "instant buyout only".
+_TRADE_STATUS = "securable"
+
+
+def _trade2_url(league: str, query: dict) -> str:
+    return (
+        f"https://www.pathofexile.com/trade2/search/poe2/{quote(league)}"
+        f"?q={quote(json.dumps(query))}"
+    )
+
+
 def _trade_search_url(league: str, base_name: str, rarity: Optional[str] = None) -> str:
     """A pathofexile.com/trade2 deep-link pre-filtered to a base type (and optionally a
     rarity: 'normal' for a raw white base, 'magic' for a partial). Built as a plain string
     (no GGG call), so it works even though the trade API 403s our datacenter IP - the user's
     browser opens it from their own IP/session.
     """
-    query: dict = {"query": {"status": {"option": "online"}, "type": base_name}, "sort": {"price": "asc"}}
+    query: dict = {"query": {"status": {"option": _TRADE_STATUS}, "type": base_name}, "sort": {"price": "asc"}}
     if rarity:
         query["query"]["filters"] = {"type_filters": {"filters": {"rarity": {"option": rarity}}}}
-    return (
-        f"https://www.pathofexile.com/trade2/search/poe2/{quote(league)}"
-        f"?q={quote(json.dumps(query))}"
-    )
+    return _trade2_url(league, query)
 
 
-def _stat_filter(stat_id: str, value: Optional[float]) -> dict:
-    """A trade2 stat filter. Only emit a min when 0.8x the rolled value rounds to >=1 - a
-    min of 0 (or a too-tight value) needlessly excludes valid listings."""
-    f: dict = {"id": stat_id}
-    if value is not None and round(value * 0.8) >= 1:
-        f["value"] = {"min": round(value * 0.8)}
-    return f
+def _stat_group(stat_ids: Optional[list]) -> Optional[dict]:
+    """A trade2 stat GROUP for ONE logical mod. A display text can map to SEVERAL trade stat
+    ids (e.g. '# to Spirit' -> two distinct ids; ~24 common mods are ambiguous) - so use a
+    count>=1 group, which matches if ANY variant is present, exactly like the price engine
+    (item_pricer line ~851). Picking only ids[0] silently matched the wrong variant and
+    returned nothing. No roll-min: a deep-link should FIND the mod, not gate on an exact roll
+    (over-tight mins also dropped valid listings)."""
+    ids = [s for s in (stat_ids or []) if s]
+    if not ids:
+        return None
+    if len(ids) == 1:
+        return {"type": "and", "filters": [{"id": ids[0]}]}
+    return {"type": "count", "value": {"min": 1}, "filters": [{"id": s} for s in ids]}
 
 
-def _mod_trade_url(league: str, base_name: str, stat_id: str, min_value: Optional[float] = None) -> str:
-    """A trade2 deep-link for a base filtered to ONE mod (by its trade stat id), with an
-    optional min-roll. Pure string, so it works despite the datacenter IP block."""
-    flt = _stat_filter(stat_id, min_value)
-    query = {
-        "query": {"status": {"option": "online"}, "type": base_name,
-                  "stats": [{"type": "and", "filters": [flt]}]},
-        "sort": {"price": "asc"},
-    }
-    return (
-        f"https://www.pathofexile.com/trade2/search/poe2/{quote(league)}"
-        f"?q={quote(json.dumps(query))}"
-    )
-
-
-def _multi_mod_trade_url(league: str, base_name: str, stat_filters: list, rarity: Optional[str] = None) -> str:
-    """A trade2 deep-link for a base + several mod filters (and optional rarity). Pure string."""
-    query: dict = {
-        "query": {"status": {"option": "online"}, "type": base_name,
-                  "stats": [{"type": "and", "filters": stat_filters}]},
-        "sort": {"price": "asc"},
-    }
+def _stats_trade_url(league: str, base_name: str, groups: list, rarity: Optional[str] = None) -> str:
+    """A trade2 deep-link for a base + a list of stat groups (one per logical mod) + rarity."""
+    groups = [g for g in (groups or []) if g]
+    query: dict = {"query": {"status": {"option": _TRADE_STATUS}, "type": base_name}, "sort": {"price": "asc"}}
+    if groups:
+        query["query"]["stats"] = groups
     if rarity:
         query["query"]["filters"] = {"type_filters": {"filters": {"rarity": {"option": rarity}}}}
-    return (
-        f"https://www.pathofexile.com/trade2/search/poe2/{quote(league)}"
-        f"?q={quote(json.dumps(query))}"
-    )
+    return _trade2_url(league, query)
 
 
 class BuildsService:
@@ -546,33 +541,33 @@ class BuildsService:
                 # 1) Build the self-contained ?q= deep-links FIRST (pure stat-id string work, no
                 #    network). These used to be built AFTER the price calls, so a single rate-limit
                 #    exception wiped every per-mod link and all magic variants.
-                rare_filters: List[dict] = []
+                rare_groups: List[dict] = []
                 for tm in good_mods:
-                    ids = pricer._match_stat_to_trade_ids(tm["stat_text"])
-                    if not ids:
+                    grp = _stat_group(pricer._match_stat_to_trade_ids(tm["stat_text"]))
+                    if grp is None:
                         continue
-                    tm["trade_url"] = _mod_trade_url(league_name, resolved_base, ids[0], tm.get("value"))
-                    if len(rare_filters) < 4 and tm["origin"] in ("explicit", "implicit"):
-                        rare_filters.append(_stat_filter(ids[0], tm.get("value")))
-                if rare_filters:
-                    rare_q_url = _multi_mod_trade_url(league_name, resolved_base, rare_filters, "rare")
+                    tm["trade_url"] = _stats_trade_url(league_name, resolved_base, [grp])
+                    # The rare link keeps to the top ~3 key mods - requiring all 6 would be too
+                    # strict to return listings.
+                    if len(rare_groups) < 3 and tm["origin"] in ("explicit", "implicit"):
+                        rare_groups.append(grp)
+                if rare_groups:
+                    rare_q_url = _stats_trade_url(league_name, resolved_base, rare_groups, "rare")
                 # Magic "partial" variants: each good prefix x good suffix combo as a magic-rarity
                 # search, so the UI can flip through real blue-base examples.
                 gp = [tm for tm in good_mods if tm["mod_type"] == "prefix"][:3]
                 gs = [tm for tm in good_mods if tm["mod_type"] == "suffix"][:3]
                 for p in gp:
                     for s in gs:
-                        filters = []
-                        pid = pricer._match_stat_to_trade_ids(p["stat_text"])
-                        sid = pricer._match_stat_to_trade_ids(s["stat_text"])
-                        if pid:
-                            filters.append(_stat_filter(pid[0], p.get("value")))
-                        if sid:
-                            filters.append(_stat_filter(sid[0], s.get("value")))
-                        if filters:
+                        groups = [
+                            _stat_group(pricer._match_stat_to_trade_ids(p["stat_text"])),
+                            _stat_group(pricer._match_stat_to_trade_ids(s["stat_text"])),
+                        ]
+                        groups = [g for g in groups if g]
+                        if groups:
                             magic_variants.append({
                                 "mods": [p["stat_text"], s["stat_text"]],
-                                "trade_url": _multi_mod_trade_url(league_name, resolved_base, filters, "magic"),
+                                "trade_url": _stats_trade_url(league_name, resolved_base, groups, "magic"),
                             })
                 magic_variants = magic_variants[:6]
                 if magic_variants:
