@@ -27,6 +27,7 @@ class CraftingConfigService:
     def __init__(self):
         self._currency_configs: Dict[str, CurrencyConfigInfo] = {}
         self._essence_configs: Dict[str, EssenceInfo] = {}
+        self._alloy_configs: Dict[str, EssenceInfo] = {}
         self._omen_configs: Dict[str, OmenInfo] = {}
         self._bone_configs: Dict[str, DesecrationBoneInfo] = {}
         self._modifier_pools: Dict[str, ModifierPoolInfo] = {}
@@ -42,6 +43,7 @@ class CraftingConfigService:
         try:
             self._load_currency_configs()
             self._load_essence_configs()
+            self._load_alloy_configs()
             self._load_omen_configs()
             self._load_bone_configs()
             self._loaded = True
@@ -90,6 +92,44 @@ class CraftingConfigService:
             logger.info(f"Loaded {len(self._essence_configs)} essence configs from pob-data")
         except Exception as e:
             logger.error(f"Error loading essences from pob-data: {e}")
+
+    def _load_alloy_configs(self):
+        """Load Runic Alloy configs from alloys.json, shaped as EssenceInfo so AlloyMechanic
+        (a subclass of EssenceMechanic) can reuse the per-slot matching and value rolling."""
+        from app.schemas.crafting import EssenceItemEffect
+        json_path = SOURCE_DATA_PATH / "alloys.json"
+        if not json_path.exists():
+            logger.warning(f"alloys.json not found at {json_path}")
+            return
+        try:
+            with open(json_path, "r", encoding="utf-8") as f:
+                alloy_list = json.load(f)
+
+            for alloy_id, alloy in enumerate(alloy_list, start=1):
+                effects = []
+                for eff_id, eff in enumerate(alloy.get("item_effects", []), start=1):
+                    mod_type = eff.get("mod_type", "prefix")
+                    effects.append(EssenceItemEffect(
+                        id=eff_id,
+                        essence_id=alloy_id,
+                        item_type=eff["item_type"],
+                        modifier_type=mod_type if mod_type in ("prefix", "suffix") else "prefix",
+                        effect_text=eff["effect_text"],
+                        mod_id=eff.get("mod_id"),
+                    ))
+                self._alloy_configs[alloy["name"]] = EssenceInfo(
+                    id=alloy_id,
+                    name=alloy["name"],
+                    essence_tier="alloy",
+                    essence_type="alloy",
+                    mechanic="remove_add_rare",
+                    stack_size=alloy.get("stack_size", 10),
+                    item_effects=effects,
+                )
+
+            logger.info(f"Loaded {len(self._alloy_configs)} alloy configs")
+        except Exception as e:
+            logger.error(f"Error loading alloys.json: {e}")
 
     def _load_omen_configs(self):
         """Load omen configurations from JSON file."""
@@ -176,6 +216,16 @@ class CraftingConfigService:
         """Get essence configuration by name."""
         self.ensure_loaded()
         return self._essence_configs.get(essence_name)
+
+    def get_alloy_config(self, alloy_name: str) -> Optional[EssenceInfo]:
+        """Get Runic Alloy configuration by name."""
+        self.ensure_loaded()
+        return self._alloy_configs.get(alloy_name)
+
+    def get_all_alloy_names(self) -> List[str]:
+        """Get all available alloy names."""
+        self.ensure_loaded()
+        return list(self._alloy_configs.keys())
 
     def get_omen_config(self, omen_name: str) -> Optional[OmenInfo]:
         """Get omen configuration by name."""

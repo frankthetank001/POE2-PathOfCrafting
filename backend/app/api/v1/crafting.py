@@ -151,12 +151,13 @@ async def get_categorized_currencies() -> dict:
             "TransmutationMechanic", "AugmentationMechanic", "AlchemyMechanic",
             "RegalMechanic", "ExaltedMechanic", "ChaosMechanic", "DivineMechanic",
             "AnnulmentMechanic", "FracturingMechanic", "DesecrationMechanic", "EssenceMechanic",
-            "CatalystMechanic"
+            "CatalystMechanic", "AlloyMechanic"
         }
 
         # Categorize currencies with implementation status
         orbs = {"implemented": [], "disabled": []}
         essences = {"implemented": [], "disabled": []}
+        alloys = {"implemented": [], "disabled": []}
         bones = {"implemented": [], "disabled": []}
 
         for currency_name in all_currencies:
@@ -168,6 +169,8 @@ async def get_categorized_currencies() -> dict:
 
             if "Essence" in currency_name:
                 essences[status].append(currency_name)
+            elif "Alloy" in currency_name:
+                alloys[status].append(currency_name)
             elif "Abyssal" in currency_name or "bone" in currency_name.lower():
                 bones[status].append(currency_name)
             else:
@@ -233,6 +236,10 @@ async def get_categorized_currencies() -> dict:
                 "implemented": sorted(essences["implemented"]),
                 "disabled": sorted(essences["disabled"])
             },
+            "alloys": {
+                "implemented": sorted(alloys["implemented"]),
+                "disabled": sorted(alloys["disabled"])
+            },
             "bones": {
                 "implemented": sorted(bones["implemented"], key=sort_bones),
                 "disabled": sorted(bones["disabled"], key=sort_bones)
@@ -243,8 +250,8 @@ async def get_categorized_currencies() -> dict:
             },
             "omens": sorted(all_omens),
             "total": len(all_currencies) + len(all_essences) + len(all_bones) + len(all_omens) + len(all_catalysts),
-            "implemented_count": len(orbs["implemented"]) + len(essences["implemented"]) + len(bones["implemented"]) + len(all_catalysts),
-            "disabled_count": len(orbs["disabled"]) + len(essences["disabled"]) + len(bones["disabled"])
+            "implemented_count": len(orbs["implemented"]) + len(essences["implemented"]) + len(alloys["implemented"]) + len(bones["implemented"]) + len(all_catalysts),
+            "disabled_count": len(orbs["disabled"]) + len(essences["disabled"]) + len(alloys["disabled"]) + len(bones["disabled"])
         }
     except Exception as e:
         logger.error(f"Error fetching categorized currencies: {e}")

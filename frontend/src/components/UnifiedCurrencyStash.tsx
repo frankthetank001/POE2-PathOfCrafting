@@ -6,12 +6,13 @@ import { useGameVersion, isFeatureAvailable } from '../contexts/VersionContext'
 const HIDE_UNAVAILABLE_KEY = 'currency-stash-hide-unavailable'
 const ACTIVE_TAB_KEY = 'currency-stash-active-tab'
 
-type CurrencyTab = 'orbs' | 'essences' | 'bones' | 'catalysts'
+type CurrencyTab = 'orbs' | 'essences' | 'alloys' | 'bones' | 'catalysts'
 
 interface UnifiedCurrencyStashProps {
   categorizedCurrencies: {
     orbs: { implemented: string[], disabled: string[] }
     essences: { implemented: string[], disabled: string[] }
+    alloys: { implemented: string[], disabled: string[] }
     bones: { implemented: string[], disabled: string[] }
     catalysts: { implemented: string[], disabled: string[] }
   }
@@ -53,7 +54,7 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
   // Active tab with sessionStorage persistence
   const [activeTab, setActiveTab] = useState<CurrencyTab>(() => {
     const stored = sessionStorage.getItem(ACTIVE_TAB_KEY) as CurrencyTab
-    return stored && ['orbs', 'essences', 'bones', 'catalysts'].includes(stored) ? stored : 'orbs'
+    return stored && ['orbs', 'essences', 'alloys', 'bones', 'catalysts'].includes(stored) ? stored : 'orbs'
   })
 
   useEffect(() => {
@@ -339,6 +340,17 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
     </div>
   )
 
+  const renderAlloysTab = () => (
+    <div className="tab-content-alloys">
+      <div className="currency-section-content currency-grid">
+        {categorizedCurrencies.alloys.implemented.filter(searchFilter).map((alloy) => {
+          const isAvailable = availableCurrencies.includes(alloy)
+          return renderCurrencySlot(alloy, true, isAvailable)
+        })}
+      </div>
+    </div>
+  )
+
   const renderCatalystsTab = () => (
     <div className="tab-content-catalysts">
       <div className="currency-section-content currency-grid">
@@ -494,6 +506,12 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
           Essences
         </button>
         <button
+          className={`currency-tab ${activeTab === 'alloys' ? 'active' : ''}`}
+          onClick={() => setActiveTab('alloys')}
+        >
+          Alloys
+        </button>
+        <button
           className={`currency-tab ${activeTab === 'bones' ? 'active' : ''}`}
           onClick={() => setActiveTab('bones')}
         >
@@ -513,6 +531,7 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
       <div className="currency-tab-content">
         {activeTab === 'orbs' && renderOrbsTab()}
         {activeTab === 'essences' && renderEssencesTab()}
+        {activeTab === 'alloys' && renderAlloysTab()}
         {activeTab === 'bones' && renderBonesTab()}
         {activeTab === 'catalysts' && isJewelry && renderCatalystsTab()}
       </div>

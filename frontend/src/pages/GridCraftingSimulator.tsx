@@ -754,6 +754,7 @@ function GridCraftingSimulator() {
   const [categorizedCurrencies, setCategorizedCurrencies] = useState<{
     orbs: { implemented: string[], disabled: string[] }
     essences: { implemented: string[], disabled: string[] }
+    alloys: { implemented: string[], disabled: string[] }
     bones: { implemented: string[], disabled: string[] }
     catalysts: { implemented: string[], disabled: string[] }
     omens: string[]
@@ -763,6 +764,7 @@ function GridCraftingSimulator() {
   }>({
     orbs: { implemented: [], disabled: [] },
     essences: { implemented: [], disabled: [] },
+    alloys: { implemented: [], disabled: [] },
     bones: { implemented: [], disabled: [] },
     catalysts: { implemented: [], disabled: [] },
     omens: [],
@@ -1797,6 +1799,10 @@ function GridCraftingSimulator() {
       categorizedCurrencies.essences.implemented.forEach(name => allCurrencyNames.add(name))
       categorizedCurrencies.essences.disabled.forEach(name => allCurrencyNames.add(name))
 
+      // Add all alloys
+      categorizedCurrencies.alloys.implemented.forEach(name => allCurrencyNames.add(name))
+      categorizedCurrencies.alloys.disabled.forEach(name => allCurrencyNames.add(name))
+
       // Add all bones
       categorizedCurrencies.bones.implemented.forEach(name => allCurrencyNames.add(name))
       categorizedCurrencies.bones.disabled.forEach(name => allCurrencyNames.add(name))
@@ -1959,6 +1965,7 @@ function GridCraftingSimulator() {
       const currencies = await craftingApi.getCategorizedCurrencies()
       setCategorizedCurrencies({
         ...currencies,
+        alloys: currencies.alloys || { implemented: [], disabled: [] },
         catalysts: currencies.catalysts || { implemented: [], disabled: [] }
       })
       setAvailableOmens(currencies.omens)

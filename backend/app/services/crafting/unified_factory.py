@@ -64,6 +64,8 @@ class UnifiedCraftingFactory:
         """Create the base crafting mechanic from configuration."""
         if config.currency_type == "essence":
             return self._create_essence_mechanic(config)
+        elif config.currency_type == "alloy":
+            return self._create_alloy_mechanic(config)
         elif config.mechanic_class == "DesecrationMechanic":
             return self._create_desecration_mechanic(config)
         else:
@@ -86,6 +88,15 @@ class UnifiedCraftingFactory:
             return None
 
         return EssenceMechanic(config.config_data, essence_config)
+
+    def _create_alloy_mechanic(self, config: CurrencyConfigInfo) -> Optional[CraftingMechanic]:
+        """Create a Runic Alloy mechanic with its per-slot crafted effects."""
+        from app.services.crafting.mechanics import AlloyMechanic
+        alloy_config = crafting_config_service.get_alloy_config(config.name)
+        if not alloy_config:
+            logger.error(f"No alloy configuration found for: {config.name}")
+            return None
+        return AlloyMechanic(config.config_data, alloy_config)
 
     def _create_desecration_mechanic(self, config: CurrencyConfigInfo) -> Optional[CraftingMechanic]:
         """Create desecration mechanic with bone information."""
@@ -157,6 +168,10 @@ class UnifiedCraftingFactory:
     def get_all_available_essences(self) -> List[str]:
         """Get all available essence names."""
         return crafting_config_service.get_all_essence_names()
+
+    def get_all_available_alloys(self) -> List[str]:
+        """Get all available Runic Alloy names."""
+        return crafting_config_service.get_all_alloy_names()
 
     def get_all_available_omens(self) -> List[str]:
         """Get all available omen names."""

@@ -1,0 +1,395 @@
+[
+  {
+    "name": "Runic Alloy",
+    "currency_type": "alloy",
+    "rarity": "currency",
+    "stack_size": 10,
+    "mechanic": "remove_add_rare_crafted",
+    "item_effects": [
+      {
+        "item_type": "Amulet",
+        "mod_id": "AlloyMaximumRunicWardPercent1",
+        "mod_type": "prefix",
+        "effect_text": "(6-10)% increased maximum Runic Ward"
+      },
+      {
+        "item_type": "Belt",
+        "mod_id": "AlloyRunicWardRechargeRate1",
+        "mod_type": "prefix",
+        "effect_text": "(15-20)% increased Runic Ward Regeneration Rate"
+      },
+      {
+        "item_type": "Ring",
+        "mod_id": "AlloyMaximumRunicWard1",
+        "mod_type": "prefix",
+        "effect_text": "+(37-49) to maximum Runic Ward"
+      }
+    ]
+  },
+  {
+    "name": "Adaptive Alloy",
+    "currency_type": "alloy",
+    "rarity": "currency",
+    "stack_size": 10,
+    "mechanic": "remove_add_rare_crafted",
+    "item_effects": [
+      {
+        "item_type": "Gloves",
+        "mod_id": "AlloyAttackSpeedIfMissingWardRecently1",
+        "mod_type": "suffix",
+        "effect_text": "(10-15)% increased Attack Speed while missing Runic Ward"
+      },
+      {
+        "item_type": "Staff",
+        "mod_id": "AlloyDamageAsExtraFireTwoHandWhileMissingRunicWard1",
+        "mod_type": "prefix",
+        "effect_text": "Gain (42-52)% of Damage as Extra Fire Damage while you are missing Runic Ward"
+      },
+      {
+        "item_type": "Wand",
+        "mod_id": "AlloyDamageAsExtraFireWhileMissingRunicWard1",
+        "mod_type": "prefix",
+        "effect_text": "Gain (21-26)% of Damage as Extra Fire Damage while you are missing Runic Ward"
+      }
+    ]
+  },
+  {
+    "name": "Protective Alloy",
+    "currency_type": "alloy",
+    "rarity": "currency",
+    "stack_size": 10,
+    "mechanic": "remove_add_rare_crafted",
+    "item_effects": [
+      {
+        "item_type": "Belt",
+        "mod_id": "AlloyRecoverRunicWardOnCharmUse1",
+        "mod_type": "prefix",
+        "effect_text": "Recover (32-45) Runic Ward when a Charm is used"
+      },
+      {
+        "item_type": "Shield",
+        "mod_id": "AlloyRunicWardOnBlock1",
+        "mod_type": "suffix",
+        "effect_text": "Recover (10-15) Runic Ward when you Block"
+      },
+      {
+        "item_type": "Weapon",
+        "mod_id": "AlloyMaximumRunicWardWeapon1",
+        "mod_type": "suffix",
+        "effect_text": "+(51-74) to maximum Runic Ward"
+      }
+    ]
+  },
+  {
+    "name": "Expansive Alloy",
+    "currency_type": "alloy",
+    "rarity": "currency",
+    "stack_size": 10,
+    "mechanic": "remove_add_rare_crafted",
+    "item_effects": [
+      {
+        "item_type": "Body Armour",
+        "mod_id": "AlloyPresenceAreaOfEffect1",
+        "mod_type": "suffix",
+        "effect_text": "(35-50)% increased Presence Area of Effect"
+      },
+      {
+        "item_type": "Boots",
+        "mod_id": "AlloyTemporaryMinionSkillLimit1",
+        "mod_type": "suffix",
+        "effect_text": "Temporary Minion Skills have +(1-2) to Limit of Minions summoned"
+      },
+      {
+        "item_type": "Gloves",
+        "mod_id": "AlloyRemnantPickupRange1",
+        "mod_type": "suffix",
+        "effect_text": "Remnants can be collected from (35-50)% further away"
+      },
+      {
+        "item_type": "Helmet",
+        "mod_id": "AlloyManaCostEfficiency1",
+        "mod_type": "prefix",
+        "effect_text": "(18-29)% increased Mana Cost Efficiency"
+      }
+    ]
+  },
+  {
+    "name": "Swift Alloy",
+    "currency_type": "alloy",
+    "rarity": "currency",
+    "stack_size": 10,
+    "mechanic": "remove_add_rare_crafted",
+    "item_effects": [
+      {
+        "item_type": "Belt",
+        "mod_id": "AlloyFlaskChargesPerSecond1",
+        "mod_type": "suffix",
+        "effect_text": "Flasks gain (0.75-1) charges per Second"
+      },
+      {
+        "item_type": "Gloves",
+        "mod_id": "AlloyCastSpeedGloves1",
+        "mod_type": "suffix",
+        "effect_text": "(9-12)% increased Cast Speed"
+      },
+      {
+        "item_type": "Ring",
+        "mod_id": "AlloyAttackSpeedRing1",
+        "mod_type": "suffix",
+        "effect_text": "(7-9)% increased Attack Speed"
+      },
+      {
+        "item_type": "Shield",
+        "mod_id": "AlloyTotemPlacementSpeed1",
+        "mod_type": "suffix",
+        "effect_text": "(30-49)% increased Totem Placement speed"
+      }
+    ]
+  },
+  {
+    "name": "Cyclonic Alloy",
+    "currency_type": "alloy",
+    "rarity": "currency",
+    "stack_size": 10,
+    "mechanic": "remove_add_rare_crafted",
+    "item_effects": [
+      {
+        "item_type": "Body Armour",
+        "mod_id": "AlloyReducedSlowPotency1",
+        "mod_type": "suffix",
+        "effect_text": "(15-30)% reduced Slowing Potency of Debuffs on You"
+      },
+      {
+        "item_type": "Boots",
+        "mod_id": "AlloySkillEffectDuration1",
+        "mod_type": "suffix",
+        "effect_text": "(15-19)% increased Skill Effect Duration"
+      },
+      {
+        "item_type": "Gloves",
+        "mod_id": "AlloyDamagingAilmentDuration1",
+        "mod_type": "suffix",
+        "effect_text": "(20-25)% increased Duration of Damaging Ailments on Enemies"
+      },
+      {
+        "item_type": "Helmet",
+        "mod_id": "AlloyArchonDuration1",
+        "mod_type": "suffix",
+        "effect_text": "(35-42)% increased Archon Buff duration"
+      }
+    ]
+  },
+  {
+    "name": "Prismatic Alloy",
+    "currency_type": "alloy",
+    "rarity": "currency",
+    "stack_size": 10,
+    "mechanic": "remove_add_rare_crafted",
+    "item_effects": [
+      {
+        "item_type": "Caster Weapon",
+        "mod_id": "AlloyExposureEffect1",
+        "mod_type": "suffix",
+        "effect_text": "(40-50)% increased Exposure Effect"
+      },
+      {
+        "item_type": "Gloves",
+        "mod_id": "AlloyElementalPenetration1",
+        "mod_type": "prefix",
+        "effect_text": "Damage Penetrates (9-15)% Elemental Resistances"
+      },
+      {
+        "item_type": "Martial Weapon",
+        "mod_id": "AlloyAilmentMagnitude1",
+        "mod_type": "suffix",
+        "effect_text": "(20-30)% increased Magnitude of Ailments you inflict"
+      },
+      {
+        "item_type": "Sceptre",
+        "mod_id": "AlloyMinionDamagingAilmentMagnitude1",
+        "mod_type": "suffix",
+        "effect_text": "Minions have (40-49)% increased Magnitude of Damaging Ailments"
+      }
+    ]
+  },
+  {
+    "name": "Mystic Alloy",
+    "currency_type": "alloy",
+    "rarity": "currency",
+    "stack_size": 10,
+    "mechanic": "remove_add_rare_crafted",
+    "item_effects": [
+      {
+        "item_type": "Boots",
+        "mod_id": "AlloySpiritOnBoots1",
+        "mod_type": "suffix",
+        "effect_text": "+(10-15) to Spirit"
+      },
+      {
+        "item_type": "Caster Weapon",
+        "mod_id": "AlloyMaximumElementalInfusions1",
+        "mod_type": "suffix",
+        "effect_text": "+1 to maximum number of Elemental Infusions"
+      },
+      {
+        "item_type": "Gloves",
+        "mod_id": "AlloyAttackAreaOfEffect1",
+        "mod_type": "suffix",
+        "effect_text": "(10-15)% increased Area of Effect for Attacks"
+      },
+      {
+        "item_type": "Helmet",
+        "mod_id": "AlloySpellAreaOfEffect1",
+        "mod_type": "suffix",
+        "effect_text": "Spell Skills have (10-15)% increased Area of Effect"
+      },
+      {
+        "item_type": "Quiver",
+        "mod_id": "AlloyChanceToChain1",
+        "mod_type": "suffix",
+        "effect_text": "(25-35)% chance to Chain an additional time"
+      }
+    ]
+  },
+  {
+    "name": "Sovereign Alloy",
+    "currency_type": "alloy",
+    "rarity": "currency",
+    "stack_size": 10,
+    "mechanic": "remove_add_rare_crafted",
+    "item_effects": [
+      {
+        "item_type": "Armour",
+        "mod_id": "AlloyLocalWardIncreasePercent1",
+        "mod_type": "prefix",
+        "effect_text": "(24-30)% increased Runic Ward"
+      },
+      {
+        "item_type": "Jewellery",
+        "mod_id": "AlloyEffectOfResistanceMods1",
+        "mod_type": "prefix",
+        "effect_text": "(20-30)% increased Explicit Resistance Modifier magnitudes"
+      },
+      {
+        "item_type": "Weapon",
+        "mod_id": "AlloyEffectOfSocketedAugments1",
+        "mod_type": "suffix",
+        "effect_text": "(20-30)% increased effect of Socketed Augment Items"
+      }
+    ]
+  },
+  {
+    "name": "Celestial Alloy",
+    "currency_type": "alloy",
+    "rarity": "currency",
+    "stack_size": 10,
+    "mechanic": "remove_add_rare_crafted",
+    "item_effects": [
+      {
+        "item_type": "Caster Weapon",
+        "mod_id": "AlloySpellLevelManaHybrid1",
+        "mod_type": "prefix",
+        "effect_text": "+(142-188) to maximum Mana"
+      },
+      {
+        "item_type": "Martial Weapon",
+        "mod_id": "AlloyAccuracyAttackSpeedHybrid1",
+        "mod_type": "prefix",
+        "effect_text": "+(327-427) to Accuracy Rating"
+      }
+    ]
+  },
+  {
+    "name": "Transcendent Alloy",
+    "currency_type": "alloy",
+    "rarity": "currency",
+    "stack_size": 10,
+    "mechanic": "remove_add_rare_crafted",
+    "item_effects": [
+      {
+        "item_type": "Caster Weapon",
+        "mod_id": "AlloyCastSpeedDamageAsExtraColdHybrid1",
+        "mod_type": "suffix",
+        "effect_text": "(39-47)% increased Cast Speed"
+      },
+      {
+        "item_type": "Martial Weapon",
+        "mod_id": "AlloyAttributeIncreasedLocalPhysicalDamageHybrid1",
+        "mod_type": "suffix",
+        "effect_text": "(15-20)% increased Physical Damage"
+      }
+    ]
+  },
+  {
+    "name": "The Runebinder's Alloy",
+    "currency_type": "alloy",
+    "rarity": "currency",
+    "stack_size": 10,
+    "mechanic": "remove_add_rare_crafted",
+    "item_effects": [
+      {
+        "item_type": "Bow",
+        "mod_id": "AlloyMarkEffect",
+        "mod_type": "suffix",
+        "effect_text": "(40-50)% increased Effect of your Mark Skills"
+      },
+      {
+        "item_type": "Crossbow",
+        "mod_id": "AlloyBallistaLimit1",
+        "mod_type": "suffix",
+        "effect_text": "+2 to maximum number of Summoned Ballista Totems"
+      },
+      {
+        "item_type": "Sceptre",
+        "mod_id": "AlloyPuppeteerStacks1",
+        "mod_type": "suffix",
+        "effect_text": "+(4-5) maximum stacks of Puppet Master"
+      },
+      {
+        "item_type": "Staff",
+        "mod_id": "AlloyNaturesArchon1",
+        "mod_type": "suffix",
+        "effect_text": "(25-50)% chance to gain Nature's Archon when your Plants Overgrow"
+      },
+      {
+        "item_type": "Wand",
+        "mod_id": "AlloyElementalSkillLimit1",
+        "mod_type": "suffix",
+        "effect_text": "+1 to Limit for Elemental Skills"
+      }
+    ]
+  },
+  {
+    "name": "The Runefather's Alloy",
+    "currency_type": "alloy",
+    "rarity": "currency",
+    "stack_size": 10,
+    "mechanic": "remove_add_rare_crafted",
+    "item_effects": [
+      {
+        "item_type": "Mace",
+        "mod_id": "AlloyRetainGlory1",
+        "mod_type": "suffix",
+        "effect_text": "(60-75)% chance for Skills to retain 40% of Glory on use"
+      },
+      {
+        "item_type": "Spear",
+        "mod_id": "AlloyMeleeStrikeRange1",
+        "mod_type": "suffix",
+        "effect_text": "+(8-10) to Weapon Range"
+      },
+      {
+        "item_type": "Talisman",
+        "mod_id": "AlloyLightningDamageIgnites1",
+        "mod_type": "suffix",
+        "effect_text": "Lightning Damage from Hits also Contributes to Flammability and Ignite Magnitudes"
+      },
+      {
+        "item_type": "Warstaff",
+        "mod_id": "AlloyBellLimit1",
+        "mod_type": "suffix",
+        "effect_text": "Tempest Bells are destroyed after an additional (4-5) Hits"
+      }
+    ]
+  }
+]
