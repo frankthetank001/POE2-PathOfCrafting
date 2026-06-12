@@ -23,7 +23,7 @@
   --poe2-mod-suffix: #8888ff;
   --poe2-mod-implicit: #9999cc;
   --poe2-mod-enchant: #b4b4ff;
-  --poe2-mod-crafted: #b8daf2;
+  --poe2-mod-crafted: #2fd6c6;  /* 0.5: crafted (essence/alloy) mods render teal */
   --poe2-mod-fractured: #a38d6d;
   --poe2-mod-corrupted: #d20000;
   --poe2-mod-essence: #aa9e82;

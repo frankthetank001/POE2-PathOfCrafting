@@ -14,6 +14,7 @@ from app.services.item_parser import ItemParser
 from app.services.item_converter import ItemConverter
 from app.services.crafting.modifier_pool import ModifierPool
 from app.services.crafting.modifier_loader import ModifierLoader
+from app.schemas.crafting import ModType
 
 
 @pytest.fixture
@@ -507,3 +508,91 @@ Gain 25% of Damage as Extra Physical Damage
         crit_mod = next((m for m in craftable.suffix_mods if "critical" in m.stat_text.lower()), None)
         assert crit_mod is not None
         assert "desecrated_only" in (crit_mod.tags or []), "Crit mod should be tagged as desecrated"
+
+
+class TestQualifiedModifierHeaders:
+    """Detailed-format headers can carry a source qualifier before the affix type, e.g.
+    '{ Desecrated Prefix Modifier ... }' or '{ Crafted Suffix Modifier ... }'. These must be
+    recognised as headers so the following stat lines aren't absorbed into the previous mod.
+    Regression for a real rare helmet that failed to import (the desecrated + crafted mods got
+    swallowed into adjacent mods, leaving garbled text that wouldn't resolve)."""
+
+    HELMET = """Item Class: Helmets
+Rarity: Rare
+Onslaught Halo
+Grinning Mask
+--------
+Quality: +20% (augmented)
+Evasion Rating: 857 (augmented)
+Energy Shield: 262 (augmented)
+--------
+Requires: Level 80, 63 Dex, 63 Int
+--------
+Sockets: S
+--------
+Item Level: 82
+--------
+18% increased Armour, Evasion and Energy Shield (rune)
+--------
+{ Prefix Modifier "Illusory" (Tier: 1) — Evasion, Energy Shield }
+97(92-100)% increased Evasion and Energy Shield
+{ Desecrated Prefix Modifier "Spirit's" (Tier: 1) — Evasion, Energy Shield }
++91(79-94) to Evasion Rating
++28(26-29) to maximum Energy Shield
+{ Prefix Modifier "Maestro's" (Tier: 1) — Life, Evasion, Energy Shield }
+42(39-42)% increased Evasion and Energy Shield
++46(42-49) to maximum Life
+{ Suffix Modifier "of Haast" (Tier: 1) — Elemental, Cold, Resistance }
++45(41-45)% to Cold Resistance
+{ Suffix Modifier "of the Furnace" (Tier: 4) — Elemental, Fire, Resistance }
++29(26-30)% to Fire Resistance
+{ Crafted Suffix Modifier "of Archaeology" (Tier: 1) }
+16(15-18)% increased Rarity of Items found
+"""
+
+    def test_qualified_headers_parse_into_distinct_mods(self):
+        parsed = ItemParser.parse(self.HELMET)
+
+        assert parsed.name == "Onslaught Halo"
+        assert parsed.base_type == "Grinning Mask"
+        # 3 prefixes + 3 suffixes - none swallowed into a neighbour.
+        assert len(parsed.explicits) == 6, [m.mod_name for m in parsed.explicits]
+        names = [m.mod_name for m in parsed.explicits]
+        assert names == ["Illusory", "Spirit's", "Maestro's", "of Haast", "of the Furnace", "of Archaeology"]
+
+        # The desecrated header set the flag and its OWN (only its own) stat lines.
+        spirit = next(m for m in parsed.explicits if m.mod_name == "Spirit's")
+        assert spirit.mod_type == "prefix"
+        assert spirit.is_desecrated is True
+        assert spirit.text == "+91 to Evasion Rating\n+28 to maximum Energy Shield"
+
+        # The mod BEFORE the desecrated header kept only its own single stat line.
+        illusory = next(m for m in parsed.explicits if m.mod_name == "Illusory")
+        assert illusory.text == "97% increased Evasion and Energy Shield"
+
+        # The crafted mod parsed as its own suffix (no tags section in its header).
+        arch = next(m for m in parsed.explicits if m.mod_name == "of Archaeology")
+        assert arch.mod_type == "suffix"
+        assert arch.text == "16% increased Rarity of Items found"
+
+    def test_qualified_headers_full_import(self, item_converter):
+        parsed = ItemParser.parse(self.HELMET)
+        craftable = item_converter.convert_to_craftable(parsed)
+
+        assert craftable is not None
+        assert craftable.base_name == "Grinning Mask"
+        assert len(craftable.prefix_mods) == 3
+        assert len(craftable.suffix_mods) == 3
+        # Every mod resolved against the pool - nothing left garbled/unmatched.
+        assert item_converter.failed_mods == []
+        # The desecrated mod is flagged on the converted item.
+        desec = [m for m in craftable.prefix_mods if m.is_desecrated]
+        assert len(desec) == 1
+        assert "desecrated_only" in (desec[0].tags or [])
+        # The crafted mod (of Archaeology) is flagged teal-worthy end-to-end, and exactly one.
+        crafted = [m for m in (craftable.prefix_mods + craftable.suffix_mods) if m.is_crafted]
+        assert len(crafted) == 1
+        assert crafted[0].mod_type == ModType.SUFFIX
+        assert "rarity" in crafted[0].stat_text.lower()
+        # Source flags are mutually exclusive - the crafted mod isn't also desecrated/fractured.
+        assert not crafted[0].is_desecrated and not crafted[0].is_fractured

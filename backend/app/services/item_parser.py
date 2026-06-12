@@ -77,15 +77,18 @@ class ItemParser:
             # Check for mods in any section after the first (i > 0)
             # This allows mods to appear in section 1 (for items without properties)
             if i > 0 and ItemParser._looks_like_mods(lines):
-                # Check if this section contains detailed mod format
+                # Check if this section contains detailed mod format. A detailed header may
+                # carry a source qualifier before the affix type, e.g.
+                # "{ Desecrated Prefix Modifier ... }" or "{ Crafted Suffix Modifier ... }",
+                # so allow an optional leading word.
                 has_detailed_format = any(
-                    re.search(r'\{\s*(?:Prefix|Suffix)\s+Modifier', line)
+                    re.search(r'\{\s*(?:\w+\s+)?(?:Prefix|Suffix)\s+Modifier', line)
                     for line in lines
                 )
 
                 # Check if section explicitly marks implicit mods
                 has_implicit_marker = any(
-                    re.search(r'\{\s*Implicit\s+Modifier', line)
+                    re.search(r'\{\s*(?:\w+\s+)?Implicit\s+Modifier', line)
                     for line in lines
                 )
 
@@ -316,8 +319,8 @@ class ItemParser:
 
         mod_indicators = ["+", "increased", "reduced", "to", "%", "Adds", "Bears", "Grants", "Mark of"]
 
-        # Check for detailed format: { Prefix/Suffix/Implicit Modifier "Name" (Tier: X) }
-        detailed_format_pattern = r'\{\s*(?:Prefix|Suffix|Implicit)\s+Modifier\s+"[^"]+"\s*(?:\(Tier:\s*\d+\))?'
+        # Check for detailed format: { [Qualifier ]Prefix/Suffix/Implicit Modifier "Name" (Tier: X) }
+        detailed_format_pattern = r'\{\s*(?:\w+\s+)?(?:Prefix|Suffix|Implicit)\s+Modifier\s+"[^"]+"\s*(?:\(Tier:\s*\d+\))?'
 
         return any(
             any(indicator in line for indicator in mod_indicators) or
@@ -329,9 +332,10 @@ class ItemParser:
         lines = [line.strip() for line in section.split("\n") if line.strip()]
         mods = []
 
-        # Pattern to detect mod headers
+        # Pattern to detect mod headers. The affix type may be preceded by a source qualifier
+        # (Desecrated/Crafted/Fractured/...), e.g. "{ Crafted Suffix Modifier "..." }".
         header_pattern = re.compile(
-            r'\{\s*(?:Prefix|Suffix|Implicit)\s+Modifier\s+"[^"]+"\s*(?:\(Tier:\s*\d+\))?\s*(?:—\s*.+)?\s*\}'
+            r'\{\s*(?:\w+\s+)?(?:Prefix|Suffix|Implicit)\s+Modifier\s+"[^"]+"\s*(?:\(Tier:\s*\d+\))?\s*(?:—\s*.+)?\s*\}'
         )
 
         i = 0
@@ -342,22 +346,29 @@ class ItemParser:
                 i += 1
                 continue
 
-            # Check if this line has detailed mod info format: { Prefix/Suffix Modifier "Name" (Tier: X) — Tags }
+            # Check if this line has detailed mod info format:
+            #   { [Qualifier ]Prefix/Suffix/Implicit Modifier "Name" (Tier: X) — Tags }
+            # The optional qualifier (Desecrated/Crafted/Fractured/...) names the mod's source.
             detailed_match = re.match(
-                r'\{\s*(Prefix|Suffix|Implicit)\s+Modifier\s+"([^"]+)"\s*(?:\(Tier:\s*(\d+)\))?\s*(?:—\s*(.+))?\s*\}',
+                r'\{\s*(?:(\w+)\s+)?(Prefix|Suffix|Implicit)\s+Modifier\s+"([^"]+)"\s*(?:\(Tier:\s*(\d+)\))?\s*(?:—\s*(.+))?\s*\}',
                 line
             )
 
             if detailed_match:
-                mod_type = detailed_match.group(1).lower()
-                mod_name = detailed_match.group(2)
-                tier_str = detailed_match.group(3)
+                qualifier = detailed_match.group(1)
+                mod_type = detailed_match.group(2).lower()
+                mod_name = detailed_match.group(3)
+                tier_str = detailed_match.group(4)
                 tier = int(tier_str) if tier_str else None
-                tags_str = detailed_match.group(4) or ""
+                tags_str = detailed_match.group(5) or ""
                 tags = [tag.strip() for tag in tags_str.split(",") if tag.strip()]
 
-                # Check if desecrated from tags
-                is_desecrated = "desecrated" in tags_str.lower()
+                # The qualifier (or a tag) names the mod's 0.5 source. These are mutually
+                # exclusive: a mod is a plain explicit, or crafted, or desecrated, or fractured.
+                qual = (qualifier or "").lower()
+                is_desecrated = "desecrated" in tags_str.lower() or qual == "desecrated"
+                is_crafted = qual == "crafted"
+                is_fractured = qual == "fractured"
 
                 # Collect ALL stat lines until next header or end
                 i += 1
@@ -384,7 +395,9 @@ class ItemParser:
                         tier=tier,
                         mod_type=mod_type,
                         tags=tags,
-                        is_desecrated=is_desecrated
+                        is_desecrated=is_desecrated,
+                        is_crafted=is_crafted,
+                        is_fractured=is_fractured,
                     ))
             else:
                 # Simple format without detailed info

@@ -26,6 +26,7 @@ export function PoE2ModLine({
     mod.mod_type === 'implicit' ? 'implicit' : '',
     mod.is_fractured ? 'fractured' : '',
     mod.is_desecrated ? 'desecrated' : '',
+    mod.is_crafted ? 'crafted' : '',
     mod.is_unrevealed ? 'unrevealed' : '',
     onClick ? 'clickable' : '',
   ].filter(Boolean).join(' ')
