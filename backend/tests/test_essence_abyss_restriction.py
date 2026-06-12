@@ -117,9 +117,11 @@ def test_essence_abyss_allowed_on_non_desecrated_item():
     # Should succeed
     assert result.success is True, f"Essence of the Abyss should work on non-desecrated items: {result.message}"
 
-    # Verify the Abyssal mark was added
+    # Verify the Abyssal mark was added. The mark has a prefix variant ("Abyssal") and a
+    # suffix variant ("of the Abyss") and the mechanic picks one at random, so match on the
+    # mod group rather than a single variant name (otherwise the assertion is RNG-order flaky).
     all_mods = result.result_item.prefix_mods + result.result_item.suffix_mods
-    abyssal_mods = [m for m in all_mods if m.name == "Abyssal"]
+    abyssal_mods = [m for m in all_mods if m.mod_group == "AbyssTargetMod"]
     assert len(abyssal_mods) == 1, "Expected Abyssal modifier to be added"
 
 
