@@ -24,6 +24,8 @@ class ItemMod(BaseModel):
     mod_type: Optional[str] = None
     tags: List[str] = Field(default_factory=list)
     is_desecrated: bool = False
+    is_crafted: bool = False  # 0.5: a single teal "crafted" mod (from essence/alloy)
+    is_fractured: bool = False  # locked explicit (cannot be removed)
 
 
 class ParsedRune(BaseModel):

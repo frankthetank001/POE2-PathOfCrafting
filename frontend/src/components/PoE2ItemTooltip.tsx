@@ -44,6 +44,10 @@ export function PoE2ItemTooltip({ item, showTiers = false, compact = false }: Po
       classes.push('fractured')
     }
 
+    if (mod.is_crafted) {
+      classes.push('crafted')
+    }
+
     if (mod.is_desecrated || mod.is_unrevealed) {
       classes.push('desecrated')
     }

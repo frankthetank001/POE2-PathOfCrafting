@@ -1305,6 +1305,8 @@ function GridCraftingSimulator() {
       // Add annotations for special mod types
       if (mod.is_desecrated) {
         lines.push(`${modText} (desecrated)`)
+      } else if (mod.is_crafted) {
+        lines.push(`${modText} (crafted)`)
       } else if (mod.is_fractured) {
         lines.push(`${modText} (fractured)`)
       } else {
@@ -4485,6 +4487,7 @@ function GridCraftingSimulator() {
                             const isDesecrated = mod.is_desecrated === true
                             const isUnrevealed = mod.is_unrevealed === true
                             const isFractured = mod.is_fractured === true
+                            const isCrafted = mod.is_crafted === true
                             const isPriceSelected = isModSelectedForPriceSearch('prefix', idx)
                             // Only show price selection styling when price panel is open
                             const priceClass = priceModalOpen ? (isPriceSelected ? 'price-selected' : 'price-excluded') : ''
@@ -4492,7 +4495,7 @@ function GridCraftingSimulator() {
                             const isPseudoContributing = priceModalOpen && itemPrice?.pseudo_stats?.some(
                               ps => ps.contributing_mod_indices.includes(idx)
                             )
-                            const modClasses = `mod-line prefix ${isTagFiltered ? 'tag-filtered' : ''} ${isDesecrated ? 'desecrated' : ''} ${isUnrevealed ? 'unrevealed' : ''} ${isFractured ? 'fractured' : ''} ${priceClass} ${isPseudoContributing ? 'pseudo-contributing' : ''}`
+                            const modClasses = `mod-line prefix ${isTagFiltered ? 'tag-filtered' : ''} ${isDesecrated ? 'desecrated' : ''} ${isUnrevealed ? 'unrevealed' : ''} ${isFractured ? 'fractured' : ''} ${isCrafted ? 'crafted' : ''} ${priceClass} ${isPseudoContributing ? 'pseudo-contributing' : ''}`
 
                             // Get unrevealed metadata if this is an unrevealed mod
                             const unrevealedMetadata = isUnrevealed && mod.unrevealed_id
@@ -4758,13 +4761,14 @@ function GridCraftingSimulator() {
                                         const isDesecrated = mod.is_desecrated === true
                                         const isUnrevealed = mod.is_unrevealed === true
                                         const isFractured = mod.is_fractured === true
+                                        const isCrafted = mod.is_crafted === true
                                         const isPriceSelected = isModSelectedForPriceSearch('suffix', idx)
                                         // Hidden mods: show as crossed out unless user explicitly enabled them
                                         const modKey = `suffix-${idx}`
                                         const isHiddenModEnabled = enabledHiddenMods.has(modKey)
                                         const effectivelySelected = isHiddenMod ? isHiddenModEnabled : isPriceSelected
                                         const priceClass = priceModalOpen ? (effectivelySelected ? 'price-selected' : 'price-excluded') : ''
-                                        const modClasses = `mod-line suffix ${isTagFiltered ? 'tag-filtered' : ''} ${isDesecrated ? 'desecrated' : ''} ${isUnrevealed ? 'unrevealed' : ''} ${isFractured ? 'fractured' : ''} ${priceClass} ${isHiddenMod ? 'hidden-mod-revealed' : ''}`
+                                        const modClasses = `mod-line suffix ${isTagFiltered ? 'tag-filtered' : ''} ${isDesecrated ? 'desecrated' : ''} ${isUnrevealed ? 'unrevealed' : ''} ${isFractured ? 'fractured' : ''} ${isCrafted ? 'crafted' : ''} ${priceClass} ${isHiddenMod ? 'hidden-mod-revealed' : ''}`
 
                             // Get unrevealed metadata if this is an unrevealed mod
                             const unrevealedMetadata = isUnrevealed && mod.unrevealed_id

@@ -332,12 +332,21 @@ class ItemConverter:
                 # This ensures consistent format for trade API matching
                 result_mod.stat_text = re.sub(r'\(\d+(?:\.\d+)?-\d+(?:\.\d+)?\)', '#', result_mod.stat_text)
 
-                # If the original text had (desecrated), ensure the tag is present
-                if '(desecrated)' in item_mod.text.lower():
+                # Carry the mod's source onto the result so it tints and behaves correctly. The
+                # source comes from a "{ Desecrated/Crafted/Fractured ... Modifier }" header
+                # (captured at parse time) or an inline "(...)" marker in the stat text.
+                text_lower = item_mod.text.lower()
+                if '(desecrated)' in text_lower or getattr(item_mod, 'is_desecrated', False):
+                    result_mod.is_desecrated = True
                     if not result_mod.tags:
                         result_mod.tags = []
                     if 'desecrated_only' not in result_mod.tags:
                         result_mod.tags.append('desecrated_only')
+                # 0.5: the single teal "crafted" mod (from an essence/alloy).
+                if '(crafted)' in text_lower or getattr(item_mod, 'is_crafted', False):
+                    result_mod.is_crafted = True
+                if '(fractured)' in text_lower or getattr(item_mod, 'is_fractured', False):
+                    result_mod.is_fractured = True
 
                 return result_mod
 

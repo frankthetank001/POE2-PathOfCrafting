@@ -46,6 +46,19 @@
   text-shadow: 0 0 6px rgba(68, 255, 136, 0.2);
 }
 
+/* Crafted - 0.5 teal (essence/alloy mod; one per item) */
+.poe2-mod-line.crafted {
+  color: var(--poe2-mod-crafted, #2fd6c6);
+  border-left-color: rgba(47, 214, 198, 0.5);
+  text-shadow: 0 0 6px rgba(47, 214, 198, 0.2);
+}
+
+.poe2-mod-line.crafted .poe2-mod-tier {
+  background: rgba(47, 214, 198, 0.18);
+  border-color: rgba(47, 214, 198, 0.4);
+  color: var(--poe2-mod-crafted, #2fd6c6);
+}
+
 /* Rune mods - amber/brown color */
 .poe2-mod-line.rune {
   color: #d4a574;

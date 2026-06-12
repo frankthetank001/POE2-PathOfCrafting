@@ -59,6 +59,7 @@ class ItemModifier(BaseModel):
     unrevealed_id: Optional[str] = None  # ID linking to UnrevealedModifier metadata
     is_desecrated: bool = False  # True if this mod was added via desecration (for green tint)
     is_fractured: bool = False  # True if this mod is fractured (cannot be removed, displayed in orange)
+    is_crafted: bool = False  # True if this is the item's crafted mod (0.5: from essence/alloy; teal tint, max 1)
     exclusion_group: Optional[int] = None  # Mods in the same exclusion group cannot coexist
     trade_hash: Optional[int] = None  # Trade API stat hash for searching (from pob-data tradeHash)
 
