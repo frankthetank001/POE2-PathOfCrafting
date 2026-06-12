@@ -228,6 +228,13 @@
   border-left-color: rgba(68, 255, 136, 0.5);
 }
 
+/* Crafted - 0.5 teal (essence/alloy mod; one per item). Must be scoped to .poe2-frame
+   like the other source rules so it wins over .poe2-frame .mod-line.suffix/.prefix. */
+.poe2-frame .mod-line.crafted {
+  color: var(--poe2-mod-crafted, #2fd6c6);
+  border-left-color: rgba(47, 214, 198, 0.5);
+}
+
 /* Empty mods message */
 .poe2-frame .empty-mods {
   padding: 16px;
