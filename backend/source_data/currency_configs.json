@@ -1304,5 +1304,122 @@
       "quality_per_use": 5,
       "max_quality": 20
     }
+  },
+  {
+    "name": "Runic Alloy",
+    "currency_type": "alloy",
+    "tier": "alloy",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "AlloyMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Adaptive Alloy",
+    "currency_type": "alloy",
+    "tier": "alloy",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "AlloyMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Protective Alloy",
+    "currency_type": "alloy",
+    "tier": "alloy",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "AlloyMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Expansive Alloy",
+    "currency_type": "alloy",
+    "tier": "alloy",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "AlloyMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Swift Alloy",
+    "currency_type": "alloy",
+    "tier": "alloy",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "AlloyMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Cyclonic Alloy",
+    "currency_type": "alloy",
+    "tier": "alloy",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "AlloyMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Prismatic Alloy",
+    "currency_type": "alloy",
+    "tier": "alloy",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "AlloyMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Mystic Alloy",
+    "currency_type": "alloy",
+    "tier": "alloy",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "AlloyMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Sovereign Alloy",
+    "currency_type": "alloy",
+    "tier": "alloy",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "AlloyMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Celestial Alloy",
+    "currency_type": "alloy",
+    "tier": "alloy",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "AlloyMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "Transcendent Alloy",
+    "currency_type": "alloy",
+    "tier": "alloy",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "AlloyMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "The Runebinder's Alloy",
+    "currency_type": "alloy",
+    "tier": "alloy",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "AlloyMechanic",
+    "config_data": {}
+  },
+  {
+    "name": "The Runefather's Alloy",
+    "currency_type": "alloy",
+    "tier": "alloy",
+    "stack_size": 10,
+    "rarity": "common",
+    "mechanic_class": "AlloyMechanic",
+    "config_data": {}
   }
 ]

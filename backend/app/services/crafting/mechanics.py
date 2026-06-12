@@ -2579,8 +2579,45 @@ class CatalystMechanic(CraftingMechanic):
 
 
 # Registry of available mechanics
+class AlloyMechanic(EssenceMechanic):
+    """Runic Alloy (PoE2 0.5): removes a random modifier from a Rare item and adds the alloy's
+    guaranteed CRAFTED modifier for that item's slot.
+
+    Structurally identical to a Perfect Essence (remove_add_rare) - the per-slot effects come
+    from source_data/alloys.json shaped as essence item_effects, so EssenceMechanic's slot
+    matching and value rolling are reused. The only differences: the added mod is the item's
+    single teal *crafted* mod (max 1 per item in 0.5), not an essence-only mod, and alloys only
+    apply to Rare items.
+    """
+
+    def can_apply(self, item: CraftableItem, for_display: bool = False) -> Tuple[bool, Optional[str]]:
+        if item.rarity != ItemRarity.RARE:
+            return False, f"{self.essence_info.name} can only be applied to Rare items"
+        if not self._has_applicable_effect_for_item(item):
+            return False, f"{self.essence_info.name} cannot be applied to {item.base_name}"
+        if not for_display:
+            # 0.5: an item can hold at most one crafted modifier.
+            if any(getattr(m, "is_crafted", False) for m in item.prefix_mods + item.suffix_mods):
+                return False, "Item already has a crafted modifier (only 1 allowed)"
+            target_group = self._get_target_mod_group_for_item(item)
+            if target_group and target_group in [m.mod_group for m in item.prefix_mods + item.suffix_mods]:
+                return False, f"{self.essence_info.name}'s modifier is already on the item"
+        return True, None
+
+    def _create_guaranteed_modifier(self, item: CraftableItem, modifier_pool: ModifierPool) -> Optional[ItemModifier]:
+        # Reuse the essence mod_id lookup + value rolling, then re-flag the result as the
+        # item's single teal crafted mod rather than an essence mod.
+        mod = super()._create_guaranteed_modifier(item, modifier_pool)
+        if mod is not None:
+            mod.is_essence_only = False
+            mod.is_crafted = True
+            mod.tags = [t for t in (mod.tags or []) if t not in ("essence_guaranteed", "essence_only")] + ["alloy_guaranteed"]
+        return mod
+
+
 MECHANIC_REGISTRY = {
     "TransmutationMechanic": TransmutationMechanic,
+    "AlloyMechanic": AlloyMechanic,
     "AugmentationMechanic": AugmentationMechanic,
     "AlchemyMechanic": AlchemyMechanic,
     "RegalMechanic": RegalMechanic,

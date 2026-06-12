@@ -75,6 +75,8 @@ export const craftingApi = {
   getCategorizedCurrencies: async (): Promise<{
     orbs: { implemented: string[], disabled: string[] }
     essences: { implemented: string[], disabled: string[] }
+    alloys?: { implemented: string[], disabled: string[] }
+    catalysts?: { implemented: string[], disabled: string[] }
     bones: { implemented: string[], disabled: string[] }
     omens: string[]
     total: number

@@ -119,6 +119,18 @@ class CraftingSimulator:
                     available.append(essence_name)
                     already_added.add(essence_name)
 
+        # Check Runic Alloys separately (for_display=True so a slot-matching alloy still shows
+        # even when the item already has a crafted mod - it fails on apply with a message).
+        for alloy_name in unified_crafting_factory.get_all_available_alloys():
+            if alloy_name in already_added:
+                continue
+            alloy = unified_crafting_factory.create_currency(alloy_name)
+            if alloy:
+                can_apply, _ = alloy.can_apply(item, for_display=True)
+                if can_apply:
+                    available.append(alloy_name)
+                    already_added.add(alloy_name)
+
         # Check desecration bones separately
         for bone_name in unified_crafting_factory.get_all_available_bones():
             if bone_name in already_added:
