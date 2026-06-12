@@ -94,6 +94,7 @@ export interface BasePricing {
   prefixes: number
   suffixes: number
   craftable: boolean
+  is_unique?: boolean
   priced: boolean
   market?: MarketInfo | null
   market_typical?: MarketInfo | null
