@@ -108,6 +108,60 @@ def test_response_model_preserves_is_unique(service: BuildsService):
     assert dumped["verdict"] == "unique"
 
 
+# --- Slot-level decked rare (mods roll by item-class, not by base) -------------
+
+def _craftable_slot_bases(svc: BuildsService):
+    """Craftable bases grouped by their (scraper) slot, slot -> [base_name]."""
+    from collections import defaultdict
+    by_slot = defaultdict(list)
+    seen = set()
+    for b in svc._stats.base_usage:
+        if b.base_name in seen or svc._is_unique_only(b.base_name):
+            continue
+        seen.add(b.base_name)
+        by_slot[b.slot].append(b.base_name)
+    return by_slot
+
+
+def test_decked_rare_is_slot_level_not_base(service: BuildsService):
+    """Two craftable bases of the SAME slot must yield the SAME decked-rare affix set - the mods
+    are aggregated at the slot level, so the exact base no longer matters (this is the whole point:
+    a sparse single-base sample is replaced by the slot pool)."""
+    by_slot = _craftable_slot_bases(service)
+    slot = next((s for s, names in by_slot.items() if len(names) >= 2 and s not in ("ring3", "weapon2")), None)
+    if slot is None:
+        pytest.skip("no slot with 2+ craftable bases")
+    a, b = by_slot[slot][:2]
+    ra, rb = service._resolve_base(a), service._resolve_base(b)
+    _, _, _, mods_a, _ = service._select_slot_meta_mods(a, ra, 6)
+    _, _, _, mods_b, _ = service._select_slot_meta_mods(b, rb, 6)
+    affixes_a = {(m["mod_type"], m["mod_group"]) for m in mods_a if m["mod_type"] != "implicit"}
+    affixes_b = {(m["mod_type"], m["mod_group"]) for m in mods_b if m["mod_type"] != "implicit"}
+    assert affixes_a == affixes_b, f"{a} and {b} share slot {slot} but got different affixes"
+
+
+def test_decked_rare_reaches_six_and_is_well_formed(service: BuildsService):
+    """For every craftable base whose slot has mod data, the decked rare is a full, valid item:
+    up to 3 prefixes + 3 suffixes (no duplicate group), <=1 implicit, and slot-wide usage in [0,1].
+    Bases in slots with no affix data (e.g. special Incursion limb slots) may legitimately show 0."""
+    by_slot = _craftable_slot_bases(service)
+    checked = 0
+    for slot, names in by_slot.items():
+        rb = service._resolve_base(names[0])
+        _, _, _, mods, _ = service._select_slot_meta_mods(names[0], rb, 6)
+        pre = [m for m in mods if m["mod_type"] == "prefix"]
+        suf = [m for m in mods if m["mod_type"] == "suffix"]
+        imp = [m for m in mods if m["mod_type"] == "implicit"]
+        assert len(pre) <= 3 and len(suf) <= 3 and len(imp) <= 1, slot
+        assert len(pre) == len({m["mod_group"] for m in pre}), f"{slot}: duplicate prefix group"
+        assert len(suf) == len({m["mod_group"] for m in suf}), f"{slot}: duplicate suffix group"
+        for m in mods:
+            assert m["usage_pct"] is None or 0.0 <= m["usage_pct"] <= 1.0, (slot, m)
+        if pre or suf:
+            checked += 1
+    assert checked >= 5, "expected several slots to produce a populated decked rare"
+
+
 # --- Issue 2: the decked-out rare counts every affix-occupying mod -------------
 
 def test_decked_rare_includes_non_explicit_affixes(service: BuildsService):

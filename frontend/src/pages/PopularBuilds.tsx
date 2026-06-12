@@ -436,6 +436,10 @@ function PopularBuilds({ embedded = false }: { embedded?: boolean }) {
                           let headLabel = 'Decked-out rare'
                           let note = ''
                           let mods: PreviewMod[] = pricing.target_mods
+                          if (previewRung === 'rare') {
+                            note =
+                              'The mods most popular for this slot - a decked rare draws from the slot pool, not just this exact base. % = share of the slot’s rares running it.'
+                          }
                           if (previewRung === 'white') {
                             rarity = 'normal'
                             headLabel = 'White base'
@@ -468,7 +472,7 @@ function PopularBuilds({ embedded = false }: { embedded?: boolean }) {
                                     {m.value != null ? m.stat_text.replace('#', String(Math.round(m.value))) : m.stat_text}
                                   </span>
                                   {m.usage_pct != null && (
-                                    <span className="pm-usage" title="share of builds using this mod">
+                                    <span className="pm-usage" title="share of this slot's rares running this mod">
                                       {pct(m.usage_pct)}
                                     </span>
                                   )}

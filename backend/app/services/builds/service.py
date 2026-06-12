@@ -491,7 +491,110 @@ class BuildsService:
             target_mods.append({
                 "stat_text": rm.stat_text, "value": float(value), "tier": tier_obj.tier,
                 "mod_type": mtype, "origin": mu.mod_origin, "usage_pct": mu.usage_pct,
+                "mod_group": rm.mod_group,
             })
+        return prefix_mods, suffix_mods, implicit_mods, target_mods, ilvl
+
+    def _slot_rare_count(self, slot: str) -> int:
+        """How many sampled builds run a RARE item in this slot (across every base of the slot).
+        The denominator for slot-level usage_pct."""
+        n = 0
+        for b in self._stats.base_usage:
+            if b.slot == slot:
+                n += (b.rarity_mix or {}).get("rare", 0)
+        return n or 1
+
+    def _select_slot_meta_mods(self, base_name: str, rb, max_mods: int,
+                               origins=_AFFIX_ORIGINS):
+        """The decked-rare affixes for a base, aggregated at the SLOT level rather than from the
+        exact base's rare samples. Mods roll by item-class/slot, not by base, and most bases are
+        barely crafted as rare (they're worn as uniques), so a single base's rare sample is tiny
+        (often n=1) and unrepresentative. Pooling EVERY base of the slot gives the true picture of
+        what a decked rare of that slot runs: the top 3 prefix + 3 suffix mod groups by slot-wide
+        usage, at best tiers, applicable to this base. usage_pct = share of the slot's rares that
+        run the group. The implicit line stays base-specific. Returns the same shape as
+        _select_meta_mods (prefix ItemModifiers, suffix ItemModifiers, implicit, target dicts, ilvl)."""
+        from app.schemas.crafting import ItemModifier, ModType
+
+        # mod_usage/base_usage are keyed by the SCRAPER slot ("weapon", "helmet", "ring", ...),
+        # which differs from the pob-data rb.slot ("weapons - 1 hand", ...). Derive the scraper
+        # slot from this base's own base_usage rows (the highest-usage one).
+        base_rows = [b for b in self._stats.base_usage if b.base_name == base_name]
+        slot = max(base_rows, key=lambda b: b.usage_count).slot if base_rows else rb.slot
+        slot_rares = self._slot_rare_count(slot)
+        # Aggregate slot mod rows by (mod_type, mod_group): sum usage, keep the best-tier
+        # representative + the dominant origin.
+        agg: Dict[tuple, dict] = {}
+        for mu in self._stats.mod_usage:
+            if mu.slot != slot or mu.mod_origin not in origins:
+                continue
+            rm = self._resolver.resolve_mod(mu.mod_template, rb.category, rb.tags, mu.value_samples)
+            if not rm.resolved or not rm.tiers or not rm.stat_text or rm.mod_type not in ("prefix", "suffix"):
+                continue
+            chosen = min(rm.tier_distribution) if rm.tier_distribution else min(t.tier for t in rm.tiers)
+            tier_obj = next((t for t in rm.tiers if t.tier == chosen), rm.tiers[0])
+            key = (rm.mod_type, rm.mod_group or rm.stat_text)
+            e = agg.get(key)
+            if e is None:
+                agg[key] = {"stat_text": rm.stat_text, "mod_type": rm.mod_type, "mod_group": rm.mod_group,
+                            "origin": mu.mod_origin, "tier_obj": tier_obj, "usage": mu.usage_count}
+            else:
+                e["usage"] += mu.usage_count
+                if tier_obj.tier < e["tier_obj"].tier:  # keep the best-tier representative
+                    e["tier_obj"], e["stat_text"], e["origin"] = tier_obj, rm.stat_text, mu.mod_origin
+
+        prefix_mods: List = []
+        suffix_mods: List = []
+        target_mods: List[dict] = []
+        ilvl = 81
+        for e in sorted(agg.values(), key=lambda x: -x["usage"]):
+            if len(prefix_mods) + len(suffix_mods) >= max_mods:
+                break
+            mtype = e["mod_type"]
+            bucket = prefix_mods if mtype == "prefix" else suffix_mods
+            if len(bucket) >= 3:
+                continue
+            tier_obj = e["tier_obj"]
+            value = tier_obj.stat_max if tier_obj.stat_max is not None else tier_obj.stat_min
+            if value is None:
+                continue
+            if tier_obj.required_ilvl:
+                ilvl = max(ilvl, tier_obj.required_ilvl)
+            bucket.append(ItemModifier(
+                mod_id=tier_obj.mod_id, name=e["stat_text"], mod_type=ModType(mtype),
+                tier=tier_obj.tier, stat_text=e["stat_text"], current_value=float(value),
+                mod_group=e["mod_group"], required_ilvl=tier_obj.required_ilvl,
+            ))
+            target_mods.append({
+                "stat_text": e["stat_text"], "value": float(value), "tier": tier_obj.tier,
+                "mod_type": mtype, "origin": e["origin"], "usage_pct": round(e["usage"] / slot_rares, 4),
+                "mod_group": e["mod_group"],
+            })
+
+        # The implicit line is base-specific (e.g. a Gold Amulet's % Rarity) - keep it from the base.
+        implicit_mods: List = []
+        for mu in self._mods_for_base(base_name):
+            if mu.mod_origin != "implicit":
+                continue
+            rm = self._resolver.resolve_mod(mu.mod_template, rb.category, rb.tags, mu.value_samples)
+            if not rm.resolved or not rm.tiers or not rm.stat_text:
+                continue
+            tier_obj = rm.tiers[0]
+            value = tier_obj.stat_max if tier_obj.stat_max is not None else tier_obj.stat_min
+            if value is None:
+                continue
+            implicit_mods.append(ItemModifier(
+                mod_id=tier_obj.mod_id, name=rm.stat_text, mod_type=ModType("implicit"),
+                tier=tier_obj.tier, stat_text=rm.stat_text, current_value=float(value),
+                mod_group=rm.mod_group, required_ilvl=tier_obj.required_ilvl,
+            ))
+            target_mods.append({
+                "stat_text": rm.stat_text, "value": float(value), "tier": tier_obj.tier,
+                "mod_type": "implicit", "origin": "implicit", "usage_pct": mu.usage_pct,
+                "mod_group": rm.mod_group,
+            })
+            break  # one implicit line
+
         return prefix_mods, suffix_mods, implicit_mods, target_mods, ilvl
 
     async def _price_white_base(self, pricer, resolved_base, rb, ilvl, league, fallback_url):
@@ -564,15 +667,17 @@ class BuildsService:
 
         from app.schemas.crafting import CraftableItem, ItemRarity
 
-        # DISPLAY: the full decked-out meta rare (up to 6 affixes + implicit) at best tiers.
-        # _select_meta_mods already dedups affixes by mod group and counts the desecrated/
-        # fractured/crafted mods that occupy real slots, so this is the complete decked item.
-        _, _, _, good_mods, gd_ilvl = self._select_meta_mods(base_name, rb, max_mods, "best")
+        # DISPLAY: the full decked-out rare (3 prefix + 3 suffix + implicit) at best tiers, built
+        # from the SLOT's most popular mods. Mods roll by item-class, not base, and most bases are
+        # worn as uniques (so a single base's rare sample is tiny/unrepresentative) - the slot-level
+        # pool is what a decked rare of this base actually runs.
+        _, _, _, good_mods, gd_ilvl = self._select_slot_meta_mods(base_name, rb, max_mods)
         n_pre = sum(1 for tm in good_mods if tm["mod_type"] == "prefix")
         n_suf = sum(1 for tm in good_mods if tm["mod_type"] == "suffix")
         # PRICE: only the ~4 key affixes - a full 6-mod search is too strict (almost nobody lists
-        # an item with those EXACT 6 mods) and returns no listings. GOOD = best tiers, TYPICAL = modal.
-        gd_pre, gd_suf, gd_imp, _, _ = self._select_meta_mods(base_name, rb, 4, "best")
+        # an item with those EXACT 6 mods) and returns no listings. GOOD = slot-popular best tiers;
+        # TYPICAL stays base-specific/modal (a secondary "typical roll floors around" signal).
+        gd_pre, gd_suf, gd_imp, _, _ = self._select_slot_meta_mods(base_name, rb, 4)
         tp_pre, tp_suf, tp_imp, _, tp_ilvl = self._select_meta_mods(base_name, rb, 4, "modal")
 
         def _rare(pre, suf, imp, lvl):
@@ -594,7 +699,7 @@ class BuildsService:
         # Magic "partial": a blue base carrying the GOOD top prefix + suffix (pre-slammed). A
         # magic item can only hold raw explicit affixes, so derive it from explicit-only mods
         # (never a desecrated/crafted mod, which can't exist on a magic item).
-        ex_pre, ex_suf, _, _, _ = self._select_meta_mods(base_name, rb, 2, "best", origins=_MAGIC_ORIGINS)
+        ex_pre, ex_suf, _, _, _ = self._select_slot_meta_mods(base_name, rb, 2, origins=_MAGIC_ORIGINS)
         magic_prefix = ex_pre[:1]
         magic_suffix = ex_suf[:1]
         magic_mods = [
