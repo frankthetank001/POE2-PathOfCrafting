@@ -5120,7 +5120,7 @@ function GridCraftingSimulator() {
                       <div className="mods-section">
                         <h4>Prefix Mods ({pastedItemPreview.prefix_mods.length}/3)</h4>
                         {pastedItemPreview.prefix_mods.map((mod, idx) => (
-                          <div key={idx} className="mod-preview">
+                          <div key={idx} className={`mod-preview ${mod.is_desecrated ? 'desecrated' : ''} ${mod.is_crafted ? 'crafted' : ''} ${mod.is_fractured ? 'fractured' : ''}`}>
                             {renderModifier(mod)}
                           </div>
                         ))}
@@ -5130,7 +5130,7 @@ function GridCraftingSimulator() {
                       <div className="mods-section">
                         <h4>Suffix Mods ({pastedItemPreview.suffix_mods.length}/3)</h4>
                         {pastedItemPreview.suffix_mods.map((mod, idx) => (
-                          <div key={idx} className="mod-preview">
+                          <div key={idx} className={`mod-preview ${mod.is_desecrated ? 'desecrated' : ''} ${mod.is_crafted ? 'crafted' : ''} ${mod.is_fractured ? 'fractured' : ''}`}>
                             {renderModifier(mod)}
                           </div>
                         ))}
