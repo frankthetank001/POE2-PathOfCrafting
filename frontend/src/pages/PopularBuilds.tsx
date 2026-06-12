@@ -45,7 +45,17 @@ const VERDICT_LABELS: Record<string, string> = {
   available: 'Available',
   pricing_unavailable: 'Pricing unavailable',
   no_meta_data: 'No meta data',
+  unique: 'Unique (buy only)',
   unknown: 'Unknown',
+}
+
+const CRAFTABLE_RARITIES = ['normal', 'magic', 'rare']
+
+// A base the meta only ever runs as a unique is a drop/buy item, not something you craft.
+// Mirrors BuildsService._is_unique_only on the backend so the UI can adapt before pricing.
+function isUniqueOnly(mix: Record<string, number> | undefined | null): boolean {
+  const rarities = Object.keys(mix || {})
+  return rarities.length > 0 && !rarities.some((r) => CRAFTABLE_RARITIES.includes(r))
 }
 
 function fillMod(m: PricingTargetMod): string {
@@ -206,6 +216,21 @@ function PopularBuilds({ embedded = false }: { embedded?: boolean }) {
     () => (slot ? bases.filter((b) => b.slot === slot) : bases),
     [bases, slot]
   )
+  // Is the selected base a buy-only unique? Aggregate the rarity mix across every slot row
+  // for this base (matching the backend's _is_unique_only) so the "Check price" button can
+  // adapt before pricing runs. The priced result's `is_unique` flag stays authoritative.
+  const selectedIsUnique = useMemo(() => {
+    if (!selected) return false
+    const rows = bases.filter((b) => b.base_name === selected)
+    if (!rows.length) return false
+    const mix: Record<string, number> = {}
+    for (const r of rows) {
+      for (const [rarity, count] of Object.entries(r.rarity_mix || {})) {
+        mix[rarity] = (mix[rarity] || 0) + count
+      }
+    }
+    return isUniqueOnly(mix)
+  }, [bases, selected])
 
   const selectBase = (name: string) => {
     setSelected(name)
@@ -321,11 +346,31 @@ function PopularBuilds({ embedded = false }: { embedded?: boolean }) {
                   <div className="pricing-panel">
                     {!pricing && !pricingLoading && (
                       <button className="price-btn" onClick={checkPrice}>
-                        Check market price (buy vs craft)
+                        {selectedIsUnique
+                          ? 'Find this unique on trade'
+                          : 'Check market price (buy vs craft)'}
                       </button>
                     )}
                     {pricingLoading && <span className="pb-muted">Pricing on the live market…</span>}
-                    {pricing && (
+                    {pricing && pricing.is_unique && (
+                      <div className="pricing-result unique-result">
+                        <div className="verdict verdict-unique">
+                          {VERDICT_LABELS.unique}
+                        </div>
+                        {pricing.message && <span className="pricing-msg">{pricing.message}</span>}
+                        {pricing.trade_search_url && (
+                          <a
+                            className="price-btn unique-trade-link"
+                            href={pricing.trade_search_url}
+                            target="_blank"
+                            rel="noreferrer"
+                          >
+                            Find {pricing.resolved_name || pricing.base_name} on trade ↗
+                          </a>
+                        )}
+                      </div>
+                    )}
+                    {pricing && !pricing.is_unique && (
                       <div className="pricing-result">
                         <div className={`verdict verdict-${pricing.verdict}`}>
                           {VERDICT_LABELS[pricing.verdict] || 'Unknown'}

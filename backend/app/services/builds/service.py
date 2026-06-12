@@ -28,6 +28,20 @@ logger = get_logger(__name__)
 # "securable" = instant-buyout-only, matching the price engine and the UI's "instant buyout only".
 _TRADE_STATUS = "securable"
 
+# Origins that occupy a real prefix/suffix affix slot on a rare. A maxed rare carries 6 of
+# these (3 prefix + 3 suffix); desecrated/fractured/crafted mods take a slot just like a
+# raw explicit. Runes (socketed) and enchants (a separate enchant line) do NOT consume an
+# affix slot, so they're excluded - otherwise a "decked rare" would look impossibly full.
+_AFFIX_ORIGINS = ("explicit", "desecrated", "fractured", "crafted")
+# The decked-rare preview shows the 6 affixes plus the base implicit line.
+_DISPLAY_ORIGINS = _AFFIX_ORIGINS + ("implicit",)
+# A magic item can only hold raw explicit affixes (no desecrated/fractured/crafted), so the
+# "magic partial" rung is built from explicit-origin mods only.
+_MAGIC_ORIGINS = ("explicit",)
+# Rarities that mean a base is actually crafted by players. A base whose meta usage is
+# exclusively unique is a drop/buy item with no rare meta to craft toward.
+_CRAFTABLE_RARITIES = {"normal", "magic", "rare"}
+
 
 def _trade2_url(league: str, query: dict) -> str:
     return (
@@ -374,6 +388,23 @@ class BuildsService:
             key=lambda m: -m.usage_count,
         )
 
+    def _aggregated_rarity_mix(self, base_name: str) -> Dict[str, int]:
+        """Combine rarity_mix across every (base, slot) row for this base name. Pricing is
+        keyed on base name only, so a base worn in two slots must be judged on its whole mix."""
+        mix: Dict[str, int] = {}
+        for b in self._stats.base_usage:
+            if b.base_name == base_name:
+                for rarity, count in (b.rarity_mix or {}).items():
+                    mix[rarity] = mix.get(rarity, 0) + count
+        return mix
+
+    def _is_unique_only(self, base_name: str) -> bool:
+        """True when the meta only ever runs this base as a unique - a drop/buy item with no
+        rare meta to craft toward. A base some builds craft as a rare (even if mostly worn as
+        a unique, e.g. Prismatic Ring) still counts as craftable and keeps the craft flow."""
+        mix = self._aggregated_rarity_mix(base_name)
+        return bool(mix) and not (set(mix) & _CRAFTABLE_RARITIES)
+
     @staticmethod
     def _market_from_estimate(est, fallback_url: str) -> dict:
         return {
@@ -388,10 +419,14 @@ class BuildsService:
             "trade_url": fallback_url or est.trade_url,
         }
 
-    def _select_meta_mods(self, base_name: str, rb, max_mods: int, tier_mode: str = "modal"):
+    def _select_meta_mods(self, base_name: str, rb, max_mods: int, tier_mode: str = "modal",
+                          origins=_DISPLAY_ORIGINS):
         """The base's meta mods as ItemModifiers + target_mod dicts + the ilvl the set needs.
         tier_mode 'modal' = the most common tier builds roll (a TYPICAL item); 'best' = the
-        best tier the meta actually rolls (a GOOD, craft-worthy item)."""
+        best tier the meta actually rolls (a GOOD, craft-worthy item). `origins` filters which
+        mod sources count - default includes every affix-occupying source (explicit plus
+        desecrated/fractured/crafted) so a decked rare shows all 6 of its slots, not just the
+        raw explicits."""
         from app.schemas.crafting import ItemModifier, ModType
 
         prefix_mods: List = []
@@ -399,16 +434,32 @@ class BuildsService:
         implicit_mods: List = []
         target_mods: List[dict] = []
         ilvl = 81
+        used_affixes: set = set()  # mod_group/stat_text already on a prefix or suffix slot
         for mu in self._mods_for_base(base_name):
-            if mu.mod_origin not in ("explicit", "implicit"):
+            if mu.mod_origin not in origins:
                 continue
-            # max_mods caps EXPLICIT affixes (3 prefix + 3 suffix on a rare); the implicit is
+            # max_mods caps the affix slots (3 prefix + 3 suffix on a rare); the implicit is
             # extra and doesn't consume a slot.
             if len(prefix_mods) + len(suffix_mods) >= max_mods:
                 break
             rm = self._resolver.resolve_mod(mu.mod_template, rb.category, rb.tags, mu.value_samples)
             if not rm.resolved or not rm.tiers or not rm.stat_text:
                 continue
+            # Only a true implicit-origin mod is the implicit line; an affix-origin mod always
+            # takes a prefix/suffix slot even when its stat ALSO exists as an implicit elsewhere
+            # (e.g. % Rarity is both an amulet implicit and an explicit suffix).
+            if mu.mod_origin == "implicit":
+                mtype = "implicit"
+            elif rm.mod_type in ("prefix", "suffix"):
+                mtype = rm.mod_type
+            else:
+                mtype = "prefix"
+            # An item can't carry two affixes of the same mod group, nor the same line twice;
+            # the implicit slot is separate and may legitimately duplicate an affix's stat.
+            if mtype != "implicit":
+                affix_key = rm.mod_group or rm.stat_text
+                if affix_key in used_affixes or rm.stat_text in used_affixes:
+                    continue
             if tier_mode == "best":
                 chosen = min(rm.tier_distribution) if rm.tier_distribution else min(t.tier for t in rm.tiers)
             else:
@@ -425,7 +476,6 @@ class BuildsService:
                 continue
             if tier_obj.required_ilvl:
                 ilvl = max(ilvl, tier_obj.required_ilvl)
-            mtype = rm.mod_type if rm.mod_type in ("prefix", "suffix", "implicit") else "prefix"
             bucket = {"prefix": prefix_mods, "suffix": suffix_mods, "implicit": implicit_mods}[mtype]
             cap = 1 if mtype == "implicit" else 3
             if len(bucket) >= cap:
@@ -435,6 +485,9 @@ class BuildsService:
                 tier=tier_obj.tier, stat_text=rm.stat_text, current_value=float(value),
                 mod_group=rm.mod_group, required_ilvl=tier_obj.required_ilvl,
             ))
+            if mtype != "implicit":
+                used_affixes.add(rm.mod_group or rm.stat_text)
+                used_affixes.add(rm.stat_text)
             target_mods.append({
                 "stat_text": rm.stat_text, "value": float(value), "tier": tier_obj.tier,
                 "mod_type": mtype, "origin": mu.mod_origin, "usage_pct": mu.usage_pct,
@@ -477,23 +530,46 @@ class BuildsService:
         from app.schemas.item_bases import get_item_base_by_name
         from app.services.market.item_pricer import get_item_pricer
 
+        league_name = league or self._stats.league
         rb = self._resolve_base(base_name)
         if not rb.resolved or not rb.category:
             result = {"base_name": base_name, "priced": False, "craftable": False,
+                      "is_unique": False,
                       "verdict": "unknown", "note": "Base not matched to a craftable item.",
                       "target_mods": [], "market": None,
-                      "trade_search_url": _trade_search_url(league or self._stats.league, base_name)}
+                      "trade_search_url": _trade_search_url(league_name, base_name)}
+            self._price_cache.set(cache_key, result)
+            return result
+
+        resolved_base = rb.resolved_name or base_name
+
+        # A base the meta only ever runs as a unique is a drop/buy item, not something you
+        # craft - skip the whole white/magic/rare ladder and hand back a buy-the-unique result.
+        if self._is_unique_only(base_name):
+            result = {
+                "base_name": base_name, "resolved_name": rb.resolved_name,
+                "category": rb.category, "slot": rb.slot,
+                "is_unique": True, "craftable": False, "priced": False,
+                "verdict": "unique",
+                "message": ("This base only shows up as a unique in the current meta - it's a "
+                            "drop/buy item, not something you craft. Use the link to find it on trade."),
+                "target_mods": [], "magic_mods": [], "magic_variants": [],
+                "prefixes": 0, "suffixes": 0,
+                "trade_search_url": _trade_search_url(league_name, resolved_base, "unique"),
+                "market": None, "market_typical": None, "magic_market": None, "base_market": None,
+                "note": "",
+            }
             self._price_cache.set(cache_key, result)
             return result
 
         from app.schemas.crafting import CraftableItem, ItemRarity
 
         # DISPLAY: the full decked-out meta rare (up to 6 affixes + implicit) at best tiers.
+        # _select_meta_mods already dedups affixes by mod group and counts the desecrated/
+        # fractured/crafted mods that occupy real slots, so this is the complete decked item.
         _, _, _, good_mods, gd_ilvl = self._select_meta_mods(base_name, rb, max_mods, "best")
-        # Dedup: two mod templates can resolve to the same stat text (e.g. flat + hybrid both
-        # grant attributes), which would show the same line twice with different thresholds.
-        _seen_mods: set = set()
-        good_mods = [m for m in good_mods if not (m["stat_text"] in _seen_mods or _seen_mods.add(m["stat_text"]))]
+        n_pre = sum(1 for tm in good_mods if tm["mod_type"] == "prefix")
+        n_suf = sum(1 for tm in good_mods if tm["mod_type"] == "suffix")
         # PRICE: only the ~4 key affixes - a full 6-mod search is too strict (almost nobody lists
         # an item with those EXACT 6 mods) and returns no listings. GOOD = best tiers, TYPICAL = modal.
         gd_pre, gd_suf, gd_imp, _, _ = self._select_meta_mods(base_name, rb, 4, "best")
@@ -508,8 +584,6 @@ class BuildsService:
         good_item = _rare(gd_pre, gd_suf, gd_imp, gd_ilvl)
         typical_item = _rare(tp_pre, tp_suf, tp_imp, tp_ilvl)
 
-        league_name = league or self._stats.league
-        resolved_base = rb.resolved_name or base_name
         # Always available (plain URLs, no GGG call) so the buy paths work despite the IP block.
         trade_search_url = _trade_search_url(league_name, resolved_base)
         base_trade_url = _trade_search_url(league_name, resolved_base, "normal")  # raw white base
@@ -517,9 +591,12 @@ class BuildsService:
 
         from app.services.market import item_pricer as ip_module
 
-        # Magic "partial": a blue base carrying the GOOD top prefix + suffix (pre-slammed).
-        magic_prefix = gd_pre[:1]
-        magic_suffix = gd_suf[:1]
+        # Magic "partial": a blue base carrying the GOOD top prefix + suffix (pre-slammed). A
+        # magic item can only hold raw explicit affixes, so derive it from explicit-only mods
+        # (never a desecrated/crafted mod, which can't exist on a magic item).
+        ex_pre, ex_suf, _, _, _ = self._select_meta_mods(base_name, rb, 2, "best", origins=_MAGIC_ORIGINS)
+        magic_prefix = ex_pre[:1]
+        magic_suffix = ex_suf[:1]
         magic_mods = [
             tm for tm in good_mods
             if (tm["mod_type"] == "prefix" and magic_prefix and tm["stat_text"] == magic_prefix[0].stat_text)
@@ -548,15 +625,16 @@ class BuildsService:
                         continue
                     tm["trade_url"] = _stats_trade_url(league_name, resolved_base, [grp])
                     # The rare link keeps to the top ~3 key mods - requiring all 6 would be too
-                    # strict to return listings.
-                    if len(rare_groups) < 3 and tm["origin"] in ("explicit", "implicit"):
+                    # strict to return listings. Any affix-origin mod is a valid search term.
+                    if len(rare_groups) < 3:
                         rare_groups.append(grp)
                 if rare_groups:
                     rare_q_url = _stats_trade_url(league_name, resolved_base, rare_groups, "rare")
                 # Magic "partial" variants: each good prefix x good suffix combo as a magic-rarity
-                # search, so the UI can flip through real blue-base examples.
-                gp = [tm for tm in good_mods if tm["mod_type"] == "prefix"][:3]
-                gs = [tm for tm in good_mods if tm["mod_type"] == "suffix"][:3]
+                # search, so the UI can flip through real blue-base examples. Explicit-only - a
+                # magic item can't carry desecrated/crafted affixes.
+                gp = [tm for tm in good_mods if tm["mod_type"] == "prefix" and tm["origin"] == "explicit"][:3]
+                gs = [tm for tm in good_mods if tm["mod_type"] == "suffix" and tm["origin"] == "explicit"][:3]
                 for p in gp:
                     for s in gs:
                         groups = [
@@ -603,7 +681,7 @@ class BuildsService:
         for tm in good_mods:
             tm.setdefault("trade_url", trade_search_url)
 
-        craftable = bool(good_mods) and len(gd_pre) <= 3 and len(gd_suf) <= 3
+        craftable = bool(good_mods)
         n_listings = (market or {}).get("num_listings", 0) if market else 0
         market_errored = bool(market and market.get("error"))
         if not good_mods:
@@ -640,9 +718,10 @@ class BuildsService:
             "target_mods": good_mods,
             "magic_mods": magic_mods,
             "magic_variants": magic_variants,
-            "prefixes": len(gd_pre),
-            "suffixes": len(gd_suf),
+            "prefixes": n_pre,
+            "suffixes": n_suf,
             "craftable": craftable,
+            "is_unique": False,
             "priced": bool(market and not market.get("error") and n_listings),
             "market": market,
             "market_typical": market_typical,

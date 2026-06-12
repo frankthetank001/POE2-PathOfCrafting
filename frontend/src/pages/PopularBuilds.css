@@ -288,6 +288,21 @@
   background: #2a2a33;
   color: #9aa0c0;
 }
+.verdict-unique {
+  background: #3a2614;
+  color: #c97f3e;
+}
+.verdict-no_meta_data {
+  background: #333029;
+  color: #9a948a;
+}
+.unique-result {
+  gap: 0.6rem;
+}
+.unique-trade-link {
+  align-self: flex-start;
+  text-decoration: none;
+}
 .pricing-msg {
   color: #c8c2b6;
   font-size: 0.85rem;
