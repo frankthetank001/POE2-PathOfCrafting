@@ -91,6 +91,23 @@ def test_price_base_unique_only_skips_ladder(service: BuildsService):
     assert "unique" in result["trade_search_url"].lower()
 
 
+def test_response_model_preserves_is_unique(service: BuildsService):
+    """The API serializes price_base through BasePricingResponse, which DROPS any field not
+    declared on the model. is_unique drives the frontend's buy-only panel, so it must survive
+    the response model - a plain dict assertion (above) would not have caught it being stripped."""
+    from app.api.v1.builds import BasePricingResponse
+
+    unique_bases = [
+        b.base_name for b in service._stats.base_usage if service._is_unique_only(b.base_name)
+    ]
+    if not unique_bases:
+        pytest.skip("no unique-only base in snapshot")
+    result = asyncio.run(service.price_base(unique_bases[0]))
+    dumped = BasePricingResponse.model_validate(result).model_dump()
+    assert dumped["is_unique"] is True, "response model dropped is_unique"
+    assert dumped["verdict"] == "unique"
+
+
 # --- Issue 2: the decked-out rare counts every affix-occupying mod -------------
 
 def test_decked_rare_includes_non_explicit_affixes(service: BuildsService):

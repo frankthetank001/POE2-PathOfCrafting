@@ -115,6 +115,7 @@ class BasePricingResponse(BaseModel):
     prefixes: int = 0
     suffixes: int = 0
     craftable: bool = False
+    is_unique: bool = False  # base only ever runs as a unique - buy-only, no craft ladder
     priced: bool = False
     market: Optional[MarketInfo] = None  # GOOD finished meta Rare (headline)
     market_typical: Optional[MarketInfo] = None  # typical/modal finished Rare
