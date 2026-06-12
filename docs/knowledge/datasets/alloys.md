@@ -134,11 +134,13 @@ These 3 of the 49 `Alloy*` mods are intentionally **not** in `alloys.json` yet. 
 
 | mod_id | Stat text | Affix | Note |
 | --- | --- | --- | --- |
-| `AlloyLocalWardIncreasePercent2` | `(31-40)% increased Runic Ward` | Prefix | Higher-roll sibling of the mapped `AlloyLocalWardIncreasePercent1` (`(24-30)% increased Runic Ward`), which is **Sovereign Alloy / Armour**. |
-| `AlloyManaNearbyAllyAttackSpeedHybrid1` | `+(110-114) to maximum Mana \| Allies in your Presence have (4-8)% increased Attack Speed` | Prefix | Hybrid mana / presence attack-speed line. |
-| `AlloySpiritPresenceAreaOfEffectHybrid1` | `(8-12)% increased Spirit \| (50-60)% increased Presence Area of Effect` | Suffix | Hybrid spirit / presence AoE line. |
+| `AlloyLocalWardIncreasePercent2` | `(31-40)% increased Runic Ward` | Prefix | Followed up 2026-06-12 and could NOT place it. It is **not** a Sovereign Alloy variant: the wiki confirms Sovereign Alloy's armour effect is a uniform `(24-30)% increased Runic Ward` across all armour slots (that is the already-mapped `AlloyLocalWardIncreasePercent1`), with no `(31-40)%` variant. The source of the 31-40% roll is unidentified. Deferred. |
+| `AlloyManaNearbyAllyAttackSpeedHybrid1` | `+(110-114) to maximum Mana \| Allies in your Presence have (4-8)% increased Attack Speed` | Prefix | Followed up 2026-06-12: the granting alloy/slot could not be located in-game or on poe2db/wiki. Deferred. |
+| `AlloySpiritPresenceAreaOfEffectHybrid1` | `(8-12)% increased Spirit \| (50-60)% increased Presence Area of Effect` | Suffix | Followed up 2026-06-12: **not** Expansive Alloy (Expansive does not grant Spirit and the rolls do not line up); the granting alloy is unidentified. Deferred. |
 
 > Note: the `ModItem.json` `'1'` field only stores the first stat of a hybrid mod; the full two-line text above was reconstructed from the `'1'` + `'2'` fields of each record.
+>
+> These three were investigated with the repo owner (in-game) + the PoE2 wiki on 2026-06-12 and left deferred per the "mark uncertainty as TODO, do not guess" convention. Coverage stays **46/49**. Re-open if a future game build or a clearer source resolves the alloy + slot.
 
 ### How to add a deferred mod
 
