@@ -2,9 +2,10 @@ import { useState, useEffect, useMemo, useCallback, useRef } from 'react'
 import { useLocation } from 'react-router-dom'
 import { craftingApi, HiddenTagsConfig } from '@/services/crafting-api'
 import { marketApi, ExchangeRates, ItemPriceEstimate } from '@/services/market-api'
+import { buildsApi } from '@/services/builds-api'
+import type { FinishSuggestion, SuggestedMod } from '@/types/builds'
 import { TradePriceFlyout } from '@/components/TradePriceFlyout'
 import { UnifiedCurrencyStash } from '@/components/UnifiedCurrencyStash'
-import { FinishAdvisorPanel } from '@/components/FinishAdvisorPanel'
 import { SaveCraftModal } from '@/components/SaveCraftModal'
 import { LocalCraftsList } from '@/components/LocalCraftsList'
 import { PoE2ItemFrame, PoE2Separator, PoE2Section, PoE2Property, PoE2TwoColumn, PoE2Column } from '@/components/poe2'
@@ -873,6 +874,73 @@ function GridCraftingSimulator() {
   const [expandedModGroups, setExpandedModGroups] = useState<Set<string>>(new Set())
   const [activeTab, setActiveTab] = useState<'item' | 'history' | 'currency'>('item')
   const [searchQuery, setSearchQuery] = useState<string>('')
+
+  // Finish-my-craft advisor: meta suggestions used to highlight the real pool mods.
+  const [finishData, setFinishData] = useState<FinishSuggestion | null>(null)
+  const [metaPicksFloat, setMetaPicksFloat] = useState<boolean>(false)
+
+  // Refetch suggestions (debounced) whenever the rare item's identity/mods change.
+  const itemSig = useMemo(
+    () =>
+      JSON.stringify({
+        b: item.base_name,
+        c: item.base_category,
+        r: item.rarity,
+        p: item.prefix_mods.map((m) => [m.stat_text, m.is_crafted, m.is_desecrated]),
+        s: item.suffix_mods.map((m) => [m.stat_text, m.is_crafted, m.is_desecrated]),
+      }),
+    [item]
+  )
+  useEffect(() => {
+    if (item.rarity !== 'Rare') {
+      setFinishData(null)
+      return
+    }
+    let cancelled = false
+    const t = setTimeout(async () => {
+      try {
+        const res = await buildsApi.finishSuggestions(item)
+        if (!cancelled) setFinishData(res)
+      } catch {
+        if (!cancelled) setFinishData(null)
+      }
+    }, 350)
+    return () => {
+      cancelled = true
+      clearTimeout(t)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [itemSig])
+
+  // (mod_type:mod_group) -> meta evidence, for badging the real pool mods.
+  const metaPicks = useMemo(() => {
+    const m = new Map<string, { neighbour: number; slot: number | null; origin: string }>()
+    if (!finishData) return m
+    const add = (list: SuggestedMod[]) =>
+      list.forEach((s) => {
+        if (!s.mod_group) return
+        const key = `${s.mod_type}:${s.mod_group}`
+        const prev = m.get(key)
+        if (!prev || s.neighbour_count > prev.neighbour) {
+          m.set(key, { neighbour: s.neighbour_count, slot: s.slot_usage_pct, origin: s.origin })
+        }
+      })
+    add(finishData.suggested_prefixes)
+    add(finishData.suggested_suffixes)
+    add(finishData.suggested_crafted)
+    add(finishData.suggested_desecrated)
+    return m
+  }, [finishData])
+
+  const metaPickFor = (modType: 'prefix' | 'suffix', groupKey: string) =>
+    metaPicks.get(`${modType}:${groupKey}`)
+
+  const metaTitle = (mp: { neighbour: number; slot: number | null }) => {
+    const parts: string[] = []
+    if (mp.neighbour > 0) parts.push(`${mp.neighbour} similar meta item${mp.neighbour > 1 ? 's' : ''} run it`)
+    if (mp.slot != null) parts.push(`${Math.round(mp.slot * 100)}% of this slot's rares`)
+    return parts.length ? `Meta finisher - ${parts.join(' · ')}` : 'Meta finisher'
+  }
 
   // Currency tooltip cache for search functionality
   const [currencyTooltipCache, setCurrencyTooltipCache] = useState<Record<string, {
@@ -2684,6 +2752,15 @@ function GridCraftingSimulator() {
       grouped[group].sort((a, b) => a.tier - b.tier)
     })
 
+    // When "Meta picks" is on, float the meta-suggested groups to the top of the column.
+    if (metaPicksFloat && metaPicks.size > 0) {
+      const ordered: Record<string, ItemModifier[]> = {}
+      const keys = Object.keys(grouped)
+      keys.filter(k => metaPicks.has(`${modType}:${k}`)).forEach(k => { ordered[k] = grouped[k] })
+      keys.filter(k => !metaPicks.has(`${modType}:${k}`)).forEach(k => { ordered[k] = grouped[k] })
+      return ordered
+    }
+
     return grouped
   }
 
@@ -3067,6 +3144,20 @@ function GridCraftingSimulator() {
 
             {/* Search bar removed - will be global instead */}
 
+            {finishData && item.rarity === 'Rare' &&
+              (finishData.suggested_prefixes.length + finishData.suggested_suffixes.length) > 0 && (
+                <button
+                  className={`meta-picks-toggle ${metaPicksFloat ? 'active' : ''}`}
+                  onClick={() => setMetaPicksFloat(v => !v)}
+                  title="Highlight the mods the meta's similar items run to finish this base, and float them to the top of each column"
+                >
+                  ★ Meta picks
+                  {finishData.open_prefixes + finishData.open_suffixes > 0
+                    ? ` · ${finishData.open_prefixes}P · ${finishData.open_suffixes}S open`
+                    : ''}
+                </button>
+              )}
+
             <div className="mods-pool-columns">
               <div className="mods-pool-column">
                 <h4 className="column-title">Prefixes ({(() => {
@@ -3081,6 +3172,7 @@ function GridCraftingSimulator() {
                     const allUnavailable = unavailableCount === groupMods.length
                     const isGroupGreyedOut = shouldGreyOutModGroup(groupMods, 'prefix')
                     const isExpanded = expandedModGroups.has(`prefix-${groupKey}`)
+                    const metaPick = metaPickFor('prefix', groupKey)
 
                     // Calculate available tiers (filtered by ilvl)
                     const availableModsInGroup = groupMods.filter(m => !m.required_ilvl || m.required_ilvl <= item.item_level)
@@ -3097,7 +3189,7 @@ function GridCraftingSimulator() {
                     const hasAnyEssenceGuarantee = essenceGuaranteeTiers.length > 0
 
                     return (
-                      <div key={groupKey} className={`pool-mod-group ${isGroupGreyedOut ? 'omen-incompatible' : ''}`}>
+                      <div key={groupKey} className={`pool-mod-group ${isGroupGreyedOut ? 'omen-incompatible' : ''} ${metaPick ? 'meta-pick' : ''}`}>
                         <div
                           className={`pool-mod-group-header prefix compact-single-line ${allUnavailable ? 'all-unavailable' : ''} mod-group-clickable`}
                           onClick={() => toggleModGroup(`prefix-${groupKey}`)}
@@ -3156,6 +3248,11 @@ function GridCraftingSimulator() {
                             )}
                             <span className="group-tier-range">{tierRangeText}</span>
                             <span className="group-max-ilvl">ilvl {maxIlvl}</span>
+                            {metaPick && (
+                              <span className="meta-pick-chip" title={metaTitle(metaPick)}>
+                                ★ {metaPick.neighbour > 0 ? `${metaPick.neighbour}× meta` : 'meta'}
+                              </span>
+                            )}
                             {(() => {
                               // Calculate combined weight of available tiers only (filtered by ilvl)
                               const combinedWeight = availableModsInGroup.reduce((sum, mod) => sum + (mod.weight || 0), 0)
@@ -3488,6 +3585,7 @@ function GridCraftingSimulator() {
                     const allUnavailable = unavailableCount === groupMods.length
                     const isGroupGreyedOut = shouldGreyOutModGroup(groupMods, 'suffix')
                     const isExpanded = expandedModGroups.has(`suffix-${groupKey}`)
+                    const metaPick = metaPickFor('suffix', groupKey)
 
                     // Calculate available tiers (filtered by ilvl)
                     const availableModsInGroup = groupMods.filter(m => !m.required_ilvl || m.required_ilvl <= item.item_level)
@@ -3504,7 +3602,7 @@ function GridCraftingSimulator() {
                     const hasAnyEssenceGuarantee = essenceGuaranteeTiers.length > 0
 
                     return (
-                      <div key={groupKey} className={`pool-mod-group ${isGroupGreyedOut ? 'omen-incompatible' : ''}`}>
+                      <div key={groupKey} className={`pool-mod-group ${isGroupGreyedOut ? 'omen-incompatible' : ''} ${metaPick ? 'meta-pick' : ''}`}>
                         <div
                           className={`pool-mod-group-header suffix compact-single-line ${allUnavailable ? 'all-unavailable' : ''} mod-group-clickable`}
                           onClick={() => toggleModGroup(`suffix-${groupKey}`)}
@@ -3563,6 +3661,11 @@ function GridCraftingSimulator() {
                             )}
                             <span className="group-tier-range">{tierRangeText}</span>
                             <span className="group-max-ilvl">ilvl {maxIlvl}</span>
+                            {metaPick && (
+                              <span className="meta-pick-chip" title={metaTitle(metaPick)}>
+                                ★ {metaPick.neighbour > 0 ? `${metaPick.neighbour}× meta` : 'meta'}
+                              </span>
+                            )}
                             {(() => {
                               // Calculate combined weight of available tiers only (filtered by ilvl)
                               const combinedWeight = availableModsInGroup.reduce((sum, mod) => sum + (mod.weight || 0), 0)
@@ -4952,8 +5055,6 @@ function GridCraftingSimulator() {
                         </div>
                       )}
                     </PoE2ItemFrame>
-
-                    <FinishAdvisorPanel item={item} />
 
                     <div className="item-controls">
                       <button
