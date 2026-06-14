@@ -399,6 +399,57 @@
   display: none;
 }
 
+/* Finish-craft advisor: highlight the real pool mods the meta runs to finish this base. */
+.pool-mod-group.meta-pick {
+  border-color: rgba(212, 175, 55, 0.55);
+  background: rgba(212, 175, 55, 0.08);
+  box-shadow: inset 2px 0 0 rgba(212, 175, 55, 0.7);
+}
+
+.meta-pick-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  margin-left: 4px;
+  padding: 0 5px;
+  border-radius: 8px;
+  font-size: 0.62rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: #e8c860;
+  background: rgba(212, 175, 55, 0.16);
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  white-space: nowrap;
+}
+
+.meta-picks-toggle {
+  width: 100%;
+  margin-bottom: 0.4rem;
+  padding: 0.35rem 0.5rem;
+  border: 1px solid rgba(212, 175, 55, 0.4);
+  border-radius: 3px;
+  background: rgba(212, 175, 55, 0.08);
+  color: #d9be6a;
+  font-family: 'FontinSmallCaps', 'Fontin', Georgia, serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.meta-picks-toggle:hover {
+  background: rgba(212, 175, 55, 0.16);
+  border-color: rgba(212, 175, 55, 0.6);
+  color: #f0d77a;
+}
+
+.meta-picks-toggle.active {
+  background: rgba(212, 175, 55, 0.24);
+  border-color: rgba(212, 175, 55, 0.75);
+  color: #ffe98c;
+  box-shadow: 0 0 8px rgba(212, 175, 55, 0.2);
+}
+
 .pool-mod-group.essence-only {
   border-left: 3px solid #9c4dd4;
   background: rgba(156, 77, 212, 0.1);
@@ -842,7 +893,7 @@
 }
 
 .current-item-display {
-  flex: 0 0 auto;
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -3264,26 +3315,6 @@
   height: 100%;
   display: flex;
   flex-direction: column;
-  min-height: 0;
-  /* The whole item view scrolls as one unit, so anything below the frame (the finish
-     advisor) is reachable instead of overflowing the fixed-height column. */
-  overflow-y: auto;
-}
-
-/* Inside the scrolling view the frame sizes to its content (no internal scrollbar) and the
-   column scrolls instead. Scoped + higher specificity so it wins over the frame's own rule. */
-.item-created-view .poe2-frame.item-display-frame {
-  flex: 0 0 auto;
-  max-height: none;
-  overflow-y: visible;
-}
-
-/* Keep New/Reset/Undo reachable while the item + advisor scroll past. */
-.item-created-view .item-controls {
-  position: sticky;
-  bottom: 0;
-  background: #14110d;
-  z-index: 2;
 }
 
 /* Abyssal Bones Row Styling - Horizontal layout at top */
