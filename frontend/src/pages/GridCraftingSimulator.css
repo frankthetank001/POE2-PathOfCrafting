@@ -842,7 +842,7 @@
 }
 
 .current-item-display {
-  flex: 1;
+  flex: 0 0 auto;
   display: flex;
   flex-direction: column;
   gap: 1rem;
@@ -3264,6 +3264,26 @@
   height: 100%;
   display: flex;
   flex-direction: column;
+  min-height: 0;
+  /* The whole item view scrolls as one unit, so anything below the frame (the finish
+     advisor) is reachable instead of overflowing the fixed-height column. */
+  overflow-y: auto;
+}
+
+/* Inside the scrolling view the frame sizes to its content (no internal scrollbar) and the
+   column scrolls instead. Scoped + higher specificity so it wins over the frame's own rule. */
+.item-created-view .poe2-frame.item-display-frame {
+  flex: 0 0 auto;
+  max-height: none;
+  overflow-y: visible;
+}
+
+/* Keep New/Reset/Undo reachable while the item + advisor scroll past. */
+.item-created-view .item-controls {
+  position: sticky;
+  bottom: 0;
+  background: #14110d;
+  z-index: 2;
 }
 
 /* Abyssal Bones Row Styling - Horizontal layout at top */
