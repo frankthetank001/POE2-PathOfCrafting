@@ -89,6 +89,7 @@ export function FinishAdvisorPanel({ item }: Props) {
   const [loading, setLoading] = useState(false)
   const [err, setErr] = useState<string | null>(null)
   const [showSimilar, setShowSimilar] = useState(false)
+  const [collapsed, setCollapsed] = useState(false)
 
   // A stable signature so we only refetch when the item's identity/mods actually change.
   const sig = useMemo(
@@ -156,7 +157,12 @@ export function FinishAdvisorPanel({ item }: Props) {
 
   return (
     <div className="finish-advisor">
-      <div className="fa-header">
+      <button
+        className="fa-header fa-header-btn"
+        onClick={() => setCollapsed((c) => !c)}
+        aria-expanded={!collapsed}
+      >
+        <span className="fa-collapse" aria-hidden>{collapsed ? '▸' : '▾'}</span>
         <span className="fa-title">Finish this item</span>
         {loading && <span className="fa-spinner" aria-hidden />}
         {data.verdict === 'complete' ? (
@@ -166,9 +172,11 @@ export function FinishAdvisorPanel({ item }: Props) {
             {data.open_prefixes}P · {data.open_suffixes}S open
           </span>
         )}
-      </div>
+      </button>
 
-      {data.message && <div className="fa-message">{data.message}</div>}
+      {!collapsed && (
+        <>
+          {data.message && <div className="fa-message">{data.message}</div>}
 
       {data.verdict !== 'complete' && !noSuggestions && (
         <>
@@ -218,7 +226,9 @@ export function FinishAdvisorPanel({ item }: Props) {
         </div>
       )}
 
-      {data.note && <div className="fa-note">{data.note}</div>}
+          {data.note && <div className="fa-note">{data.note}</div>}
+        </>
+      )}
     </div>
   )
 }
