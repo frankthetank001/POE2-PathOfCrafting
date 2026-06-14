@@ -93,6 +93,14 @@ class BuildResolver:
         return ResolvedBase(base_name, base.name, base.category, base.slot, True, list(base.tags or []))
 
     # --- mods --------------------------------------------------------------
+    def applicable(self, template: str, category: Optional[str], tags: Optional[List[str]]) -> bool:
+        """True if SOME tier of this mod template can actually roll on a base of this
+        category/tags. resolve_mod() falls back to any-category candidates just to recover a
+        mod_group, so it is NOT a strict applicability test - callers that need 'can this mod
+        appear on THIS base' (e.g. suggesting finish mods for a pure-ES int_armour) use this."""
+        cands = self._index.get(canonical(template), [])
+        return any(self._applicable(m, category, tags) for m in cands)
+
     def _applicable(self, mod, category: Optional[str], tags: Optional[List[str]]) -> bool:
         if not category:
             return True

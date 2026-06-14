@@ -12,6 +12,7 @@ from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel, Field
 
 from app.core.logging import get_logger
+from app.schemas.crafting import CraftableItem
 from app.services.builds import get_builds_service
 
 logger = get_logger(__name__)
@@ -122,6 +123,70 @@ class BasePricingResponse(BaseModel):
     magic_market: Optional[MarketInfo] = None  # magic partial ("buy a blue base and finish")
     base_market: Optional[MarketInfo] = None  # raw white base at the target ilvl
     verdict: str
+    message: Optional[str] = None
+    note: Optional[str] = None
+
+
+# ---------------------------------------------------------------------------
+# Finish-my-craft advisor schemas
+# ---------------------------------------------------------------------------
+class SuggestedMod(BaseModel):
+    stat_text: str
+    mod_group: Optional[str] = None
+    mod_type: str  # prefix | suffix
+    origin: str  # explicit | crafted | desecrated
+    tier: Optional[int] = None
+    value: Optional[float] = None
+    neighbour_count: int = 0  # how many similar sampled items run this mod
+    neighbour_pct: Optional[float] = None  # share of similar items running it
+    slot_usage_pct: Optional[float] = None  # share of the slot's rares running it
+    trade_url: Optional[str] = None
+
+
+class PresentMod(BaseModel):
+    stat_text: str
+    mod_type: str
+    mod_group: Optional[str] = None
+    is_crafted: bool = False
+    is_desecrated: bool = False
+
+
+class SimilarItem(BaseModel):
+    name: Optional[str] = None
+    base_type: str
+    item_level: int = 0
+    corrupted: bool = False
+    approx_energy_shield: Optional[float] = None  # reconstructed, for ordering only
+    mod_count: int = 0
+    shared_with_you: int = 0
+    missing_mods: List[str] = Field(default_factory=list)
+
+
+class FinishSuggestRequest(BaseModel):
+    item: CraftableItem
+
+
+class FinishSuggestResponse(BaseModel):
+    base_name: str
+    resolved_name: Optional[str] = None
+    category: Optional[str] = None
+    slot: Optional[str] = None
+    craftable: bool = True
+    is_unique: bool = False
+    open_prefixes: int = 0
+    open_suffixes: int = 0
+    crafted_slot_open: bool = False
+    desecrated_slot_open: bool = False
+    approx_energy_shield: Optional[float] = None
+    present_mods: List[PresentMod] = Field(default_factory=list)
+    suggested_prefixes: List[SuggestedMod] = Field(default_factory=list)
+    suggested_suffixes: List[SuggestedMod] = Field(default_factory=list)
+    suggested_crafted: List[SuggestedMod] = Field(default_factory=list)
+    suggested_desecrated: List[SuggestedMod] = Field(default_factory=list)
+    similar_items: List[SimilarItem] = Field(default_factory=list)
+    similar_count: int = 0
+    similar_basis: str = ""
+    verdict: str = "suggestions"
     message: Optional[str] = None
     note: Optional[str] = None
 
@@ -317,6 +382,27 @@ async def price_base(
         raise
     except Exception as e:
         logger.error(f"Error pricing base: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+@router.post("/finish-suggestions", response_model=FinishSuggestResponse)
+async def finish_suggestions(req: FinishSuggestRequest) -> FinishSuggestResponse:
+    """Given a partially-crafted Rare (the simulator's parsed item), suggest the valuable mods
+    to fill its open slots - sourced from real similar meta items + slot popularity, filtered to
+    mods that can roll on the base, respecting the 1-crafted/1-desecrated caps. Deterministic;
+    'valuable' means what the meta runs, not a live price."""
+    try:
+        service = await get_builds_service()
+        if not service.available:
+            raise HTTPException(status_code=503, detail=_UNAVAILABLE)
+        result = service.suggest_finish(req.item)
+        if result is None:
+            raise HTTPException(status_code=503, detail=_UNAVAILABLE)
+        return FinishSuggestResponse(**result)
+    except HTTPException:
+        raise
+    except Exception as e:
+        logger.error(f"Error building finish suggestions: {e}")
         raise HTTPException(status_code=500, detail=str(e))
 
 

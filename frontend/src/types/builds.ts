@@ -105,6 +105,65 @@ export interface BasePricing {
   note?: string | null
 }
 
+// --- Finish-my-craft advisor -------------------------------------------------
+
+export interface SuggestedMod {
+  stat_text: string
+  mod_group: string | null
+  mod_type: string // prefix | suffix
+  origin: string // explicit | crafted | desecrated
+  tier: number | null
+  value: number | null
+  neighbour_count: number
+  neighbour_pct: number | null
+  slot_usage_pct: number | null
+  trade_url: string | null
+}
+
+export interface PresentMod {
+  stat_text: string
+  mod_type: string
+  mod_group: string | null
+  is_crafted: boolean
+  is_desecrated: boolean
+}
+
+export interface SimilarItem {
+  name: string | null
+  base_type: string
+  item_level: number
+  corrupted: boolean
+  approx_energy_shield: number | null
+  mod_count: number
+  shared_with_you: number
+  missing_mods: string[]
+}
+
+export interface FinishSuggestion {
+  base_name: string
+  resolved_name: string | null
+  category: string | null
+  slot: string | null
+  craftable: boolean
+  is_unique: boolean
+  open_prefixes: number
+  open_suffixes: number
+  crafted_slot_open: boolean
+  desecrated_slot_open: boolean
+  approx_energy_shield: number | null
+  present_mods: PresentMod[]
+  suggested_prefixes: SuggestedMod[]
+  suggested_suffixes: SuggestedMod[]
+  suggested_crafted: SuggestedMod[]
+  suggested_desecrated: SuggestedMod[]
+  similar_items: SimilarItem[]
+  similar_count: number
+  similar_basis: string
+  verdict: string // complete | suggestions | unknown
+  message: string | null
+  note: string | null
+}
+
 // --- Builds browser (the per-build sample) -----------------------------------
 
 export interface MainSkillBrief {
