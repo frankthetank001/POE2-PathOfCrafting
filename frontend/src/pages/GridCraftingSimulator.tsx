@@ -4,6 +4,7 @@ import { craftingApi, HiddenTagsConfig } from '@/services/crafting-api'
 import { marketApi, ExchangeRates, ItemPriceEstimate } from '@/services/market-api'
 import { TradePriceFlyout } from '@/components/TradePriceFlyout'
 import { UnifiedCurrencyStash } from '@/components/UnifiedCurrencyStash'
+import { FinishAdvisorPanel } from '@/components/FinishAdvisorPanel'
 import { SaveCraftModal } from '@/components/SaveCraftModal'
 import { LocalCraftsList } from '@/components/LocalCraftsList'
 import { PoE2ItemFrame, PoE2Separator, PoE2Section, PoE2Property, PoE2TwoColumn, PoE2Column } from '@/components/poe2'
@@ -4951,6 +4952,8 @@ function GridCraftingSimulator() {
                         </div>
                       )}
                     </PoE2ItemFrame>
+
+                    <FinishAdvisorPanel item={item} />
 
                     <div className="item-controls">
                       <button

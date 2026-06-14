@@ -8,7 +8,9 @@ import type {
   BuildsListResponse,
   BuildDetail,
   ListBuildsParams,
+  FinishSuggestion,
 } from '@/types/builds'
+import type { CraftableItem } from '@/types/crafting'
 
 // Same runtime-config pattern as the other API services (config.js -> env -> localhost).
 const getApiBaseUrl = () => {
@@ -62,6 +64,12 @@ export const buildsApi = {
     const response = await api.get<BasePricing>(`/price/${encodeURIComponent(baseName)}`, {
       params: { max_mods: maxMods },
     })
+    return response.data
+  },
+
+  // Finish-my-craft advisor: given a partially-crafted rare, what valuable mods finish it.
+  finishSuggestions: async (item: CraftableItem): Promise<FinishSuggestion> => {
+    const response = await api.post<FinishSuggestion>('/finish-suggestions', { item })
     return response.data
   },
 

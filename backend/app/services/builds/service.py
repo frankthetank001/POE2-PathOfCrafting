@@ -11,6 +11,7 @@ Singleton, mirroring app.services.market.service.get_market_service().
 from __future__ import annotations
 
 import json
+import re
 import statistics
 from typing import Dict, List, Optional
 from urllib.parse import quote
@@ -19,7 +20,7 @@ from app.core.config import settings
 from app.core.logging import get_logger
 from app.services.builds.build_data_loader import load_build_stats, load_builds_artifact
 from app.services.builds.models import Build, BuildItem, BuildsArtifact, BuildStats
-from app.services.builds.resolver import BuildResolver, ResolvedBase
+from app.services.builds.resolver import BuildResolver, ResolvedBase, canonical
 from app.services.market.cache import TTLCache
 
 logger = get_logger(__name__)
@@ -41,6 +42,19 @@ _MAGIC_ORIGINS = ("explicit",)
 # Rarities that mean a base is actually crafted by players. A base whose meta usage is
 # exclusively unique is a drop/buy item with no rare meta to craft toward.
 _CRAFTABLE_RARITIES = {"normal", "magic", "rare"}
+# The mod sources the finish-advisor suggests: a normal affix (explicit), the one teal
+# crafted mod (essence/alloy), or the one green desecrated mod. Fractured/rune/enchant are
+# excluded - you can't deterministically choose to add a specific fractured/rune/enchant mod.
+_SUGGEST_ORIGINS = ("explicit", "crafted", "desecrated")
+# Energy-Shield reconstruction from mod text (approximate, for ranking similar items).
+# "increased ... Energy Shield" covers the pure, hybrid (Evasion+ES) and rune (Armour+Evasion+ES) lines.
+_ES_INCREASED = re.compile(r"increased.*energy shield", re.I)
+_ES_FLAT = re.compile(r"to maximum energy shield", re.I)
+# Defence stats a base can carry (pob-data base_stats keys, PascalCase). Used to gate defence-type
+# mods: a pure-ES (int_armour) base must NOT be told to roll Evasion/Armour mods, which the coarse
+# pob-data applicability tag ('armour', shared by every armour piece) doesn't prevent on its own.
+_DEF_STAT_KEYS = ("Armour", "Evasion", "EnergyShield")
+_DEF_PHRASES = (("armour", "Armour"), ("evasion", "Evasion"), ("energy shield", "EnergyShield"))
 
 
 def _trade2_url(league: str, query: dict) -> str:
@@ -839,6 +853,317 @@ class BuildsService:
         }
         self._price_cache.set(cache_key, result)
         return result
+
+    # --- finish-my-craft advisor ------------------------------------------
+    def _scraper_slot(self, base_name: str, rb: ResolvedBase) -> Optional[str]:
+        """The scraper slot vocab ('body_armour', 'weapon', ...) for a base. mod_usage and the
+        per-build items are keyed on this, NOT on pob-data's rb.slot ('weapons - 1 hand')."""
+        rows = [b for b in self._stats.base_usage if b.base_name == base_name]
+        if rows:
+            return max(rows, key=lambda b: b.usage_count).slot
+        return rb.slot
+
+    def _group_for_text(self, stat_text: str, rb: ResolvedBase) -> Optional[str]:
+        """Resolve a display stat line to its canonical mod_group via the SAME path the meta
+        data uses, so 'is this mod already on the item' dedups reliably (the parser's own
+        mod_group comes from a different value-sensitive matcher and can disagree)."""
+        if not stat_text:
+            return None
+        rm = self._resolver.resolve_mod(stat_text, rb.category, rb.tags, None)
+        return rm.mod_group if rm.resolved else None
+
+    @staticmethod
+    def _approx_es(mods, base_type: str) -> Optional[float]:
+        """A rough Energy Shield total for an item, from its base intrinsic ES + flat/increased
+        ES mods (assumes 20% quality). Used only to ORDER similar items (best examples first);
+        it is approximate, not the game's exact figure. Accepts BuildItemMod (text/values) or
+        ItemModifier (stat_text/current_value)."""
+        from app.schemas.item_bases import get_item_base_by_name
+
+        base = get_item_base_by_name(base_type)
+        base_es = (base.base_stats or {}).get("EnergyShield") if base else None
+        if not base_es:
+            return None
+        flat = 0.0
+        inc = 20.0  # most endgame pieces are 20% quality, which adds increased ES
+        for m in mods:
+            text = getattr(m, "text", None) or getattr(m, "stat_text", "") or ""
+            vals = getattr(m, "values", None)
+            if not vals:
+                cv = getattr(m, "current_value", None)
+                vals = [cv] if cv is not None else []
+            v = vals[0] if vals else None
+            if v is None:
+                continue
+            if _ES_INCREASED.search(text):
+                inc += v
+            elif _ES_FLAT.search(text):
+                flat += v
+        return round((base_es + flat) * (1 + inc / 100.0))
+
+    @staticmethod
+    def _base_defences(base_type: str) -> set:
+        """Which defence stats a base actually carries ({'EnergyShield'} for a Vile Robe)."""
+        from app.schemas.item_bases import get_item_base_by_name
+
+        base = get_item_base_by_name(base_type)
+        if not base:
+            return set()
+        return {k for k in _DEF_STAT_KEYS if k in (base.base_stats or {})}
+
+    @staticmethod
+    def _defence_compatible(stat_text: str, base_defences: set) -> bool:
+        """A defence-type mod (Armour/Evasion/Energy Shield) fits only if the base carries EVERY
+        defence it references - so a pure-ES base never gets evasion/armour or hybrid suggestions.
+        Bases with no defence stats (jewellery/weapons) aren't gated."""
+        if not base_defences:
+            return True
+        t = (stat_text or "").lower()
+        mentioned = {key for phrase, key in _DEF_PHRASES if phrase in t}
+        if not mentioned:
+            return True
+        return mentioned.issubset(base_defences)
+
+    def suggest_finish(self, item) -> Optional[dict]:
+        """Suggest the valuable mods to finish a partially-crafted Rare, the way a player does
+        by hand: look at similar real items (same slot + defence archetype) and the slot's
+        popular mods, drop what's already on the item, respect the 1-crafted/1-desecrated caps,
+        and only suggest mods that can actually roll on this base. Deterministic + offline.
+        'Valuable' = what the meta's good versions run, NOT a live price.
+
+        `item` is a CraftableItem (the parser's output the simulator already holds)."""
+        if not self.available:
+            return None
+
+        base_name = item.base_name
+        rb = self._resolve_base(base_name)
+        category = rb.category or item.base_category
+        slot = self._scraper_slot(base_name, rb)
+        league_name = self._stats.league
+        # The base's real defence set, to keep evasion/armour mods off a pure-ES base etc.
+        user_defences = self._base_defences(base_name)
+
+        # What's already on the item (excluded from suggestions, keyed by (mod_type, mod_group)).
+        present_groups: set = set()
+        present_mods: List[dict] = []
+        has_crafted = False
+        has_desecrated = False
+        for m in list(item.prefix_mods) + list(item.suffix_mods):
+            mtype = getattr(m.mod_type, "value", None) or str(m.mod_type)
+            grp = self._group_for_text(m.stat_text, rb) or m.mod_group
+            if grp:
+                present_groups.add((mtype, grp))
+            present_mods.append({
+                "stat_text": m.stat_text, "mod_type": mtype, "mod_group": grp,
+                "is_crafted": bool(getattr(m, "is_crafted", False)),
+                "is_desecrated": bool(getattr(m, "is_desecrated", False)),
+            })
+            if getattr(m, "is_crafted", False):
+                has_crafted = True
+            if getattr(m, "is_desecrated", False):
+                has_desecrated = True
+
+        open_pre = max(0, 3 - len(item.prefix_mods))
+        open_suf = max(0, 3 - len(item.suffix_mods))
+        total_open = open_pre + open_suf
+        # The teal crafted mod and the green desecrated mod each occupy a normal affix slot and
+        # are capped at 1; they're "open" only if not yet used AND a slot remains to hold one.
+        crafted_slot_open = (not has_crafted) and total_open > 0
+        desecrated_slot_open = (not has_desecrated) and total_open > 0
+
+        if not rb.resolved or not category:
+            return {
+                "base_name": base_name, "resolved_name": rb.resolved_name, "category": category,
+                "slot": slot, "craftable": False, "is_unique": False,
+                "open_prefixes": open_pre, "open_suffixes": open_suf,
+                "crafted_slot_open": False, "desecrated_slot_open": False,
+                "present_mods": present_mods, "suggested_prefixes": [], "suggested_suffixes": [],
+                "suggested_crafted": [], "suggested_desecrated": [], "similar_items": [],
+                "similar_count": 0, "similar_basis": "",
+                "verdict": "unknown",
+                "message": "This base isn't matched to a craftable item, so there's no meta to suggest from.",
+                "note": "",
+            }
+
+        # tally: (mod_type, mod_group, origin) -> aggregated evidence from BOTH sources.
+        tally: Dict[tuple, dict] = {}
+        slot_rares = self._slot_rare_count(slot)
+
+        # Source B (backfill): slot-wide popularity, gated to mods that can roll on THIS base.
+        for mu in self._stats.mod_usage:
+            if mu.slot != slot or mu.mod_origin not in _SUGGEST_ORIGINS:
+                continue
+            if not self._resolver.applicable(mu.mod_template, rb.category, rb.tags):
+                continue
+            rm = self._resolver.resolve_mod(mu.mod_template, rb.category, rb.tags, mu.value_samples)
+            if not rm.resolved or rm.mod_type not in ("prefix", "suffix") or not rm.mod_group or not rm.tiers:
+                continue
+            if not self._defence_compatible(rm.stat_text, user_defences):
+                continue
+            chosen = min(rm.tier_distribution) if rm.tier_distribution else min(t.tier for t in rm.tiers)
+            tier_obj = next((t for t in rm.tiers if t.tier == chosen), rm.tiers[0])
+            value = tier_obj.stat_max if tier_obj.stat_max is not None else tier_obj.stat_min
+            key = (rm.mod_type, rm.mod_group, mu.mod_origin)
+            e = tally.get(key)
+            if e is None:
+                tally[key] = {"stat_text": rm.stat_text, "tier": tier_obj.tier, "value": value,
+                              "neighbour": 0, "usage": mu.usage_count}
+            else:
+                e["usage"] += mu.usage_count
+                if tier_obj.tier < (e["tier"] or 99):
+                    e["tier"], e["stat_text"], e["value"] = tier_obj.tier, rm.stat_text, value
+
+        # Source A (primary): real similar items from the per-build sample. Prefer same defence
+        # archetype; if that's too thin, widen to the whole slot (suggestions stay base-valid via
+        # the applicability gate either way).
+        similar_items: List[dict] = []
+        similar_basis = ""
+        n_neighbours = 0
+        if self.builds_available:
+            slot_items = [
+                it for b in self._builds_artifact.builds for it in b.items
+                if it.rarity == "rare" and it.slot == slot
+            ]
+            same_arch = [it for it in slot_items if (self._resolve_base(it.base_type).category or "") == category]
+            if len(same_arch) >= 3:
+                pool, similar_basis = same_arch, f"{category} {slot} (same defence archetype)"
+            else:
+                pool, similar_basis = slot_items, f"{slot} (archetype sample thin - widened to slot)"
+            n_neighbours = len(pool)
+
+            for it in pool:
+                irb = self._resolve_base(it.base_type)
+                groups_here: Dict[tuple, str] = {}  # (mod_type, mod_group) -> stat_text, for display
+                for mod in it.mods:
+                    if mod.origin not in _SUGGEST_ORIGINS:
+                        continue
+                    if not self._resolver.applicable(mod.text, rb.category, rb.tags):
+                        continue
+                    rm = self._resolver.resolve_mod(mod.text, irb.category, irb.tags, mod.values or None)
+                    if not rm.resolved or rm.mod_type not in ("prefix", "suffix") or not rm.mod_group:
+                        continue
+                    if not self._defence_compatible(rm.stat_text, user_defences):
+                        continue
+                    groups_here[(rm.mod_type, rm.mod_group)] = rm.stat_text
+                    key = (rm.mod_type, rm.mod_group, mod.origin)
+                    e = tally.get(key)
+                    if e is None:
+                        tally[key] = {"stat_text": rm.stat_text, "tier": None, "value": None,
+                                      "neighbour": 1, "usage": 0}
+                    else:
+                        e["neighbour"] += 1
+                        if not e["stat_text"]:
+                            e["stat_text"] = rm.stat_text
+                missing = [st for (mt, grp), st in groups_here.items() if (mt, grp) not in present_groups]
+                similar_items.append({
+                    "name": it.name, "base_type": it.base_type, "item_level": it.item_level,
+                    "corrupted": it.corrupted,
+                    "approx_energy_shield": self._approx_es(it.mods, it.base_type),
+                    "mod_count": len(groups_here),
+                    "shared_with_you": sum(1 for g in groups_here if g in present_groups),
+                    "missing_mods": missing,
+                })
+            # Strongest examples first: highest approx ES, then most mods.
+            similar_items.sort(
+                key=lambda s: (s["approx_energy_shield"] or -1, s["mod_count"]), reverse=True
+            )
+            similar_items = similar_items[:8]
+
+        # Build the suggestion lists from the merged tally, dropping anything the item already has.
+        rare_search_url = _trade_search_url(league_name, rb.resolved_name or base_name, "rare")
+
+        def to_mod(key: tuple, e: dict) -> dict:
+            mt, grp, origin = key
+            return {
+                "stat_text": e["stat_text"], "mod_group": grp, "mod_type": mt, "origin": origin,
+                "tier": e["tier"], "value": e["value"], "neighbour_count": e["neighbour"],
+                "neighbour_pct": round(e["neighbour"] / n_neighbours, 3) if n_neighbours else None,
+                "slot_usage_pct": round(e["usage"] / slot_rares, 4) if e["usage"] else None,
+                "trade_url": rare_search_url,
+            }
+
+        sug_pre: List[dict] = []
+        sug_suf: List[dict] = []
+        sug_craft: List[dict] = []
+        sug_des: List[dict] = []
+        for key, e in tally.items():
+            mt, grp, origin = key
+            if (mt, grp) in present_groups:
+                continue
+            mod = to_mod(key, e)
+            if origin == "crafted":
+                sug_craft.append(mod)
+            elif origin == "desecrated":
+                sug_des.append(mod)
+            else:
+                (sug_pre if mt == "prefix" else sug_suf).append(mod)
+
+        def rank(mods: List[dict]) -> List[dict]:
+            # Lead with how many similar items run it (the player's own heuristic), then slot-wide
+            # popularity, then mod tier.
+            return sorted(
+                mods,
+                key=lambda c: (c["neighbour_count"], c["slot_usage_pct"] or 0.0, -(c["tier"] or 99)),
+                reverse=True,
+            )
+
+        # Only suggest for slot types that actually have an opening; a crafted/desecrated mod takes
+        # a normal prefix/suffix slot, so it's only offerable for a type with room left.
+        open_types = set()
+        if open_pre > 0:
+            open_types.add("prefix")
+        if open_suf > 0:
+            open_types.add("suffix")
+        sug_pre = rank(sug_pre)[:8] if open_pre > 0 else []
+        sug_suf = rank(sug_suf)[:8] if open_suf > 0 else []
+        sug_craft = [m for m in rank(sug_craft) if m["mod_type"] in open_types][:6] if crafted_slot_open else []
+        sug_des = [m for m in rank(sug_des) if m["mod_type"] in open_types][:6] if desecrated_slot_open else []
+
+        user_es = self._approx_es(
+            list(item.prefix_mods) + list(item.suffix_mods) + list(item.implicit_mods), base_name
+        )
+
+        if total_open == 0:
+            verdict = "complete"
+            message = ("This item's affix slots are full - it's a finished 6-mod rare, nothing left to add.")
+        else:
+            verdict = "suggestions"
+            label = similar_basis or (category or slot)
+            message = (
+                f"{total_open} open affix slot(s). Top mods the meta's {label} items run that "
+                f"yours is missing, strongest examples first."
+            )
+        if getattr(item, "corrupted", False):
+            message += " (Your item is Corrupted and can't be modified further - this is illustrative.)"
+
+        return {
+            "base_name": base_name,
+            "resolved_name": rb.resolved_name,
+            "category": category,
+            "slot": slot,
+            "craftable": True,
+            "is_unique": False,
+            "open_prefixes": open_pre,
+            "open_suffixes": open_suf,
+            "crafted_slot_open": crafted_slot_open,
+            "desecrated_slot_open": desecrated_slot_open,
+            "approx_energy_shield": user_es,
+            "present_mods": present_mods,
+            "suggested_prefixes": sug_pre,
+            "suggested_suffixes": sug_suf,
+            "suggested_crafted": sug_craft,
+            "suggested_desecrated": sug_des,
+            "similar_items": similar_items,
+            "similar_count": n_neighbours,
+            "similar_basis": similar_basis,
+            "verdict": verdict,
+            "message": message,
+            "note": (
+                "Deterministic from the current build sample: ranked by how many similar items run "
+                "each mod, then slot-wide popularity, filtered to mods that can roll on your base. "
+                "'Valuable' means what the meta runs, not a live price. Energy Shield figures are approximate."
+            ),
+        }
 
 
 # -----------------------------------------------------------------------------
