@@ -323,6 +323,10 @@ class ModifierLoader:
             "One Handed Melee Weapon": ["sword", "axe", "mace", "flail", "dagger", "claw", "spear"],
             "Two Handed Melee Weapon": ["sword", "axe", "mace"],
             "Martial Weapon": ["spear", "sword", "axe", "mace", "flail", "dagger", "claw"],
+            # Generic weapon groupings used by alloy effects (caster staves load as "staff")
+            "Caster Weapon": ["wand", "sceptre", "staff"],
+            "Weapon": ["sword", "axe", "mace", "dagger", "claw", "flail", "spear",
+                       "sceptre", "wand", "bow", "crossbow", "staff"],
             "Equipment": ["weapon", "armour", "ring", "amulet", "belt"],
         }
         return type_mapping.get(item_type, [item_type.lower().replace(" ", "_")])

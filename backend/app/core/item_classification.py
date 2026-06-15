@@ -373,6 +373,33 @@ def _build_essence_item_type_mapping() -> Dict[str, List[str]]:
         "Caster Weapon": list(CASTER_WEAPONS),
         "Quarterstaff": ["staff", "warstaff"],
         "Focus": ["focus"],
+        # Per-weapon item types AS USED by the essence/alloy data. The grouped keys above
+        # ("One Handed Melee Weapon", etc.) don't match the data, which is granular ("One Hand
+        # Sword", "Warstaff", "Buckler"). Single-word types survive via the lowercase fallback in
+        # _has_applicable_effect_for_item, but multi-word / aliased ones were wrongly greyed.
+        "One Hand Sword": ["sword"],
+        "One Hand Axe": ["axe"],
+        "One Hand Mace": ["mace"],
+        "Two Hand Sword": ["sword"],
+        "Two Hand Axe": ["axe"],
+        "Two Hand Mace": ["mace"],
+        "Sword": ["sword"],
+        "Axe": ["axe"],
+        "Mace": ["mace"],
+        "Dagger": ["dagger"],
+        "Claw": ["claw"],
+        "Wand": ["wand"],
+        "Sceptre": ["sceptre"],
+        "Spear": ["spear"],
+        "Flail": ["flail"],
+        "Talisman": ["talisman"],
+        "Quiver": ["quiver"],
+        # Quarterstaves and caster staves both load as category "staff", so map both data
+        # spellings to it (the data uses "Warstaff" for quarterstaves, "Staff" for caster staves).
+        "Staff": ["staff", "warstaff"],
+        "Warstaff": ["staff", "warstaff"],
+        "Buckler": ["shield"],
+        "Weapon": list(ALL_WEAPON_CATEGORIES),
         # Generic
         "Equipment": body_armor_list + ["helmet", "gloves", "boots", "shield", "amulet", "ring", "belt"],
     }
