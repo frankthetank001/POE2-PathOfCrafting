@@ -490,6 +490,27 @@
   z-index: 10;
 }
 
+/* Alloy-only crafted mods (Runic Alloy) - teal, matching the crafted-mod colour. */
+.pool-mod-group.alloy-only {
+  border-left: 3px solid #2fd6c6;
+  background: rgba(47, 214, 198, 0.1);
+}
+
+.pool-mod-group.alloy-only::before {
+  content: "ALLOY";
+  position: absolute;
+  top: 0.2rem;
+  right: 0.3rem;
+  font-size: 0.5rem;
+  font-weight: 700;
+  color: #2fd6c6;
+  background: rgba(47, 214, 198, 0.2);
+  padding: 0.1rem 0.3rem;
+  border-radius: 2px;
+  letter-spacing: 0.5px;
+  z-index: 10;
+}
+
 .pool-mod-group-header {
   padding: 0.25rem 0.35rem;
   border-left: 3px solid transparent;

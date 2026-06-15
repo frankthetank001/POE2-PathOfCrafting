@@ -828,13 +828,15 @@ function GridCraftingSimulator() {
     essence_suffixes: ItemModifier[]
     desecrated_prefixes: ItemModifier[]
     desecrated_suffixes: ItemModifier[]
+    alloy_prefixes: ItemModifier[]
+    alloy_suffixes: ItemModifier[]
     essence_guarantees: Record<string, Array<{
       essence_name: string
       essence_tier: string
       item_type: string
       applicable_items: string[]
     }>>
-  }>({ prefixes: [], suffixes: [], essence_prefixes: [], essence_suffixes: [], desecrated_prefixes: [], desecrated_suffixes: [], essence_guarantees: {} })
+  }>({ prefixes: [], suffixes: [], essence_prefixes: [], essence_suffixes: [], desecrated_prefixes: [], desecrated_suffixes: [], alloy_prefixes: [], alloy_suffixes: [], essence_guarantees: {} })
 
   // Calculate total weights for probability display
   const totalWeights = useMemo(() => {
@@ -2025,6 +2027,8 @@ function GridCraftingSimulator() {
       essence_suffixes: annotate(mods.essence_suffixes),
       desecrated_prefixes: annotate(mods.desecrated_prefixes),
       desecrated_suffixes: annotate(mods.desecrated_suffixes),
+      alloy_prefixes: annotate(mods.alloy_prefixes),
+      alloy_suffixes: annotate(mods.alloy_suffixes),
       essence_guarantees: mods.essence_guarantees || {},
     }
   }
@@ -3569,6 +3573,26 @@ function GridCraftingSimulator() {
                       </div>
                     )
                   })}
+
+                  {/* Alloy Prefixes (Runic Alloy crafted mods) */}
+                  {availableMods.alloy_prefixes.map((mod, idx) => {
+                    const isTagFiltered = activeTagFilters.size > 0 && !isModMatchingTagFilters(mod)
+                    const isSearchFiltered = searchQuery.trim() && !isModMatchingSearch(mod)
+                    const isFiltered = isTagFiltered || isSearchFiltered
+                    return (
+                      <div key={`alloy-prefix-${idx}`} className={`pool-mod-group alloy-only ${isFiltered ? 'tag-filtered' : ''}`}>
+                        <div
+                          className="pool-mod-group-header prefix compact-single-line mod-group-clickable"
+                          draggable={itemCreated}
+                          onDragStart={() => handleDragStart(mod, 'prefix')}
+                          onDragEnd={handleDragEnd}
+                          title="Alloy-only crafted mod (Runic Alloy) - drag to add to item"
+                        >
+                          <span className="pool-mod-stat-main">{mod.stat_text}</span>
+                        </div>
+                      </div>
+                    )
+                  })}
                 </div>
               </div>
 
@@ -3978,6 +4002,26 @@ function GridCraftingSimulator() {
                               </div>
                             )}
                           </div>
+                        </div>
+                      </div>
+                    )
+                  })}
+
+                  {/* Alloy Suffixes (Runic Alloy crafted mods) */}
+                  {availableMods.alloy_suffixes.map((mod, idx) => {
+                    const isTagFiltered = activeTagFilters.size > 0 && !isModMatchingTagFilters(mod)
+                    const isSearchFiltered = searchQuery.trim() && !isModMatchingSearch(mod)
+                    const isFiltered = isTagFiltered || isSearchFiltered
+                    return (
+                      <div key={`alloy-suffix-${idx}`} className={`pool-mod-group alloy-only ${isFiltered ? 'tag-filtered' : ''}`}>
+                        <div
+                          className="pool-mod-group-header suffix compact-single-line mod-group-clickable"
+                          draggable={itemCreated}
+                          onDragStart={() => handleDragStart(mod, 'suffix')}
+                          onDragEnd={handleDragEnd}
+                          title="Alloy-only crafted mod (Runic Alloy) - drag to add to item"
+                        >
+                          <span className="pool-mod-stat-main">{mod.stat_text}</span>
                         </div>
                       </div>
                     )

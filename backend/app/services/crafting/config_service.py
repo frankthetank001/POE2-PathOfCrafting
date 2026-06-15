@@ -332,6 +332,10 @@ def get_essence_config(essence_name: str) -> Optional[EssenceInfo]:
     return crafting_config_service.get_essence_config(essence_name)
 
 
+def get_alloy_config(alloy_name: str) -> Optional[EssenceInfo]:
+    return crafting_config_service.get_alloy_config(alloy_name)
+
+
 def get_omen_config(omen_name: str) -> Optional[OmenInfo]:
     return crafting_config_service.get_omen_config(omen_name)
 
