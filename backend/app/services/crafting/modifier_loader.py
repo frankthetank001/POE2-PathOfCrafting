@@ -307,8 +307,9 @@ class ModifierLoader:
             "Two Hand Sword": ["sword", "two_hand_weapon"],
             "Two Hand Axe": ["axe", "two_hand_weapon"],
             "Two Hand Mace": ["mace", "two_hand_weapon"],
-            "Warstaff": ["staff", "two_hand_weapon"],
-            "Staff": ["staff", "two_hand_weapon"],
+            # Quarterstaff = martial "warstaff" category; caster staff = "staff" (keep distinct).
+            "Warstaff": ["warstaff", "two_hand_weapon"],
+            "Staff": ["staff"],
             "Talisman": ["talisman", "two_hand_weapon"],
 
             # Weapons - Ranged
@@ -319,14 +320,15 @@ class ModifierLoader:
             "Quiver": ["quiver"],
             "Focus": ["focus"],
 
-            # Legacy mappings for compatibility
+            # Legacy mappings for compatibility (warstaff = quarterstaff, a 2H melee weapon)
             "One Handed Melee Weapon": ["sword", "axe", "mace", "flail", "dagger", "claw", "spear"],
-            "Two Handed Melee Weapon": ["sword", "axe", "mace"],
-            "Martial Weapon": ["spear", "sword", "axe", "mace", "flail", "dagger", "claw"],
-            # Generic weapon groupings used by alloy effects (caster staves load as "staff")
+            "Two Handed Melee Weapon": ["sword", "axe", "mace", "warstaff"],
+            "Martial Weapon": ["spear", "sword", "axe", "mace", "flail", "dagger", "claw", "warstaff"],
+            # Generic weapon groupings used by alloy effects. Caster staves load as "staff";
+            # quarterstaves as "warstaff". "Caster Weapon" must NOT include warstaff.
             "Caster Weapon": ["wand", "sceptre", "staff"],
             "Weapon": ["sword", "axe", "mace", "dagger", "claw", "flail", "spear",
-                       "sceptre", "wand", "bow", "crossbow", "staff"],
+                       "sceptre", "wand", "bow", "crossbow", "staff", "warstaff"],
             "Equipment": ["weapon", "armour", "ring", "amulet", "belt"],
         }
         return type_mapping.get(item_type, [item_type.lower().replace(" ", "_")])
