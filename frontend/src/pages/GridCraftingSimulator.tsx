@@ -2920,6 +2920,26 @@ function GridCraftingSimulator() {
       return boneIconMap[currency] || 'https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png'
     }
 
+    // Handle Runic Alloys (icons from poe2wiki, resolved hashed paths)
+    if (currency.includes('Alloy')) {
+      const alloyIconMap: Record<string, string> = {
+        'Runic Alloy': 'https://www.poe2wiki.net/images/d/d3/Runic_Alloy_inventory_icon.png',
+        'Adaptive Alloy': 'https://www.poe2wiki.net/images/e/e6/Adaptive_Alloy_inventory_icon.png',
+        'Protective Alloy': 'https://www.poe2wiki.net/images/3/3f/Protective_Alloy_inventory_icon.png',
+        'Expansive Alloy': 'https://www.poe2wiki.net/images/3/3c/Expansive_Alloy_inventory_icon.png',
+        'Swift Alloy': 'https://www.poe2wiki.net/images/5/55/Swift_Alloy_inventory_icon.png',
+        'Cyclonic Alloy': 'https://www.poe2wiki.net/images/1/1c/Cyclonic_Alloy_inventory_icon.png',
+        'Prismatic Alloy': 'https://www.poe2wiki.net/images/7/7b/Prismatic_Alloy_inventory_icon.png',
+        'Mystic Alloy': 'https://www.poe2wiki.net/images/d/d9/Mystic_Alloy_inventory_icon.png',
+        'Sovereign Alloy': 'https://www.poe2wiki.net/images/1/18/Sovereign_Alloy_inventory_icon.png',
+        'Celestial Alloy': 'https://www.poe2wiki.net/images/1/1b/Celestial_Alloy_inventory_icon.png',
+        'Transcendent Alloy': 'https://www.poe2wiki.net/images/d/de/Transcendent_Alloy_inventory_icon.png',
+        "The Runebinder's Alloy": "https://www.poe2wiki.net/images/f/f9/The_Runebinder%27s_Alloy_inventory_icon.png",
+        "The Runefather's Alloy": "https://www.poe2wiki.net/images/a/af/The_Runefather%27s_Alloy_inventory_icon.png",
+      }
+      if (alloyIconMap[currency]) return alloyIconMap[currency]
+    }
+
     return iconMap[currency] || "https://www.poe2wiki.net/images/9/9c/Chaos_Orb_inventory_icon.png"
   }
 
