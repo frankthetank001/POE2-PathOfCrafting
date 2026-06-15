@@ -535,13 +535,15 @@ async def get_available_mods(item: CraftableItem) -> dict:
 
         # Separate essence-only and desecrated-only modifiers
         # Exclude utzaal mods from general desecrated list (they only appear with utzaal bone)
-        regular_prefixes = [mod for mod in available_prefixes if "essence_only" not in mod.tags and "desecrated_only" not in mod.tags]
+        regular_prefixes = [mod for mod in available_prefixes if "essence_only" not in mod.tags and "desecrated_only" not in mod.tags and "alloy_only" not in mod.tags]
         essence_prefixes = [mod for mod in available_prefixes if "essence_only" in mod.tags]
         desecrated_prefixes = [mod for mod in available_prefixes if "desecrated_only" in mod.tags and "utzaal" not in mod.tags]
+        alloy_prefixes = [mod for mod in available_prefixes if "alloy_only" in mod.tags]
 
-        regular_suffixes = [mod for mod in available_suffixes if "essence_only" not in mod.tags and "desecrated_only" not in mod.tags]
+        regular_suffixes = [mod for mod in available_suffixes if "essence_only" not in mod.tags and "desecrated_only" not in mod.tags and "alloy_only" not in mod.tags]
         essence_suffixes = [mod for mod in available_suffixes if "essence_only" in mod.tags]
         desecrated_suffixes = [mod for mod in available_suffixes if "desecrated_only" in mod.tags and "utzaal" not in mod.tags]
+        alloy_suffixes = [mod for mod in available_suffixes if "alloy_only" in mod.tags]
 
         # Renumber tiers based on what's actually available for this item type
         # (e.g., if T6-T8 are blocked for helmets, T5 becomes T1)
@@ -551,6 +553,8 @@ async def get_available_mods(item: CraftableItem) -> dict:
         _renumber_tiers_for_available_mods(essence_suffixes)
         _renumber_tiers_for_available_mods(desecrated_prefixes)
         _renumber_tiers_for_available_mods(desecrated_suffixes)
+        _renumber_tiers_for_available_mods(alloy_prefixes)
+        _renumber_tiers_for_available_mods(alloy_suffixes)
 
         # Get essence guarantees for regular mods (mod_id -> essence info)
         from app.services.crafting.modifier_loader import ModifierLoader
@@ -584,6 +588,8 @@ async def get_available_mods(item: CraftableItem) -> dict:
             "essence_suffixes": [filter_mod_with_weight(mod, db_item) for mod in essence_suffixes],
             "desecrated_prefixes": [filter_mod_with_weight(mod, db_item) for mod in desecrated_prefixes],
             "desecrated_suffixes": [filter_mod_with_weight(mod, db_item) for mod in desecrated_suffixes],
+            "alloy_prefixes": [filter_mod_with_weight(mod, db_item) for mod in alloy_prefixes],
+            "alloy_suffixes": [filter_mod_with_weight(mod, db_item) for mod in alloy_suffixes],
             "essence_guarantees": relevant_guarantees,  # Map of mod_id -> list of essence guarantee info
             "total_prefixes": len(regular_prefixes),
             "total_suffixes": len(regular_suffixes),
@@ -591,6 +597,8 @@ async def get_available_mods(item: CraftableItem) -> dict:
             "total_essence_suffixes": len(essence_suffixes),
             "total_desecrated_prefixes": len(desecrated_prefixes),
             "total_desecrated_suffixes": len(desecrated_suffixes),
+            "total_alloy_prefixes": len(alloy_prefixes),
+            "total_alloy_suffixes": len(alloy_suffixes),
         }
 
     except Exception as e:
@@ -776,6 +784,22 @@ async def get_currency_tooltip(currency_name: str) -> dict:
                 "mechanics": "\n".join(mechanics_parts) if mechanics_parts else None,
                 "tier": essence_config.essence_tier,
                 "type": essence_config.essence_type
+            }
+
+        # Check if it's a Runic Alloy (adds a guaranteed Crafted mod, like an essence)
+        from app.services.crafting.config_service import get_alloy_config
+        alloy_config = get_alloy_config(currency_name)
+        if alloy_config:
+            mechanics_parts = [
+                f"• {effect.item_type}: {effect.effect_text}"
+                for effect in alloy_config.item_effects
+            ]
+            return {
+                "name": currency_name,
+                "description": "Removes a random modifier and adds a guaranteed Crafted modifier (teal, max 1 per item)",
+                "mechanics": "\n".join(mechanics_parts) if mechanics_parts else None,
+                "tier": "alloy",
+                "type": "alloy",
             }
 
         # Check if it's a desecration bone

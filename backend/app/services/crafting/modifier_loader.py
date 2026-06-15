@@ -40,6 +40,9 @@ class ModifierLoader:
         # Add essence-only modifiers from Perfect/Corrupted essences
         cls._add_essence_only_modifiers(loader)
 
+        # Add alloy-only modifiers (Runic Alloys grant a guaranteed Crafted mod, like essences)
+        cls._add_alloy_modifiers(loader)
+
         cls._loaded = True
         logger.info(f"Loaded {len(cls._modifiers)} modifiers from pob-data")
         return cls._modifiers
@@ -210,6 +213,62 @@ class ModifierLoader:
 
         essence_count = len([m for m in cls._modifiers if "essence_only" in m.tags])
         logger.info(f"Added {essence_count} essence-only modifiers, {len(essence_guarantees)} mods have essence guarantees")
+
+    @classmethod
+    def _add_alloy_modifiers(cls, loader) -> None:
+        """Add alloy-only modifiers. Runic Alloys grant a guaranteed Crafted mod (teal, max 1),
+        like essences. Their mods live in alloys.json (config_service), are crafted-only, and are
+        weight-0 in pob-data - so, exactly like essence-only mods, they must be synthesized with
+        explicit applicable_items to appear in the Available Mods pool (the weight/applicable-items
+        filter in modifier_pool would otherwise drop them)."""
+        try:
+            from app.services.crafting.config_service import crafting_config_service
+        except Exception as e:
+            logger.warning(f"Could not load alloy modifiers: {e}")
+            return
+
+        seen = set()  # (mod_id, item_type) - dedupe the same mod across alloy tiers
+        added = 0
+        for alloy_name in crafting_config_service.get_all_alloy_names():
+            cfg = crafting_config_service.get_alloy_config(alloy_name)
+            if not cfg:
+                continue
+            for effect in cfg.item_effects:
+                if not effect.mod_id:
+                    continue
+                key = (effect.mod_id, effect.item_type)
+                if key in seen:
+                    continue
+                seen.add(key)
+
+                applicable_items = cls._map_essence_item_type_to_categories(effect.item_type)
+                if not applicable_items:
+                    continue
+
+                base_mod = loader.get_modifier_by_id(effect.mod_id)
+                mod_type = ModType.PREFIX if effect.modifier_type == "prefix" else ModType.SUFFIX
+                alloy_mod = ItemModifier(
+                    mod_id=effect.mod_id,
+                    name=base_mod.name if base_mod else effect.effect_text,
+                    mod_type=base_mod.mod_type if base_mod else mod_type,
+                    tier=1,
+                    stat_text=effect.effect_text,
+                    stat_ranges=(base_mod.stat_ranges if base_mod else []),
+                    stat_min=base_mod.stat_min if base_mod else None,
+                    stat_max=base_mod.stat_max if base_mod else None,
+                    current_value=None,
+                    required_ilvl=base_mod.required_ilvl if base_mod else 0,
+                    mod_group=base_mod.mod_group if base_mod else None,
+                    applicable_items=applicable_items,
+                    tags=["alloy_only", "alloy_guaranteed"],
+                    is_exclusive=True,
+                    is_essence_only=False,
+                    is_crafted=True,
+                )
+                cls._modifiers.append(alloy_mod)
+                added += 1
+
+        logger.info(f"Added {added} alloy-only modifiers")
 
     @classmethod
     def _map_essence_item_type_to_categories(cls, item_type: str) -> List[str]:

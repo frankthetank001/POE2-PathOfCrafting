@@ -112,6 +112,8 @@ export const craftingApi = {
     essence_suffixes: ItemModifier[]
     desecrated_prefixes: ItemModifier[]
     desecrated_suffixes: ItemModifier[]
+    alloy_prefixes: ItemModifier[]
+    alloy_suffixes: ItemModifier[]
     essence_guarantees: Record<string, Array<{
       essence_name: string
       essence_tier: string
@@ -124,6 +126,8 @@ export const craftingApi = {
     total_essence_suffixes: number
     total_desecrated_prefixes: number
     total_desecrated_suffixes: number
+    total_alloy_prefixes: number
+    total_alloy_suffixes: number
   }> => {
     const response = await api.post('/available-mods', item)
     return response.data

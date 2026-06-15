@@ -491,7 +491,7 @@ class ModifierPool:
             if not mod.applicable_items and mod.mod_group != "AbyssTargetMod":
                 continue
 
-            if exclude_exclusive and mod.is_exclusive and "essence_only" not in mod.tags and "desecrated_only" not in mod.tags:
+            if exclude_exclusive and mod.is_exclusive and "essence_only" not in mod.tags and "desecrated_only" not in mod.tags and "alloy_only" not in mod.tags:
                 continue
 
             if exclude_exclusive and self._is_unique_only_mod_group(mod.mod_group, item_category):
