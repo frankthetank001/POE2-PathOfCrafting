@@ -79,13 +79,14 @@ EXPECTED_MOD_COUNTS: Dict[str, Tuple[int, int, int, int]] = {
     "claw": (0, 0, 1, 1),  # Only Abyssal mark (prefix + suffix)
 
     # 2H Weapons
-    "bow": (8, 9, 9, 6),
+    "bow": (8, 9, 9, 4),  # 0.5: caster-staff essences no longer leak onto bows (ess suffix 6 -> 4)
     "crossbow": (4, 5, 5, 3),
-    "staff": (6, 6, 5, 5),
+    # staff = caster staff (martial essences moved to warstaff); warstaff = quarterstaff (martial)
+    "staff": (6, 6, 1, 3),  # was (.,.,5,5) - martial essences moved off the caster staff
     "two_hand_axe": (0, 0, 9, 4),
     "two_hand_mace": (8, 11, 9, 4),
     "two_hand_sword": (0, 0, 9, 4),
-    "warstaff": (3, 3, 1, 1),
+    "warstaff": (3, 3, 5, 3),  # was (.,.,1,1) - quarterstaff now gets its martial essences
 }
 
 

@@ -371,7 +371,7 @@ def _build_essence_item_type_mapping() -> Dict[str, List[str]]:
         "Crossbow": ["crossbow"],
         "Martial Weapon": list(ATTACK_WEAPONS) + ["talisman"],
         "Caster Weapon": list(CASTER_WEAPONS),
-        "Quarterstaff": ["staff", "warstaff"],
+        "Quarterstaff": ["warstaff"],
         "Focus": ["focus"],
         # Per-weapon item types AS USED by the essence/alloy data. The grouped keys above
         # ("One Handed Melee Weapon", etc.) don't match the data, which is granular ("One Hand
@@ -394,10 +394,11 @@ def _build_essence_item_type_mapping() -> Dict[str, List[str]]:
         "Flail": ["flail"],
         "Talisman": ["talisman"],
         "Quiver": ["quiver"],
-        # Quarterstaves and caster staves both load as category "staff", so map both data
-        # spellings to it (the data uses "Warstaff" for quarterstaves, "Staff" for caster staves).
-        "Staff": ["staff", "warstaff"],
-        "Warstaff": ["staff", "warstaff"],
+        # Quarterstaves load as category "warstaff" (martial), caster staves as "staff" (caster).
+        # The data uses "Warstaff" for quarterstaves and "Staff" for caster staves - keep them
+        # precise so caster essences don't show on quarterstaves and vice versa.
+        "Staff": ["staff"],
+        "Warstaff": ["warstaff"],
         "Buckler": ["shield"],
         "Weapon": list(ALL_WEAPON_CATEGORIES),
         # Generic

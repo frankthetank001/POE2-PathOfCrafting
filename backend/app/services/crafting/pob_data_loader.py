@@ -774,6 +774,13 @@ class POBDataLoader:
             return "bow"
         if "crossbow" in tags:
             return "crossbow"
+        # Quarterstaves (martial 2H, pob subType "Warstaff") and caster staves both live in
+        # staff.json with type "Staff", but carry mutually-exclusive tags: a quarterstaff has
+        # "warstaff" (never "staff"), a caster staff has "staff" (never "warstaff"). Check
+        # warstaff FIRST so quarterstaves get their own category and the correct martial mod pool
+        # instead of inheriting caster-staff spell mods.
+        if "warstaff" in tags:
+            return "warstaff"
         if "staff" in tags:
             return "staff"
         if "wand" in tags:
@@ -1034,6 +1041,7 @@ class POBDataLoader:
             "bow": "bow",
             "crossbow": "crossbow",
             "staff": "weapon",
+            "warstaff": "weapon",
             # Caster types
             "wand": "caster",
             "sceptre": "sceptre",

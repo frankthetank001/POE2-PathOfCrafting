@@ -46,12 +46,14 @@ def _get_item_tags(item) -> List[str]:
 
         if base_info:
             tags = []
-            # The category field contains the defense type (e.g., dex_int_armour)
+            # The category field contains the defense type (e.g., dex_int_armour) or weapon
+            # class (e.g., warstaff).
             if base_info.category:
                 tags.append(base_info.category)
-            # The subcategory/slot is the item type (e.g., helmet)
-            if base_info.subcategory:
-                tags.append(base_info.subcategory.lower())
+            # NOTE: we deliberately do NOT add base_info.subcategory. For weapons it is the
+            # coarse pob "type" - "Staff" for BOTH quarterstaves and caster staves - which
+            # wrongly stamped a "staff" tag onto quarterstaves and leaked caster spell mods onto
+            # them. category + slot already cover everything weight-key matching needs.
             if hasattr(base_info, '_slot') and base_info._slot:
                 tags.append(base_info._slot)
             # Add generic 'armour' tag if this is an armor piece

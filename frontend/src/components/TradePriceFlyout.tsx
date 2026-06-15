@@ -41,7 +41,7 @@ function getSlotFromCategory(baseCategory: string, baseName?: string): string {
     return 'body_armour';
   }
 
-  if (lowerCat.includes('weapon') || ['wand', 'staff', 'bow', 'crossbow', 'mace', 'sceptre',
+  if (lowerCat.includes('weapon') || ['wand', 'staff', 'warstaff', 'bow', 'crossbow', 'mace', 'sceptre',
       'sword', 'axe', 'dagger', 'claw', 'flail', 'spear', 'talisman'].includes(lowerCat)) {
     return 'weapon';
   }
@@ -77,7 +77,7 @@ function getListingColumns(slot: string): Array<{ key: string; label: string; wi
     ];
   }
 
-  if (slot === 'weapon' || ['wand', 'staff', 'bow', 'crossbow', 'mace', 'sceptre', 'sword', 'axe', 'dagger', 'claw', 'flail', 'spear', 'talisman'].includes(slot)) {
+  if (slot === 'weapon' || ['wand', 'staff', 'warstaff', 'bow', 'crossbow', 'mace', 'sceptre', 'sword', 'axe', 'dagger', 'claw', 'flail', 'spear', 'talisman'].includes(slot)) {
     return [
       ...baseColumns,
       { key: 'pDps', label: 'pDPS', width: '55px' },
