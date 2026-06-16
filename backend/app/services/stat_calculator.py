@@ -4,6 +4,18 @@ from app.schemas.crafting import CraftableItem, ItemModifier
 from app.schemas.item_bases import get_item_base_by_name
 
 
+_NUM_RE = re.compile(r'\d+(?:\.\d+)?')
+
+
+def _canon(stat_text: str) -> str:
+    """Uppercase + collapse all numbers to '#'. Matching works whether a mod still carries the
+    '#'-template stat_text (backend pool mods, e.g. '+# to Evasion Rating') OR has rolled numbers
+    substituted in (the frontend manual drag-add formats them, e.g. '+150 to Evasion Rating' /
+    '50% increased Evasion Rating') - without this, numeric stat_text never matched and the bonus
+    was silently dropped."""
+    return _NUM_RE.sub('#', stat_text or '').upper()
+
+
 class StatCalculator:
     """Calculate final item stats from base + quality + modifiers"""
 
@@ -56,7 +68,7 @@ class StatCalculator:
 
         for mod in mods:
             value = mod.current_value or 0
-            stat_text = mod.stat_text.upper()
+            stat_text = _canon(mod.stat_text)
 
             # Flat armour bonuses: "+50 to Armour"
             if '+# TO ARMOUR' in stat_text:
@@ -77,14 +89,16 @@ class StatCalculator:
 
         for mod in mods:
             value = mod.current_value or 0
-            stat_text = mod.stat_text.upper()
+            stat_text = _canon(mod.stat_text)
 
-            # Percentage bonuses: "15% increased Armour"
-            if '#% INCREASED ARMOUR' in stat_text:
+            # Order matters: test the most specific (hybrid) phrases FIRST, because the
+            # single-stat phrase is a substring of the hybrids (e.g. "INCREASED ARMOUR" is
+            # inside "INCREASED ARMOUR AND EVASION"). Checking singles first short-circuited the
+            # elif chain and dropped the second/third defence - that's why hybrid evasion mods
+            # never moved the Evasion number. Mirrors _calculate_rune_percentage_bonuses.
+            if '#% INCREASED ARMOUR, EVASION AND ENERGY SHIELD' in stat_text:
                 percentage_bonuses['Armour'] = percentage_bonuses.get('Armour', 0) + value
-            elif '#% INCREASED EVASION' in stat_text:
                 percentage_bonuses['Evasion'] = percentage_bonuses.get('Evasion', 0) + value
-            elif '#% INCREASED ENERGY SHIELD' in stat_text:
                 percentage_bonuses['EnergyShield'] = percentage_bonuses.get('EnergyShield', 0) + value
             elif '#% INCREASED ARMOUR AND EVASION' in stat_text:
                 percentage_bonuses['Armour'] = percentage_bonuses.get('Armour', 0) + value
@@ -94,6 +108,12 @@ class StatCalculator:
                 percentage_bonuses['EnergyShield'] = percentage_bonuses.get('EnergyShield', 0) + value
             elif '#% INCREASED EVASION AND ENERGY SHIELD' in stat_text:
                 percentage_bonuses['Evasion'] = percentage_bonuses.get('Evasion', 0) + value
+                percentage_bonuses['EnergyShield'] = percentage_bonuses.get('EnergyShield', 0) + value
+            elif '#% INCREASED ARMOUR' in stat_text:
+                percentage_bonuses['Armour'] = percentage_bonuses.get('Armour', 0) + value
+            elif '#% INCREASED EVASION' in stat_text:
+                percentage_bonuses['Evasion'] = percentage_bonuses.get('Evasion', 0) + value
+            elif '#% INCREASED ENERGY SHIELD' in stat_text:
                 percentage_bonuses['EnergyShield'] = percentage_bonuses.get('EnergyShield', 0) + value
 
         return percentage_bonuses
@@ -209,7 +229,7 @@ class StatCalculator:
         flat_phys_min = 0
         flat_phys_max = 0
         for mod in all_mods:
-            stat_text = mod.stat_text.upper()
+            stat_text = _canon(mod.stat_text)
             if 'ADDS # TO # PHYSICAL DAMAGE' in stat_text:
                 values = mod.current_values if hasattr(mod, 'current_values') and mod.current_values else []
                 if len(values) >= 2:
@@ -228,7 +248,7 @@ class StatCalculator:
         flat_chaos_min, flat_chaos_max = 0, 0
 
         for mod in all_mods:
-            stat_text = mod.stat_text.upper()
+            stat_text = _canon(mod.stat_text)
             values = mod.current_values if hasattr(mod, 'current_values') and mod.current_values else []
 
             if 'ADDS # TO # FIRE DAMAGE' in stat_text and len(values) >= 2:
@@ -247,7 +267,7 @@ class StatCalculator:
         # Calculate percentage increased physical damage
         inc_phys_pct = 0
         for mod in all_mods:
-            stat_text = mod.stat_text.upper()
+            stat_text = _canon(mod.stat_text)
             value = mod.current_value or 0
             if '#% INCREASED PHYSICAL DAMAGE' in stat_text:
                 inc_phys_pct += value
@@ -266,7 +286,7 @@ class StatCalculator:
         # Calculate attack speed increases
         inc_attack_speed_pct = 0
         for mod in all_mods:
-            stat_text = mod.stat_text.upper()
+            stat_text = _canon(mod.stat_text)
             value = mod.current_value or 0
             if '#% INCREASED ATTACK SPEED' in stat_text:
                 inc_attack_speed_pct += value

@@ -1847,6 +1847,38 @@ function GridCraftingSimulator() {
     }
   }
 
+  // Recompute calculated_stats (Armour/Evasion/Energy Shield, weapon DPS) whenever the item's
+  // mods/base/quality/runes change. The currency-apply path already returns backend-computed
+  // stats, but a manual drag-add/remove does NOT round-trip, so without this the defence panel
+  // froze (e.g. Evasion not updating when you add evasion mods). Keyed on a stat signature that
+  // excludes calculated_stats so patching it back doesn't re-trigger the effect.
+  const statsSig = useMemo(
+    () =>
+      JSON.stringify({
+        b: item.base_name,
+        q: item.quality,
+        im: item.implicit_mods?.map((m) => [m.stat_text, m.current_value, m.current_values]),
+        p: item.prefix_mods?.map((m) => [m.stat_text, m.current_value, m.current_values]),
+        s: item.suffix_mods?.map((m) => [m.stat_text, m.current_value, m.current_values]),
+        r: item.socketed_runes?.map((rn) => rn.name),
+      }),
+    [item]
+  )
+  useEffect(() => {
+    if (!itemCreated) return
+    let cancelled = false
+    craftingApi
+      .calculateStats(item)
+      .then((updated) => {
+        if (!cancelled) setItem((prev) => ({ ...prev, calculated_stats: updated.calculated_stats }))
+      })
+      .catch(() => {})
+    return () => {
+      cancelled = true
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [statsSig, itemCreated])
+
   // Load available mods and currencies when item changes or exclusion groups change
   useEffect(() => {
     if (item.base_name && item.base_name !== "Int Armour Body Armour" && exclusionGroups.length > 0) {

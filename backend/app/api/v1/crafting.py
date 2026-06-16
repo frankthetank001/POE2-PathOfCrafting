@@ -54,6 +54,21 @@ async def get_available_currencies_for_item(item: CraftableItem) -> List[str]:
         raise HTTPException(status_code=500, detail=str(e))
 
 
+@router.post("/calculate-stats", response_model=CraftableItem)
+async def calculate_stats(item: CraftableItem) -> CraftableItem:
+    """Recompute an item's calculated_stats (Armour/Evasion/Energy Shield, weapon DPS) from its
+    base + quality + current mods + runes. The frontend uses this after manually adding/removing
+    a mod (drag-to-add), where there is no currency round-trip to refresh the defence panel."""
+    try:
+        from app.services.stat_calculator import StatCalculator
+
+        updated = StatCalculator.update_item_stats(item)
+        return CraftableItem(**filter_item_tags(updated))
+    except Exception as e:
+        logger.error(f"Error calculating stats: {e}")
+        raise HTTPException(status_code=500, detail=str(e))
+
+
 @router.post("/simulate", response_model=CraftingSimulationResult)
 async def simulate_crafting(
     request: CraftingSimulationRequest,

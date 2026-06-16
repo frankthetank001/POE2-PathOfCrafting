@@ -138,6 +138,13 @@ export const craftingApi = {
     return response.data
   },
 
+  // Recompute calculated_stats (Armour/Evasion/ES, weapon DPS) for an item. Used after a manual
+  // drag-add/remove, which doesn't round-trip through a currency apply.
+  calculateStats: async (item: CraftableItem): Promise<CraftableItem> => {
+    const response = await api.post<CraftableItem>('/calculate-stats', item)
+    return response.data
+  },
+
   getBasesForSlotCategory: async (
     slot: string,
     category: string
