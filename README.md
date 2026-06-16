@@ -56,8 +56,8 @@ Plan your perfect items with accurate simulation of all crafting mechanics, esse
 
 1. **Clone the repository**
    ```bash
-   git clone https://github.com/yourusername/Poe2-AI-TradeCraft.git
-   cd Poe2-AI-TradeCraft
+   git clone https://github.com/frankthetank001/POE2-PathOfCrafting.git
+   cd POE2-PathOfCrafting
    ```
 
 2. **Start the application**
