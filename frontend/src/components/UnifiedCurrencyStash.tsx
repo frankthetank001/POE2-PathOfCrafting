@@ -126,7 +126,7 @@ export const UnifiedCurrencyStash: React.FC<UnifiedCurrencyStashProps> = ({
       <div className="currency-section special-section">
         <div className="currency-section-header">Special</div>
         <div className="currency-section-content currency-grid">
-          {['Orb of Alchemy', 'Vaal Orb', 'Divine Orb', 'Orb of Annulment', 'Orb of Fracturing'].filter(searchFilter).map((currency) => {
+          {['Orb of Alchemy', 'Vaal Orb', 'Divine Orb', 'Orb of Annulment', 'Fracturing Orb'].filter(searchFilter).map((currency) => {
             const isImplemented = categorizedCurrencies.orbs.implemented.includes(currency)
             const isAvailable = availableCurrencies.includes(currency) && isImplemented
             return renderCurrencySlot(currency, isImplemented, isAvailable)

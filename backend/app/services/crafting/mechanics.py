@@ -451,11 +451,11 @@ class AnnulmentMechanic(CraftingMechanic):
 
 
 class FracturingMechanic(CraftingMechanic):
-    """Orb of Fracturing: Fractures a random modifier on a rare item with 4+ mods."""
+    """Fracturing Orb: Fractures a random modifier on a rare item with 4+ mods."""
 
     def can_apply(self, item: CraftableItem) -> Tuple[bool, Optional[str]]:
         if item.rarity != ItemRarity.RARE:
-            return False, "Orb of Fracturing can only be applied to Rare items"
+            return False, "Fracturing Orb can only be applied to Rare items"
 
         if item.total_explicit_mods < 4:
             return False, "Item must have at least 4 explicit modifiers"

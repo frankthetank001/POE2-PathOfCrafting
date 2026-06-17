@@ -14,6 +14,12 @@ import type { CraftSnapshot } from '@/types/saved-craft'
 import { CURRENCY_DESCRIPTIONS } from '@/data/currency-descriptions'
 import './GridCraftingSimulator.css'
 
+// Canonicalize a currency name so "Orb of X" and "X Orb" (PoE1 vs PoE2 naming) resolve to the
+// same price-source entry - e.g. "Orb of Fracturing" <-> "Fracturing Orb". Used as a last-resort
+// match in the cost lookup so a naming drift never silently drops a currency into "+N other".
+const canonCurrencyName = (s: string) =>
+  s.toLowerCase().replace(/^orb of /, '').replace(/ orb$/, '').replace(/-/g, ' ').trim()
+
 // Tag color mapping for consistent tag colors across the UI
 const TAG_COLORS: Record<string, { bg: string; border: string; text: string; hover: string }> = {
   // Damage types
@@ -625,6 +631,9 @@ function CurrencyTab({ currencySpent, exchangeRates, getCurrencyIconUrl }: TabCo
         || exchangeRates.rates[basicOrbName]           // "exalted", "divine" etc
         || Object.values(exchangeRates.rates).find(r =>
             r.name.toLowerCase() === lowerCurrency
+          )
+        || Object.values(exchangeRates.rates).find(r =>
+            canonCurrencyName(r.name) === canonCurrencyName(currency)
           )
 
       if (rate) {
@@ -2873,7 +2882,8 @@ function GridCraftingSimulator() {
       "Divine Orb": "https://www.poe2wiki.net/images/5/58/Divine_Orb_inventory_icon.png",
       "Orb of Annulment": "https://www.poe2wiki.net/images/4/4c/Orb_of_Annulment_inventory_icon.png",
       "Vaal Orb": "https://www.poe2wiki.net/images/2/2c/Vaal_Orb_inventory_icon.png",
-      "Orb of Fracturing": "https://www.poe2wiki.net/images/7/70/Fracturing_Orb_inventory_icon.png"
+      "Orb of Fracturing": "https://www.poe2wiki.net/images/7/70/Fracturing_Orb_inventory_icon.png",
+      "Fracturing Orb": "https://www.poe2wiki.net/images/7/70/Fracturing_Orb_inventory_icon.png"
     }
 
     // Handle Essences
@@ -4424,6 +4434,9 @@ function GridCraftingSimulator() {
                                       || exchangeRates.rates[basicOrbName]     // "exalted", "divine" etc
                                       || Object.values(exchangeRates.rates).find(r =>
                                           r.name.toLowerCase() === lowerCurrency
+                                        )
+                                      || Object.values(exchangeRates.rates).find(r =>
+                                          canonCurrencyName(r.name) === canonCurrencyName(currency)
                                         )
                                   }
                                   if (rate) {
