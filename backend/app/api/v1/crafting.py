@@ -26,6 +26,23 @@ router = APIRouter(prefix="/crafting", tags=["crafting"])
 simulator = CraftingSimulator()
 
 
+# The frontend's base selector uses UI display category names (e.g. "quarterstaff"), but the
+# crafting engine keys on the pob-data category ("warstaff"). Without this, a CREATED quarterstaff
+# (carrying base_category "quarterstaff") failed every category-sensitive applicability check -
+# bones, essences, alloys, and the mod pool - while a PASTED one (resolved to "warstaff") worked.
+# Pasted items are unaffected; this normalizes any display name to the db category for the logic.
+_DISPLAY_TO_DB_CATEGORY = {"quarterstaff": "warstaff"}
+
+
+def _normalize_item_category(item: CraftableItem) -> CraftableItem:
+    db = _DISPLAY_TO_DB_CATEGORY.get(item.base_category, item.base_category)
+    if db == item.base_category:
+        return item
+    data = item.model_dump()
+    data["base_category"] = db
+    return CraftableItem(**data)
+
+
 @router.get("/currencies")
 async def get_available_currencies() -> List[str]:
     try:
@@ -48,7 +65,7 @@ async def get_hidden_tags() -> Dict[str, List[str]]:
 @router.post("/currencies/available-for-item")
 async def get_available_currencies_for_item(item: CraftableItem) -> List[str]:
     try:
-        return simulator.get_available_currencies(item)
+        return simulator.get_available_currencies(_normalize_item_category(item))
     except Exception as e:
         logger.error(f"Error fetching available currencies: {e}")
         raise HTTPException(status_code=500, detail=str(e))
@@ -60,9 +77,7 @@ async def calculate_stats(item: CraftableItem) -> CraftableItem:
     base + quality + current mods + runes. The frontend uses this after manually adding/removing
     a mod (drag-to-add), where there is no currency round-trip to refresh the defence panel."""
     try:
-        from app.services.stat_calculator import StatCalculator
-
-        updated = StatCalculator.update_item_stats(item)
+        updated = StatCalculator.update_item_stats(_normalize_item_category(item))
         return CraftableItem(**filter_item_tags(updated))
     except Exception as e:
         logger.error(f"Error calculating stats: {e}")
@@ -78,10 +93,14 @@ async def simulate_crafting(
             f"Simulating {request.currency_name} on {request.item.base_name}"
         )
 
-        result = simulator.simulate_currency(request.item, request.currency_name)
+        item = _normalize_item_category(request.item)
+        result = simulator.simulate_currency(item, request.currency_name)
 
         # Filter tags on the result item
         if result.success and result.result_item:
+            # Keep the caller's (display) category on the returned item so the UI keeps showing
+            # "quarterstaff" rather than the db "warstaff".
+            result.result_item.base_category = request.item.base_category
             filtered_item_dict = filter_item_tags(result.result_item)
             result.result_item = CraftableItem(**filtered_item_dict)
 
@@ -101,12 +120,14 @@ async def simulate_crafting_with_omens(
             f"Simulating {request.currency_name} with omens {request.omen_names} on {request.item.base_name}"
         )
 
+        item = _normalize_item_category(request.item)
         result = simulator.simulate_currency_with_omens(
-            request.item, request.currency_name, request.omen_names
+            item, request.currency_name, request.omen_names
         )
 
         # Filter tags on the result item
         if result.success and result.result_item:
+            result.result_item.base_category = request.item.base_category  # keep display category
             filtered_item_dict = filter_item_tags(result.result_item)
             result.result_item = CraftableItem(**filtered_item_dict)
 
@@ -521,19 +542,9 @@ def _renumber_tiers_for_available_mods(mods: List[ItemModifier]) -> List[ItemMod
 @router.post("/available-mods")
 async def get_available_mods(item: CraftableItem) -> dict:
     try:
-        # Map display category names to database category names
-        display_to_db_category = {
-            'quarterstaff': 'warstaff'
-        }
-        db_category = display_to_db_category.get(item.base_category, item.base_category)
-
-        # Create a modified item with the correct database category
-        if item.base_category != db_category:
-            item_dict = item.model_dump()
-            item_dict['base_category'] = db_category
-            db_item = CraftableItem(**item_dict)
-        else:
-            db_item = item
+        # Normalize the UI display category ("quarterstaff") to the db category ("warstaff").
+        db_item = _normalize_item_category(item)
+        db_category = db_item.base_category
 
         # Return ALL mods for the item category (frontend will handle ilvl filtering visually)
         available_prefixes = simulator.modifier_pool.get_all_mods_for_category(

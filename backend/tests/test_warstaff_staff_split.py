@@ -86,5 +86,33 @@ def test_martial_essence_applies_to_quarterstaff_not_caster_staff():
     assert battle.can_apply(mk(st), for_display=True)[0] is False, "Battle should NOT apply to caster staff"
 
 
+def test_display_category_quarterstaff_resolves_like_warstaff():
+    """A quarterstaff CREATED via the base selector carries the UI display category 'quarterstaff'
+    (not the db 'warstaff'). The backend must normalize it so currency/bone/essence applicability
+    and the mod pool match - the bug where bones (and 14 other currencies) vanished on a created
+    quarterstaff. Pasted items resolve to 'warstaff' directly; this guards the display-name path."""
+    from app.api.v1.crafting import get_available_currencies_for_item, get_available_mods
+
+    def item(cat):
+        return CraftableItem(
+            base_name="Bolting Quarterstaff", base_category=cat, slot="weapon - 2 hand",
+            rarity=ItemRarity.RARE, item_level=82,
+            prefix_mods=[ItemModifier(name="x", mod_type=ModType.PREFIX, tier=1,
+                                      stat_text="Adds # to # Fire Damage", current_value=1)],
+        )
+
+    display = asyncio.run(get_available_currencies_for_item(item("quarterstaff")))
+    db = asyncio.run(get_available_currencies_for_item(item("warstaff")))
+    assert set(display) == set(db), "display 'quarterstaff' must yield the same currencies as 'warstaff'"
+    # Bones specifically (the reported symptom) must be present.
+    assert any(k in c for c in display for k in ("Jawbone", "Rib", "Collarbone", "Cranium", "Vertebrae")), \
+        "created quarterstaff should have desecration bones available"
+
+    # And the mod pool must be the martial warstaff pool (no caster spell mods).
+    mods = asyncio.run(get_available_mods(item("quarterstaff")))
+    pool = mods["prefixes"] + mods["suffixes"]
+    assert not any("spell" in m["stat_text"].lower() for m in pool), "no spell mods on a quarterstaff"
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v", "--tb=short"])
